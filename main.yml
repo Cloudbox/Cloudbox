@@ -1,0 +1,16 @@
+---
+- hosts: all
+  gather_facts: False
+  roles:
+    - rclone
+
+  tasks:
+  
+  - name: Install required packages
+    apt: name={{item}} state=installed
+    with_items:
+      - unrar
+      - unzip
+      - p7zip
+      - python-pip
+      - docker.io
