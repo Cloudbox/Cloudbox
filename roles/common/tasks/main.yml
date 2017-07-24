@@ -5,7 +5,7 @@
       - docker
       - seed
 
-  - name: "Create seed user"
+  - name: "Create seed {{user}}"
     user:
       name: seed
       groups: seed,docker

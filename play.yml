@@ -1,7 +1,5 @@
 ---
-- hosts: localhost
-  vars_files:
-    - settings.yml
+- hosts: all
   roles:
     - common
     - docker

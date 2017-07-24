@@ -1,0 +1,5 @@
+[all]
+localhost
+
+[all:vars]
+user=seed
