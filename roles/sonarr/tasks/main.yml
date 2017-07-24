@@ -3,9 +3,9 @@
   shell: "id -u {{user}}"
   register: sonarr_uid
 
-- name: "Get {{user}} guid"
+- name: "Get {{user}} gid"
   shell: "id -g {{user}}"
-  register: sonarr_guid
+  register: sonarr_gid
 
 - name: "Create container"
   vars:
