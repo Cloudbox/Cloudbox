@@ -8,3 +8,4 @@
     - ansible-rclone
     - unionfs
     - plexdrive
+    - sonarr
