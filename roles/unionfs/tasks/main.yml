@@ -3,6 +3,12 @@
     apt: 
       name: unionfs-fuse
       state: installed
-      
+
   - name: Copy across default /etc/fuse.conf
     copy: src=fuse.conf dest=/etc/fuse.conf force=yes
+
+  - name: Copy across unionfs.service
+    copy: src=unionfs.service dest=/etc/systemd/system/unionfs.service force=yes
+
+  - name: Start unionfs service
+    systemd: state=started name=unionfs daemon_reload=yes enabled=yes

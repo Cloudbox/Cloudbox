@@ -1,0 +1,14 @@
+[Unit]
+Description=UnionFS Mount
+After=network-online.target plexdrive.service
+
+[Service]
+Type=forking
+GuessMainPID=no
+User=seed
+Group=seed
+ExecStart=/usr/bin/unionfs-fuse -o cow,allow_other /mnt/local=RW:/mnt/plexdrive=RO /mnt/unionfs
+ExecStop=/bin/fusermount -u /mnt/unionfs
+
+[Install]
+WantedBy=default.target
