@@ -1,2 +1,9 @@
 ---
   user: seed
+  media: /mnt/unionfs/Media
+  nzbget:
+    downloads: /home/seed/downloads/nzbget
+  rutorrent:
+    downloads: /home/seed/downloads/rutorrent
+  sonarr:
+    port: 8989

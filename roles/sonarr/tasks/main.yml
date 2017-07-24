@@ -1,0 +1,13 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: sonarr_uid
+
+- name: "Get {{user}} guid"
+  shell: "id -g {{user}}"
+  register: sonarr_guid
+
+- name: "Create container"
+  vars:
+    docker_cmd: "docker create -p {{sonarr.port}}:{{sonarr.port}} -e PUID={{sonarr_uid}} -e PGID={{sonarr_gid}} -v /etc/localtime:/etc/localtime:ro -v /opt/sonarr:/config -v {{media}}:/media -v {{nzbget.downloads}}:/downloads/nzbget -v {{rutorrent.downloads}}:/downloads/rutorrent linuxserver/sonarr"
+  command: "echo {{docker_cmd}}"
