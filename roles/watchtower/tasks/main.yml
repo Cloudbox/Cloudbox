@@ -1,0 +1,29 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: watchtower
+    state: absent
+
+- name: Create container
+  docker_container:
+    name: watchtower
+    image: "v2tec/watchtower"
+    pull: yes
+    command: sonarr radarr jackett nzbhydra nzbget organizr plexpy plexrequests portainer watchtower nginx-proxy letsencrypt --cleanup --interval 15
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.5
+        aliases:
+          - watchtower
+    state: stopped

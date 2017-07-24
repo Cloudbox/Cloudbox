@@ -1,0 +1,67 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Import proxy.conf
+  copy: "src=proxy.conf dest=/opt/nginx-proxy/proxy.conf force=yes owner={{user}} group={{user}} mode=0775"
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: nginx-proxy
+    state: absent
+
+- name: Stop and remove any existing letsencrypt container
+  docker_container:
+    name: letsencrypt
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: nginx-proxy
+    image: "jwilder/nginx-proxy@sha256:76d9ed11c131fadc7546e3b9b085970e13ff45186171b975ad60830f5ca0d689" 
+    pull: yes
+    published_ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nginx-proxy:/etc/nginx/certs:ro"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/etc/nginx/vhost.d"
+      - "/usr/share/nginx/html"
+      - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf"
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.6
+        aliases:
+          - nginx-proxy
+    restart_policy: always
+    state: started
+
+- name: Create and start letsencrypt container
+  docker_container:
+    name: letsencrypt
+    image: "jrcs/letsencrypt-nginx-proxy-companion"
+    pull: yes
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nginx-proxy:/etc/nginx/certs:rw"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    volumes_from:
+      - "nginx-proxy"
+    env:
+      DEBUG: true
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.19
+        aliases:
+          - letsencrypt
+    restart_policy: always
+    state: started

@@ -1,0 +1,129 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: nzbget
+    state: absent
+
+- name: Create nzbget download directory
+  file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+
+- name: "Set {{nzbget.downloads}} permissions"
+  shell: "chmod -R 775 {{nzbget.downloads}}"
+
+- name: "Set {{nzbget.downloads}} owner"
+  shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
+
+- name: Check nzbget.conf exists
+  stat:
+    path: "/opt/nzbget/nzbget.conf"
+  register: nzbget_conf
+
+- name: Create and start container
+  docker_container:
+    name: nzbget
+    image: hotio/suitarr
+    pull: yes
+    published_ports:
+      - "127.0.0.1:6789:8080"
+    env:
+      APP: "nzbget"
+      VERSION: "unstable"
+      BACKUP: "no"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "nzbget.{{domain}}"
+      VIRTUAL_PORT: 8080
+      LETSENCRYPT_HOST: "nzbget.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbget:/config"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "/mnt:/mnt"
+      - "/opt/scripts/nzb:/scripts"
+    restart_policy: always
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.9
+        aliases:
+          - nzbget
+    state: started
+
+- name: Wait for nzbget.conf to be created
+  wait_for:
+    path: "/opt/nzbget/nzbget.conf"
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: "Wait for 10 seconds before stopping nzbget container"
+  wait_for:
+    timeout: 10
+  when: nzbget_conf.stat.exists == False
+
+- name: Stop container to customize nzbget.conf
+  docker_container:
+    name: nzbget
+    state: stopped
+  when: nzbget_conf.stat.exists == False
+
+- name: Change downloads directory
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^MainDir\s?='
+    line: 'MainDir=/downloads/nzbget'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Change scripts directory
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ScriptDir\s?='
+    line: 'ScriptDir=/scripts'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Rename Movies category
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^Category1.Name\s?='
+    line: 'Category1.Name=radarr'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Rename TV category
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^Category2.Name\s?='
+    line: 'Category2.Name=sonarr'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Remove default Username
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ControlUsername\s?='
+    line: 'ControlUsername='
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Remove default Password
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ControlPassword=\s?='
+    line: 'ControlPassword='
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Start container to apply changes
+  docker_container:
+    name: nzbget
+    state: started
+  when: nzbget_conf.stat.exists == False

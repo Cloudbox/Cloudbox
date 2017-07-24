@@ -1,0 +1,34 @@
+---
+- hosts: localhost
+  vars_files:
+    - settings.yml
+  roles:
+    - { role: sanity_check }
+    - { role: kernel, tags: ['kernel'] }
+    - { role: pre_install, tags: ['full', 'feeder', 'plex'] }
+    - { role: system, tags: ['full', 'feeder', 'plex'] }
+    - { role: motd, tags: ['full', 'feeder', 'plex', 'update-motd'] }
+    - { role: common, tags: ['full', 'feeder', 'plex'] }
+    - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
+    - { role: docker, tags: ['full', 'feeder', 'plex'] }
+    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx'] }
+    - { role: watchtower, tags: ['full', 'feeder', 'plex', 'update-watchtower'] }
+    - { role: portainer, tags: ['full', 'feeder', 'update-portainer'] }
+    - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
+    - { role: rclone, tags: ['full', 'feeder', 'plex'] }
+    - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
+    - { role: scripts, tags: ['full', 'feeder', 'plex'] }
+    - { role: unionfs_cleaner, tags: ['full', 'feeder']}
+    - { role: nzbget, tags: ['full', 'feeder', 'update-nzbget'] }
+    - { role: rutorrent, tags: ['full', 'feeder', 'update-rutorrent'] }
+    - { role: jackett, tags: ['full', 'feeder', 'update-jackett'] }
+    - { role: nzbhydra, tags: ['full', 'feeder', 'update-nzbhydra'] }
+    - { role: sonarr, tags: ['full', 'feeder', 'update-sonarr'] }
+    - { role: radarr, tags: ['full', 'feeder', 'update-radarr'] }
+    - { role: plex, tags: ['full', 'plex', 'update-plex'] }
+    - { role: plexpy, tags: ['full', 'plex', 'update-plexpy'] }
+    - { role: plexrequests, tags: ['full', 'plex', 'update-plexrequests'] }
+    - { role: plex_autoscan, tags: ['full', 'plex'] }
+    - { role: backup, tags: ['backup'] }
+    - { role: restore, tags: ['restore'] }
+    

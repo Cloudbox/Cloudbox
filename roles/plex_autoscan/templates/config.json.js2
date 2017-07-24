@@ -1,0 +1,55 @@
+{
+    "DOCKER_NAME": "plex",
+    "PLEX_DATABASE_PATH": "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db",
+    "PLEX_EMPTY_TRASH": true,
+    "PLEX_EMPTY_TRASH_CONTROL_FILES": [
+        "/mnt/unionfs/mounted.bin"
+    ],
+    "PLEX_EMPTY_TRASH_MAX_FILES": 100,
+    "PLEX_EMPTY_TRASH_ZERO_DELETED": false,
+    "PLEX_LD_LIBRARY_PATH": "/usr/lib/plexmediaserver",
+    "PLEX_LOCAL_URL": "http://plex.{{domain}}",
+    "PLEX_SCANNER": "/usr/lib/plexmediaserver/Plex\\ Media\\ Scanner",
+    "PLEX_SECTION_PATH_MAPPINGS": {
+        "1": [
+            "/Movies/"
+        ],
+        "2": [
+            "/TV/"
+        ]
+    },
+    "PLEX_SUPPORT_DIR": "/var/lib/plexmediaserver/Library/Application\\ Support",
+    "PLEX_TOKEN": "",
+    "PLEX_USER": "plex",
+    "PLEX_WAIT_FOR_EXTERNAL_SCANNERS": true,
+    "PLEX_ANALYZE_FILE": true,
+    "SERVER_ALLOW_MANUAL_SCAN": false,
+    "SERVER_FILE_EXIST_PATH_MAPPINGS": {
+        "/mnt/unionfs/Media": [
+            "/data"
+        ]
+    },
+    "SERVER_IP": "{{plex_autoscan.ip}}",
+    "SERVER_MAX_FILE_CHECKS": 10,
+    "SERVER_PASS": "{{plex_autoscan_pass.stdout}}",
+    "SERVER_PATH_MAPPINGS": {
+        "/data/Movies/": [
+            "/movies/",
+            "/mnt/unionfs/Media/Movies/"
+        ],
+        "/data/TV/": [
+            "/tv/",
+            "/mnt/unionfs/Media/TV/"
+        ]
+    },
+    "SERVER_IGNORE_LIST": [
+        "/.grab/",
+        ".DS_Store",
+        "Thumbs.db"
+    ],
+    "SERVER_USE_SQLITE": true,
+    "SERVER_PORT": 3468,
+    "SERVER_SCAN_DELAY": 180,
+    "USE_DOCKER": true,
+    "USE_SUDO": false
+}

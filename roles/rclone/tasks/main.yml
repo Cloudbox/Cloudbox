@@ -1,0 +1,77 @@
+---
+- name: "Unarchive rclone v{{rclone.version}}"
+  unarchive:
+    src: https://github.com/ncw/rclone/releases/download/v{{ rclone.version }}/rclone-v{{ rclone.version }}-linux-amd64.zip
+    dest: /tmp
+    copy: no
+    validate_certs: no
+
+- name: Ensure rclone folders exists
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  with_items:
+    - /opt/rclone
+    - "/home/{{user}}/.config/rclone"
+
+- name: Copy binary to /opt/rclone
+  copy:
+    src: "/tmp/rclone-v{{ rclone.version }}-linux-amd64/rclone"
+    dest: /opt/rclone/rclone
+    mode: 0777
+    owner: "{{user}}"
+    group: "{{user}}"
+
+- name: Symlink binary to /usr/sbin
+  file:
+    src: /opt/rclone/rclone
+    dest: /usr/sbin/rclone
+    state: link
+    force: yes
+
+- name: Make dir for local manpages
+  file:
+    path: '/usr/local/share/man/man1'
+    state: directory
+    mode: 0775
+    owner: root
+    group: root
+
+- name: Copy manpage
+  copy:
+    src: "/tmp/rclone-v{{ rclone.version }}-linux-amd64/rclone.1"
+    dest: /usr/local/share/man/man1/rclone.1
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Install manpage
+  shell: mandb
+  changed_when: false
+
+- name: Symlink config
+  file:
+    src: /opt/rclone/rclone.conf
+    dest: "/home/{{user}}/.config/rclone/rclone.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    state: link
+    force: yes
+
+- name: Check restore rclone.conf exists
+  stat:
+    path: "{{playbook_dir}}/rclone.conf"
+  register: restore_rclone_conf
+
+- name: Restore rclone.conf as part of restore process
+  copy:
+    src: "{{playbook_dir}}/rclone.conf"
+    dest: /opt/rclone/rclone.conf
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+  when: restore_rclone_conf.stat.exists
+
+- name: Remove restored rclone.conf
+  file:
+    path: "{{playbook_dir}}/rclone.conf"
+    state: absent
+  when: restore_rclone_conf.stat.exists

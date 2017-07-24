@@ -1,0 +1,56 @@
+---
+- name: Check service exists
+  stat:
+    path: "/etc/systemd/system/plex_autoscan.service"
+  register: plex_autoscan_service
+
+- name: Stop existing plex_autoscan service
+  systemd: state=stopped name=plex_autoscan
+  when: plex_autoscan_service.stat.exists
+  
+- name: Clone plex_autoscan
+  git:
+    repo: https://github.com/l3uddz/plex_autoscan/
+    dest: /opt/plex_autoscan
+    version: master
+    force: yes
+    
+- name: Install pip requirements
+  pip:
+    requirements: /opt/plex_autoscan/requirements.txt
+    executable: pip2
+
+- name: Check config exists
+  stat:
+    path: "/opt/plex_autoscan/config/config.json"
+  register: plex_autoscan_config
+
+- name: "Generate 32 character SERVER_PASS"
+  shell: "pwgen 32 1"
+  register: plex_autoscan_pass
+  when: plex_autoscan_config.stat.exists == False
+
+- name: Import default config
+  template:
+    src: config.json.js2
+    dest: /opt/plex_autoscan/config/config.json
+    force: yes
+  when: plex_autoscan_config.stat.exists == False
+
+- name: Set scan.py as executable
+  file:
+    path: /opt/plex_autoscan/scan.py
+    mode: a+x
+
+- name: Set directory permissions
+  file: "path=/opt/plex_autoscan state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: Import plex_autoscan service
+  template:
+    src: plex_autoscan.service.js2
+    dest: /etc/systemd/system/plex_autoscan.service 
+    force: yes
+  when: plex_autoscan_service.stat.exists == False
+
+- name: Start plex_autoscan service
+  systemd: state=started name=plex_autoscan daemon_reload=yes enabled=yes

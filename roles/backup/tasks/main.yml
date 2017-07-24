@@ -1,0 +1,316 @@
+---
+- block:
+  - name: "Check if backup.lock is present"
+    stat:
+      path: "{{playbook_dir}}/backup.lock"
+    register: backup_lock
+
+  - name: "Fail when backup.lock exists"
+    fail:
+      msg: "Backup is already in progress..."
+    when: backup_lock.stat.exists
+
+  - name: "Create backup.lock"
+    file:
+      path: "{{playbook_dir}}/backup.lock"
+      state: touch
+      owner: "{{user}}"
+      group: "{{user}}"
+    when: backup_lock.stat.exists == False
+
+  - name: "Save Start Time"
+    set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
+
+  - name: "Pushover Message: Started Cloudbox backup task."
+    pushover:
+      msg: "Started Cloudbox backup task."
+      app_token: "{{backup.pushover_app_token}}"
+      user_key: "{{backup.pushover_user_key}}"
+    when: not(
+        (backup.pushover_app_token is undefined)
+        or
+        (backup.pushover_app_token is none)
+        or
+        (backup.pushover_app_token | trim == '')
+        or
+        (backup.pushover_user_key is undefined)
+        or
+        (backup.pushover_user_key is none)
+        or
+        (backup.pushover_user_key | trim == '')
+      )
+
+  - name: "Check {{backup.tar_dest}} exists"
+    stat:
+      path: "{{backup.tar_dest}}"
+    register: backup_location
+
+  - name: "Create backup location {{backup.tar_dest}}"
+    file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
+    when: backup_location.stat.exists == False
+
+
+  - name: "Check {{backup.tar_dest}}/cloudbox.tar exists"
+    stat:
+      path: "{{backup.tar_dest}}/cloudbox.tar"
+      get_attributes: false
+      get_checksum: false
+      get_md5: false
+      get_mime: false
+    register: backup_previous_tgz
+
+  - name: "Moving cloudbox.tar to cloudbox.tar.backup"
+    shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
+    when: backup_previous_tgz.stat.exists
+
+  - name: "Remove previous cloudbox.tar"
+    file:
+      path: "{{backup.tar_dest}}/cloudbox.tar"
+      state: absent
+    when: backup_previous_tgz.stat.exists
+
+  - name: "Copy settings.xml to /opt for inclusion in backup"
+    copy:
+      src: "{{playbook_dir}}/settings.yml"
+      dest: "/opt/settings.yml"
+      force: yes
+      group: "{{user}}"
+      owner: "{{user}}"
+      mode: 0775
+
+  - name: "Copy /etc/systemd/system to /opt/systemd for inclusion in backup"
+    copy:
+      src: "/etc/systemd/system"
+      dest: "/opt/systemd"
+      force: yes
+      group: "{{user}}"
+      owner: "{{user}}"
+      mode: 0775
+
+  - name: "Stop all containers"
+    shell: "docker stop $(docker ps -aq)"
+    ignore_errors: yes
+
+  - name: "Pushover Message: Stopped Cloudbox containers."
+    pushover:
+      msg: "Stopped Cloudbox containers."
+      app_token: "{{backup.pushover_app_token}}"
+      user_key: "{{backup.pushover_user_key}}"
+    when: not(
+        (backup.pushover_app_token is undefined)
+        or
+        (backup.pushover_app_token is none)
+        or
+        (backup.pushover_app_token | trim == '')
+        or
+        (backup.pushover_user_key is undefined)
+        or
+        (backup.pushover_user_key is none)
+        or
+        (backup.pushover_user_key | trim == '')
+      )
+
+  - name: Check if plexdrive is running
+    command: systemctl status plexdrive
+    ignore_errors: yes
+    register: plexdrive_status
+
+  - name: Check if unionfs_cleaner is running
+    command: systemctl status unionfs_cleaner
+    ignore_errors: yes
+    register: unionfs_cleaner_status
+
+  - name: Stop unionfs_cleaner service
+    systemd:
+      name: unionfs_cleaner
+      state: stopped
+    when: unionfs_cleaner_status|success
+
+  - name: Stop plexdrive service
+    systemd:
+      name: plexdrive
+      state: stopped
+    when: plexdrive_status|success
+
+  - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
+    shell: "tar --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+
+  - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
+    stat:
+      path: "{{backup.tar_dest}}/cloudbox.tar"
+      get_attributes: false
+      get_checksum: false
+      get_md5: false
+      get_mime: false
+    register: backup_new_tgz
+
+  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
+    pushover:
+      msg: "Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
+      app_token: "{{backup.pushover_app_token}}"
+      user_key: "{{backup.pushover_user_key}}"
+    when: not(
+        (backup.pushover_app_token is undefined)
+        or
+        (backup.pushover_app_token is none)
+        or
+        (backup.pushover_app_token | trim == '')
+        or
+        (backup.pushover_user_key is undefined)
+        or
+        (backup.pushover_user_key is none)
+        or
+        (backup.pushover_user_key | trim == '')
+        or
+        (backup_new_tgz is undefined)
+      )
+
+  - name: Start plexdrive service
+    systemd:
+      name: plexdrive
+      state: started
+    when: plexdrive_status|success
+
+  - name: Start unionfs_cleaner service
+    systemd:
+      name: unionfs_cleaner
+      state: started
+    when: unionfs_cleaner_status|success
+
+  - name: "Wait for 5 seconds before starting containers"
+    wait_for:
+      timeout: 5
+
+  - name: "Start containers"
+    shell: 'docker start plexrequests plexpy plex radarr sonarr nzbhydra jackett rutorrent nzbget organizr portainer letsencrypt nginx-proxy'
+    ignore_errors: yes
+
+  - name: "Pushover Message: Started Cloudbox containers."
+    pushover:
+      msg: "Started Cloudbox containers."
+      app_token: "{{backup.pushover_app_token}}"
+      user_key: "{{backup.pushover_user_key}}"
+    when: not(
+        (backup.pushover_app_token is undefined)
+        or
+        (backup.pushover_app_token is none)
+        or
+        (backup.pushover_app_token | trim == '')
+        or
+        (backup.pushover_user_key is undefined)
+        or
+        (backup.pushover_user_key is none)
+        or
+        (backup.pushover_user_key | trim == '')
+      )
+
+  - name: "Wait for 10 seconds before uploads"
+    wait_for:
+      timeout: 10
+
+  - name: "Set {{backup.tar_dest}} permissions"
+    shell: "chmod -R 775 {{backup.tar_dest}}"
+
+  - name: "Set {{backup.tar_dest}} owner"
+    shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}"
+
+  - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    become: true
+    become_user: "{{user}}"
+    when: backup.use_rclone
+
+  - name: "Pushover Message: Uploaded backup with rclone to \"{{backup.rclone_dest}}\"."
+    pushover:
+      msg: "Uploaded backup with rclone to \"{{backup.rclone_dest}}\"."
+      app_token: "{{backup.pushover_app_token}}"
+      user_key: "{{backup.pushover_user_key}}"
+    when: not(
+        (backup.pushover_app_token is undefined)
+        or
+        (backup.pushover_app_token is none)
+        or
+        (backup.pushover_app_token | trim == '')
+        or
+        (backup.pushover_user_key is undefined)
+        or
+        (backup.pushover_user_key is none)
+        or
+        (backup.pushover_user_key | trim == '')
+        or
+        (backup.use_rclone == false)
+      )
+
+  - name: "Upload backup with rsync to \"{{backup.rsync_dest}}\""
+    synchronize:
+      src: "{{backup.tar_dest}}/"
+      dest: "{{backup.rsync_dest}}/"
+      rsync_opts:
+        - "--log-file='{{playbook_dir}}/backup_rsync.log'"
+    become: true
+    become_user: "{{user}}"
+    when: backup.use_rsync
+
+  - name: "Pushover Message: Uploaded backup with rsync to \"{{backup.rsync_dest}}\"."
+    pushover:
+      msg: "Uploaded backup with rsync to \"{{backup.rsync_dest}}\"."
+      app_token: "{{backup.pushover_app_token}}"
+      user_key: "{{backup.pushover_user_key}}"
+    when: not(
+        (backup.pushover_app_token is undefined)
+        or
+        (backup.pushover_app_token is none)
+        or
+        (backup.pushover_app_token | trim == '')
+        or
+        (backup.pushover_user_key is undefined)
+        or
+        (backup.pushover_user_key is none)
+        or
+        (backup.pushover_user_key | trim == '')
+        or
+        (backup.use_rsync == false)
+      )
+
+  - name: "Save End Time"
+    set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
+
+  - name: "Pushover Message: Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
+    pushover:
+      msg: "Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
+      app_token: "{{backup.pushover_app_token}}"
+      user_key: "{{backup.pushover_user_key}}"
+    when: not(
+        (backup.pushover_app_token is undefined)
+        or
+        (backup.pushover_app_token is none)
+        or
+        (backup.pushover_app_token | trim == '')
+        or
+        (backup.pushover_user_key is undefined)
+        or
+        (backup.pushover_user_key is none)
+        or
+        (backup.pushover_user_key | trim == '')
+      )
+
+  - name: "Get ansible-playbook binary path"
+    shell: "which ansible-playbook"
+    register: playbook_binary
+
+  - name: "Schedule cron backup for state: {{backup.cron_state}}, when: {{backup.cron_time}}"
+    cron:
+      name: "Backup Cloudbox"
+      special_time: "{{backup.cron_time}}"
+      job: "{{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup"
+      state: "{{backup.cron_state}}"
+
+  always:
+  - debug: msg="Finished backup"
+    when: backup_lock.stat.exists == False
+
+  - name: "Remove backup.lock"
+    file:
+      path: "{{playbook_dir}}/backup.lock"
+      state: absent
+    when: backup_lock.stat.exists == False

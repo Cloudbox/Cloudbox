@@ -1,0 +1,60 @@
+#!/bin/bash
+# autodl script: /scripts/arrpush.sh
+# autodl args: radarr OR sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
+# settings
+sonarrUrl=http://sonarr:8080/api/release/push
+sonarrApiKey=YOUR_API_KEY
+radarrUrl=http://radarr:8080/api/release/push
+radarrApiKey=YOUR_API_KEY
+
+# args
+type=$1
+title=$2
+downloadUrl=$3
+indexer=$5
+date=$(date -u +"%Y-%m-%d %H:%M:%SZ")
+
+# funcs
+get_release_name() {
+        filename=$(wget --server-response -q -O - "$1" 2>&1 | grep "Content-Disposition:" | tail -1 | awk -F"filename=" '{print $2}')
+        releasename="${filename%.*}"
+        for (( c=0; c<$2; c++ ))
+        do
+                releasename="${releasename%.*}"
+        done
+        echo $releasename | sed -e 's/^"//' -e 's/"$//'
+}
+
+# calculate provided size
+conv_size=($4)
+if [ ${conv_size[1]} = "GB" ]
+then
+        size=$(echo ${conv_size[0]} 1073741824 | awk '{printf "%.0f",$1*$2}')
+elif [  ${conv_size[1]} = "MB" ]
+then
+        size=$(echo ${conv_size[0]} 1048576 | awk '{printf "%.0f",$1*$2}')
+else
+        echo "Unexpected release size: $4, skipping..."
+        exit
+fi
+
+# parse release name from download link headers, for the trackers that do not provide it in their announcements... (looking at you PTP)
+if [ $indexer = "PassThePopcorn" ]
+then
+        title=$(get_release_name $downloadUrl 1)
+fi
+
+# push to sonarr/radarr
+if [ $type = "sonarr" ]
+then
+        {
+        /usr/local/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $sonarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","size":"'"$size"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $sonarrUrl
+        } &> /dev/null
+elif [ $type = "radarr" ]
+then
+        {
+        /usr/local/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $radarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","size":"'"$size"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $radarrUrl
+        } &> /dev/null
+else
+        echo "Unknown type: $type"
+fi
