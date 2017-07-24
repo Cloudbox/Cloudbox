@@ -10,4 +10,5 @@
 - name: "Create container"
   vars:
     docker_cmd: "docker create -p {{sonarr.port}}:{{sonarr.port}} -e PUID={{sonarr_uid.stdout}} -e PGID={{sonarr_gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/sonarr:/config -v {{media}}:/media -v {{nzbget.downloads}}:/downloads/nzbget -v {{rutorrent.downloads}}:/downloads/rutorrent linuxserver/sonarr"
-  command: "echo {{docker_cmd}}"
+  debug:
+    var: docker_cmd
