@@ -1,5 +1,5 @@
 ---
 - hosts: localhost
   roles:
-    common
-    ansible-rclone
+    - common
+    - ansible-rclone
