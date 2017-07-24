@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: localhost
   vars_files:
     - settings.yml
   roles:

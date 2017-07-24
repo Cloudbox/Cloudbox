@@ -3,12 +3,12 @@
     group: name={{item}} state=present
     with_items:
       - docker
-      - seed
+      - "{{user}}"
 
-  - name: "Create seed {{user}}"
+  - name: "Create default user {{user}}"
     user:
-      name: seed
-      groups: seed,docker
+      name: {{user}}
+      groups: "{{user}},docker"
       password: $6$zB04ETFuezaIT$CnhuAgxVir31qsE3.hLjv.WjMWNLFsrAtuK5mjHUx7gMnzGv7awJq8ZhEK8F/8UBNOjyoauaQ3Wle.GoYC2i1.
       update_password: on_create
       append: yes
@@ -26,7 +26,7 @@
       - sqlite3
 
   - name: Create common directories
-    file: "path={{item}} state=directory mode=0775 owner=seed group=seed"
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
       - /mnt/plexdrive
       - /mnt/unionfs
