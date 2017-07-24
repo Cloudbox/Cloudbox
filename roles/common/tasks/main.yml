@@ -1,0 +1,10 @@
+---
+  - name: Install required packages
+    apt: name={{item}} state=installed
+    with_items:
+      - unrar
+      - unzip
+      - p7zip
+      - python-pip
+      - python3-pip
+      - docker.io

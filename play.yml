@@ -1,7 +1,5 @@
 ---
 - hosts: localhost
-  gather_facts: False
-  user: root
   roles:
-    - ansible-rclone
-    
+    common
+    ansible-rclone
