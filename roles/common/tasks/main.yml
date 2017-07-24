@@ -10,7 +10,7 @@
       - curl
 
   - name: Create common directories
-    file: path={{item}} state=directory mode=0775 group=docker owner="{{remote_user}}"
+    file: path={{item}} state=directory mode=0775 group=docker owner=seed
     with_items:
       - /mnt/plexdrive
       - /mnt/unionfs
