@@ -8,7 +8,7 @@ After=network-online.target mongodb.service
 User={{user}}
 Group={{user}}
 Type=simple
-ExecStart=/usr/sbin/plexdrive -v 3 --refresh-interval=1m --chunk-size=16m --clear-chunk-age=2h --fuse-options=allow_other,read_only --config=/opt/plexdrive --temp=/opt/plexdrive /mnt/plexdrive
+ExecStart=/opt/plexdrive/plexdrive -v 3 --refresh-interval=1m --chunk-size=16m --clear-chunk-age=2h --fuse-options=allow_other,read_only --config=/opt/plexdrive --temp=/opt/plexdrive /mnt/plexdrive
 ExecStop=/bin/fusermount -uz /mnt/plexdrive
 Restart=always
 RestartSec=5
