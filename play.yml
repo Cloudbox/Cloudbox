@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
+  include_vars: settings.yml
   roles:
     - common
     - docker
