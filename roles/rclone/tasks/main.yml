@@ -1,3 +1,0 @@
----
-  - name: 'test this playbook'
-    shell: "echo 'hello world'"
