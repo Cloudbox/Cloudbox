@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: False
   roles:
-    - rclone
+    - ansible-rclone
 
   tasks:
   
