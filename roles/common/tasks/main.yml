@@ -1,9 +1,11 @@
 ---
-  - name: Create seed user
-    group:
-      name: docker
-      state: present
+  - name: Create required groups
+    group: name={{item}} state=present
+    with_items:
+      - docker
+      - seed
       
+  - name: Create seed user
     user:
       name: seed
       groups: seed,docker
