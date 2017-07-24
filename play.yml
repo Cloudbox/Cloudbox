@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
+  remote_user: seed
   roles:
     - common
+    - docker
     - ansible-rclone
     

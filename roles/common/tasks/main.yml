@@ -7,4 +7,4 @@
       - p7zip
       - python-pip
       - python3-pip
-      - docker.io
+      - curl

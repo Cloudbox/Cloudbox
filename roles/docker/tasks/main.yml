@@ -1,0 +1,16 @@
+---
+- name: Install required packages
+  apt: name={{item}} state=installed
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+
+- name: Add Docker GPG Signing Key
+  apt_key:
+    id: 0EBFCD88
+    url: https://download.docker.com/linux/ubuntu/gpg
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
