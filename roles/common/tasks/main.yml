@@ -1,4 +1,12 @@
 ---
+  - name: Create seed user
+    user:
+      name: seed
+      groups: seed,docker
+      password: $6$zB04ETFuezaIT$CnhuAgxVir31qsE3.hLjv.WjMWNLFsrAtuK5mjHUx7gMnzGv7awJq8ZhEK8F/8UBNOjyoauaQ3Wle.GoYC2i1.
+      update_password: on_create
+      append: yes
+
   - name: Install required packages
     apt: name={{item}} state=installed
     with_items:
@@ -16,9 +24,3 @@
       - /mnt/unionfs
       - /mnt/local
       
-  - name: Create default user - seed
-    user:
-      name: seed
-      group: seed
-      password: $6$zB04ETFuezaIT$CnhuAgxVir31qsE3.hLjv.WjMWNLFsrAtuK5mjHUx7gMnzGv7awJq8ZhEK8F/8UBNOjyoauaQ3Wle.GoYC2i1.
-      update_password: on_create
