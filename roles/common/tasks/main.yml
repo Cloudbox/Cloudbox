@@ -4,7 +4,7 @@
     with_items:
       - docker
       - seed
-      
+
   - name: Create seed user
     user:
       name: seed
@@ -23,6 +23,7 @@
       - python-pip
       - python3-pip
       - curl
+      - sqlite3
 
   - name: Create common directories
     file: path={{item}} state=directory mode=0775 owner=seed group=seed
