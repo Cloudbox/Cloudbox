@@ -15,12 +15,8 @@
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
 
-- name: Update and upgrade apt
-  apt:
-    update_cache: yes
-    upgrade: yes
-
 - name: Install Docker
   apt: 
+    update_cache: yes
     name: docker
     state: installed
