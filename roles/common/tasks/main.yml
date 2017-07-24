@@ -5,7 +5,7 @@
       - docker
       - "{{user}}"
 
-  - name: "Create default user {{user}}"
+  - name: "Create user {{user}}"
     user:
       name: "{{user}}"
       groups: "{{user}},docker"
