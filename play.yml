@@ -3,3 +3,4 @@
   roles:
     - common
     - ansible-rclone
+    - rclone
