@@ -6,14 +6,18 @@
     - ca-certificates
     - software-properties-common
 
-- name: Add Docker GPG Signing Key
+- name: Add official gpg signing key
   apt_key:
     id: 0EBFCD88
     url: https://download.docker.com/linux/ubuntu/gpg
 
-- name: Add Docker Repository
+- name: Add official repository
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
 
 - name: Install Docker
-  apt: name=docker state=installed
+  apt: 
+    update_cache: yes
+    upgrade: yes
+    name: docker
+    state: installed
