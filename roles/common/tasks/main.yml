@@ -10,7 +10,7 @@
       - curl
 
   - name: Create common directories
-    file: path={{item}} state=directory mode=0775 owner=seed
+    file: path={{item}} state=directory mode=0775 owner=seed group=seed
     with_items:
       - /mnt/plexdrive
       - /mnt/unionfs
