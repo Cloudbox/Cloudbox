@@ -8,7 +8,10 @@
     copy: src=fuse.conf dest=/etc/fuse.conf force=yes
 
   - name: Import unionfs.service
-    template: src=unionfs.service dest=/etc/systemd/system/unionfs.service force=yes
+    template: 
+      src: unionfs.service.js2
+      dest: /etc/systemd/system/unionfs.service 
+      force: yes
 
   - name: Start unionfs service
     systemd: state=started name=unionfs daemon_reload=yes enabled=yes
