@@ -1,6 +1,5 @@
 ---
 - hosts: localhost
-  gather_facts: False
   roles:
     - common
     - docker
