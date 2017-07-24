@@ -1,8 +1,8 @@
 ---
   - name: Install mongodb
-      apt: 
-        name: mongodb
-        state: installed
+    apt: 
+      name: mongodb
+      state: installed
 
   - name: Install plexdrive
     get_url:
