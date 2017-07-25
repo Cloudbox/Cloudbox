@@ -30,8 +30,8 @@
     with_items:
       - /mnt/plexdrive
       - /mnt/unionfs
-      - /mnt/unionfs/Media
       - /mnt/local
+      - /mnt/local/Media
       - /opt/plexdrive
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
