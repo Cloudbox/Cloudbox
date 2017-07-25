@@ -6,7 +6,7 @@
     port: 7878
   nzbget:
     port: 6789
-    downloads: /home/seed/downloads/nzbget
+    downloads: /home/seed/downloads
   rutorrent:
     port: 80
-    downloads: /home/seed/downloads/rutorrent
+    downloads: /home/seed/downloads
