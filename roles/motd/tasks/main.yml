@@ -5,6 +5,11 @@
     - lsb-release
     - figlet
 
+- name: Remove any existing dynamic motd
+  file:
+    path: /etc/update-motd.d
+    state: absent
+
 - name: Create dynamic motd directory
   file:
     path: /etc/update-motd.d
@@ -16,6 +21,8 @@
   with_items:
     - 00-header
     - 10-sysinfo
+    - 20-package-updates
+    - 30-security-updates
     - 90-footer
 
 - name: Remove old motd file

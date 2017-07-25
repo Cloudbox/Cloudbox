@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# if the current release is under development there won't be a new one
+if [ "$(lsb_release -sd | cut -d' ' -f4)" = "(development" ]; then
+    exit 0
+fi
+if [ -x /usr/lib/ubuntu-release-upgrader/release-upgrade-motd ]; then
+    exec /usr/lib/ubuntu-release-upgrader/release-upgrade-motd
+fi
