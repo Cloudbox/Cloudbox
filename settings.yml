@@ -1,6 +1,6 @@
 ---
   user: seed
-  media: /mnt/unionfs/Media
+  media: /mnt/unionfs
   nzbget:
     downloads: /home/seed/downloads/nzbget
   rutorrent:
