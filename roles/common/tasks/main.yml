@@ -46,6 +46,7 @@
       - /opt/sonarr
       - /opt/radarr
       - /opt/nzbget
+      - /opt/rutorrent
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
       
