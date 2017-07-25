@@ -36,6 +36,7 @@
       - /opt/plexdrive
       - /opt/sonarr
       - /opt/radarr
+      - /opt/nzbget
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
       

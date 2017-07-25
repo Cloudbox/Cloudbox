@@ -1,10 +1,12 @@
 ---
   user: seed
-  nzbget:
-    downloads: /home/seed/downloads/nzbget
-  rutorrent:
-    downloads: /home/seed/downloads/rutorrent
   sonarr:
     port: 8989
   radarr:
     port: 7878
+  nzbget:
+    port: 6789
+    downloads: /home/seed/downloads/nzbget
+  rutorrent:
+    port: 80
+    downloads: /home/seed/downloads/rutorrent
