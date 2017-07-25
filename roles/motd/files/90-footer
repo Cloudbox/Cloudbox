@@ -22,4 +22,3 @@
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
 [ -f /etc/motd.tail ] && cat /etc/motd.tail || true
-echo
