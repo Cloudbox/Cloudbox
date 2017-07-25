@@ -6,3 +6,5 @@
     downloads: /home/seed/downloads/rutorrent
   sonarr:
     port: 8989
+  radarr:
+    port: 7878

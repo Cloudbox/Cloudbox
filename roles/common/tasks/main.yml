@@ -34,6 +34,8 @@
       - /mnt/local/Media/TV
       - /mnt/local/Media/Movies
       - /opt/plexdrive
+      - /opt/sonarr
+      - /opt/radarr
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
       
