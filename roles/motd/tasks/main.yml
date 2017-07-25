@@ -28,3 +28,4 @@
     src: /var/run/motd
     dest: /etc/motd
     state: link
+    force: yes
