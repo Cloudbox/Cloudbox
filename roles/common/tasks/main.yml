@@ -1,5 +1,5 @@
 ---
-  - name: Create required groups
+  - name: Create common groups
     group: name={{item}} state=present
     with_items:
       - docker
@@ -22,7 +22,7 @@
     shell: "id -g {{user}}"
     register: gid
       
-  - name: Install required packages
+  - name: Install common packages
     apt: name={{item}} state=installed
     with_items:
       - unrar
@@ -32,8 +32,9 @@
       - python3-pip
       - curl
       - sqlite3
+      - vnstat
 
-  - name: Create required directories
+  - name: Create common directories
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
       - /mnt/plexdrive
