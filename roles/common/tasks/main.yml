@@ -13,6 +13,14 @@
       update_password: on_create
       append: yes
       shell: /bin/bash
+
+  - name: "Get {{user}} uid"
+    shell: "id -u {{user}}"
+    register: uid
+
+  - name: "Get {{user}} gid"
+    shell: "id -g {{user}}"
+    register: gid
       
   - name: Install required packages
     apt: name={{item}} state=installed

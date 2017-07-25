@@ -1,13 +1,5 @@
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: nzbget_uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: nzbget_gid
-
 - name: "Create and start container"
   vars:
-    docker_cmd: "docker run -d --name=nzbget -p {{nzbget.port}}:{{nzbget.port}} -e PUID={{nzbget_uid.stdout}} -e PGID={{nzbget_gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/nzbget:/config -v {{nzbget.downloads}}:/downloads --restart=always linuxserver/nzbget"
+    docker_cmd: "docker run -d --name=nzbget -p {{nzbget.port}}:{{nzbget.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/nzbget:/config -v {{nzbget.downloads}}:/downloads --restart=always linuxserver/nzbget"
   command: "{{docker_cmd}}"

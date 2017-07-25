@@ -1,13 +1,5 @@
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: radarr_uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: radarr_gid
-
 - name: "Create and start container"
   vars:
-    docker_cmd: "docker run -d --name=radarr -p {{radarr.port}}:{{radarr.port}} -e PUID={{radarr_uid.stdout}} -e PGID={{radarr_gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/radarr:/config -v /mnt/unionfs/Media/Movies:/movies -v {{nzbget.downloads}}:/downloads/nzbget -v {{rutorrent.downloads}}:/downloads/rutorrent --restart=always linuxserver/radarr"
+    docker_cmd: "docker run -d --name=radarr -p {{radarr.port}}:{{radarr.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/radarr:/config -v /mnt/unionfs/Media/Movies:/movies -v {{nzbget.downloads}}:/downloads/nzbget -v {{rutorrent.downloads}}:/downloads/rutorrent --restart=always linuxserver/radarr"
   command: "{{docker_cmd}}"

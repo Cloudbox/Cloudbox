@@ -1,13 +1,5 @@
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: sonarr_uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: sonarr_gid
-
 - name: "Create and start container"
   vars:
-    docker_cmd: "docker run -d --name=sonarr -p {{sonarr.port}}:{{sonarr.port}} -e PUID={{sonarr_uid.stdout}} -e PGID={{sonarr_gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/sonarr:/config -v /mnt/unionfs/Media/TV:/tv -v {{nzbget.downloads}}:/downloads/nzbget -v {{rutorrent.downloads}}:/downloads/rutorrent --restart=always linuxserver/sonarr"
+    docker_cmd: "docker run -d --name=sonarr -p {{sonarr.port}}:{{sonarr.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/sonarr:/config -v /mnt/unionfs/Media/TV:/tv -v {{nzbget.downloads}}:/downloads/nzbget -v {{rutorrent.downloads}}:/downloads/rutorrent --restart=always linuxserver/sonarr"
   command: "{{docker_cmd}}"
