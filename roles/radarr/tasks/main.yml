@@ -1,5 +1,5 @@
 ---
 - name: "Create and start container"
   vars:
-    docker_cmd: "docker run -d --name=radarr -p {{radarr.port}}:{{radarr.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/radarr:/config -v /mnt/unionfs/Media/Movies:/movies -v {{nzbget.downloads}}:/downloads -v {{rutorrent.downloads}}:/downloads --restart=always --network=host linuxserver/radarr"
+    docker_cmd: "docker run -d --name=radarr -p {{radarr.port}}:{{radarr.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/radarr:/config -v /mnt/unionfs/Media/Movies:/movies -v {{nzbget.downloads}}:/downloads/nzbget -v {{rutorrent.downloads}}:/downloads/rutorrent --restart=always --network=host linuxserver/radarr"
   command: "{{docker_cmd}}"

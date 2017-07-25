@@ -1,5 +1,5 @@
 ---
 - name: "Create and start container"
   vars:
-    docker_cmd: "docker run -d --name=nzbget -p {{nzbget.port}}:{{nzbget.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/nzbget:/config -v {{nzbget.downloads}}:/downloads --restart=always --network=host linuxserver/nzbget"
+    docker_cmd: "docker run -d --name=nzbget -p {{nzbget.port}}:{{nzbget.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/nzbget:/config -v {{nzbget.downloads}}:/downloads/nzbget --restart=always --network=host linuxserver/nzbget"
   command: "{{docker_cmd}}"

@@ -1,5 +1,5 @@
 ---
 - name: "Create and start container"
   vars:
-    docker_cmd: "docker run -d --name=sonarr -p {{sonarr.port}}:{{sonarr.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/sonarr:/config -v /mnt/unionfs/Media/TV:/tv -v {{nzbget.downloads}}:/downloads -v {{rutorrent.downloads}}:/downloads --restart=always --network=host linuxserver/sonarr"
+    docker_cmd: "docker run -d --name=sonarr -p {{sonarr.port}}:{{sonarr.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/sonarr:/config -v /mnt/unionfs/Media/TV:/tv -v {{nzbget.downloads}}:/downloads/nzbget -v {{rutorrent.downloads}}:/downloads/rutorrent --restart=always --network=host linuxserver/sonarr"
   command: "{{docker_cmd}}"
