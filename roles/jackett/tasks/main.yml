@@ -1,0 +1,5 @@
+---
+- name: "Create and start container"
+  vars:
+    docker_cmd: "docker run -d --name=jackett -p {{jackett.port}}:{{jackett.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/jackett:/config --restart=always --network=host linuxserver/jackett"
+  command: "{{docker_cmd}}"

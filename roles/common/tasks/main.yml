@@ -47,6 +47,7 @@
       - /opt/radarr
       - /opt/nzbget
       - /opt/rutorrent
+      - /opt/jackett
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
       

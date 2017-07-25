@@ -10,3 +10,5 @@
   rutorrent:
     port: 80
     downloads: /home/seed/downloads/rutorrent
+  jackett:
+    port: 9117
