@@ -32,6 +32,8 @@
       - /mnt/unionfs
       - /mnt/local
       - /mnt/local/Media
+      - /mnt/local/Media/TV
+      - /mnt/local/Media/Movies
       - /opt/plexdrive
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
