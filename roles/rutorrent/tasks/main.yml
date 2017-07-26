@@ -1,5 +1,5 @@
 ---
 - name: "Create and start container"
   vars:
-    docker_cmd: "docker run -d --name=rutorrent -p {{rutorrent.port}}:{{rutorrent.port}} -p 51413:51413 -p 6881:6881/udp -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/rutorrent:/config -v {{rutorrent.downloads}}:/downloads/rutorrent --restart=always --network=host linuxserver/rutorrent"
+    docker_cmd: "docker run -d --name=rutorrent -p {{rutorrent.port}}:{{rutorrent.port}} -p 51413:51413 -p 6881:6881/udp -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/rutorrent:/config -v '{{rutorrent.downloads}}:/downloads/rutorrent' --restart=always --network=host linuxserver/rutorrent"
   command: "{{docker_cmd}}"
