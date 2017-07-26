@@ -1,0 +1,5 @@
+---
+- name: "Create and start container"
+  vars:
+    docker_cmd: "docker run -d --name=nzbhydra -p {{nzbhydra.port}}:{{nzbhydra.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/nzbhydra:/config --restart=always --network=host linuxserver/hydra"
+  command: "{{docker_cmd}}"

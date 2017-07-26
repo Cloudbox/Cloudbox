@@ -48,6 +48,7 @@
       - /opt/nzbget
       - /opt/rutorrent
       - /opt/jackett
+      - /opt/nzbhydra
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
       

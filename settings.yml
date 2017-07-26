@@ -12,3 +12,5 @@
     downloads: /home/seed/downloads/rutorrent
   jackett:
     port: 9117
+  nzbhydra:
+    port: 5075
