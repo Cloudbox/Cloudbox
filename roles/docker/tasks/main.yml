@@ -20,3 +20,10 @@
     name: docker-ce
     state: installed
     update_cache: yes
+
+- name: Install ctop
+  get_url:
+  url:  https://github.com/bcicen/ctop/releases/download/v0.6.0/ctop-0.6.0-linux-amd64
+  dest: /usr/local/bin/ctop
+  mode: 0755
+  
