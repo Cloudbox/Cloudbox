@@ -1,6 +1,6 @@
 ---
 - name: Install required packages
-  apt: name={{item}} state=installed
+  apt: "name={{item}} state=installed"
   with_items:
     - apt-transport-https
     - ca-certificates
