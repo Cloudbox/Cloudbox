@@ -45,6 +45,7 @@
       - /mnt/local
       - /mnt/local/Media/TV
       - /mnt/local/Media/Movies
+      - /opt
       - /opt/plexdrive
       - /opt/sonarr
       - /opt/radarr
