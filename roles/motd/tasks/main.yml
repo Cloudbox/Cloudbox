@@ -1,14 +1,15 @@
 ---
 - name: Install required packages
-  apt: name={{item}} state=installed
+  apt: "name={{item}} state=installed"
   with_items:
     - lsb-release
     - figlet
 
-- name: Remove any existing dynamic motd
-  file:
-    path: /etc/update-motd.d
-    state: absent
+- name: Remove existing motd
+  file: "path={{item}} state=absent"
+  with_items:
+    - /etc/update-motd.d
+    - /etc/motd
 
 - name: Create dynamic motd directory
   file:
@@ -24,11 +25,6 @@
     - 20-package-updates
     - 30-security-updates
     - 90-footer
-
-- name: Remove old motd file
-  file:
-    path: /etc/motd
-    state: absent
 
 - name: Create symlink to dynamic motd
   file:

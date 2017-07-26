@@ -1,6 +1,6 @@
 ---
   - name: Create common groups
-    group: name={{item}} state=present
+    group: "name={{item}} state=present"
     with_items:
       - docker
       - "{{user}}"
@@ -23,7 +23,7 @@
     register: gid
       
   - name: Install common packages
-    apt: name={{item}} state=installed
+    apt: "name={{item}} state=installed"
     with_items:
       - unrar
       - unzip
