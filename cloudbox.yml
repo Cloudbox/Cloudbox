@@ -7,7 +7,7 @@
     - motd
     - common
     - docker
-    - ansible-rclone
+    - rclone
     - unionfs
     - plexdrive
     - sonarr

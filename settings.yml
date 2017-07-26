@@ -21,3 +21,5 @@
     port: 8181
   plexdrive:
     chunks: /opt/plexdrive
+  rclone:
+    version: 1.36

@@ -1,0 +1,40 @@
+---
+- name: Install rclone
+  unarchive:
+    src: https://github.com/ncw/rclone/releases/download/v{{ rclone.version }}/rclone-v{{ rclone.version }}-linux-amd64.zip
+    dest: /opt/rclone
+    copy: no
+
+- name: Set binary permissions
+  file:
+    src: /opt/rclone/rclone
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Make dir for local manpages
+  file:
+    path: '/usr/local/share/man/man1'
+    state: directory
+    mode: 0775
+    owner: root
+    group: root
+
+- name: Copy manpage
+  copy:
+    src: /opt/rclone/rclone.1
+    dest: /usr/local/share/man/man1/rclone.1
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Install manpage
+  shell: mandb
+  changed_when: false
+
+- name: Symlink config
+  file:
+    src: "/home/{{user}}/.config/rclone/rclone.conf"
+    dest: /opt/rclone/rclone.conf
+    state: link
+    force: yes
