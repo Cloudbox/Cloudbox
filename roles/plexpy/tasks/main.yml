@@ -1,0 +1,5 @@
+---
+- name: "Create and start container"
+  vars:
+    docker_cmd: "docker run -d --name=plexpy -p {{plexpy.port}}:{{plexpy.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/plexpy:/config -v '/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro' --restart=always --network=host linuxserver/plexpy"
+  command: "{{docker_cmd}}"

@@ -17,3 +17,5 @@
   plex:
     port: 32400
     transcodes: /tmp/plex
+  plexpy:
+    port: 8181
