@@ -1,20 +1,21 @@
 ---
-- name: Install rclone
+- name: "Unarchive rclone v{{rclone.version}}"
   unarchive:
     src: https://github.com/ncw/rclone/releases/download/v{{ rclone.version }}/rclone-v{{ rclone.version }}-linux-amd64.zip
-    dest: /opt/rclone
+    dest: /tmp
     copy: no
 
-- name: Set binary permissions
-  file:
-    src: /opt/rclone/rclone
+- name: Copy binary to /opt/rclone
+  copy:
+    src: "/tmp/rclone-v{{ rclone.version }}-linux-amd64/rclone"
+    dest: /opt/rclone/rclone
     mode: 0755
     owner: root
     group: root
 
-- name: Symlink binary
+- name: Symlink binary to /usr/sbin
   file:
-    src: "/opt/rclone/rclone"
+    src: /opt/rclone/rclone
     dest: /usr/sbin/rclone
     state: link
     force: yes
@@ -29,7 +30,7 @@
 
 - name: Copy manpage
   copy:
-    src: /opt/rclone/rclone.1
+    src: "/tmp/rclone-v{{ rclone.version }}-linux-amd64/rclone.1"
     dest: /usr/local/share/man/man1/rclone.1
     mode: 0644
     owner: root
