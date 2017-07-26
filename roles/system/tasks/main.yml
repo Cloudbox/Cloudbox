@@ -3,13 +3,7 @@
   apt:
     update_cache: yes
 
-- name: Install aptitude
-  apt:
-    name: aptitude
-    state: installed
-    
 - name: Upgrade packages
   apt:
-    upgrade: safe
-
+    upgrade: dist
 
