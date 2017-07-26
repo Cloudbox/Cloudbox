@@ -19,3 +19,5 @@
     transcodes: /tmp/plex
   plexpy:
     port: 8181
+  plexdrive:
+    chunks: /opt/plexdrive
