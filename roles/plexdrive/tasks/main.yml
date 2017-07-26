@@ -24,9 +24,9 @@
   - name: Check config exists
     stat:
       path: "/opt/plexdrive/config.json"
-      register: config_file
+    register: plexdrive_config
 
   - name: Start plexdrive service
     systemd: state=started name=plexdrive enabled=yes
-    when: config_file.stat.exists
+    when: plexdrive_config.stat.exists
     ignore_errors: True
