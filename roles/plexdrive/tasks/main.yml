@@ -18,12 +18,15 @@
       dest: /etc/systemd/system/plexdrive.service 
       force: yes
 
+  - name: Systemd daemon-reload
+    systemd: state=stopped name=plexdrive daemon_reload=yes enabled=no
+
   - name: Check config exists
     stat:
       path: "/opt/plexdrive/config.json"
       register: config_file
 
   - name: Start plexdrive service
-    systemd: state=started name=plexdrive daemon_reload=yes enabled=yes
-    when: config_file.stat.exists == False
+    systemd: state=started name=plexdrive enabled=yes
+    when: config_file.stat.exists
     ignore_errors: True
