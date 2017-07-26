@@ -4,7 +4,7 @@
     update_cache: yes
 
 - name: Install apt-utils
-  apt: "name=apt-utils state=installed"
+  apt: "name=apt-utils state=latest"
 
 - name: Upgrade packages
   apt:
