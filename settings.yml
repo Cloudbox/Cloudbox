@@ -14,3 +14,6 @@
     port: 9117
   nzbhydra:
     port: 5075
+  plex:
+    port: 32400
+    transcodes: /tmp/plex

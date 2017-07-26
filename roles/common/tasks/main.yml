@@ -49,6 +49,8 @@
       - /opt/rutorrent
       - /opt/jackett
       - /opt/nzbhydra
+      - /opt/plex
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
+      - "{{plex.transcodes}}"
       
