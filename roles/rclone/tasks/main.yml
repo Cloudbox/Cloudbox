@@ -12,6 +12,13 @@
     owner: root
     group: root
 
+- name: Symlink binary
+  file:
+    src: "/opt/rclone/rclone"
+    dest: /usr/sbin/rclone
+    state: link
+    force: yes
+
 - name: Make dir for local manpages
   file:
     path: '/usr/local/share/man/man1'
