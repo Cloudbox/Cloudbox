@@ -54,6 +54,7 @@
       - /opt/nzbhydra
       - /opt/plex
       - /opt/rclone
+      - "/home/{{user}}/.config/rclone"
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
       - "{{plex.transcodes}}"
