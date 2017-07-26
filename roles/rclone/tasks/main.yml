@@ -42,7 +42,9 @@
 
 - name: Symlink config
   file:
-    src: "/home/{{user}}/.config/rclone/rclone.conf"
-    dest: /opt/rclone/rclone.conf
+    src: /opt/rclone/rclone.conf
+    dest: "/home/{{user}}/.config/rclone/rclone.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
     state: link
     force: yes
