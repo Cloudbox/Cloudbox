@@ -3,6 +3,9 @@
   apt:
     update_cache: yes
 
+- name: Install apt-utils
+  apt: "name=apt-utils state=installed"
+
 - name: Upgrade packages
   apt:
     upgrade: dist
