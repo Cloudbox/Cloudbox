@@ -10,8 +10,8 @@
     src: "/tmp/rclone-v{{ rclone.version }}-linux-amd64/rclone"
     dest: /opt/rclone/rclone
     mode: 0777
-    owner: {{user}}
-    group: {{user}}
+    owner: "{{user}}"
+    group: "{{user}}"
 
 - name: Symlink binary to /usr/sbin
   file:
