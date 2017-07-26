@@ -35,7 +35,7 @@
       - vnstat
 
   - name: Create common directories
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
     with_items:
       - /mnt/plexdrive
       - /mnt/unionfs
