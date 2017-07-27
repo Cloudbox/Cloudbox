@@ -1,6 +1,6 @@
 ---
 - name: Clone unionfs_cleaner
-- git:
+  git:
     repo: https://github.com/l3uddz/unionfs_cleaner/
     dest: /opt/unionfs_cleaner
     version: dev
