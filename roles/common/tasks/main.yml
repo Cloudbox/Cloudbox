@@ -41,8 +41,9 @@
       - git
       
   - name: Install common pip modules
-    pip: "name={{item}}"
+    pip: "name={{item}} state=latest"
     with_items:
+      - docker-py
       - speedtest-cli
 
   - name: Create common directories
