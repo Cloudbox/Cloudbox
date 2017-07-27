@@ -19,6 +19,6 @@
       - "/opt/nzbget:/config"
       - "{{nzbget.downloads}}:/downloads/nzbget"
     restart_policy: always
-    net: host
+    network_mode: host
     state: started
 

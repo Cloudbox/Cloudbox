@@ -22,5 +22,5 @@
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
     restart_policy: always
-    net: host
+    network_mode: host
     state: started

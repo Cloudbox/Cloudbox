@@ -18,5 +18,5 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"
     restart_policy: always
-    net: host
+    network_mode: host
     state: started

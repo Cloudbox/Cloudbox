@@ -19,6 +19,6 @@
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
     restart_policy: always
-    net: host
+    network_mode: host
     state: started
 
