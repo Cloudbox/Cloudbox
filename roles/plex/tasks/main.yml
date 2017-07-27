@@ -1,12 +1,12 @@
 ---
 - name: Stop and remove any existing container
-  docker:
+  docker_container:
     name: plex
     image: plexinc/pms-docker
     state: absent
 
 - name: Create and start container
-  docker:
+  docker_container:
     name: plex
     image: "plexinc/pms-docker:{{plex.tag}}"
     ports:

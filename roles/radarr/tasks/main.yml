@@ -1,12 +1,12 @@
 ---
 - name: Stop and remove any existing container
-  docker:
+  docker_container:
     name: radarr
     image: hotio/radarr
     state: absent
 
 - name: Create and start container
-  docker:
+  docker_container:
     name: radarr
     image: hotio/radarr
     ports:

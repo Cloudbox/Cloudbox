@@ -1,12 +1,12 @@
 ---
 - name: Stop and remove any existing container
-  docker:
+  docker_container:
     name: nzbhydra
     image: linuxserver/hydra
     state: absent
 
 - name: Create and start container
-  docker:
+  docker_container:
     name: nzbhydra
     image: linuxserver/hydra
     ports:

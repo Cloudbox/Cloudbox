@@ -1,12 +1,12 @@
 ---
 - name: Stop and remove any existing container
-  docker:
+  docker_container:
     name: plexpy
     image: linuxserver/plexpy
     state: absent
 
 - name: Create and start container
-  docker:
+  docker_container:
     name: plexpy
     image: linuxserver/plexpy
     ports:
