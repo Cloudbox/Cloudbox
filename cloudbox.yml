@@ -10,13 +10,12 @@
     - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder'] }
+    - { role: unionfs_cleaner, tags: ['full', 'feeder']}
     - { role: sonarr, tags: ['full', 'feeder'] }
     - { role: radarr, tags: ['full', 'feeder'] }
     - { role: nzbget, tags: ['full', 'feeder'] }
     - { role: rutorrent, tags: ['full', 'feeder'] }
     - { role: jackett, tags: ['full', 'feeder'] }
     - { role: nzbhydra, tags: ['full', 'feeder'] }
-    - { role: unionfs_cleaner, tags: ['full', 'feeder']}
     - { role: plex, tags: ['full', 'plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
-    
