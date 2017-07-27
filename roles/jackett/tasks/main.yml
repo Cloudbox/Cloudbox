@@ -1,5 +1,20 @@
 ---
-- name: "Create and start container"
-  vars:
-    docker_cmd: "docker run -d --name=jackett -p {{jackett.port}}:{{jackett.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/jackett:/config --restart=always --network=host linuxserver/jackett"
-  command: "{{docker_cmd}}"
+- name: Stop and remove any existing container
+  docker:
+    name: jackett
+    image: linuxserver/jackett
+    state: absent
+
+- name: Create and start container
+  image: linuxserver/jackett
+  ports:
+    - "{{jackett.port}}:{{jackett.port}}"
+  env:
+    PUID: "{{uid.stdout}}"
+    PGID: "{{gid.stdout}}"
+  volumes:
+    - "/etc/localtime:/etc/localtime:ro"
+    - "/opt/jackett:/config"
+  restart_policy: always
+  net: host
+  state: started
