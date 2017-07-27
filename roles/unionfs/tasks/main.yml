@@ -14,6 +14,7 @@
 
   - name: Stop existing unionfs service
     systemd: state=stopped name=unionfs
+    ignore_errors: True
 
   - name: Import unionfs.service
     template: 

@@ -34,6 +34,7 @@
 
 - name: Stop existing unionfs_cleaner service
   systemd: state=stopped name=unionfs_cleaner
+  ignore_errors: True
 
 - name: Import unionfs_cleaner service
   template:

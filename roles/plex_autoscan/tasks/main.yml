@@ -34,7 +34,8 @@
 
 - name: Stop existing plex_autoscan service
   systemd: state=stopped name=plex_autoscan
-
+  ignore_errors: True
+  
 - name: Import plex_autoscan service
   template:
     src: plex_autoscan.service.js2

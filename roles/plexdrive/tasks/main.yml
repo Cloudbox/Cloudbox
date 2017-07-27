@@ -14,7 +14,8 @@
 
   - name: Stop existing plexdrive service
     systemd: state=stopped name=plexdrive
-
+    ignore_errors: True
+    
   - name: Import plexdrive.service
     template:
       src: plexdrive.service.js2
