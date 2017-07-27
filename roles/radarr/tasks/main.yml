@@ -1,5 +1,27 @@
 ---
-- name: "Create and start container"
-  vars:
-    docker_cmd: "docker run -d --name=radarr -p {{radarr.port}}:{{radarr.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -e VERSION=latest -e MONO_TLS_PROVIDER=legacy -v /etc/localtime:/etc/localtime:ro -v /opt/radarr:/config -v /mnt/unionfs/Media/Movies:/movies -v '{{nzbget.downloads}}:/downloads/nzbget' -v '{{rutorrent.downloads}}:/downloads/rutorrent' --restart=always --network=host hotio/radarr"
-  command: "{{docker_cmd}}"
+- name: Stop and remove any existing container
+  docker:
+    name: radarr
+    image: hotio/radarr
+    state: absent
+
+- name: Create and start container
+  docker:
+    name: radarr
+    image: hotio/radarr
+    ports:
+      - "{{radarr.port}}:{{radarr.port}}"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VERSION: latest
+      MONO_TLS_PROVIDER: legacy
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/radarr:/config"
+      - "/mnt/unionfs/Media/Movies:/movies"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+    restart_policy: always
+    net: host
+    state: started

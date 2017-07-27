@@ -1,5 +1,24 @@
 ---
-- name: "Create and start container"
-  vars:
-    docker_cmd: "docker run -d --name=nzbget -p {{nzbget.port}}:{{nzbget.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/nzbget:/config -v '{{nzbget.downloads}}:/downloads/nzbget' --restart=always --network=host linuxserver/nzbget"
-  command: "{{docker_cmd}}"
+- name: Stop and remove any existing container
+  docker:
+    name: nzbget
+    image: linuxserver/nzbget
+    state: absent
+
+- name: Create and start container
+  docker:
+    name: nzbget
+    image: linuxserver/nzbget
+    ports:
+      - "{{nzbget.port}}:{{nzbget.port}}"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbget:/config"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+    restart_policy: always
+    net: host
+    state: started
+

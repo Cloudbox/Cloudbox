@@ -1,5 +1,22 @@
 ---
-- name: "Create and start container"
-  vars:
-    docker_cmd: "docker run -d --name=nzbhydra -p {{nzbhydra.port}}:{{nzbhydra.port}} -e PUID={{uid.stdout}} -e PGID={{gid.stdout}} -v /etc/localtime:/etc/localtime:ro -v /opt/nzbhydra:/config --restart=always --network=host linuxserver/hydra"
-  command: "{{docker_cmd}}"
+- name: Stop and remove any existing container
+  docker:
+    name: nzbhydra
+    image: linuxserver/hydra
+    state: absent
+
+- name: Create and start container
+  docker:
+    name: nzbhydra
+    image: linuxserver/hydra
+    ports:
+      - "{{nzbhydra.port}}:{{nzbhydra.port}}"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbhydra:/config"
+    restart_policy: always
+    net: host
+    state: started

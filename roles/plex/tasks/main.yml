@@ -1,5 +1,25 @@
 ---
-- name: "Create and start container"
-  vars:
-    docker_cmd: "docker run -d --name=plex -p {{plex.port}}:{{plex.port}}/tcp -e PLEX_UID={{uid.stdout}} -e PLEX_GID={{gid.stdout}} -e CHANGE_CONFIG_DIR_OWNERSHIP=false -v /etc/localtime:/etc/localtime:ro -v /opt/plex:/config -v '{{plex.transcodes}}:/transcode' -v /mnt/unionfs/Media:/data --restart=always --network=host plexinc/pms-docker"
-  command: "{{docker_cmd}}"
+- name: Stop and remove any existing container
+  docker:
+    name: plex
+    image: plexinc/pms-docker
+    state: absent
+
+- name: Create and start container
+  docker:
+    name: plex
+    image: "plexinc/pms-docker:{{plex.tag}}"
+    ports:
+      - "{{plex.port}}:{{plex.port}}/tcp"
+    env:
+      PLEX_UID: "{{uid.stdout}}"
+      PLEX_GID: "{{gid.stdout}}"
+      CHANGE_CONFIG_DIR_OWNERSHIP: false
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/plex:/config"
+      - "{{plex.transcodes}}:/transcode"
+      - "/mnt/unionfs/Media:/data"
+    restart_policy: always
+    net: host
+    state: started
