@@ -11,7 +11,7 @@
 - name: Install pip requirements
   pip:
     requirements: /opt/unionfs_cleaner/requirements.txt
-    executable: pip-3.5
+    executable: pip3
 
 - name: Import unionfs_cleaner service
   template:
