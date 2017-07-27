@@ -46,6 +46,7 @@
       - /mnt/plexdrive
       - /mnt/unionfs
       - /mnt/local
+      - /mnt/local/.unionfs-fuse
       - /mnt/local/Media/TV
       - /mnt/local/Media/Movies
       - /opt
