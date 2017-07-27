@@ -3,18 +3,18 @@
   vars_files:
     - settings.yml
   roles:
-    - system
-    - motd
-    - common
-    - docker
-    - rclone
-    - unionfs
-    - plexdrive
-    - sonarr
-    - radarr
-    - nzbget
-    - rutorrent
-    - jackett
-    - nzbhydra
-    - plex
-    - plexpy
+    - { role: system, tags: ['all'] }
+    - { role: motd, tags: ['all'] }
+    - { role: common, tags: ['all'] }
+    - { role: docker, tags: ['all'] }
+    - { role: unionfs, tags: ['all'] }
+    - { role: plexdrive, tags: ['all'] }
+    - { role: rclone, tags: ['full', 'feeder'] }
+    - { role: sonarr, tags: ['full', 'feeder'] }
+    - { role: radarr, tags: ['full', 'feeder'] }
+    - { role: nzbget, tags: ['full', 'feeder'] }
+    - { role: rutorrent, tags: ['full', 'feeder'] }
+    - { role: jackett, tags: ['full', 'feeder'] }
+    - { role: nzbhydra, tags: ['full', 'feeder'] }
+    - { role: plex, tags: ['full', 'plex'] }
+    - { role: plexpy, tags: ['full', 'plex'] }
