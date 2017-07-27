@@ -3,7 +3,7 @@
   git:
     repo: https://github.com/l3uddz/plex_autoscan/
     dest: /opt/plex_autoscan
-    version: develop
+    version: dev
     force: yes
     
 - name: Install pip requirements
