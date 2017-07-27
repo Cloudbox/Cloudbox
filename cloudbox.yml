@@ -18,3 +18,4 @@
     - { role: nzbhydra, tags: ['full', 'feeder'] }
     - { role: plex, tags: ['full', 'plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
+    - { role: unionfs_cleaner, tags: ['cleaner']}

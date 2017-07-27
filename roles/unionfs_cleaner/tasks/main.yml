@@ -1,0 +1,23 @@
+---
+- name: Clone unionfs_cleaner
+- git:
+    repo: https://github.com/l3uddz/unionfs_cleaner/
+    dest: /opt/unionfs_cleaner
+    version: dev
+
+- name: Set directory permissions
+  file: "path=/opt/unionfs_cleaner state=directory owner={{user}} group={{user}}"
+
+- name: Set file permissions
+  file: "path=/opt/unionfs_cleaner state=file owner={{user}} group={{user}}"
+
+- name: Install pip requirements
+  pip:
+    requirements: /opt/unionfs_cleaner/requirements.txt
+    executable: pip-3.5
+
+- name: Import unionfs_cleaner service
+  template:
+    src: unionfs_cleaner.service.js2
+    dest: /etc/systemd/system/unionfs_cleaner.service 
+    force: yes
