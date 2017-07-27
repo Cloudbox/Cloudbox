@@ -12,6 +12,9 @@
       owner: "{{user}}"
       group: "{{user}}"
 
+  - name: Stop existing plexdrive service
+    systemd: state=stopped name=plexdrive
+
   - name: Import plexdrive.service
     template:
       src: plexdrive.service.js2

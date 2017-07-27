@@ -32,6 +32,9 @@
 - name: Set directory permissions
   file: "path=/opt/unionfs_cleaner state=directory owner={{user}} group={{user}} recurse=yes"
 
+- name: Stop existing unionfs_cleaner service
+  systemd: state=stopped name=unionfs_cleaner
+
 - name: Import unionfs_cleaner service
   template:
     src: unionfs_cleaner.service.js2

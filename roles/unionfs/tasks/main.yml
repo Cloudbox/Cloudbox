@@ -12,6 +12,9 @@
       name: unionfs-fuse
       state: installed
 
+  - name: Stop existing unionfs service
+    systemd: state=stopped name=unionfs
+
   - name: Import unionfs.service
     template: 
       src: unionfs.service.js2

@@ -21,7 +21,7 @@
     src: config.json.js2
     dest: /opt/plex_autoscan/config/config.json
     force: yes
-  when: plex_autoscan.stat.exists == False
+  when: plex_autoscan_config.stat.exists == False
   ignore_errors: True
 
 - name: Set scan.py as executable
@@ -31,6 +31,9 @@
 
 - name: Set directory permissions
   file: "path=/opt/plex_autoscan state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: Stop existing plex_autoscan service
+  systemd: state=stopped name=plex_autoscan
 
 - name: Import plex_autoscan service
   template:
