@@ -12,9 +12,14 @@
       name: unionfs-fuse
       state: installed
 
+  - name: Check service exists
+    stat:
+      path: "/etc/systemd/system/unionfs.service"
+    register: unionfs_service
+
   - name: Stop existing unionfs service
     systemd: state=stopped name=unionfs
-    ignore_errors: True
+    when: unionfs_service.stat.exists
 
   - name: Import unionfs.service
     template: 

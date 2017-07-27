@@ -22,7 +22,6 @@
     dest: /opt/unionfs_cleaner/config.json
     force: yes
   when: unionfs_cleaner_config.stat.exists == False
-  ignore_errors: True
 
 - name: Set cleaner.py as executable
   file:
@@ -32,9 +31,14 @@
 - name: Set directory permissions
   file: "path=/opt/unionfs_cleaner state=directory owner={{user}} group={{user}} recurse=yes"
 
+- name: Check service exists
+  stat:
+    path: "/etc/systemd/system/unionfs_cleaner.service"
+  register: unionfs_cleaner_service
+
 - name: Stop existing unionfs_cleaner service
   systemd: state=stopped name=unionfs_cleaner
-  ignore_errors: True
+  when: unionfs_cleaner_service.stat.exists
 
 - name: Import unionfs_cleaner service
   template:

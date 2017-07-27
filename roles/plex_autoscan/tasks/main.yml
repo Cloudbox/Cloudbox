@@ -22,7 +22,6 @@
     dest: /opt/plex_autoscan/config/config.json
     force: yes
   when: plex_autoscan_config.stat.exists == False
-  ignore_errors: True
 
 - name: Set scan.py as executable
   file:
@@ -32,10 +31,15 @@
 - name: Set directory permissions
   file: "path=/opt/plex_autoscan state=directory owner={{user}} group={{user}} recurse=yes"
 
+- name: Check service exists
+  stat:
+    path: "/etc/systemd/system/plex_autoscan.service"
+  register: plex_autoscan_service
+
 - name: Stop existing plex_autoscan service
   systemd: state=stopped name=plex_autoscan
-  ignore_errors: True
-  
+  when: plex_autoscan_service.stat.exists
+
 - name: Import plex_autoscan service
   template:
     src: plex_autoscan.service.js2

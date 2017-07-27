@@ -12,10 +12,15 @@
       owner: "{{user}}"
       group: "{{user}}"
 
+  - name: Check service exists
+    stat:
+      path: "/etc/systemd/system/plexdrive.service"
+    register: plexdrive_service
+
   - name: Stop existing plexdrive service
     systemd: state=stopped name=plexdrive
-    ignore_errors: True
-    
+    when: plexdrive_service.stat.exists
+
   - name: Import plexdrive.service
     template:
       src: plexdrive.service.js2
@@ -33,4 +38,4 @@
   - name: Start plexdrive service
     systemd: state=started name=plexdrive enabled=yes
     when: plexdrive_config.stat.exists
-    ignore_errors: True
+    
