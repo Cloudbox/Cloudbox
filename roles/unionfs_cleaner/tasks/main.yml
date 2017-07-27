@@ -6,10 +6,7 @@
     version: dev
 
 - name: Set directory permissions
-  file: "path=/opt/unionfs_cleaner state=directory owner={{user}} group={{user}}"
-
-- name: Set file permissions
-  file: "path=/opt/unionfs_cleaner state=file owner={{user}} group={{user}}"
+  file: "path=/opt/unionfs_cleaner state=directory owner={{user}} group={{user}} recurse=yes"
 
 - name: Install pip requirements
   pip:
