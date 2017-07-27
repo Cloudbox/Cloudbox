@@ -22,6 +22,10 @@
     port: 8181
   plexdrive:
     chunks: /opt/plexdrive
+  plex_autoscan:
+    ip: "0.0.0.0"
+    port: 3468
+    token: ""
   rclone:
     version: 1.36
   unionfs_cleaner:

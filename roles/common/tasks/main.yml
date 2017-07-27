@@ -64,6 +64,9 @@
       - /opt/jackett
       - /opt/nzbhydra
       - /opt/plex
+      - /opt/plexpy
+      - /opt/plex_autoscan
+      - /opt/unionfs_cleaner
       - /opt/rclone
       - "/home/{{user}}/.config/rclone"
       - "{{nzbget.downloads}}"
