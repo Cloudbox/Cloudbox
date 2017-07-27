@@ -6,15 +6,16 @@
     state: absent
 
 - name: Create and start container
-  image: linuxserver/jackett
-  ports:
-    - "{{jackett.port}}:{{jackett.port}}"
-  env:
-    PUID: "{{uid.stdout}}"
-    PGID: "{{gid.stdout}}"
-  volumes:
-    - "/etc/localtime:/etc/localtime:ro"
-    - "/opt/jackett:/config"
-  restart_policy: always
-  net: host
-  state: started
+  docker:
+    image: linuxserver/jackett
+    ports:
+      - "{{jackett.port}}:{{jackett.port}}"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/jackett:/config"
+    restart_policy: always
+    net: host
+    state: started
