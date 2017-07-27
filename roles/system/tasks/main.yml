@@ -10,3 +10,7 @@
   apt:
     upgrade: dist
 
+- name: Upgrade kernel
+  apt:
+    name: linux-generic-hwe-16.04
+    state: latest
