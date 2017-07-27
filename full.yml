@@ -3,12 +3,12 @@
   vars_files:
     - settings.yml
   roles:
-    - { role: system, tags: ['all'] }
-    - { role: motd, tags: ['all'] }
-    - { role: common, tags: ['all'] }
-    - { role: docker, tags: ['all'] }
-    - { role: unionfs, tags: ['all'] }
-    - { role: plexdrive, tags: ['all'] }
+    - { role: system, tags: ['full', 'feeder', 'plex'] }
+    - { role: motd, tags: ['full', 'feeder', 'plex'] }
+    - { role: common, tags: ['full', 'feeder', 'plex'] }
+    - { role: docker, tags: ['full', 'feeder', 'plex'] }
+    - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
+    - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder'] }
     - { role: sonarr, tags: ['full', 'feeder'] }
     - { role: radarr, tags: ['full', 'feeder'] }
