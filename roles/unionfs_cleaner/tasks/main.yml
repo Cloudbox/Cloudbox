@@ -4,6 +4,7 @@
     repo: https://github.com/l3uddz/unionfs_cleaner/
     dest: /opt/unionfs_cleaner
     version: dev
+    force: yes
     
 - name: Install pip requirements
   pip:
