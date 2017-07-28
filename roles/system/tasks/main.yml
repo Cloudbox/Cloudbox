@@ -16,50 +16,38 @@
     state: latest
 
 - name: Enable tcp_window_scaling in sysctl.conf
-  ini_file:
-    path: /etc/sysctl.conf
-    section: null
-    option: "net.ipv4.tcp_window_scaling"
+  sysctl:
+    name: net.ipv4.tcp_window_scaling
     value: 1
     state: present
 
 - name: Increase rmem_max test buffer limit to 64 MB in sysctl.conf
-  ini_file:
-    path: /etc/sysctl.conf
-    section: null
-    option: "net.core.rmem_max"
+  sysctl:
+    name: net.core.rmem_max
     value: 67108864
     state: present
 
 - name: Increase wmem_max test buffer limit to 64 MB in sysctl.conf
-  ini_file:
-    path: /etc/sysctl.conf
-    section: null
-    option: "net.core.wmem_max"
+  sysctl:
+    name: net.core.wmem_max
     value: 67108864
     state: present
 
 - name: Increase tcp_rmem autotune buffer limit to 32 MB in sysctl.conf
-  ini_file:
-    path: /etc/sysctl.conf
-    section: null
-    option: "net.ipv4.tcp_rmem"
+  sysctl:
+    option: net.ipv4.tcp_rmem
     value: "4096 87380 33554432"
     state: present
     
 - name: Increase tcp_wmem autotune buffer limit to 32 MB in sysctl.conf
-  ini_file:
-    path: /etc/sysctl.conf
-    section: null
-    option: "net.ipv4.tcp_wmem"
+  sysctl:
+    option: net.ipv4.tcp_wmem
     value: "4096 87380 33554432"
     state: present
 
 - name: Set tcp_congestion_control to bbr in sysctl.conf
-  ini_file:
-    path: /etc/sysctl.conf
-    section: null
-    option: "net.ipv4.tcp_congestion_control"
+  sysctl:
+    option: net.ipv4.tcp_congestion_control
     value: bbr
     state: present
 
