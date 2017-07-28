@@ -1,7 +1,7 @@
 {
     "cloud_folder": "/mnt/plexdrive",
     "dry_run": false,
-    "du_excludes": [],
+    "du_excludes": ["*.partial~"],
     "local_folder": "/mnt/local/Media",
     "local_folder_check_interval": {{unionfs_cleaner.size_check_mins}},
     "local_folder_size": {{unionfs_cleaner.max_local_gigabytes}},
