@@ -3,11 +3,11 @@
   apt:
     update_cache: yes
 
-- name: Install apt-utils
-  apt: "name=apt-utils state=latest"
-
-- name: Install byobu
-  apt: "name=byobu state=latest"
+- name: Install required packages
+  apt: "name={{item}} state=latest"
+  with_items:
+    - apt-utils
+    - byobu
 
 - name: Upgrade kernel
   apt:
