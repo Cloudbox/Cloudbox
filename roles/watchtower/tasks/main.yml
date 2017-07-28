@@ -1,0 +1,16 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: watchtower
+    image: v2tec/watchtower
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: watchtower
+    image: "v2tec/watchtower"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart_policy: always
+    state: started
