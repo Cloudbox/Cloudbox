@@ -35,10 +35,17 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
+- name: Stop container to customize rtorrent.rc
+  docker_container:
+    name: rutorrent
+    image: linuxserver/rutorrent
+    state: stopped
+  when: rtorrent_rc.stat.exists == False
+
 - name: Change downloads directory
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^directory\\s?='
+    regexp: '^directory\s?='
     line: 'directory = /downloads/rutorrent'
     state: present
   when: rtorrent_rc.stat.exists == False
@@ -46,7 +53,7 @@
 - name: Disable DHT
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^dht\\s?='
+    regexp: '^dht\s?='
     line: 'dht = disable'
     state: present
   when: rtorrent_rc.stat.exists == False
@@ -54,7 +61,7 @@
 - name: Disable PEX
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^peer_exchange\\s?='
+    regexp: '^peer_exchange\s?='
     line: 'peer_exchange = no'
     state: present
   when: rtorrent_rc.stat.exists == False
@@ -62,7 +69,7 @@
 - name: Reduce min_peers
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^min_peers\\s?='
+    regexp: '^min_peers\s?='
     line: 'min_peers = 1'
     state: present
   when: rtorrent_rc.stat.exists == False
@@ -70,7 +77,7 @@
 - name: Increase max_uploads
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^max_uploads\\s?='
+    regexp: '^max_uploads\s?='
     line: 'max_uploads = 1024'
     state: present
   when: rtorrent_rc.stat.exists == False
@@ -78,7 +85,7 @@
 - name: Disable check_hash
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^check_hash\\s?='
+    regexp: '^check_hash\s?='
     line: 'check_hash = no'
     state: present
   when: rtorrent_rc.stat.exists == False
@@ -86,7 +93,7 @@
 - name: Set upload_rate to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^upload_rate\\s?='
+    regexp: '^upload_rate\s?='
     line: 'upload_rate = 0'
     state: present
   when: rtorrent_rc.stat.exists == False
@@ -94,7 +101,7 @@
 - name: Set download_rate to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^download_rate\\s?='
+    regexp: '^download_rate\s?='
     line: 'download_rate = 0'
     state: present
   when: rtorrent_rc.stat.exists == False
@@ -102,14 +109,14 @@
 - name: Set encryption parameters
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^encryption\\s?='
+    regexp: '^encryption\s?='
     line: 'encryption = allow_incoming,enable_retry,prefer_plaintext'
     state: present
   when: rtorrent_rc.stat.exists == False
 
-- name: Restart container to apply changes
+- name: Start container to apply changes
   docker_container:
     name: rutorrent
     image: linuxserver/rutorrent
-    state: restarted
+    state: started
   when: rtorrent_rc.stat.exists == False
