@@ -50,6 +50,7 @@
     name: net.ipv4.tcp_congestion_control
     value: bbr
     state: present
+    reload: no
 
 - debug:
     msg: "System {{ inventory_hostname }} has interface {{ ansible_default_ipv4.interface }}"
