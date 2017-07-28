@@ -150,7 +150,11 @@
     value: fq
     state: present
 
-- name: "Set RX/TX ring params on boot for interface {{ ansible_default_ipv4.interface }}"
+- debug:
+    msg: "System {{ inventory_hostname }} has interface {{ ansible_default_ipv4.interface }}"
+  when: ansible_default_ipv4.interface is defined
+
+- name: "Set RX/TX ring params on boot for default network interface"
   cron:
     name: "Set RX/TX ring params on boot"
     special_time: reboot
