@@ -17,8 +17,8 @@
   register: plex_autoscan_config
 
 - name: "Generate 32 character SERVER_PASS"
-    shell: "pwgen 32 1"
-    register: plex_autoscan_pass
+  shell: "pwgen 32 1"
+  register: plex_autoscan_pass
   when: plex_autoscan_config.stat.exists == False
 
 - name: Import default config
