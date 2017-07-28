@@ -17,7 +17,7 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexpy:/config"
-      - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
+      - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs"
     restart_policy: always
     network_mode: host
     state: started
