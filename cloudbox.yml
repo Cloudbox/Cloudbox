@@ -19,4 +19,4 @@
     - { role: nzbhydra, tags: ['full', 'feeder'] }
     - { role: plex, tags: ['full', 'plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
-    - { role: plex_autoscan, tags: ['full', 'plex'] }
+    - { role: plex_autoscan, tags: ['full', 'plex', 'autoscan'] }
