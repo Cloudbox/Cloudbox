@@ -30,7 +30,7 @@
     },
     "SERVER_IP": "{{plex_autoscan.ip}}",
     "SERVER_MAX_FILE_CHECKS": 10,
-    "SERVER_PASS": "test",
+    "SERVER_PASS": "{{plex_autoscan_pass.stdout}}",
     "SERVER_PATH_MAPPINGS": {
         "/data/TV/": [
             "/tv/"

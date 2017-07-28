@@ -39,6 +39,7 @@
       - man-db
       - ksmtuned
       - git
+      - pwgen
       
   - name: Install common pip modules
     pip: "name={{item}} state=latest"

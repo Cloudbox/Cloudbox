@@ -3,7 +3,7 @@
   git:
     repo: https://github.com/l3uddz/plex_autoscan/
     dest: /opt/plex_autoscan
-    version: dev
+    version: master
     force: yes
     
 - name: Install pip requirements
@@ -15,6 +15,11 @@
   stat:
     path: "/opt/plex_autoscan/config/config.json"
   register: plex_autoscan_config
+
+- name: "Generate 32 character SERVER_PASS"
+    shell: "pwgen 32 1"
+    register: plex_autoscan_pass
+  when: plex_autoscan_config.stat.exists == False
 
 - name: Import default config
   template:
