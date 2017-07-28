@@ -24,11 +24,6 @@
   apt:
     upgrade: dist
 
-- name: Upgrade kernel
-  apt:
-    name: linux-generic-hwe-16.04
-    state: latest
-
 - name: Enable tcp_window_scaling
   sysctl:
     name: net.ipv4.tcp_window_scaling
