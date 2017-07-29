@@ -56,10 +56,6 @@
   - debug:
       msg: "Current playbook path: {{playbook_dir}}/cloudbox.yml"
   
-  rescue:
-  - debug:
-      msg: "There was an error while backing up...."
-      
   always:
   - debug:
       msg: "Finished backup"
