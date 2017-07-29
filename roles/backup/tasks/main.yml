@@ -31,8 +31,8 @@
 
   - name: "Stop Plex"
     docker_container:
-      name: plex
-      image: plexinc/pms-docker
+      name: test
+      image: ghrshsrh
       state: stopped
     when: backup.stop_plex|bool
 
