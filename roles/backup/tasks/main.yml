@@ -1,35 +1,25 @@
 ---
 - block:
   - name: "Check {{backup.tgz_dest}} exists"
-    tags:
-      - tagged
     stat:
       path: "{{backup.tgz_dest}}"
     register: backup_location
 
   - name: "Create backup location {{backup.tgz_dest}}"
-    tags:
-      - tagged
     file: path={{backup.tgz_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
     when: backup_location.stat.exists == False
 
   - name: "Check if backup.lock is present"
-    tags:
-      - tagged
     stat:
       path: "{{playbook_dir}}/backup.lock"
     register: backup_lock
 
   - name: "Fail when backup.lock exists"
-    tags:
-      - tagged
     fail:
       msg: "Backup is already in progress..."
     when: backup_lock.stat.exists
 
   - name: "Create backup.lock"
-    tags:
-      - tagged
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: touch
@@ -38,15 +28,11 @@
     when: backup_lock.stat.exists == False
 
   - name: "Check {{backup.tgz_dest}}/cloudbox.tgz exists"
-    tags:
-      - tagged
     stat:
       path: "{{backup.tgz_dest}}/cloudbox.tgz"
     register: backup_previous_tgz
 
   - name: "Copying cloudbox.tgz to cloudbox.tgz.backup"
-    tags:
-      - tagged
     copy:
       src: "{{backup.tgz_dest}}/cloudbox.tgz"
       dest: "{{backup.tgz_dest}}/cloudbox.tgz.backup"
@@ -56,16 +42,12 @@
     when: backup_previous_tgz.stat.exists
 
   - name: "Remove previous cloudbox.tgz"
-    tags:
-      - tagged
     file:
       path: "{{backup.tgz_dest}}/cloudbox.tgz"
       state: absent
     when: backup_previous_tgz.stat.exists
 
   - name: "Stop Plex"
-    tags:
-      - tagged
     docker_container:
       name: plex
       image: plexinc/pms-docker
@@ -73,8 +55,6 @@
     when: backup.stop_plex|bool
 
   - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tgz"
-    tags:
-      - tagged
     archive:
       path: /opt
       dest: "{{backup.tgz_dest}}/cloudbox.tgz"
@@ -82,8 +62,6 @@
       group: "{{user}}"
 
   - name: "Start Plex"
-    tags:
-      - tagged
     docker_container:
       name: plex
       image: plexinc/pms-docker
@@ -91,14 +69,10 @@
     when: backup.stop_plex|bool
   
   - name: "Upload backups with rclone to {{backup.rclone_dest}}"
-    tags:
-      - tagged
     command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/backup_rclone.log'"
     when: backup.use_rclone|bool
 
   - name: "Upload backups with rsync to {{backup.rsync_dest}}"
-    tags:
-      - tagged
     synchronize:
       src: "{{backup.tgz_dest}}"
       dest: "{{backup.rsync_dest}}"
@@ -108,13 +82,9 @@
 
   always:
   - debug: msg="Finished backup"
-    tags:
-    - tagged
     when: backup_lock.stat.exists == False
 
   - name: "Remove backup.lock"
-    tags:
-      - tagged
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: absent
