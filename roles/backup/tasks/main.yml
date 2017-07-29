@@ -28,9 +28,24 @@
     state: absent
   when: backup_previous_tgz.stat.exists
 
+- name: "Stop Plex"
+  docker_container:
+    name: plex
+    image: plexinc/pms-docker
+    state: stopped
+  when: backup.stop_plex|bool
+
+  when: rtorrent_rc.stat.exists == False
 - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tgz"
   archive:
     path: /opt
     dest: "{{backup.tgz_dest}}/cloudbox.tgz"
     owner: "{{user}}"
     group: "{{user}}"
+
+- name: "Start Plex"
+  docker_container:
+    name: plex
+    image: plexinc/pms-docker
+    state: started
+  when: backup.stop_plex|bool
