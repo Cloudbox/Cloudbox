@@ -1,10 +1,9 @@
 ---
-- vars:
-    date: "{{ lookup('pipe', 'date +%Y%m%d_%H%M') }}"
-
 - name: "Archiving /opt to /home/{{user}}/backups/cloudbox_{{date}}.tgz"
+  vars:
+    backup_date: "{{ lookup('pipe', 'date +%Y%m%d_%H%M') }}"
   archive:
     path: /opt
-    dest: "{{backup.dest}}/cloudbox_{{date}}.tgz"
+    dest: "{{backup.dest}}/cloudbox_{{backup_date}}.tgz"
     owner: "{{user}}"
     group: "{{user}}"
