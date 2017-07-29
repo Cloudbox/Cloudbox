@@ -32,3 +32,5 @@
     max_local_gigabytes: 200
     size_check_mins: 30
     rclone_remote: "google:"
+  backup:
+    dest: /home/seed/backups

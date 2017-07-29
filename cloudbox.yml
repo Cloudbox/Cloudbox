@@ -21,3 +21,4 @@
     - { role: plex, tags: ['full', 'plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
     - { role: plex_autoscan, tags: ['full', 'plex'] }
+    - { role: backup, tags: ['backup'] }
