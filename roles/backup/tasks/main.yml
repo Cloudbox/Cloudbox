@@ -80,6 +80,13 @@
         - "--log-file='{{playbook_dir}}/backup_rsync.log'"
     when: backup.use_rsync|bool
 
+  - name: "Schedule cron backup for state: {{backup.cron_state}}, when: {{backup.cron_time}}"
+    cron:
+      name: "Backup Cloudbox"
+      special_time: "{{backup.cron_time}}"
+      job: "ansible-playbook {{playbook_dir}}/cloudbox.yml --tags 'backup'"
+      state: "{{backup.cron_state}}"
+
   always:
   - debug: msg="Finished backup"
     when: backup_lock.stat.exists == False
