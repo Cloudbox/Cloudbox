@@ -32,9 +32,9 @@
     size_check_mins: 30
     rclone_remote: "google:"
   backup:
-    tgz_dest: /home/seed/backups
-    rsync_dest: rsync://somehost.com/backups
-    rclone_dest: google:/backups
+    tgz_dest: /home/seed/Backups
+    rsync_dest: rsync://somehost.com/Backups
+    rclone_dest: google:/Backups
     use_rsync: false
     use_rclone: false
     stop_plex: false
