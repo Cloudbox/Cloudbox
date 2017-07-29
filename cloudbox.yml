@@ -3,6 +3,7 @@
   vars_files:
     - settings.yml
   roles:
+    - { role: sanity_check }
     - { role: system, tags: ['full', 'feeder', 'plex'] }
     - { role: motd, tags: ['full', 'feeder', 'plex'] }
     - { role: common, tags: ['full', 'feeder', 'plex'] }
