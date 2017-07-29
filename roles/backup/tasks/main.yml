@@ -1,5 +1,14 @@
 ---
-- name: "Archiving /opt to /home/{{user}}/backups/cloudbox_{{date}}.tgz"
+- name: "Check {{backup.dest}} exists"
+  stat:
+    path: "{{backup.dest}}"
+  register: backup_location
+
+- name: "Create backup location {{backup.dest}}"
+  file: path={{backup.dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
+  when: backup_location.stat.exists == False
+  
+- name: "Archiving /opt to {{backup.dest}}"
   vars:
     backup_date: "{{ lookup('pipe', 'date +%Y%m%d_%H%M') }}"
   archive:
