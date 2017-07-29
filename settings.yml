@@ -36,7 +36,7 @@
     rsync_dest: rsync://somehost.com/backups
     rclone_dest: google:/backups
     use_rsync: false
-    use_rclone: true
+    use_rclone: false
     stop_plex: false
     cron_time: weekly
     cron_state: absent
