@@ -35,7 +35,6 @@
     state: stopped
   when: backup.stop_plex|bool
 
-  when: rtorrent_rc.stat.exists == False
 - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tgz"
   archive:
     path: /opt
