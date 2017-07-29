@@ -9,6 +9,21 @@
     file: path={{backup.tgz_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
     when: backup_location.stat.exists == False
 
+  - name: "Check if backup.lock is present"
+    stat:
+      path: "{{playbook_dir}}/backup.lock"
+    register: backup_lock
+
+  - fail:
+      msg: "Backup is already in progress..."
+    when: backup_lock.stat.exists
+
+  - name: "Create backup.lock"
+    file:
+      path: "{{playbook_dir}}/backup.lock"
+      state: present
+    when: backup_lock.stat.exists == False
+
   - name: "Check {{backup.tgz_dest}}/cloudbox.tgz exists"
     stat:
       path: "{{backup.tgz_dest}}/cloudbox.tgz"
@@ -59,3 +74,10 @@
   always:
   - debug:
       msg: "Finished backup"
+    when: backup_lock.stat.exists == False
+
+  - name: "Remove backup.lock"
+    file:
+      path: "{{playbook_dir}}/backup.lock"
+      state: absent
+    when: backup_lock.stat.exists == False
