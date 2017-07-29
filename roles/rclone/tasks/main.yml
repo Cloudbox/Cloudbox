@@ -5,6 +5,15 @@
     dest: /tmp
     copy: no
 
+- name: Ensure /opt/rclone exists
+  file:
+    path: /opt/rclone
+    state: directory 
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+    recurse: true
+
 - name: Copy binary to /opt/rclone
   copy:
     src: "/tmp/rclone-v{{ rclone.version }}-linux-amd64/rclone"
