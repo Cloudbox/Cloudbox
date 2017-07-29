@@ -48,11 +48,11 @@
       name: plex
       image: plexinc/pms-docker
       state: started
-    when: backup.stop_plex|bool
+    when: backup.stop_plex|boo
 
   - debug:
       msg: "Current playbook path: {{playbook_dir}}/cloudbox.yml"
 
 - always:
   - debug:
-      msg: "Finished backup block"
+      msg: "Finished backup"
