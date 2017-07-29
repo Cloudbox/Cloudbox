@@ -25,7 +25,6 @@
   plex_autoscan:
     ip: "0.0.0.0"
     port: 3468
-    token: ""
   rclone:
     version: 1.36
   unionfs_cleaner:
@@ -33,4 +32,8 @@
     size_check_mins: 30
     rclone_remote: "google:"
   backup:
-    dest: /home/seed/backups
+    tgz_dest: /home/seed/backups
+    rsync_dest: rsync://somehost.com/backups
+    rclone_dest: google:/backups
+    use_rsync: false
+    use_rclone: true

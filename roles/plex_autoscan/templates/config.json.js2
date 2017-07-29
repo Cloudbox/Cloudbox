@@ -19,7 +19,7 @@
         ]
     },
     "PLEX_SUPPORT_DIR": "/var/lib/plexmediaserver/Library/Application\\ Support",
-    "PLEX_TOKEN": "{{plex_autoscan.token}}",
+    "PLEX_TOKEN": "",
     "PLEX_USER": "plex",
     "PLEX_WAIT_FOR_EXTERNAL_SCANNERS": true,
     "SERVER_ALLOW_MANUAL_SCAN": false,
