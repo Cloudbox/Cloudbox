@@ -1,0 +1,19 @@
+---
+- name: Check rclone.conf exists
+  stat:
+    path: "{{playbook_dir}}/rclone.conf"
+  register: rclone_conf
+
+- name: Check rclone installed
+  stat:
+    path: "/opt/rclone/rclone"
+  register: rclone_bin
+
+- name: Install rclone
+  include_role:
+    name: rclone
+  when: backup.use_rclone and rclone_bin.stat.exists == False and rclone_conf.stat.exists
+
+- name: Fail because no rclone and no rclone.conf
+  fail: msg="rclone was not installed and there was no rclone.conf in the same path as cloudbox.yml, so could not install rclone automatically..."
+  when: backup.use_rclone and rclone_bin.stat.exists == False and rclone_conf.stat.exists == False
