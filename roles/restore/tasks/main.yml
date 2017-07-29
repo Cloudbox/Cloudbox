@@ -1,4 +1,9 @@
 ---
+- name: Ensure unzip is installed
+  apt:
+    name: unzip
+    state: installed
+    
 - name: Check rclone.conf exists
   stat:
     path: "{{playbook_dir}}/rclone.conf"
