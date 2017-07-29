@@ -31,8 +31,8 @@
 
   - name: "Stop Plex"
     docker_container:
-      name: test
-      image: ghrshsrh
+      name: plex
+      image: plexinc/pms-docker
       state: stopped
     when: backup.stop_plex|bool
 
@@ -50,13 +50,16 @@
       state: started
     when: backup.stop_plex|bool
 
+  - name: test fail
+    shell: fail
+
   - debug:
       msg: "Current playbook path: {{playbook_dir}}/cloudbox.yml"
 
 - rescue:
   - debug:
       msg: "There was an error while backing up...."
-
+      
 - always:
   - debug:
       msg: "Finished backup"
