@@ -14,14 +14,17 @@
       path: "{{playbook_dir}}/backup.lock"
     register: backup_lock
 
-  - fail:
+  - name: "Fail when backup.lock exists"
+    fail:
       msg: "Backup is already in progress..."
     when: backup_lock.stat.exists
 
   - name: "Create backup.lock"
     file:
       path: "{{playbook_dir}}/backup.lock"
-      state: present
+      state: touch
+      owner: "{{user}}"
+      group: "{{user}}"
     when: backup_lock.stat.exists == False
 
   - name: "Check {{backup.tgz_dest}}/cloudbox.tgz exists"
