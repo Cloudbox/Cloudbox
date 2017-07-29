@@ -55,11 +55,11 @@
 
   - debug:
       msg: "Current playbook path: {{playbook_dir}}/cloudbox.yml"
-
-- rescue:
+  
+  rescue:
   - debug:
       msg: "There was an error while backing up...."
       
-- always:
+  always:
   - debug:
       msg: "Finished backup"
