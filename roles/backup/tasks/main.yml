@@ -68,6 +68,18 @@
       state: started
     when: backup.stop_plex|bool
   
+  - name: "Upload backups with rclone to {{backup.rclone_dest}}"
+    command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/backup_rclone.log'"
+    when: backup.use_rclone|bool
+
+  - name: "Upload backups with rsync to {{backup.rsync_dest}}"
+    synchronize:
+      src: "{{backup.tgz_dest}}"
+      dest: "{{backup.rsync_dest}}"
+      rsync_opts:
+        - "--log-file='{{playbook_dir}}/backup_rsync.log'"
+    when: backup.use_rsync|bool
+
   always:
   - debug:
       msg: "Finished backup"
