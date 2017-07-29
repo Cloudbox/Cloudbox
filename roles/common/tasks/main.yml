@@ -40,6 +40,7 @@
       - ksmtuned
       - git
       - pwgen
+      - rsync
       
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
