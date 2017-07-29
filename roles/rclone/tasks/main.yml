@@ -10,7 +10,7 @@
   with_items:
     - /opt/rclone
     - "/home/{{user}}/.config/rclone"
-    
+
 - name: Copy binary to /opt/rclone
   copy:
     src: "/tmp/rclone-v{{ rclone.version }}-linux-amd64/rclone"
@@ -54,3 +54,23 @@
     group: "{{user}}"
     state: link
     force: yes
+
+- name: Check restore rclone.conf exists
+  stat:
+    path: "{{playbook_dir}}/rclone.conf"
+  register: restore_rclone_conf
+
+- name: Restore rclone.conf as part of restore process
+  copy:
+    src: "{{playbook_dir}}/rclone.conf"
+    dest: /opt/rclone/rclone.conf
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+  when: restore_rclone_conf.stat.exists
+
+- name: Remove restored rclone.conf
+  file:
+    path: "{{playbook_dir}}/rclone.conf"
+    state: absent
+  when: restore_rclone_conf.stat.exists
