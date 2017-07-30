@@ -37,7 +37,7 @@
   when: backup.use_rclone and rclone_bin.stat.exists == False and rclone_conf.stat.exists == False
 
 - name: "Fetch cloudbox.tgz from {{backup.rclone_dest}}"
-  command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tgz' '{{backup.tgz_dest}}/cloudbox.tgz' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
+  command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tgz' '{{backup.tgz_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: true
   become_user: "{{user}}"
   when: (backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)
@@ -45,7 +45,7 @@
 - name: "Fetch cloudbox.tgz from {{backup.rsync_dest}}"
   synchronize:
     src: "{{backup.rsync_dest}}/cloudbox.tgz"
-    dest: "{{backup.tgz_dest}}/cloudbox.tgz"
+    dest: "{{backup.tgz_dest}}"
     rsync_opts:
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
   become: true
