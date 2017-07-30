@@ -52,7 +52,7 @@
       name: plex
       image: plexinc/pms-docker
       state: stopped
-    when: backup.stop_plex|bool
+    when: backup.stop_plex
 
   - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tgz"
     archive:
@@ -66,11 +66,11 @@
       name: plex
       image: plexinc/pms-docker
       state: started
-    when: backup.stop_plex|bool
+    when: backup.stop_plex
   
   - name: "Upload backups with rclone to {{backup.rclone_dest}}"
     command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/backup_rclone.log'"
-    when: backup.use_rclone|bool
+    when: backup.use_rclone
 
   - name: "Upload backups with rsync to {{backup.rsync_dest}}"
     synchronize:
@@ -78,7 +78,7 @@
       dest: "{{backup.rsync_dest}}"
       rsync_opts:
         - "--log-file='{{playbook_dir}}/backup_rsync.log'"
-    when: backup.use_rsync|bool
+    when: backup.use_rsync
 
   - name: "Schedule cron backup for state: {{backup.cron_state}}, when: {{backup.cron_time}}"
     cron:
