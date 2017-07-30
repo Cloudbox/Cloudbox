@@ -1,4 +1,17 @@
 ---
+- name: Fail when no backup provider has been turned on
+  fail: msg="You must set atleast one backup.use_* option in order to perform a restore"
+  when: backup.use_rclone == False and backup.use_rsync == False
+
+- name: "Check {{backup.tgz_dest}} exists"
+  stat:
+    path: "{{backup.tgz_dest}}"
+  register: backup_location
+
+- name: "Create backup location {{backup.tgz_dest}}"
+  file: path={{backup.tgz_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
+  when: backup_location.stat.exists == False
+
 - name: Ensure unzip is installed
   apt:
     name: unzip
@@ -22,3 +35,15 @@
 - name: Fail because no rclone and no rclone.conf
   fail: msg="rclone was not installed and there was no rclone.conf in the same path as cloudbox.yml, so could not install rclone automatically..."
   when: backup.use_rclone and rclone_bin.stat.exists == False and rclone_conf.stat.exists == False
+
+- name: "Fetch cloudbox.tgz from {{backup.rclone_dest}}"
+  command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tgz' '{{backup.tgz_dest}}/cloudbox.tgz' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
+  when: (backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)
+
+- name: "Fetch cloudbox.tgz from {{backup.rsync_dest}}"
+  synchronize:
+    src: "{{backup.rsync_dest}}/cloudbox.tgz"
+    dest: "{{backup.tgz_dest}}/cloudbox.tgz"
+    rsync_opts:
+      - "--log-file='{{playbook_dir}}/restore_rsync.log'"
+  when: backup.use_rclone == False and backup.use_rsync
