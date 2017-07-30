@@ -38,6 +38,6 @@
     rclone_dest: google:/Backups
     use_rsync: false
     use_rclone: false
-    stop_plex: true
+    stop_plex: false
     cron_time: weekly
     cron_state: absent
