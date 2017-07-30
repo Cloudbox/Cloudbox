@@ -85,7 +85,7 @@
       path: /mnt/plexdrive
       state: directory
       mode: 0755
-      owner: {{ user }}
-      group: {{ user }}
+      owner: "{{user}}"
+      group: "{{user}}"
       recurse: true
     when: plexdrive_mnt.stat.exists == False
