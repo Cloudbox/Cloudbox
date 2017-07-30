@@ -52,7 +52,6 @@
   - name: Create common directories
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
     with_items:
-      - /mnt/plexdrive
       - /mnt/unionfs
       - /mnt/local
       - /mnt/local/.unionfs-fuse
@@ -76,3 +75,17 @@
       - "{{rutorrent.downloads}}"
       - "{{plex.transcodes}}"
       
+  - name: Check plexdrive mount folder exist
+    stat:
+      path: /mnt/plexdrive
+    register: plexdrive_mnt
+
+  - name: Create /mnt/plexdrive
+    file:
+      path: /mnt/plexdrive
+      state: directory
+      mode: 0755
+      owner: {{ user }}
+      group: {{ user }}
+      recurse: true
+    when: plexdrive_mnt.stat.exists == False
