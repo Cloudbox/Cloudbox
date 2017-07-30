@@ -21,7 +21,7 @@
     src: "plexdrive_token_builder.py"
     dest: "{{playbook_dir}}/plexdrive_token_builder.py"
     owner: "{{user}}"
-    group: "{{group}}"
+    group: "{{user}}"
     mode: a+x
     force: yes
   when: plexdrive_token.stat.exists == False
