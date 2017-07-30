@@ -56,7 +56,7 @@
 
   - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tgz"
     archive:
-      path: /opt
+      path: "/opt/*"
       dest: "{{backup.tgz_dest}}/cloudbox.tgz"
       owner: "{{user}}"
       group: "{{user}}"
