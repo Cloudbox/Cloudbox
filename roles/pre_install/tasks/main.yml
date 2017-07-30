@@ -15,6 +15,9 @@
     append: yes
     shell: /bin/bash
 
+- name: "Make cloudbox folder readable/writeable by {{user}}"
+  file: "path={{playbook_dir}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+
 - name: "Check plexdrive token.json exists"
   stat:
     path: /opt/plexdrive/token.json
