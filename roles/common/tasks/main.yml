@@ -52,7 +52,6 @@
   - name: Create common directories
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
     with_items:
-      - /mnt/unionfs
       - /mnt/local
       - /mnt/local/.unionfs-fuse
       - /mnt/local/Media/TV
@@ -89,3 +88,18 @@
       group: "{{user}}"
       recurse: true
     when: plexdrive_mnt.stat.exists == False
+
+  - name: Check unionfs mount folder exist
+    stat:
+      path: /mnt/unionfs
+    register: unionfs_mnt
+
+  - name: Create /mnt/unionfs
+    file:
+      path: /mnt/unionfs
+      state: directory
+      mode: 0755
+      owner: "{{user}}"
+      group: "{{user}}"
+      recurse: true
+    when: unionfs_mnt.stat.exists == False
