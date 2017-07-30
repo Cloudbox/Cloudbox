@@ -1,20 +1,4 @@
 ---
-  - name: Create common groups
-    group: "name={{item}} state=present"
-    with_items:
-      - docker
-      - "{{user}}"
-
-  - name: "Create user {{user}}"
-    user:
-      name: "{{user}}"
-      group: "{{user}}"
-      groups: "{{user}},docker,sudo"
-      password: "{{ passwd |password_hash('sha512') }}"
-      update_password: on_create
-      append: yes
-      shell: /bin/bash
-
   - name: "Get {{user}} uid"
     shell: "id -u {{user}}"
     register: uid
