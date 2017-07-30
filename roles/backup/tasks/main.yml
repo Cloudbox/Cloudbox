@@ -70,6 +70,8 @@
   
   - name: "Upload backups with rclone to {{backup.rclone_dest}}"
     command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/backup_rclone.log'"
+    become: true
+    become_user: "{{user}}"
     when: backup.use_rclone
 
   - name: "Upload backups with rsync to {{backup.rsync_dest}}"
@@ -78,6 +80,8 @@
       dest: "{{backup.rsync_dest}}"
       rsync_opts:
         - "--log-file='{{playbook_dir}}/backup_rsync.log'"
+    become: true
+    become_user: "{{user}}"
     when: backup.use_rsync
 
   - name: "Schedule cron backup for state: {{backup.cron_state}}, when: {{backup.cron_time}}"

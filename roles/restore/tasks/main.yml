@@ -38,6 +38,8 @@
 
 - name: "Fetch cloudbox.tgz from {{backup.rclone_dest}}"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tgz' '{{backup.tgz_dest}}/cloudbox.tgz' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
+  become: true
+  become_user: "{{user}}"
   when: (backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)
 
 - name: "Fetch cloudbox.tgz from {{backup.rsync_dest}}"
@@ -46,4 +48,6 @@
     dest: "{{backup.tgz_dest}}/cloudbox.tgz"
     rsync_opts:
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
+  become: true
+  become_user: "{{user}}"
   when: backup.use_rclone == False and backup.use_rsync
