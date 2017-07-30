@@ -53,7 +53,7 @@
   when: plexdrive_token.stat.exists == False
 
 - name: "Fail when built token.json does not exist"
-  fail: msg="There was a problem building your config.json && token.json for plexdrive. Google Response == {{plexdrive_built_token.stdout}}"
+  fail: msg="There was a problem building your config.json && token.json for plexdrive."
   when: plexdrive_token.stat.exists == False and plexdrive_built_token.stat.exists == False
 
 - name: "Ensure plexdrive folder exists in /opt"
