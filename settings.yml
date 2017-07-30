@@ -21,7 +21,6 @@
   plexpy:
     port: 8181
   plexdrive:
-    chunks: /opt/plexdrive
     client_id: ""
     client_secret: ""
   plex_autoscan:
