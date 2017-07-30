@@ -1,5 +1,5 @@
 ---
-- name: Fail when no backup provider has been turned on
+- name: Fail when no backup upload tool has been enabled
   fail: msg="You must set atleast one backup.use_* option in order to perform a restore"
   when: backup.use_rclone == False and backup.use_rsync == False
 
