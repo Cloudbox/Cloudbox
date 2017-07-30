@@ -1,5 +1,6 @@
 ---
   user: seed
+  passwd: password123
   sonarr:
     port: 8989
   radarr:

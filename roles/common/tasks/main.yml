@@ -10,7 +10,7 @@
       name: "{{user}}"
       group: "{{user}}"
       groups: "{{user}},docker,sudo"
-      password: $6$zB04ETFuezaIT$CnhuAgxVir31qsE3.hLjv.WjMWNLFsrAtuK5mjHUx7gMnzGv7awJq8ZhEK8F/8UBNOjyoauaQ3Wle.GoYC2i1.
+      password: "{{ passwd |password_hash('sha512') }}"
       update_password: on_create
       append: yes
       shell: /bin/bash
