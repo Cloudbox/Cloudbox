@@ -76,8 +76,8 @@
 
   - name: "Upload backups with rsync to {{backup.rsync_dest}}"
     synchronize:
-      src: "{{backup.tgz_dest}}"
-      dest: "{{backup.rsync_dest}}"
+      src: "{{backup.tgz_dest}}/"
+      dest: "{{backup.rsync_dest}}/"
       rsync_opts:
         - "--log-file='{{playbook_dir}}/backup_rsync.log'"
     become: true

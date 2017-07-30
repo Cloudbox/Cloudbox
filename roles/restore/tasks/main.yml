@@ -45,7 +45,7 @@
 - name: "Fetch cloudbox.tgz from {{backup.rsync_dest}}"
   synchronize:
     src: "{{backup.rsync_dest}}/cloudbox.tgz"
-    dest: "{{backup.tgz_dest}}"
+    dest: "{{backup.tgz_dest}}/"
     rsync_opts:
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
   become: true
