@@ -2,13 +2,13 @@
 
 [Unit]
 Description=Plexdrive
-After=network-online.target mongodb.service
+After=network-online.target
 
 [Service]
 User={{user}}
 Group={{user}}
 Type=simple
-ExecStart=/opt/plexdrive/plexdrive -v 3 --refresh-interval=1m --chunk-size=16m --clear-chunk-age=2h --fuse-options=allow_other,read_only --config=/opt/plexdrive --temp={{plexdrive.chunks}} /mnt/plexdrive
+ExecStart=/opt/plexdrive/plexdrive -v 3 --refresh-interval=1m --max-chunks=250 --fuse-options=allow_other,read_only --config=/opt/plexdrive --cache-file=/opt/plexdrive/cache.bolt /mnt/plexdrive
 ExecStop=/bin/fusermount -uz /mnt/plexdrive
 Restart=always
 RestartSec=5
