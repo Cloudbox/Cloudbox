@@ -27,6 +27,7 @@
       - pwgen
       - rsync
       - logrotate
+      - htop
       
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
