@@ -22,5 +22,8 @@
       - "/mnt/unionfs/Media/Movies:/movies"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+    links:
+      - "nzbget:nzbget"
+      - "rutorrent:rutorrent"
     restart_policy: always
     state: started
