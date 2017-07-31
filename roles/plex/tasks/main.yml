@@ -10,7 +10,7 @@
   register: public_ip
 
 - name: Show ADVERTISE_IP to be used
-  debug: msg="Will use ADVERTISE_IP with plex container http://{{public_ip}}:{{plex.port}}/"
+  debug: msg="Will use ADVERTISE_IP with plex container http://{{public_ip.ipify_public_ip}}:{{plex.port}}/"
 
 - name: Retreive plex docker iamge
   docker_image:
@@ -46,7 +46,7 @@
       PLEX_GID: "{{gid.stdout}}"
       PLEX_CLAIM: "{{plex_claim.user_input}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://{{public_ip}}:{{plex.port}}/"
+      ADVERTISE_IP: "http://{{public_ip.ipify_public_ip}}:{{plex.port}}/"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
@@ -74,7 +74,7 @@
       PLEX_UID: "{{uid.stdout}}"
       PLEX_GID: "{{gid.stdout}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://{{public_ip}}:{{plex.port}}/"
+      ADVERTISE_IP: "http://{{public_ip.ipify_public_ip}}:{{plex.port}}/"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
