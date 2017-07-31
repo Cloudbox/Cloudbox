@@ -26,7 +26,6 @@
       - "/opt/rutorrent:/config"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
     restart_policy: always
-    network_mode: host
     state: started
 
 - name: Wait for rtorrent.rc to be created
