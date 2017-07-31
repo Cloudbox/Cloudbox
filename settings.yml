@@ -9,7 +9,7 @@
     port: 6789
     downloads: /home/seed/downloads/nzbget
   rutorrent:
-    port: 80
+    port: 3252
     downloads: /home/seed/downloads/rutorrent
     user: seed
     passwd: sekret321
