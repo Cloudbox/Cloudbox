@@ -5,7 +5,50 @@
     image: plexinc/pms-docker
     state: absent
 
-- name: Create and start container
+- name: Retreive plex docker iamge
+  docker_image:
+    name: "plexinc/pms-docker:{{plex.tag}}"
+
+- name: Check Preferences.xml exists
+  stat:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+  register: plex_prefs
+
+- name: Ask user for his plex server claim id
+  pause: 
+    prompt: "To continue the plex installation, you must visit https://plex.tv/claim and retrieve a claim token, paste it below and press enter"
+  register: plex_claim
+  when: plex_prefs.stat.exists == False
+
+- name: Create and start container for fresh install
+  docker_container:
+    name: plex
+    image: "plexinc/pms-docker:{{plex.tag}}"
+    published_ports:
+      - "{{plex.port}}:32400/tcp"
+      - "3005:3005/tcp"
+      - "8324:8324/tcp"
+      - "32469:32469/tcp"
+      - "1900:1900/udp"
+      - "32410:32410/udp"
+      - "32412:32412/udp"
+      - "32413:32413/udp"
+      - "32414:32414/udp"
+    env:
+      PLEX_UID: "{{uid.stdout}}"
+      PLEX_GID: "{{gid.stdout}}"
+      PLEX_CLAIM: "{{plex_claim.user_input}}"
+      CHANGE_CONFIG_DIR_OWNERSHIP: false
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/plex:/config"
+      - "{{plex.transcodes}}:/transcode"
+      - "/mnt/unionfs/Media:/data"
+    restart_policy: always
+    state: started
+  when: plex_prefs.stat.exists == False
+
+- name: Create and start container for existing install
   docker_container:
     name: plex
     image: "plexinc/pms-docker:{{plex.tag}}"
@@ -30,6 +73,7 @@
       - "/mnt/unionfs/Media:/data"
     restart_policy: always
     state: started
+  when: plex_prefs.stat.exists
 
 - name: Check WebTools exists
   stat:
