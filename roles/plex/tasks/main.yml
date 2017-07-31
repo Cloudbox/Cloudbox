@@ -7,7 +7,7 @@
 
 - name: Retrieve public ip
   ipify_facts:
-    register: public_ip
+  register: public_ip
 
 - name: Retreive plex docker iamge
   docker_image:
