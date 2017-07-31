@@ -52,7 +52,7 @@
       src: "{{playbook_dir}}/settings.yml"
       dest: "/opt/settings.yml"
       force: yes
-      user: "{{user}}"
+      group: "{{user}}"
       owner: "{{user}}"
       mode: 0775
 
