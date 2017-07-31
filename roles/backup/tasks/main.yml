@@ -59,7 +59,6 @@
   - name: "Stop Plex"
     docker_container:
       name: plex
-      image: "plexinc/pms-docker:{{plex.tag}}"
       state: stopped
     when: backup.stop_plex
 
@@ -73,7 +72,6 @@
   - name: "Start Plex"
     docker_container:
       name: plex
-      image: "plexinc/pms-docker:{{plex.tag}}"
       state: started
     when: backup.stop_plex
   
