@@ -9,7 +9,7 @@
   docker_container:
     name: jackett
     image: linuxserver/jackett
-    ports:
+    published_ports:
       - "{{jackett.port}}:{{jackett.port}}"
     env:
       PUID: "{{uid.stdout}}"

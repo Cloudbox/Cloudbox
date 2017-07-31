@@ -14,7 +14,7 @@
   docker_container:
     name: nzbget
     image: linuxserver/nzbget
-    ports:
+    published_ports:
       - "{{nzbget.port}}:{{nzbget.port}}"
     env:
       PUID: "{{uid.stdout}}"

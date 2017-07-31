@@ -14,7 +14,7 @@
   docker_container:
     name: plexpy
     image: linuxserver/plexpy
-    ports:
+    published_ports:
       - "{{plexpy.port}}:{{plexpy.port}}"
     env:
       PUID: "{{uid.stdout}}"

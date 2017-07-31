@@ -9,7 +9,7 @@
   docker_container:
     name: plex
     image: "plexinc/pms-docker:{{plex.tag}}"
-    ports:
+    published_ports:
       - "{{plex.port}}:{{plex.port}}/tcp"
     env:
       PLEX_UID: "{{uid.stdout}}"

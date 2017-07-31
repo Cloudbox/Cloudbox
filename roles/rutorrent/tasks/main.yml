@@ -14,7 +14,7 @@
   docker_container:
     name: rutorrent
     image: linuxserver/rutorrent
-    ports:
+    published_ports:
       - "{{rutorrent.port}}:{{rutorrent.port}}"
       - "51413:51413"
       - "6881:6881/udp"
@@ -33,6 +33,13 @@
   wait_for:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Wait for nginx.conf to be created
+  wait_for:
+    path:
+      path: "/opt/rutorrent/nginx/nginx.conf"
+      state: present
   when: rtorrent_rc.stat.exists == False
 
 - name: Stop container to customize rtorrent.rc

@@ -9,7 +9,7 @@
   docker_container:
     name: radarr
     image: hotio/radarr
-    ports:
+    published_ports:
       - "{{radarr.port}}:{{radarr.port}}"
     env:
       PUID: "{{uid.stdout}}"

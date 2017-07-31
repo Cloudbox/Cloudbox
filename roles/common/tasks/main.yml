@@ -32,6 +32,7 @@
     with_items:
       - docker-py
       - speedtest-cli
+      - python-passlib
 
   - name: Create common directories
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"

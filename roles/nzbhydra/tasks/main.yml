@@ -9,7 +9,7 @@
   docker_container:
     name: nzbhydra
     image: linuxserver/hydra
-    ports:
+    published_ports:
       - "{{nzbhydra.port}}:{{nzbhydra.port}}"
     env:
       PUID: "{{uid.stdout}}"

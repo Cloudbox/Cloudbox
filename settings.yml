@@ -11,6 +11,8 @@
   rutorrent:
     port: 80
     downloads: /home/seed/downloads/rutorrent
+    user: seed
+    passwd: sekret321
   jackett:
     port: 9117
   nzbhydra:

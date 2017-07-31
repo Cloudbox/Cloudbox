@@ -9,7 +9,7 @@
   docker_container:
     name: sonarr
     image: "linuxserver/sonarr:develop"
-    ports:
+    published_ports:
       - "{{sonarr.port}}:{{sonarr.port}}"
     env:
       PUID: "{{uid.stdout}}"

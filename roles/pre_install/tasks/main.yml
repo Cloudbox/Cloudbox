@@ -54,7 +54,7 @@
 
 - name: "Ask user for plexdrive authorization code"
   pause:
-    prompt: "You need to authorize plexdrive, please visit {{plexdrive_auth_link.stdout}} and choose the account to use plexdrive with. Paste the code below and press enter."
+    prompt: "You need to authorize plexdrive, please visit {{plexdrive_auth_link.stdout}} and choose the account to use plexdrive with. Paste the code below and press enter"
   register: plexdrive_auth_code
   when: plexdrive_token.stat.exists == False
 
