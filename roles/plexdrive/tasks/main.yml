@@ -1,7 +1,7 @@
 ---
   - name: Install plexdrive
     get_url:
-      url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0-beta.1501181818/plexdrive-linux-amd64
+      url:  https://plexssh.zenjabba.com/plexdrive-240717-1600
       dest: /opt/plexdrive/plexdrive
       mode: 0755
       owner: "{{user}}"
