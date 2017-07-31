@@ -10,7 +10,7 @@
     name: sonarr
     image: "linuxserver/sonarr:develop"
     published_ports:
-      - "{{sonarr.port}}:{{sonarr.port}}"
+      - "{{sonarr.port}}:8989"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -22,5 +22,4 @@
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
     restart_policy: always
-    network_mode: host
     state: started

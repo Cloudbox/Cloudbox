@@ -10,7 +10,7 @@
     name: jackett
     image: linuxserver/jackett
     published_ports:
-      - "{{jackett.port}}:{{jackett.port}}"
+      - "{{jackett.port}}:9117"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -18,5 +18,4 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"
     restart_policy: always
-    network_mode: host
     state: started

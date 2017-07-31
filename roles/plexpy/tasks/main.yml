@@ -15,7 +15,7 @@
     name: plexpy
     image: linuxserver/plexpy
     published_ports:
-      - "{{plexpy.port}}:{{plexpy.port}}"
+      - "{{plexpy.port}}:8181"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -24,6 +24,5 @@
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
     restart_policy: always
-    network_mode: host
     state: started
 

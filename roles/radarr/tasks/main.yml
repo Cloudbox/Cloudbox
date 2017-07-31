@@ -10,7 +10,7 @@
     name: radarr
     image: hotio/radarr
     published_ports:
-      - "{{radarr.port}}:{{radarr.port}}"
+      - "{{radarr.port}}:7878"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -23,5 +23,4 @@
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
     restart_policy: always
-    network_mode: host
     state: started

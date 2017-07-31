@@ -15,7 +15,7 @@
     name: nzbget
     image: linuxserver/nzbget
     published_ports:
-      - "{{nzbget.port}}:{{nzbget.port}}"
+      - "{{nzbget.port}}:6789"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -24,7 +24,6 @@
       - "/opt/nzbget:/config"
       - "{{nzbget.downloads}}:/downloads/nzbget"
     restart_policy: always
-    network_mode: host
     state: started
 
 - name: Wait for nzbget.conf to be created

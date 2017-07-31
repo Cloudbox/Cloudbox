@@ -10,7 +10,7 @@
     name: nzbhydra
     image: linuxserver/hydra
     published_ports:
-      - "{{nzbhydra.port}}:{{nzbhydra.port}}"
+      - "{{nzbhydra.port}}:5075"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -18,5 +18,4 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra:/config"
     restart_policy: always
-    network_mode: host
     state: started
