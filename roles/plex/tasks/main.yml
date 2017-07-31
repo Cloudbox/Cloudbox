@@ -9,6 +9,9 @@
   ipify_facts:
   register: public_ip
 
+- name: Show ADVERTISE_IP to be used
+  debug: msg="Will use ADVERTISE_IP with plex container http://{{public_ip}}:{{plex.port}}/"
+
 - name: Retreive plex docker iamge
   docker_image:
     name: "plexinc/pms-docker:{{plex.tag}}"
