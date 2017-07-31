@@ -23,6 +23,8 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
+    links:
+      - "plex:plex"
     restart_policy: always
     state: started
 
