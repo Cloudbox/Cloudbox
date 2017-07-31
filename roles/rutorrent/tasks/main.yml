@@ -37,9 +37,8 @@
 
 - name: Wait for nginx.conf to be created
   wait_for:
-    path:
-      path: "/opt/rutorrent/nginx/nginx.conf"
-      state: present
+    path: "/opt/rutorrent/nginx/nginx.conf"
+    state: present
   when: rtorrent_rc.stat.exists == False
 
 - name: Stop container to customize rtorrent.rc
