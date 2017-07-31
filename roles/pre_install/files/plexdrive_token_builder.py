@@ -31,6 +31,7 @@ def get_token(access_code, client_id, client_secret):
         'code': access_code,
         'client_id': client_id,
         'client_secret': client_secret,
+        'access_type': 'offline',
         'grant_type': 'authorization_code',
         'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
     }
