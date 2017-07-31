@@ -18,6 +18,7 @@
   nzbhydra:
     port: 5075
   plex:
+    port: 32400
     tag: public
     transcodes: /tmp/plex
   plexpy:
