@@ -34,6 +34,7 @@ def get_token(access_code, client_id, client_secret):
         'access_type': 'offline',
         'grant_type': 'authorization_code',
         'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
+        'state': 'state-token'
     }
     resp = requests.post('https://www.googleapis.com/oauth2/v4/token', data=payload)
     if resp.status_code == 200:
