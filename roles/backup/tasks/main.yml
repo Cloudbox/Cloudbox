@@ -47,6 +47,15 @@
       state: absent
     when: backup_previous_tgz.stat.exists
 
+  - name: "Copy settings.xml to /opt for inclusion in backup"
+    copy:
+      src: "{{playbook_dir}}/settings.yml"
+      dest: "/opt/settings.yml"
+      force: yes
+      user: "{{user}}"
+      owner: "{{user}}"
+      mode: 0775
+
   - name: "Stop Plex"
     docker_container:
       name: plex

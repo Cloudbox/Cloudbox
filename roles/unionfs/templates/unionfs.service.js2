@@ -7,7 +7,7 @@ Type=forking
 GuessMainPID=no
 User={{user}}
 Group={{user}}
-ExecStart=/usr/bin/unionfs-fuse -o cow,allow_other /mnt/local=RW:/mnt/plexdrive=RO /mnt/unionfs
+ExecStart=/usr/bin/unionfs-fuse -o cow,allow_other,nonempty /mnt/local=RW:/mnt/plexdrive=RO /mnt/unionfs
 ExecStop=/bin/fusermount -u /mnt/unionfs
 
 [Install]
