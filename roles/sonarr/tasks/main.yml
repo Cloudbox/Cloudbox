@@ -24,5 +24,7 @@
     links:
       - "nzbget:nzbget"
       - "rutorrent:rutorrent"
+      - "jackett:jackett"
+      - "nzbhydra:nzbhydra"
     restart_policy: always
     state: started
