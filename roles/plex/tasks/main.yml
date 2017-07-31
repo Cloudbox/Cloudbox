@@ -40,6 +40,8 @@
       - "32412:32412/udp"
       - "32413:32413/udp"
       - "32414:32414/udp"
+      - "33400:33400/tcp"
+      - "33443:33443/tcp"
     env:
       PLEX_UID: "{{uid.stdout}}"
       PLEX_GID: "{{gid.stdout}}"
@@ -69,6 +71,8 @@
       - "32412:32412/udp"
       - "32413:32413/udp"
       - "32414:32414/udp"
+      - "33400:33400/tcp"
+      - "33443:33443/tcp"
     env:
       PLEX_UID: "{{uid.stdout}}"
       PLEX_GID: "{{gid.stdout}}"
