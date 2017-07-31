@@ -14,12 +14,12 @@
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder']}
-    - { role: sonarr, tags: ['full', 'feeder'] }
-    - { role: radarr, tags: ['full', 'feeder'] }
     - { role: nzbget, tags: ['full', 'feeder'] }
     - { role: rutorrent, tags: ['full', 'feeder'] }
     - { role: jackett, tags: ['full', 'feeder'] }
     - { role: nzbhydra, tags: ['full', 'feeder'] }
+    - { role: sonarr, tags: ['full', 'feeder'] }
+    - { role: radarr, tags: ['full', 'feeder'] }
     - { role: plex, tags: ['full', 'plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
     - { role: plex_autoscan, tags: ['full', 'plex'] }
