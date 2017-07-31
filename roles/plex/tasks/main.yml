@@ -5,12 +5,6 @@
     image: plexinc/pms-docker
     state: absent
 
-- name: Retrieve public ip
-  ipify_facts:
-  
-- name: Show ADVERTISE_IP to be used
-  debug: msg="Will use ADVERTISE_IP with plex container http://{{ipify_public_ip}}:{{plex.port}}/"
-
 - name: Retreive plex docker iamge
   docker_image:
     name: "plexinc/pms-docker:{{plex.tag}}"
@@ -30,24 +24,12 @@
   docker_container:
     name: plex
     image: "plexinc/pms-docker:{{plex.tag}}"
-    published_ports:
-      - "{{plex.port}}:32400/tcp"
-      - "3005:3005/tcp"
-      - "8324:8324/tcp"
-      - "32469:32469/tcp"
-      - "1900:1900/udp"
-      - "32410:32410/udp"
-      - "32412:32412/udp"
-      - "32413:32413/udp"
-      - "32414:32414/udp"
-      - "33400:33400/tcp"
-      - "33443:33443/tcp"
+    network_mode: host
     env:
       PLEX_UID: "{{uid.stdout}}"
       PLEX_GID: "{{gid.stdout}}"
       PLEX_CLAIM: "{{plex_claim.user_input}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://{{ipify_public_ip}}:{{plex.port}}/"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
@@ -61,23 +43,11 @@
   docker_container:
     name: plex
     image: "plexinc/pms-docker:{{plex.tag}}"
-    published_ports:
-      - "{{plex.port}}:32400/tcp"
-      - "3005:3005/tcp"
-      - "8324:8324/tcp"
-      - "32469:32469/tcp"
-      - "1900:1900/udp"
-      - "32410:32410/udp"
-      - "32412:32412/udp"
-      - "32413:32413/udp"
-      - "32414:32414/udp"
-      - "33400:33400/tcp"
-      - "33443:33443/tcp"
+    network_mode: host
     env:
       PLEX_UID: "{{uid.stdout}}"
       PLEX_GID: "{{gid.stdout}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://{{ipify_public_ip}}:{{plex.port}}/"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
