@@ -89,6 +89,19 @@
     state: started
   when: plex_prefs.stat.exists
 
+# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
+- name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
+  wait_for:
+    timeout: 5
+
+- name: "Ensure transcodes folder has the correct permissions"
+  file:
+    path: "{{plex.transcodes}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    recurse: true
+
 - name: Check WebTools exists
   stat:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
