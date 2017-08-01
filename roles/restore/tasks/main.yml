@@ -61,6 +61,10 @@
   fail: msg="There must have been an issue retrieving the cloudbox.tgz file... as it does not exist at {{backup.tgz_dest}}/cloudbox.tgz"
   when: cloudbox_tgz.stat.exists == False
 
+- name: "Wait for 10 seconds before unarchiving"
+  wait_for:
+    timeout: 10
+
 - name: "Unarchive cloudbox.tgz to /opt"
   unarchive:
     src: "{{backup.tgz_dest}}/cloudbox.tgz"
