@@ -6,6 +6,7 @@
       mode: 0755
       owner: "{{user}}"
       group: "{{user}}"
+      force: yes
 
   - name: Check service exists
     stat:
