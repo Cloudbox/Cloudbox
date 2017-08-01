@@ -27,6 +27,7 @@
   when: plex_prefs.stat.exists == False
 
 - debug: msg="Using plex claim token {{plex_claim.user_input}}"
+  when: plex_prefs.stat.exists == False
 
 - name: Create and start container for fresh install
   docker_container:
