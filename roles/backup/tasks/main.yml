@@ -68,6 +68,7 @@
       dest: "{{backup.tgz_dest}}/cloudbox.tgz"
       owner: "{{user}}"
       group: "{{user}}"
+      format: bz2
 
   - name: "Start Plex"
     docker_container:
