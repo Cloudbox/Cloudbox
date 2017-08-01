@@ -74,6 +74,10 @@
       name: plex
       state: started
     when: backup.stop_plex
+
+  - name: "Wait for 10 seconds before uploads"
+    wait_for:
+      timeout: 10
   
   - name: "Upload backups with rclone to {{backup.rclone_dest}}"
     command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/backup_rclone.log'"
