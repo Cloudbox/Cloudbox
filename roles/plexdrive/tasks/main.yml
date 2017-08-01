@@ -1,13 +1,4 @@
 ---
-  - name: Install plexdrive
-    get_url:
-      url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
-      dest: /opt/plexdrive/plexdrive
-      mode: 0755
-      owner: "{{user}}"
-      group: "{{user}}"
-      force: yes
-
   - name: Check service exists
     stat:
       path: "/etc/systemd/system/plexdrive.service"
@@ -16,6 +7,15 @@
   - name: Stop existing plexdrive service
     systemd: state=stopped name=plexdrive
     when: plexdrive_service.stat.exists
+    
+  - name: Install plexdrive
+    get_url:
+      url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
+      dest: /opt/plexdrive/plexdrive
+      mode: 0755
+      owner: "{{user}}"
+      group: "{{user}}"
+      force: yes
 
   - name: Import plexdrive.service
     template:
