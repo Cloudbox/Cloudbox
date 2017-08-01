@@ -20,7 +20,7 @@
   plex:
     port: 32400
     tag: public
-    transcodes: /tmp/plex
+    transcodes: "/home/{{user}}/transcodes"
   plexpy:
     port: 8181
   plexdrive:
