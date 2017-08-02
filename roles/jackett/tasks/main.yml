@@ -22,3 +22,5 @@
       - name: cloudbox
         aliases:
           - jackett
+    labels:
+      traefik.backend: "cloudbox"

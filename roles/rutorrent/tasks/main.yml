@@ -29,6 +29,8 @@
         aliases:
           - rutorrent
     restart_policy: always
+    labels:
+      traefik.backend: "cloudbox"
     state: started
 
 - name: Wait for rtorrent.rc to be created

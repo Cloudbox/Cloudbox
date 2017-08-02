@@ -16,4 +16,6 @@
       - name: cloudbox
         aliases:
           - watchtower
+    labels:
+      traefik.backend: "cloudbox"
     state: started

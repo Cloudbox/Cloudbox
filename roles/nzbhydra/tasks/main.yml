@@ -23,5 +23,4 @@
           - nzbhydra
     labels:
       traefik.backend: "cloudbox"
-      traefik.port: "5075"
     state: started
