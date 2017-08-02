@@ -23,6 +23,9 @@ defaultEntryPoints = ["http", "https"]
     acmeLogging = true
     onDemand = true
     OnHostRule = true
+    caServer = "https://acme-staging.api.letsencrypt.org/directory"
+    entryPoint = "https"
+
    [[acme.domains]]
      main = "{{domain}}"
 
