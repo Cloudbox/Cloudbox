@@ -9,7 +9,7 @@
     name: nzbhydra
     image: linuxserver/hydra
     published_ports:
-      - "{{nzbhydra.port}}:5075"
+      - "127.0.0.1:{{nzbhydra.port}}:5075"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -21,4 +21,8 @@
       - name: cloudbox
         aliases:
           - nzbhydra
+    labels:
+      traefik.frontend.rule: "Host:{{nzbhydra.domain}}"
+      traefik.backend: "cloudbox"
+      traefik.port: "5075"
     state: started

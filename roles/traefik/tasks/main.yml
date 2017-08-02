@@ -1,0 +1,25 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: traefik
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: traefik
+    image: "traefik:latest"
+    published_ports:
+      - "8080:8080"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/dev/null:/traefik.toml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    networks:
+      - name: cloudbox
+        aliases:
+          - traefik
+    restart_policy: always
+    state: started

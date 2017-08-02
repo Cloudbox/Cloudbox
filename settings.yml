@@ -17,6 +17,7 @@
     port: 9117
   nzbhydra:
     port: 5075
+    domain: hydra.yourdomain.com
   plex:
     port: 32400
     tag: public
