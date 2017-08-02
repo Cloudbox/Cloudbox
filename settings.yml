@@ -1,6 +1,7 @@
 ---
   user: seed
   passwd: password123
+  domain: cloudbox.gq
   sonarr:
     port: 8989
   radarr:
@@ -17,7 +18,6 @@
     port: 9117
   nzbhydra:
     port: 5075
-    domain: hydra.cloudbox.gq
   plex:
     port: 32400
     tag: public

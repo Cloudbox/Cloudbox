@@ -22,7 +22,6 @@
         aliases:
           - nzbhydra
     labels:
-      traefik.frontend.rule: "Host:{{nzbhydra.domain}}"
       traefik.backend: "cloudbox"
       traefik.port: "5075"
     state: started
