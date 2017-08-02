@@ -25,7 +25,7 @@ email = "myemail@example.com"
 storage = "/config/acme.json"
 entryPoint = "https"
 onDemand = false
-OnHostRule = true
+OnHostRule = false
 acmeLogging = true
 
 [docker]
