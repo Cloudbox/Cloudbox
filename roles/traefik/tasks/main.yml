@@ -28,9 +28,9 @@
     state: touch
     owner: "{{user}}"
     group: "{{user}}"
-    mode: 0775
+    mode: 0600
     force: yes
-    
+
 - name: Create and start container
   docker_container:
     name: traefik
