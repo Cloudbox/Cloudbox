@@ -14,7 +14,7 @@
     name: plexpy
     image: linuxserver/plexpy
     published_ports:
-      - "{{plexpy.port}}:8181"
+      - "127.0.0.1:{{plexpy.port}}:8181"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"

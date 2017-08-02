@@ -9,7 +9,7 @@
     name: sonarr
     image: "linuxserver/sonarr:develop"
     published_ports:
-      - "{{sonarr.port}}:8989"
+      - "127.0.0.1:{{sonarr.port}}:8989"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"

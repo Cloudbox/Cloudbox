@@ -14,7 +14,7 @@
     name: nzbget
     image: linuxserver/nzbget
     published_ports:
-      - "{{nzbget.port}}:6789"
+      - "127.0.0.1:{{nzbget.port}}:6789"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"

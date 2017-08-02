@@ -9,7 +9,7 @@
     name: jackett
     image: linuxserver/jackett
     published_ports:
-      - "{{jackett.port}}:9117"
+      - "127.0.0.1:{{jackett.port}}:9117"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"

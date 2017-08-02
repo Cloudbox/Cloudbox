@@ -9,7 +9,7 @@
     name: radarr
     image: hotio/radarr
     published_ports:
-      - "{{radarr.port}}:7878"
+      - "127.0.0.1:{{radarr.port}}:7878"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
