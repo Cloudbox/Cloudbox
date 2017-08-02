@@ -21,6 +21,4 @@
       - name: cloudbox
         aliases:
           - nzbhydra
-    labels:
-      traefik.backend: "cloudbox"
     state: started

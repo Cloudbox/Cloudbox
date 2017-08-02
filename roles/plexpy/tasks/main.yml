@@ -27,7 +27,5 @@
       - name: cloudbox
         aliases:
           - plexpy
-    labels:
-      traefik.backend: "cloudbox"
     state: started
 

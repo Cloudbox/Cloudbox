@@ -55,8 +55,6 @@
         aliases:
           - plex
     state: started
-    labels:
-      traefik.backend: "cloudbox"
   when: plex_prefs.stat.exists == False
 
 - name: Create and start container for existing install
@@ -91,8 +89,6 @@
         aliases:
           - plex
     state: started
-    labels:
-      traefik.backend: "cloudbox"
   when: plex_prefs.stat.exists
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...

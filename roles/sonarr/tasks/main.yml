@@ -25,6 +25,4 @@
         aliases:
           - sonarr
     restart_policy: always
-    labels:
-      traefik.backend: "cloudbox"
     state: started

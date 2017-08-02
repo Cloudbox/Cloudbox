@@ -28,8 +28,6 @@
         aliases:
           - nzbget
     state: started
-    labels:
-      traefik.backend: "cloudbox"
 
 - name: Wait for nzbget.conf to be created
   wait_for:
