@@ -9,7 +9,7 @@
     name: nzbhydra
     image: linuxserver/hydra
     published_ports:
-      - "127.0.0.1:{{nzbhydra.port}}:5075"
+      - "127.0.0.1:5075:5075"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
