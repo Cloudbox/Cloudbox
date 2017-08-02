@@ -1,6 +1,7 @@
 ---
   user: seed
   passwd: password123
+  web_passwd: password321
   domain: cloudboxx.tk
   email: your@email.com
   nzbget:

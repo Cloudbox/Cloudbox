@@ -13,14 +13,14 @@
     mode: 0775
     force: yes
 
-- name: Import htpasswd
-  template:
-    src: htpasswd.js2
-    dest: /opt/traefik/htpasswd
+- name: Create htpasswd
+  htpasswd:
+    path: /opt/traefik/htpasswd
+    name: "{{user}}"
+    password: "{{web_passwd}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
-    force: yes
 
 - name: Ensure acme.json exists
   file:
@@ -44,7 +44,6 @@
       - "/opt/traefik/config.toml:/traefik.toml"
       - "/opt/traefik:/config"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    command: --web --docker --logLevel=DEBUG
     networks:
       - name: cloudbox
         aliases:

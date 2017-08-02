@@ -4,6 +4,7 @@
 
 defaultEntryPoints = ["http", "https"]
 InsecureSkipVerify = true
+logLevel = "DEBUG"
 
 [web]
 address = ":8080"
@@ -33,4 +34,3 @@ endpoint = "unix:///var/run/docker.sock"
 domain = "{{domain}}"
 watch = true
 exposedbydefault = true
-insecureskipverify = true
