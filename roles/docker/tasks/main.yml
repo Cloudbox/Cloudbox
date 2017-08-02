@@ -29,3 +29,7 @@
     owner: root
     group: root
     force: yes
+
+- name: Create cloudbox network
+  docker_network:
+    name: cloudbox
