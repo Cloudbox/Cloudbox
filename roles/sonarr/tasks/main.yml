@@ -21,10 +21,9 @@
       - "/mnt/unionfs/Media/TV:/tv"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
-    links:
-      - "nzbget:nzbget"
-      - "rutorrent:rutorrent"
-      - "jackett:jackett"
-      - "nzbhydra:nzbhydra"
+    networks:
+      - name: cloudbox
+        aliases:
+          - sonarr
     restart_policy: always
     state: started

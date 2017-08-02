@@ -25,6 +25,10 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+    networks:
+      - name: cloudbox
+        aliases:
+          - rutorrent
     restart_policy: always
     state: started
 
