@@ -8,8 +8,6 @@
     downloads: "/home/{{user}}/downloads/nzbget"
   rutorrent:
     downloads: "/home/{{user}}/downloads/rutorrent"
-    user: seed
-    passwd: sekret321
   plex:
     tag: public
     transcodes: "/home/{{user}}/transcodes"
