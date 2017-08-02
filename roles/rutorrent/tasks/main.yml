@@ -28,6 +28,8 @@
       - name: cloudbox
         aliases:
           - rutorrent
+    labels:
+      traefik.port: "80"
     restart_policy: always
     state: started
 

@@ -54,6 +54,8 @@
       - name: cloudbox
         aliases:
           - plex
+    labels:
+      traefik.port: "32400"
     state: started
   when: plex_prefs.stat.exists == False
 
@@ -88,6 +90,8 @@
       - name: cloudbox
         aliases:
           - plex
+    labels:
+      traefik.port: "32400"
     state: started
   when: plex_prefs.stat.exists
 
