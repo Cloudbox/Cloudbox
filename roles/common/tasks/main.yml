@@ -55,6 +55,7 @@
       - /opt/plex_autoscan
       - /opt/unionfs_cleaner
       - /opt/rclone
+      - /opt/traefik
       - "/home/{{user}}/.config/rclone"
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"

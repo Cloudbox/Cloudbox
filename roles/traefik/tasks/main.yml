@@ -4,6 +4,24 @@
     name: traefik
     state: absent
 
+- name: Import config.toml
+    template:
+      src: config.toml.js2
+      dest: /opt/traefik/config.toml
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+
+- name: Import htpasswd
+    template:
+      src: htpasswd.js2
+      dest: /opt/traefik/htpasswd
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+
 - name: Create and start container
   docker_container:
     name: traefik
@@ -14,7 +32,8 @@
       - "443:443"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/dev/null:/traefik.toml"
+      - "/opt/traefik/config.toml:/traefik.toml"
+      - "/opt/traefik:/config"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     command: --web --docker --docker.domain={{domain}} --logLevel=DEBUG
     networks:

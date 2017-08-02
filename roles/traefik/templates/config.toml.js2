@@ -1,0 +1,32 @@
+################################################################
+# Global configuration
+################################################################
+
+InsecureSkipVerify = true
+
+defaultEntryPoints = ["http", "https"]
+    [entryPoints]
+      [entryPoints.http]
+      address = ":80"
+      [entryPoints.http.redirect]
+      entryPoint = "https"
+      [entryPoints.https]
+      address = ":443"
+      [entryPoints.https.tls]
+      [entryPoints.https.auth.basic]    
+		usersFile = "/config/htpasswd"
+      
+[acme]
+    email = "{{email}}"
+    storage = "/config/acme.json"
+    entryPoint = "https"
+    acmeLogging = true
+   [[acme.domains]]
+     main = "{{domain}}"
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "{{domain}}"
+watch = true
+exposedbydefault = true
+insecureskipverify = true
