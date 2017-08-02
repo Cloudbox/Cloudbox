@@ -9,7 +9,8 @@
     name: traefik
     image: "traefik:latest"
     published_ports:
-      - "127.0.0.1:8080:8080"
+    # set below 8080 to 127.0.0.1 later
+      - "8080:8080"
       - "80:80"
       - "443:443"
     volumes:
@@ -17,7 +18,6 @@
       - "/dev/null:/traefik.toml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     command: --web --docker --docker.domain={{domain}} --logLevel=DEBUG
-    network_mode: host
     networks:
       - name: cloudbox
         aliases:
