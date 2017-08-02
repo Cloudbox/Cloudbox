@@ -17,7 +17,7 @@
     port: 9117
   nzbhydra:
     port: 5075
-    domain: hydra.yourdomain.com
+    domain: hydra.cloudbox.gq
   plex:
     port: 32400
     tag: public
