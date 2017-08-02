@@ -4,9 +4,9 @@
   domain: cloudbox.gq
   email: your@email.com
   nzbget:
-    downloads: /home/seed/downloads/nzbget
+    downloads: "/home/{{user}}/downloads/nzbget"
   rutorrent:
-    downloads: /home/seed/downloads/rutorrent
+    downloads: "/home/{{user}}/downloads/rutorrent"
     user: seed
     passwd: sekret321
   plex:
@@ -24,7 +24,7 @@
     size_check_mins: 30
     rclone_remote: "google:"
   backup:
-    tgz_dest: /home/seed/Backups
+    tgz_dest: "/home/{{user}}/Backups"
     rsync_dest: rsync://somehost.com/Backups
     rclone_dest: google:/Backups
     use_rsync: false
