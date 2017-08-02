@@ -44,7 +44,7 @@
       - "/opt/traefik/config.toml:/traefik.toml"
       - "/opt/traefik:/config"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    command: --web --docker --docker.domain={{domain}} --logLevel=DEBUG
+    command: --web --docker --logLevel=DEBUG
     networks:
       - name: cloudbox
         aliases:
