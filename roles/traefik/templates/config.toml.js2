@@ -21,7 +21,7 @@ address = ":443"
 [entryPoints.https.tls]
 
 [acme]
-email = "myemail@example.com"
+email = "{{email}}"
 storage = "/config/acme.json"
 entryPoint = "https"
 onDemand = false
