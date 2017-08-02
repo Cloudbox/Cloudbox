@@ -17,6 +17,8 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"
     restart_policy: always
+    labels:
+      traefik.port: "9117"
     state: started
     networks:
       - name: cloudbox

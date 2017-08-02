@@ -27,6 +27,8 @@
       - name: cloudbox
         aliases:
           - nzbget
+    labels:
+      traefik.port: "6789"
     state: started
 
 - name: Wait for nzbget.conf to be created

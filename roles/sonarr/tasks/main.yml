@@ -24,5 +24,7 @@
       - name: cloudbox
         aliases:
           - sonarr
+    labels:
+      traefik.port: "8989"
     restart_policy: always
     state: started

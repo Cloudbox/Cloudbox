@@ -21,4 +21,6 @@
       - name: cloudbox
         aliases:
           - nzbhydra
+    labels:
+      traefik.port: "5075"
     state: started

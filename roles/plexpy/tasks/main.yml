@@ -27,5 +27,7 @@
       - name: cloudbox
         aliases:
           - plexpy
+    labels:
+      traefik.port: "8181"
     state: started
 

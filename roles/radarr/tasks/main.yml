@@ -25,5 +25,7 @@
       - name: cloudbox
         aliases:
           - radarr
+    labels:
+      traefik.port: "7878"
     restart_policy: always
     state: started
