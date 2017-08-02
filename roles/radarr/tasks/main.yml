@@ -2,7 +2,6 @@
 - name: Stop and remove any existing container
   docker_container:
     name: radarr
-    image: hotio/radarr
     state: absent
 
 - name: Create and start container
@@ -22,10 +21,9 @@
       - "/mnt/unionfs/Media/Movies:/movies"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
-    links:
-      - "nzbget:nzbget"
-      - "rutorrent:rutorrent"
-      - "jackett:jackett"
-      - "nzbhydra:nzbhydra"
+    networks:
+      - name: cloudbox
+        aliases:
+          - radarr
     restart_policy: always
     state: started

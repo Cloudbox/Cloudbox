@@ -2,7 +2,6 @@
 - name: Stop and remove any existing container
   docker_container:
     name: rutorrent
-    image: linuxserver/rutorrent
     state: absent
 
 - name: Check rtorrent.rc exists
@@ -47,7 +46,6 @@
 - name: Stop container to customize rtorrent.rc
   docker_container:
     name: rutorrent
-    image: linuxserver/rutorrent
     state: stopped
   when: rtorrent_rc.stat.exists == False
 
@@ -146,6 +144,5 @@
 - name: Start container to apply changes
   docker_container:
     name: rutorrent
-    image: linuxserver/rutorrent
     state: started
   when: rtorrent_rc.stat.exists == False

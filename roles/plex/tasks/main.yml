@@ -2,7 +2,6 @@
 - name: Stop and remove any existing container
   docker_container:
     name: plex
-    image: plexinc/pms-docker
     state: absent
 
 - name: Retrieve public ip
@@ -57,6 +56,10 @@
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
     restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - plex
     state: started
   when: plex_prefs.stat.exists == False
 
@@ -87,6 +90,10 @@
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
     restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - plex
     state: started
   when: plex_prefs.stat.exists
 

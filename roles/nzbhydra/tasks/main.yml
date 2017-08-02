@@ -2,7 +2,6 @@
 - name: Stop and remove any existing container
   docker_container:
     name: nzbhydra
-    image: linuxserver/hydra
     state: absent
 
 - name: Create and start container
@@ -18,4 +17,8 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra:/config"
     restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - nzbhydra
     state: started
