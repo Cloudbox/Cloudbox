@@ -9,8 +9,7 @@
     name: traefik
     image: "traefik:latest"
     published_ports:
-    # set below 8080 to 127.0.0.1 later
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
       - "80:80"
       - "443:443"
     volumes:
@@ -22,5 +21,7 @@
       - name: cloudbox
         aliases:
           - traefik
+    labels:
+      traefik.port: "8080"
     restart_policy: always
     state: started
