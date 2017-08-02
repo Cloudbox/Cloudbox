@@ -14,7 +14,7 @@ defaultEntryPoints = ["http", "https"]
       address = ":443"
       [entryPoints.https.tls]
       [entryPoints.https.auth.basic]    
-		  usersFile = "/config/htpasswd"
+		  users = ["test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/", "test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"]
       
 [acme]
     email = "{{email}}"
