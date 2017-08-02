@@ -13,9 +13,6 @@
   plex:
     tag: public
     transcodes: "/home/{{user}}/transcodes"
-  plexdrive:
-    client_id: ""
-    client_secret: ""
   plex_autoscan:
     ip: "0.0.0.0"
   rclone:
