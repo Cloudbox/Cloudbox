@@ -22,6 +22,15 @@
     mode: 0775
     force: yes
 
+- name: Ensure acme.json exists
+  file:
+    path: "/opt/traefik/acme.json"
+    state: touch
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+    
 - name: Create and start container
   docker_container:
     name: traefik
