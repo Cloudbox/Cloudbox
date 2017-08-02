@@ -67,6 +67,22 @@
     state: present
   when: nzbget_conf.stat.exists == False
 
+- name: Remove default Username
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ControlUsername\s?='
+    line: 'ControlUsername='
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Rename default Password
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ControlPassword=\s?='
+    line: 'ControlPassword='
+    state: present
+  when: nzbget_conf.stat.exists == False
+
 - name: Start container to apply changes
   docker_container:
     name: nzbget
