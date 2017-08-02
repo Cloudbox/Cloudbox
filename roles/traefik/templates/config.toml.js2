@@ -21,6 +21,9 @@ address = ":443"
 
 [entryPoints.https.tls]
 
+[entryPoints.https.auth.basic]
+usersFile = "/config/htpasswd"
+
 [acme]
 email = "{{email}}"
 storage = "/config/acme.json"
