@@ -5,22 +5,22 @@
     state: absent
 
 - name: Import config.toml
-    template:
-      src: config.toml.js2
-      dest: /opt/traefik/config.toml
-      owner: "{{user}}"
-      group: "{{user}}"
-      mode: 0775
-      force: yes
+  template:
+    src: config.toml.js2
+    dest: /opt/traefik/config.toml
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
 
 - name: Import htpasswd
-    template:
-      src: htpasswd.js2
-      dest: /opt/traefik/htpasswd
-      owner: "{{user}}"
-      group: "{{user}}"
-      mode: 0775
-      force: yes
+  template:
+    src: htpasswd.js2
+    dest: /opt/traefik/htpasswd
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
 
 - name: Create and start container
   docker_container:
