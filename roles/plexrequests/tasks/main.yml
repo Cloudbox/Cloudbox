@@ -18,7 +18,7 @@
       - "/opt/plexrequests:/config"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.6
+        ipv4_address: 172.18.0.17
         aliases:
           - plexrequests
     labels:
