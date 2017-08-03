@@ -23,5 +23,6 @@
           - netdata
     labels:
       traefik.port: "19999"
+      traefik.frontend.auth.basic: "seed:$$apr1$$rIGITnks$$AESJ1N8/KFspvhK49oj2h1"
     restart_policy: always
     state: started
