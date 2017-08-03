@@ -16,6 +16,7 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
+      - "/dev/shm/fakenet:/fakenet/proc/net"
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - name: cloudbox
