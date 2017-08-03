@@ -32,9 +32,7 @@
       - name: cloudbox
         aliases:
           - rutorrent
-    labels:
-      traefik.port: "80"
-      traefik.frontend.auth.basic: "{{web_htpasswd}}"
+    labels: { traefik.port: "80",  traefik.frontend.auth.basic: "{{web_htpasswd}}" }
     restart_policy: always
     state: started
 
