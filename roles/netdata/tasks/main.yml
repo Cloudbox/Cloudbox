@@ -12,8 +12,6 @@
       - SYS_PTRACE
     published_ports:
       - "19999:19999"
-    env:
-      NETDATA_IP: "127.0.0.1"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"
