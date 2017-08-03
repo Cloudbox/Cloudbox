@@ -1,0 +1,132 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: plex
+    state: absent
+
+- name: Retrieve public ip
+  ipify_facts:
+  
+- name: Show ADVERTISE_IP to be used
+  debug: msg="Will use ADVERTISE_IP with plex container http://{{ipify_public_ip}}:{{plex.port}}/"
+
+- name: Retreive plex docker iamge
+  docker_image:
+    name: "plexinc/pms-docker:{{plex.tag}}"
+
+- name: Check Preferences.xml exists
+  stat:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+  register: plex_prefs
+
+- name: Ask user for his plex server claim id
+  pause: 
+    prompt: "To continue the plex installation, you must visit https://plex.tv/claim and retrieve a claim token, paste it below and press enter"
+  register: plex_claim
+  when: plex_prefs.stat.exists == False
+
+- debug: msg="Using plex claim token {{plex_claim.user_input}}"
+  when: plex_prefs.stat.exists == False
+
+- name: Create and start container for fresh install
+  docker_container:
+    name: plex
+    image: "plexinc/pms-docker:{{plex.tag}}"
+    published_ports:
+      - "{{plex.port}}:32400/tcp"
+      - "3005:3005/tcp"
+      - "8324:8324/tcp"
+      - "32469:32469/tcp"
+      - "1900:1900/udp"
+      - "32410:32410/udp"
+      - "32412:32412/udp"
+      - "32413:32413/udp"
+      - "32414:32414/udp"
+      - "33400:33400/tcp"
+      - "33443:33443/tcp"
+    env:
+      PLEX_UID: "{{uid.stdout}}"
+      PLEX_GID: "{{gid.stdout}}"
+      PLEX_CLAIM: "{{plex_claim.user_input}}"
+      CHANGE_CONFIG_DIR_OWNERSHIP: false
+      ADVERTISE_IP: "http://{{ipify_public_ip}}:{{plex.port}}/"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/plex:/config"
+      - "{{plex.transcodes}}:/transcode"
+      - "/mnt/unionfs/Media:/data"
+    restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - plex
+    state: started
+  when: plex_prefs.stat.exists == False
+
+- name: Create and start container for existing install
+  docker_container:
+    name: plex
+    image: "plexinc/pms-docker:{{plex.tag}}"
+    published_ports:
+      - "{{plex.port}}:32400/tcp"
+      - "3005:3005/tcp"
+      - "8324:8324/tcp"
+      - "32469:32469/tcp"
+      - "1900:1900/udp"
+      - "32410:32410/udp"
+      - "32412:32412/udp"
+      - "32413:32413/udp"
+      - "32414:32414/udp"
+      - "33400:33400/tcp"
+      - "33443:33443/tcp"
+    env:
+      PLEX_UID: "{{uid.stdout}}"
+      PLEX_GID: "{{gid.stdout}}"
+      CHANGE_CONFIG_DIR_OWNERSHIP: false
+      ADVERTISE_IP: "http://{{ipify_public_ip}}:{{plex.port}}/"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/plex:/config"
+      - "{{plex.transcodes}}:/transcode"
+      - "/mnt/unionfs/Media:/data"
+    restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - plex
+    state: started
+  when: plex_prefs.stat.exists
+
+# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
+- name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
+  wait_for:
+    timeout: 5
+
+- name: "Ensure transcodes folder has the correct permissions"
+  file:
+    path: "{{plex.transcodes}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    recurse: true
+
+- name: Check WebTools exists
+  stat:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
+  register: webtools_bundle
+
+- name: Wait for Plug-ins folder to be created by Plex
+  wait_for:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    state: present
+  when: webtools_bundle.stat.exists == False
+
+- name: Install WebTools
+  unarchive:
+    src: https://github.com/ukdtom/WebTools.bundle/releases/download/2.4.1/WebTools.bundle.zip
+    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    copy: no
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+  when: webtools_bundle.stat.exists == False

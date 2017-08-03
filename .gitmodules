@@ -1,3 +1,0 @@
-[submodule "roles/ansible-rclone"]
-	path = roles/ansible-rclone
-	url = https://github.com/stefangweichinger/ansible-rclone

@@ -1,0 +1,31 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: plexpy
+    state: absent
+
+- name: Wait for Plex Logs folder to be created by Plex
+  wait_for:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
+    state: present
+
+- name: Create and start container
+  docker_container:
+    name: plexpy
+    image: linuxserver/plexpy
+    published_ports:
+      - "{{plexpy.port}}:8181"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/plexpy:/config"
+      - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
+    restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - plexpy
+    state: started
+

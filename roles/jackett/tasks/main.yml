@@ -1,0 +1,24 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: jackett
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: jackett
+    image: linuxserver/jackett
+    published_ports:
+      - "{{jackett.port}}:9117"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/jackett:/config"
+    restart_policy: always
+    state: started
+    networks:
+      - name: cloudbox
+        aliases:
+          - jackett

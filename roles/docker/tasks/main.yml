@@ -1,6 +1,6 @@
 ---
 - name: Install required packages
-  apt: name={{item}} state=installed
+  apt: "name={{item}} state=installed"
   with_items:
     - apt-transport-https
     - ca-certificates
@@ -13,13 +13,23 @@
 
 - name: Add official repository
   apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-
-- name: Update apt
-  apt: 
-    update_cache: yes
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable" 
 
 - name: Install docker
   apt:
-    name: docker
+    name: docker-ce
     state: installed
+    update_cache: yes
+
+- name: Install ctop
+  get_url:
+    url:  https://github.com/bcicen/ctop/releases/download/v0.6.0/ctop-0.6.0-linux-amd64
+    dest: /usr/local/bin/ctop
+    mode: 0755
+    owner: root
+    group: root
+    force: yes
+
+- name: Create cloudbox network
+  docker_network:
+    name: cloudbox

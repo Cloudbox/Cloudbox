@@ -1,0 +1,74 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: nzbget
+    state: absent
+
+- name: Check nzbget.conf exists
+  stat:
+    path: "/opt/nzbget/nzbget.conf"
+  register: nzbget_conf
+
+- name: Create and start container
+  docker_container:
+    name: nzbget
+    image: linuxserver/nzbget
+    published_ports:
+      - "{{nzbget.port}}:6789"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbget:/config"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+    restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - nzbget
+    state: started
+
+- name: Wait for nzbget.conf to be created
+  wait_for:
+    path: "/opt/nzbget/nzbget.conf"
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Stop container to customize nzbget.conf
+  docker_container:
+    name: nzbget
+    state: stopped
+  when: nzbget_conf.stat.exists == False
+
+- name: Change downloads directory
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^MainDir\s?='
+    line: 'MainDir=/downloads/nzbget'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Rename Movies category
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^Category1.Name\s?='
+    line: 'Category1.Name=radarr'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Rename TV category
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^Category2.Name\s?='
+    line: 'Category2.Name=sonarr'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Start container to apply changes
+  docker_container:
+    name: nzbget
+    state: started
+  when: nzbget_conf.stat.exists == False
+
+
