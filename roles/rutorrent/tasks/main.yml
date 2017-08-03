@@ -9,10 +9,6 @@
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
   register: rtorrent_rc
 
-- name: Read htpasswd content from /opt/traefik
-  shell: cat /opt/traefik/htpasswd
-  register: web_htpasswd
-
 - name: Create and start container
   docker_container:
     name: rutorrent
@@ -32,7 +28,8 @@
       - name: cloudbox
         aliases:
           - rutorrent
-    labels: { traefik.port: "80",  traefik.frontend.auth.basic: "{{web_htpasswd}}" }
+    labels:
+      traefik.port: "80"
     restart_policy: always
     state: started
 
@@ -124,6 +121,26 @@
     regexp: '^encryption\s?='
     line: 'encryption = allow_incoming,enable_retry,prefer_plaintext'
     state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Copy across custom nginx.conf with htpasswd support
+  copy:
+    src: nginx.conf
+    dest: /opt/rutorrent/nginx/nginx.conf
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: rtorrent_rc.stat.exists == False
+
+- name: Create htpasswd
+  htpasswd:
+    path: /opt/rutorrent/nginx/.htpasswd
+    name: "{{user}}"
+    password: "{{rutorrent.passwd}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
   when: rtorrent_rc.stat.exists == False
 
 - name: Start container to apply changes

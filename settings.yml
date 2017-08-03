@@ -1,12 +1,14 @@
 ---
   user: seed
   passwd: password123
-  web_passwd: password321
   domain: cloudb0x.ml
   email: your@email.com
+  traefik:
+    passwd: password321
   nzbget:
     downloads: "/home/{{user}}/downloads/nzbget"
   rutorrent:
+    passwd: password321
     downloads: "/home/{{user}}/downloads/rutorrent"
   plex:
     tag: public

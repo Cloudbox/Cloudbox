@@ -17,7 +17,7 @@
   htpasswd:
     path: /opt/traefik/htpasswd
     name: "{{user}}"
-    password: "{{web_passwd}}"
+    password: "{{traefik.passwd}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
