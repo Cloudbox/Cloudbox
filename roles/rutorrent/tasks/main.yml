@@ -9,6 +9,10 @@
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
   register: rtorrent_rc
 
+- name: Read htpasswd content from /opt/traefik
+  shell: cat /opt/traefik/htpasswd
+  register: web_htpasswd
+
 - name: Create and start container
   docker_container:
     name: rutorrent
@@ -30,6 +34,7 @@
           - rutorrent
     labels:
       traefik.port: "80"
+      traefik.frontend.auth.basic: "{{web_htpasswd}}"
     restart_policy: always
     state: started
 
