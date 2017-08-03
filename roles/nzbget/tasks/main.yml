@@ -75,7 +75,7 @@
     state: present
   when: nzbget_conf.stat.exists == False
 
-- name: Rename default Password
+- name: Remove default Password
   lineinfile:
     path: "/opt/nzbget/nzbget.conf"
     regexp: '^ControlPassword=\s?='
