@@ -21,7 +21,7 @@ address = ":443"
 
 [entryPoints.https.tls]
 
-[entryPoints.https.auth.basic]
+[web.auth.basic]
 usersFile = "/config/htpasswd"
 
 [acme]
