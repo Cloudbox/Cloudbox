@@ -33,7 +33,7 @@
 - name: Create cloudbox network
   docker_network:
     name: cloudbox
-  ipam_options:
-    subnet: '172.18.0.0/32'
-    gateway: '172.18.0.1'
-    iprange: '172.18.0.0/48'
+    ipam_options:
+      subnet: '172.18.0.0/32'
+      gateway: '172.18.0.1'
+      iprange: '172.18.0.0/48'
