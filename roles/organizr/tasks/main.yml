@@ -1,0 +1,26 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: organizr
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: organizr
+    image: "lsiocommunity/organizr"
+    published_ports:
+      - "127.0.0.1:7421:80"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/organizr:/config"
+    networks:
+      - name: cloudbox
+        aliases:
+          - organizr
+    labels:
+      traefik.port: "80"
+    restart_policy: always
+    state: started

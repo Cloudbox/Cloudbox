@@ -1,7 +1,7 @@
 ---
   user: seed
   passwd: password123
-  domain: cloudb0x.ml
+  domain: cloudb0x.tk
   email: your@email.com
   traefik:
     passwd: password321
