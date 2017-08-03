@@ -1,0 +1,29 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: radarr
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: radarr
+    image: hotio/radarr
+    published_ports:
+      - "{{radarr.port}}:7878"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VERSION: latest
+      MONO_TLS_PROVIDER: legacy
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/radarr:/config"
+      - "/mnt/unionfs/Media/Movies:/movies"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+    networks:
+      - name: cloudbox
+        aliases:
+          - radarr
+    restart_policy: always
+    state: started

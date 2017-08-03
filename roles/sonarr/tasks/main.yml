@@ -1,0 +1,28 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: sonarr
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: sonarr
+    image: "linuxserver/sonarr:develop"
+    published_ports:
+      - "{{sonarr.port}}:8989"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      MONO_TLS_PROVIDER: legacy
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/sonarr:/config"
+      - "/mnt/unionfs/Media/TV:/tv"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+    networks:
+      - name: cloudbox
+        aliases:
+          - sonarr
+    restart_policy: always
+    state: started

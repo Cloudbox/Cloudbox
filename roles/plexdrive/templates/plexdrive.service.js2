@@ -1,0 +1,17 @@
+# /etc/systemd/system/plexdrive.service
+
+[Unit]
+Description=Plexdrive
+After=network-online.target
+
+[Service]
+User={{user}}
+Group={{user}}
+Type=simple
+ExecStart=/opt/plexdrive/plexdrive mount -v 3 --refresh-interval=1m --max-chunks=250 --fuse-options=allow_other,read_only --config=/opt/plexdrive --cache-file=/opt/plexdrive/cache.bolt /mnt/plexdrive
+ExecStop=/bin/fusermount -uz /mnt/plexdrive
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,46 @@
+---
+  user: seed
+  passwd: password123
+  sonarr:
+    port: 8989
+  radarr:
+    port: 7878
+  nzbget:
+    port: 6789
+    downloads: /home/seed/downloads/nzbget
+  rutorrent:
+    port: 3252
+    downloads: /home/seed/downloads/rutorrent
+    user: seed
+    passwd: sekret321
+  jackett:
+    port: 9117
+  nzbhydra:
+    port: 5075
+  plex:
+    port: 32400
+    tag: public
+    transcodes: "/home/{{user}}/transcodes"
+  plexpy:
+    port: 8181
+  plexdrive:
+    client_id: ""
+    client_secret: ""
+  plex_autoscan:
+    ip: "0.0.0.0"
+    port: 3468
+  rclone:
+    version: 1.36
+  unionfs_cleaner:
+    max_local_gigabytes: 200
+    size_check_mins: 30
+    rclone_remote: "google:"
+  backup:
+    tgz_dest: /home/seed/Backups
+    rsync_dest: rsync://somehost.com/Backups
+    rclone_dest: google:/Backups
+    use_rsync: false
+    use_rclone: false
+    stop_plex: false
+    cron_time: weekly
+    cron_state: absent
