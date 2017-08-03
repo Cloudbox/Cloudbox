@@ -19,6 +19,7 @@
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - name: cloudbox
+        ipv4_address: 172.18.0.7
         aliases:
           - netdata
     labels:

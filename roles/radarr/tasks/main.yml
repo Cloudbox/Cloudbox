@@ -23,6 +23,7 @@
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
     networks:
       - name: cloudbox
+        ipv4_address: 172.18.0.14
         aliases:
           - radarr
     labels:

@@ -52,6 +52,7 @@
     restart_policy: always
     networks:
       - name: cloudbox
+        ipv4_address: 172.18.0.15
         aliases:
           - plex
     labels:
@@ -88,6 +89,7 @@
     restart_policy: always
     networks:
       - name: cloudbox
+        ipv4_address: 172.18.0.15
         aliases:
           - plex
     labels:
