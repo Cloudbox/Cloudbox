@@ -11,14 +11,14 @@
     capabilities:
       - SYS_PTRACE
     published_ports:
-      - "127.0.0.1:19999:19999"
+      - "19999:19999"
     env:
       NETDATA_IP: "127.0.0.1"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - name: cloudbox
         aliases:
