@@ -11,7 +11,7 @@
     capabilities:
       - SYS_PTRACE
     published_ports:
-      - "19999:19999"
+      - "127.0.0.1:19999:19999"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"
