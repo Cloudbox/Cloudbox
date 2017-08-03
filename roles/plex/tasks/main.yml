@@ -43,7 +43,7 @@
       PLEX_GID: "{{gid.stdout}}"
       PLEX_CLAIM: "{{plex_claim.user_input}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://plex.{{domain}}/"
+      ADVERTISE_IP: "http://plex.{{domain}}/,https://plex.{{domain}}/"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
@@ -79,7 +79,7 @@
       PLEX_UID: "{{uid.stdout}}"
       PLEX_GID: "{{gid.stdout}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://plex.{{domain}}/"
+      ADVERTISE_IP: "http://plex.{{domain}}/,https://plex.{{domain}}/"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
