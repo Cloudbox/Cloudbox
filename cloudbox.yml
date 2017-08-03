@@ -11,6 +11,7 @@
     - { role: docker, tags: ['full', 'feeder', 'plex'] }
     - { role: watchtower, tags: ['full', 'feeder', 'plex'] }
     - { role: traefik, tags: ['full', 'feeder', 'plex'] }
+    - { role: netdata, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex'] }
