@@ -8,9 +8,9 @@
   docker_container:
     name: netdata
     image: "titpetric/netdata:latest"
-    command: "--cap-add SYS_PTRACE"
+    command: "--cap-add=SYS_PTRACE"
     published_ports:
-      - "127.0.0.1:19999:19999"
+      - "19999:19999"
     env:
       NETDATA_IP: "127.0.0.1"
     volumes:
