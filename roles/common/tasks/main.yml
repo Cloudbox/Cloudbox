@@ -29,6 +29,7 @@
       - logrotate
       - htop
       - nload
+      - fail2ban
       
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
