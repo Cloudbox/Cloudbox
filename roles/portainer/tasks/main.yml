@@ -1,0 +1,24 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: portainer
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: portainer
+    image: "portainer/portainer"
+    published_ports:
+      - "127.0.0.1:9000:9000"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.18
+        aliases:
+          - portainer
+    labels:
+      traefik.port: "9000"
+    restart_policy: always
+    state: started
