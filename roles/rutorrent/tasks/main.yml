@@ -12,11 +12,11 @@
 - name: Create and start container
   docker_container:
     name: rutorrent
-    image: linuxserver/rutorrent
+    image: xeroxmalf/rutorrent-autodl-irssi
     published_ports:
-      - "127.0.0.1:3111:80"
-      - "51413:51413"
-      - "6881:6881/udp"
+      - "127.0.0.1:3111:443"
+      - "127.0.0.1:3112:80"
+      - "45566-45576:45566-45576"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -30,7 +30,7 @@
         aliases:
           - rutorrent
     labels:
-      traefik.port: "80"
+      traefik.port: "443"
     restart_policy: always
     state: started
 
