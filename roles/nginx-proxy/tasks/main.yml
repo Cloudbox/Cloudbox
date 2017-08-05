@@ -41,7 +41,7 @@
       - "/opt/nginx-proxy:/etc/nginx/certs:rw"
       - "/etc/nginx/vhost.d"
       - "/usr/share/nginx/html"
-      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - name: cloudbox
         ipv4_address: 172.18.0.19
