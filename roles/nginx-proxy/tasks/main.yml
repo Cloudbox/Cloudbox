@@ -39,6 +39,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:rw"
+      - "/etc/nginx/vhost.d"
+      - "/usr/share/nginx/html"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
     networks:
       - name: cloudbox
