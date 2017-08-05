@@ -9,8 +9,8 @@
     - { role: motd, tags: ['full', 'feeder', 'plex'] }
     - { role: common, tags: ['full', 'feeder', 'plex'] }
     - { role: docker, tags: ['full', 'feeder', 'plex'] }
-    - { role: watchtower, tags: ['full', 'feeder', 'plex'] }
     - { role: nginx-proxy, tags: ['full', 'feeder', 'plex'] }
+    - { role: watchtower, tags: ['full', 'feeder', 'plex'] }
     - { role: portainer, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
