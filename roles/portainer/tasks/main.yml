@@ -17,7 +17,7 @@
     env:
       VIRTUAL_HOST: "portainer.{{domain}}"
       VIRTUAL_PORT: 9000
-      LETSENCRYPT_HOST: "portainer.{{domain}}"
+      LETSENCRYPT_HOST: "{{domain}},portainer.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     networks:
       - name: cloudbox
