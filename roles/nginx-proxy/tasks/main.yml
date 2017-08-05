@@ -19,7 +19,7 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "/var/nginx/vhost.d:/etc/nginx/vhost.d"
       - "/var/nginx/html:/usr/share/nginx/html"
     env:
