@@ -12,6 +12,7 @@
       - "127.0.0.1:9000:9000"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/portainer:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - name: cloudbox
