@@ -19,9 +19,11 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:ro"
-      - "/etc/nginx/vhost.d"
-      - "/usr/share/nginx/html"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/var/nginx/vhost.d:/etc/nginx/vhost.d"
+      - "/var/nginx/html:/usr/share/nginx/html"
+    env:
+      DEFAULT_HOST: "{{domain}}"
     labels:
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: 
     networks:
@@ -39,9 +41,9 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:rw"
-      - "/etc/nginx/vhost.d"
-      - "/usr/share/nginx/html"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/var/nginx/vhost.d:/etc/nginx/vhost.d"
+      - "/var/nginx/html:/usr/share/nginx/html"
     env:
       DEBUG: true
     networks:
