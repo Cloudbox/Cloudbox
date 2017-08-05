@@ -6,7 +6,7 @@
 
 - name: Stop and remove any existing letsencrypt container
   docker_container:
-    name: letsencrypt-companion
+    name: letsencrypt
     state: absent
 
 - name: Create and start container
@@ -36,7 +36,7 @@
 
 - name: Create and start letsencrypt container
   docker_container:
-    name: letsencrypt-companion
+    name: letsencrypt
     image: "jrcs/letsencrypt-nginx-proxy-companion"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
@@ -50,6 +50,6 @@
       - name: cloudbox
         ipv4_address: 172.18.0.19
         aliases:
-          - letsencrypt-companion
+          - letsencrypt
     restart_policy: always
     state: started
