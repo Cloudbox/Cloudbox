@@ -13,6 +13,10 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "plexrequests.{{domain}}"
+      VIRTUAL_PORT: 3000
+      LETSENCRYPT_HOST: "plexrequests.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexrequests:/config"
@@ -21,7 +25,5 @@
         ipv4_address: 172.18.0.17
         aliases:
           - plexrequests
-    labels:
-      traefik.port: "3000"
     restart_policy: always
     state: started

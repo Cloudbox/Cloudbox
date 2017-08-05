@@ -57,7 +57,7 @@
       - /opt/plex_autoscan
       - /opt/unionfs_cleaner
       - /opt/rclone
-      - /opt/traefik
+      - /opt/nginx-proxy
       - /opt/plexrequests
       - /opt/organizr
       - /opt/portainer

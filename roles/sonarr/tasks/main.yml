@@ -14,6 +14,10 @@
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "sonarr.{{domain}}"
+      VIRTUAL_PORT: 8989
+      LETSENCRYPT_HOST: "sonarr.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sonarr:/config"
@@ -25,7 +29,5 @@
         ipv4_address: 172.18.0.13
         aliases:
           - sonarr
-    labels:
-      traefik.port: "8989"
     restart_policy: always
     state: started

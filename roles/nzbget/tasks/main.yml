@@ -18,6 +18,10 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "nzbget.{{domain}}"
+      VIRTUAL_PORT: 6789
+      LETSENCRYPT_HOST: "nzbget.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbget:/config"
@@ -28,8 +32,6 @@
         ipv4_address: 172.18.0.9
         aliases:
           - nzbget
-    labels:
-      traefik.port: "6789"
     state: started
 
 - name: Wait for nzbget.conf to be created

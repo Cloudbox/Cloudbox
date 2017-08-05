@@ -13,6 +13,10 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "hydra.{{domain}}"
+      VIRTUAL_PORT: 5075
+      LETSENCRYPT_HOST: "hydra.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra:/config"
@@ -22,6 +26,4 @@
         ipv4_address: 172.18.0.12
         aliases:
           - nzbhydra
-    labels:
-      traefik.port: "5075"
     state: started

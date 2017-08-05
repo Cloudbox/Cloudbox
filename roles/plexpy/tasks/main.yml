@@ -18,6 +18,10 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "plexpy.{{domain}}"
+      VIRTUAL_PORT: 8181
+      LETSENCRYPT_HOST: "plexpy.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexpy:/config"
@@ -28,7 +32,5 @@
         ipv4_address: 172.18.0.16
         aliases:
           - plexpy
-    labels:
-      traefik.port: "8181"
     state: started
 

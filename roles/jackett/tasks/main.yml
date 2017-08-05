@@ -13,12 +13,14 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "jackett.{{domain}}"
+      VIRTUAL_PORT: 9117
+      LETSENCRYPT_HOST: "jackett.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"
     restart_policy: always
-    labels:
-      traefik.port: "9117"
     state: started
     networks:
       - name: cloudbox

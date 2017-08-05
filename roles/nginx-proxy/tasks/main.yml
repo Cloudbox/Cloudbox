@@ -1,0 +1,49 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: nginx-proxy
+    state: absent
+
+- name: Stop and remove any existing letsencrypt container
+  docker_container:
+    name: letsencrypt-companion
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: nginx-proxy
+    image: "jwilder/nginx-proxy"
+    published_ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nginx-proxy:/etc/nginx/certs"
+      - "/etc/nginx/vhost.d"
+      - "/usr/share/nginx/html"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: 
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.6
+        aliases:
+          - nginx-proxy
+    restart_policy: always
+    state: started
+
+- name: Create and start letsencrypt container
+  docker_container:
+    name: letsencrypt-companion
+    image: "jrcs/letsencrypt-nginx-proxy-companion"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nginx-proxy:/etc/nginx/certs:rw"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.19
+        aliases:
+          - letsencrypt-companion
+    restart_policy: always
+    state: started

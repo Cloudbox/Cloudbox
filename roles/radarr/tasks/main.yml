@@ -15,6 +15,10 @@
       PGID: "{{gid.stdout}}"
       VERSION: latest
       MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "radarr.{{domain}}"
+      VIRTUAL_PORT: 7878
+      LETSENCRYPT_HOST: "radarr.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarr:/config"
@@ -26,7 +30,5 @@
         ipv4_address: 172.18.0.14
         aliases:
           - radarr
-    labels:
-      traefik.port: "7878"
     restart_policy: always
     state: started
