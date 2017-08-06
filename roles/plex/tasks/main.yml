@@ -146,12 +146,22 @@
     state: present
   when: trakttv_bundle.stat.exists == False
 
-- name: Install TraktTv
+- name: Unarchive TraktTv
   unarchive:
     src: https://github.com/trakt/Plex-Trakt-Scrobbler/archive/master.zip
-    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    dest: "/tmp"
     copy: no
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
+  when: trakttv_bundle.stat.exists == False
+
+- name: Install TraktTv
+  copy:
+    src: "/tmp/Plex-Trakt-Scrobbler-master/Trakttv.bundle"
+    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
   when: trakttv_bundle.stat.exists == False
