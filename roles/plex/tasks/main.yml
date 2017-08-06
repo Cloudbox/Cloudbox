@@ -134,3 +134,24 @@
     group: "{{user}}"
     mode: 0775
   when: webtools_bundle.stat.exists == False
+
+- name: Check TraktTv exists
+  stat:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Trakttv.bundle"
+  register: trakttv_bundle
+
+- name: Wait for Plug-ins folder to be created by Plex
+  wait_for:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    state: present
+  when: trakttv_bundle.stat.exists == False
+
+- name: Install TraktTv
+  unarchive:
+    src: https://github.com/trakt/Plex-Trakt-Scrobbler/archive/master.zip
+    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    copy: no
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+  when: trakttv_bundle.stat.exists == False
