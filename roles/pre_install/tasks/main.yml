@@ -18,6 +18,19 @@
 - name: "Make cloudbox folder readable/writeable by {{user}}"
   file: "path={{playbook_dir}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
 
+- name: "Check docker binary exists"
+  stat: 
+    path: "/usr/bin/docker"
+  register: docker_binary
+
+- name: "Stop existing containers"
+  shell: "docker stop $(docker ps -aq)"
+  when: docker_binary.stat.exists
+
+- name: "Remove existing containers"
+  shell: "docker rm $(docker ps -aq)"
+  when: docker_binary.stat.exists
+
 # Will uncomment this when/if I ever figure out how to fix plexdrive_token_builder to generate a valid token that plexdrive is able to refresh after the 1hr has expired
 # currently it can use the supplied token for an hour, then it is unable to re-authorize - and not sure why as as far as I can tell, the script mimics plexdrive's auth url and token retrieval requests
 
