@@ -158,8 +158,8 @@
 
 - name: Install TraktTv
   copy:
-    src: "/tmp/Plex-Trakt-Scrobbler-master/Trakttv.bundle"
-    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    src: "/tmp/Plex-Trakt-Scrobbler-master/Trakttv.bundle/"
+    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Trakttv.bundle"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
