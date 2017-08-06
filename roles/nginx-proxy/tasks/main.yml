@@ -23,7 +23,7 @@
       - "/etc/nginx/vhost.d"
       - "/usr/share/nginx/html"
     labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: true
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     networks:
       - name: cloudbox
         ipv4_address: 172.18.0.6
