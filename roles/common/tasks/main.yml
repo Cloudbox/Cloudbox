@@ -28,6 +28,7 @@
       - rsync
       - logrotate
       - htop
+      - iotop
       - nload
       - fail2ban
       
