@@ -62,6 +62,7 @@
       - /opt/plexrequests
       - /opt/organizr
       - /opt/portainer
+      - /opt/couchpotato
       - "/home/{{user}}/.config/rclone"
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"

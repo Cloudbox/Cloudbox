@@ -1,0 +1,32 @@
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: couchpotato
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: couchpotato
+    image: "linuxserver/couchpotato"
+    published_ports:
+      - "127.0.0.1:5050:5050"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "potato.{{domain}}"
+      VIRTUAL_PORT: 5050
+      LETSENCRYPT_HOST: "potato.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/couchpotato:/config"
+      - "/mnt/unionfs/Media/Movies:/movies"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.20
+        aliases:
+          - couchpotato
+    restart_policy: always
+    state: started
