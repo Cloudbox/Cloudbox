@@ -3,8 +3,6 @@
   passwd: password123
   domain: testcloudbox.ml
   email: your@email.com
-  traefik:
-    passwd: password321
   nzbget:
     downloads: "/home/{{user}}/downloads/nzbget"
   rutorrent:
