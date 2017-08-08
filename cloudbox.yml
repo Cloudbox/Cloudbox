@@ -23,7 +23,6 @@
     - { role: nzbhydra, tags: ['full', 'feeder'] }
     - { role: sonarr, tags: ['full', 'feeder'] }
     - { role: radarr, tags: ['full', 'feeder'] }
-    - { role: couchpotato, tags: ['full', 'feeder'] }
     - { role: plex, tags: ['full', 'plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
     - { role: plexrequests, tags: ['full', 'plex'] }
