@@ -54,6 +54,14 @@
     state: present
   when: nzbget_conf.stat.exists == False
 
+- name: Change scripts directory
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ScriptDir\s?='
+    line: 'ScriptDir=/config/scripts'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
 - name: Rename Movies category
   lineinfile:
     path: "/opt/nzbget/nzbget.conf"

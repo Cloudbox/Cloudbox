@@ -50,6 +50,7 @@
       - /opt/sonarr
       - /opt/radarr
       - /opt/nzbget
+      - /opt/nzbget/scripts
       - /opt/rutorrent
       - /opt/jackett
       - /opt/nzbhydra
