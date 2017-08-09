@@ -63,6 +63,7 @@
       - /opt/plexrequests
       - /opt/organizr
       - /opt/portainer
+      - /opt/scripts
       - "/home/{{user}}/.config/rclone"
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
