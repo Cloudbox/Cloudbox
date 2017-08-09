@@ -48,6 +48,11 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
+- name: "Wait for 10 seconds before stopping rutorrent container"
+  wait_for:
+    timeout: 10
+  when: rtorrent_rc.stat.exists == False
+
 - name: Stop container to customize rtorrent.rc
   docker_container:
     name: rutorrent

@@ -40,6 +40,11 @@
     state: present
   when: nzbget_conf.stat.exists == False
 
+- name: "Wait for 10 seconds before stopping nzbget container"
+  wait_for:
+    timeout: 10
+  when: nzbget_conf.stat.exists == False
+
 - name: Stop container to customize nzbget.conf
   docker_container:
     name: nzbget
