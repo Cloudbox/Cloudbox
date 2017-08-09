@@ -1,12 +1,3 @@
 ---
-- name: Ensure /opt/scripts/torrent exists
-  file:
-    path: /opt/scripts/torrent
-    state: directory
-    mode: 0775 
-    owner: "{{user}}"
-    group: "{{user}}"
-    recurse: "true"
-
 - name: Import TorrentCleanup.py
   copy: "src=TorrentCleanup.py dest=/opt/scripts/torrent/TorrentCleanup.py force=yes owner={{user}} group={{user}} mode=0775"

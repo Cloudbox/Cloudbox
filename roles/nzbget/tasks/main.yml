@@ -26,6 +26,7 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbget:/config"
       - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "/opt/scripts/nzb:/scripts"
     restart_policy: always
     networks:
       - name: cloudbox
@@ -63,7 +64,7 @@
   lineinfile:
     path: "/opt/nzbget/nzbget.conf"
     regexp: '^ScriptDir\s?='
-    line: 'ScriptDir=/config/scripts'
+    line: 'ScriptDir=/scripts'
     state: present
   when: nzbget_conf.stat.exists == False
 

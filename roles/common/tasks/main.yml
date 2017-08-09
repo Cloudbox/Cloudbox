@@ -64,6 +64,8 @@
       - /opt/organizr
       - /opt/portainer
       - /opt/scripts
+      - /opt/scripts/torrent
+      - /opt/scripts/nzb
       - "/home/{{user}}/.config/rclone"
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
