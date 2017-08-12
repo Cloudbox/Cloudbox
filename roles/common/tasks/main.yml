@@ -32,12 +32,12 @@
       - nload
       - fail2ban
       - ufw
+      - speedtest-cli
       
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
     with_items:
       - docker-py
-      - speedtest-cli
 
   - name: Create common directories
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
