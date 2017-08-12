@@ -31,6 +31,7 @@
       - iotop
       - nload
       - fail2ban
+      - ufw
       
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
