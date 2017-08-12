@@ -229,3 +229,9 @@
 
 - name: Disable ondemand CPU frequency scaling daemon
   shell: "update-rc.d ondemand disable"
+
+- name: Ensure all cores are in performance mode on reboot
+  cron:
+    name: "Set all cores to performance mode"
+    special_time: reboot
+    job: "for ((i=0;i<$(nproc);i++)); do cpufreq-set -c $i -r -g performance; done"
