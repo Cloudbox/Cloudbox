@@ -213,7 +213,7 @@
     state: touch
   when: cpufrequtils_file.stat.exists == False
 
-- name: Set CPU frequency scaling governor to performance
+- name: Set CPU frequency scaling govenor to performance
   lineinfile:
     path: "/etc/default/cpufrequtils"
     regexp: '^GOVENOR\s?='
