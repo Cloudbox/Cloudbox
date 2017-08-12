@@ -149,13 +149,24 @@
 - name: Set noatime,nobarrier opts for / mount
   mount:
     path: /
-    opts: noatime,nobarrier
+    opts: defaults,noatime,nobarrier
     state: present
     fstype: ext4
     src: "{{ item.device }}"
   with_items:
     - "{{ ansible_mounts }}"
   when: "item.mount == '/'"
+
+- name: Check /etc/default/cpufrequtils exists
+  stat:
+    path: /etc/default/cpufrequtils
+  register: cpufrequtils_file
+
+- name: Create /etc/default/cpufrequtils
+  file:
+    path: /etc/default/cpufrequtils
+    state: touch
+  when: cpufrequtils_file.stat.exists == False
 
 - name: Set CPU frequency scaling governor to performance
   lineinfile:
