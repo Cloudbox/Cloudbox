@@ -74,6 +74,24 @@
     value: 10
     state: present
 
+- name: Set dirty_background_ratio
+  sysctl:
+    name: vm.dirty_background_ratio
+    value: 10
+    state: present
+
+- name: Set dirty_ratio
+  sysctl:
+    name: vm.dirty_ratio
+    value: 15
+    state: present
+
+- name: Set somaxconn to 1024
+  sysctl:
+    name: net.core.somaxconn
+    value: 1024
+    state: present
+
 - name: Increase netdev_max_backlog
   sysctl:
     name: net.core.netdev_max_backlog
