@@ -151,6 +151,11 @@
     path: /
     opts: noatime,nobarrier
     state: present
+    fstype: ext4
+    src: "{{ item.device }}"
+  with_items:
+    - "{{ ansible_mounts }}"
+  when: "item.mount == '/'"
 
 - name: Set CPU frequency scaling governor to performance
   lineinfile:
