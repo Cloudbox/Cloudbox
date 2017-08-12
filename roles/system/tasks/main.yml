@@ -188,6 +188,9 @@
     value: fq
     state: present
 
+- debug: 
+    msg: "System mounts: are {{ ansible_mounts }}"
+
 - name: Set noatime,nobarrier opts for / mount
   mount:
     path: /
@@ -213,8 +216,8 @@
 - name: Set CPU frequency scaling governor to performance
   lineinfile:
     path: "/etc/default/cpufrequtils"
-    regexp: '^GOVERNOR\s?='
-    line: 'GOVERNOR="performance"'
+    regexp: '^GOVENOR\s?='
+    line: 'GOVENOR="performance"'
     state: present
 
 - name: Ensure governor is enabled
