@@ -98,6 +98,30 @@
     value: 1
     state: present
 
+- name: Enable tcp_mtu_probing
+  sysctl:
+    name: net.ipv4.tcp_mtu_probing
+    value: 1
+    state: present
+
+- name: Enable tcp_sack
+  sysctl:
+    name: net.ipv4.tcp_sack
+    value: 1
+    state: present
+
+- name: Increase tcp_adv_win_scale
+  sysctl:
+    name: net.ipv4.tcp_adv_win_scale
+    value: 2
+    state: present
+
+- name: Enable tcp_rfc1337
+  sysctl:
+    name: net.ipv4.tcp_rfc1337
+    value: 1
+    state: present
+
 - name: Increase tcp_fin_timeout
   sysctl:
     name: net.ipv4.tcp_fin_timeout
