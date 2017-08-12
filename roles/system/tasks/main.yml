@@ -235,3 +235,4 @@
     name: "Set all cores to performance mode"
     special_time: reboot
     job: "for ((i=0;i<$(nproc);i++)); do cpufreq-set -c $i -r -g performance; done"
+    state: present
