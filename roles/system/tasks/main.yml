@@ -213,11 +213,18 @@
     state: touch
   when: cpufrequtils_file.stat.exists == False
 
-- name: Set CPU frequency scaling govenor to performance
+- name: Set CPU frequency scaling governor to performance
   lineinfile:
     path: "/etc/default/cpufrequtils"
     regexp: '^GOVENOR\s?='
     line: 'GOVENOR="performance"'
+    state: present
+
+- name: Set CPU frequency scaling governor to performance
+  lineinfile:
+    path: "/etc/default/cpufrequtils"
+    regexp: '^GOVERNOR\s?='
+    line: 'GOVERNOR="performance"'
     state: present
 
 - name: Ensure governor is enabled
@@ -229,10 +236,3 @@
 
 - name: Disable ondemand CPU frequency scaling daemon
   shell: "update-rc.d ondemand disable"
-
-- name: Ensure all cores are in performance mode on reboot
-  cron:
-    name: "Set all cores to performance mode"
-    special_time: reboot
-    job: "for ((i=0;i<$(nproc);i++)); do cpufreq-set -c $i -r -g performance; done"
-    state: present
