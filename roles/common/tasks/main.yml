@@ -64,7 +64,6 @@
       - /opt/plexrequests
       - /opt/organizr
       - /opt/portainer
-      - /opt/cadvisor
       - /opt/scripts
       - /opt/scripts/torrent
       - /opt/scripts/nzb
