@@ -43,16 +43,16 @@
     value: 67108864
     state: present
 
-- name: Increase tcp_rmem autotune buffer limit to 16 MB
+- name: Increase tcp_rmem autotune buffer limit to 32 MB
   sysctl:
     name: net.ipv4.tcp_rmem
-    value: "4096 87380 16777216"
+    value: "4096 87380 33554432"
     state: present
     
-- name: Increase tcp_wmem autotune buffer limit to 16 MB
+- name: Increase tcp_wmem autotune buffer limit to 32 MB
   sysctl:
     name: net.ipv4.tcp_wmem
-    value: "4096 87380 16777216"
+    value: "4096 87380 33554432"
     state: present
 
 - name: Set tcp_congestion_control to bbr
