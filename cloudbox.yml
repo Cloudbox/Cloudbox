@@ -12,6 +12,7 @@
     - { role: nginx-proxy, tags: ['full', 'feeder', 'plex'] }
     - { role: watchtower, tags: ['full', 'feeder', 'plex'] }
     - { role: portainer, tags: ['full', 'feeder', 'plex'] }
+    - { role: cadvisor, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex'] }
