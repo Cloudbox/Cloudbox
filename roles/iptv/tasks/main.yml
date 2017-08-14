@@ -64,6 +64,5 @@
           ipv4_address: 172.18.0.21
           aliases:
             - plexheadend
-      user: "{{uid.stdout}}:{{gid.stdout}}"
       restart_policy: always
       state: started
