@@ -19,13 +19,13 @@
       name: tvheadend
       state: absent
 
-  - name: Create and start container
+  - name: Create and start tvheadend container
     docker_container:
       name: tvheadend
       image: "linuxserver/tvheadend:release-4.2"
       published_ports:
         - "127.0.0.1:9981:9981"
-        - "127.0.0.1:9982:9982"
+        - "9982:9982"
       env:
         PUID: "{{uid.stdout}}"
         PGID: "{{gid.stdout}}"
@@ -49,7 +49,7 @@
       name: plexheadend
       state: absent
 
-  - name: Create and start container
+  - name: Create and start plexheadend container
     docker_container:
       name: plexheadend
       image: "wrboyce/plexheadend"
