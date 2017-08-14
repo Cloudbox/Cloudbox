@@ -53,15 +53,10 @@
     docker_container:
       name: plexheadend
       image: "wrboyce/plexheadend"
-      exposed_ports:
-        - 80
-      published_ports:
-        - "127.0.0.1:81:80"
       env:
         PLEXHEADEND_TVH_HOST: tvheadend
         PLEXHEADEND_PROXY_HOSTNAME: plexheadend
-        PLEXHEADEND_TUNERS: 8
-      user: "{{uid.stdout}}:{{gid.stdout}}"
+        PLEXHEADEND_TUNERS: 4
       volumes:
         - "/etc/localtime:/etc/localtime:ro"
       networks:
