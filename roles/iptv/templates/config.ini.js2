@@ -1,6 +1,0 @@
-[config]
-username = ""
-password = ""
-service = ""
-server = ""
-ip = "smoothstreams.{{domain}}"
