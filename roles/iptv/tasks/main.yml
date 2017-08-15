@@ -13,6 +13,10 @@
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
     with_items:
       - /opt/tvheadend
+      - /opt/smoothstreams
+      - /opt/smoothstreams/www
+      - /opt/smoothstreams/www/cache
+      - /opt/smoothstreams/www/playlist
 
   - name: Stop and remove any existing container
     docker_container:
@@ -41,5 +45,51 @@
           ipv4_address: 172.18.0.20
           aliases:
             - tvheadend
+      restart_policy: always
+      state: started
+
+  - name: Check smoothstreams config.ini exists
+    stat:
+      path: /opt/smoothstreams/www
+    register: smoothstreams_config
+
+  - name: Stop and remove any existing container
+    docker_container:
+      name: smoothstreams
+      state: absent
+
+  - name: Import config.ini
+    template: "src=config.ini.js2 dest=/opt/smoothstreams/www/config.ini force=yes owner={{user}} group={{user}} mode=0775"
+    when: smoothstreams_config.stat.exists == False
+
+  - name: Import sstv.php
+    copy: "src=sstv.php dest=/opt/smoothstreams/www/sstv.php force=yes owner={{user}} group={{user}} mode=0775"
+  
+  - name: Import sstv_init.php
+    copy: "src=sstv_init.php dest=/opt/smoothstreams/www/sstv_init.php force=yes owner={{user}} group={{user}} mode=0775"
+  
+  - name: Import empty.png
+    copy: "src=cache/empty.png dest=/opt/smoothstreams/www/cache/empty.png force=yes owner={{user}} group={{user}} mode=0775"
+  
+  - name: Create and start smoothstreams container
+    docker_container:
+      name: smoothstreams
+      image: "linuxserver/nginx"
+      published_ports:
+        - "127.0.0.1:81:80"
+        - "127.0.0.1:444:443"
+      env:
+        PUID: "{{uid.stdout}}"
+        PGID: "{{gid.stdout}}"
+        VIRTUAL_HOST: "smoothstreams.{{domain}}"
+        VIRTUAL_PORT: 80
+      volumes:
+        - "/etc/localtime:/etc/localtime:ro"
+        - "/opt/smoothstreams:/config"
+      networks:
+        - name: cloudbox
+          ipv4_address: 172.18.0.22
+          aliases:
+            - smoothstreams
       restart_policy: always
       state: started
