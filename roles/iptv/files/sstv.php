@@ -20,8 +20,10 @@ if (isset($_GET['ch'])) {
     $url = 'http://' . $config['server'] . '.smoothstreams.tv:9100/' . $config['service']
         . '/ch' . ($_GET['ch'] < 10 ? '0' : '') . $_GET['ch'] . 'q1.stream/';
 
-    file_put_contents('./cache/playlist.m3u8', str_replace('chunks', $url . 'chunks',
-        file_get_contents($url . 'playlist.m3u8?wmsAuthSign=' . $auth['hash'] . '==')));
+    $count = null;
+    $returnValue = preg_replace('/(chunks(\\.m3u8)).*?(wmsAuthSign=[^&]*)/', $url . 'playlist\\2?\\3', file_get_contents($url . 'playlist.m3u8?wmsAuthSign=' . $auth['hash'] . '=='), -1, $count);
+
+    file_put_contents('./cache/playlist.m3u8', $returnValue);
 
     header('Content-Disposition: attachment; filename="playlist.m3u8"');
     header('Content-Length: ' . filesize('./cache/playlist.m3u8'));
