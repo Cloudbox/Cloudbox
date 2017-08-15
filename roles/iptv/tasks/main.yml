@@ -13,6 +13,7 @@
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
     with_items:
       - /opt/tvheadend
+      - /opt/smoothstreams
 
   - name: Stop and remove any existing container
     docker_container:
@@ -41,5 +42,46 @@
           ipv4_address: 172.18.0.20
           aliases:
             - tvheadend
+      restart_policy: always
+      state: started
+
+  - name: Check sstv-playlist-config.json exists
+    stat:
+      path: /opt/smoothstreams/sstv-playlist-config.json
+    register: smoothstreams_config
+
+  - name: Stop and remove any existing container
+    docker_container:
+      name: smoothstreams
+      state: absent
+
+  - name: Import sstv-playlist-config.json
+    copy: "src=sstv-playlist-config.json dest=/opt/smoothstreams/sstv-playlist-config.json force=yes owner={{user}} group={{user}} mode=0775"
+    when: smoothstreams_config.stat.exists == False
+
+  - name: Import sstv-playlist.py
+    copy: "src=sstv-playlist.py dest=/opt/smoothstreams/sstv-playlist.py force=yes owner={{user}} group={{user}} mode=0775"
+  
+  - name: Import README.md
+    copy: "src=README.md dest=/opt/smoothstreams/README.md force=yes owner={{user}} group={{user}} mode=0775"
+      
+  - name: Create and start smoothstreams container
+    docker_container:
+      name: smoothstreams
+      image: "linuxserver/nginx"
+      published_ports:
+        - "127.0.0.1:81:80"
+        - "127.0.0.1:444:443"
+      env:
+        PUID: "{{uid.stdout}}"
+        PGID: "{{gid.stdout}}"
+      volumes:
+        - "/etc/localtime:/etc/localtime:ro"
+        - "/opt/smoothstreams:/config"
+      networks:
+        - name: cloudbox
+          ipv4_address: 172.18.0.22
+          aliases:
+            - smoothstreams
       restart_policy: always
       state: started
