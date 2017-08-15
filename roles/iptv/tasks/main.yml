@@ -50,7 +50,7 @@
 
   - name: Check smoothstreams config.ini exists
     stat:
-      path: /opt/smoothstreams/www
+      path: /opt/smoothstreams/www/config.ini
     register: smoothstreams_config
 
   - name: Stop and remove any existing container
