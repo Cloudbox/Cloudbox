@@ -43,26 +43,3 @@
             - tvheadend
       restart_policy: always
       state: started
-
-  - name: Stop and remove any existing container
-    docker_container:
-      name: plexheadend
-      state: absent
-
-  - name: Create and start plexheadend container
-    docker_container:
-      name: plexheadend
-      image: "wrboyce/plexheadend"
-      env:
-        PLEXHEADEND_TVH_HOST: tvheadend
-        PLEXHEADEND_PROXY_HOSTNAME: plexheadend
-        PLEXHEADEND_TUNERS: 4
-      volumes:
-        - "/etc/localtime:/etc/localtime:ro"
-      networks:
-        - name: cloudbox
-          ipv4_address: 172.18.0.21
-          aliases:
-            - plexheadend
-      restart_policy: always
-      state: started
