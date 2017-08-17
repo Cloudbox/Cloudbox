@@ -68,8 +68,6 @@
       - /opt/scripts/torrent
       - /opt/scripts/nzb
       - "/home/{{user}}/.config/rclone"
-      - "{{nzbget.downloads}}"
-      - "{{rutorrent.downloads}}"
       - "{{plex.transcodes}}"
       
   - name: Check plexdrive mount folder exist
