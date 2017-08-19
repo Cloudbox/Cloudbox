@@ -28,10 +28,10 @@
   
 - name: Create systemd service override
   copy: 
-    source: "docker-service.override"
+    src: "docker-service.override"
     dest: "/etc/systemd/system/docker.service.d/override.conf"
     force: yes
-    
+
 - name: Restart docker daemon
   systemd:
     state: restarted
