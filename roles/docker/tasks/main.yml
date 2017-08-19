@@ -15,11 +15,28 @@
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable" 
 
+- name: Create systemd service override
+  copy: 
+    source: "docker-service.override"
+    dest: "/etc/systemd/system/docker.service.d/override.conf"
+
 - name: Install docker
   apt:
     name: docker-ce
     state: installed
     update_cache: yes
+  
+- name: Create systemd service override
+  copy: 
+    source: "docker-service.override"
+    dest: "/etc/systemd/system/docker.service.d/override.conf"
+    force: yes
+    
+- name: Restart docker daemon
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
 
 - name: Install ctop
   get_url:
