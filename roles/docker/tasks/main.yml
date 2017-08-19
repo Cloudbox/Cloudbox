@@ -14,12 +14,7 @@
 - name: Add official repository
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable" 
-
-- name: Create systemd service override
-  copy: 
-    source: "docker-service.override"
-    dest: "/etc/systemd/system/docker.service.d/override.conf"
-
+    
 - name: Install docker
   apt:
     name: docker-ce
@@ -30,7 +25,7 @@
   file:
     path: /etc/systemd/system/docker.service.d
     state: directory
-    
+
 - name: Create systemd service override
   copy: 
     src: "docker-service.override"
