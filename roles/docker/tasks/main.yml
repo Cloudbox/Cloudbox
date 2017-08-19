@@ -26,6 +26,11 @@
     state: installed
     update_cache: yes
   
+- name: Ensure systemd service override folder exists
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    
 - name: Create systemd service override
   copy: 
     src: "docker-service.override"
