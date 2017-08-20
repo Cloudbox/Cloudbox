@@ -35,11 +35,5 @@
       - /mnt/unionfs/Media/Movies
       - /mnt/unionfs/Media/TV
 
-  - name: Create download folders
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
-    with_items:
-      - "{{nzbget.downloads}}"
-      - "{{rutorrent.downloads}}"
-
   - name: Start unionfs service
     systemd: state=started name=unionfs daemon_reload=yes enabled=yes

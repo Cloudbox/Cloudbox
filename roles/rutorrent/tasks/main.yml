@@ -4,6 +4,9 @@
     name: rutorrent
     state: absent
 
+- name: Create rutorrent download directory
+  file: "path={{rutorrent.downloads}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+
 - name: Check rtorrent.rc exists
   stat:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"

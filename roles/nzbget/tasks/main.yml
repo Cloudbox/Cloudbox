@@ -4,6 +4,9 @@
     name: nzbget
     state: absent
 
+- name: Create nzbget download directory
+  file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+
 - name: Check nzbget.conf exists
   stat:
     path: "/opt/nzbget/nzbget.conf"
