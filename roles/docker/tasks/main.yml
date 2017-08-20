@@ -20,23 +20,6 @@
     name: docker-ce
     state: installed
     update_cache: yes
-  
-- name: Ensure systemd service override folder exists
-  file:
-    path: /etc/systemd/system/docker.service.d
-    state: directory
-
-- name: Create systemd service override
-  copy: 
-    src: "docker-service.override"
-    dest: "/etc/systemd/system/docker.service.d/override.conf"
-    force: yes
-
-- name: Restart docker daemon
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    name: docker
 
 - name: Install ctop
   get_url:
