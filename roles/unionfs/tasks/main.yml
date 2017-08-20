@@ -27,11 +27,6 @@
       dest: /etc/systemd/system/unionfs.service 
       force: yes
 
-   - name: Check unionfs mount folder exist
-    stat:
-      path: /mnt/unionfs
-    register: unionfs_mnt
-
   - name: Create /mnt/unionfs and subdirs
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
     with_items:
@@ -42,9 +37,9 @@
 
   - name: Create download folders
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+    with_items:
       - "{{nzbget.downloads}}"
       - "{{rutorrent.downloads}}"
-    when: unionfs_mnt.stat.exists == False
 
   - name: Start unionfs service
     systemd: state=started name=unionfs daemon_reload=yes enabled=yes
