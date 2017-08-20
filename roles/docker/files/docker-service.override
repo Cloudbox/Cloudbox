@@ -1,2 +1,2 @@
 [Unit]
-After=unionfs.service
+Requires=unionfs.service
