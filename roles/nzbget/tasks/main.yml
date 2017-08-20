@@ -1,7 +1,4 @@
 ---
-- name: Create nzbget download directory
-  file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
-  
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget

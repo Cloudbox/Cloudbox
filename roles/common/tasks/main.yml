@@ -97,4 +97,6 @@
       - /mnt/unionfs/Media
       - /mnt/unionfs/Media/Movies
       - /mnt/unionfs/Media/TV
+      - "{{nzbget.downloads}}"
+      - "{{rutorrent.downloads}}"
     when: unionfs_mnt.stat.exists == False
