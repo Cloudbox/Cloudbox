@@ -7,14 +7,17 @@
 - name: Create and start container
   docker_container:
     name: nzbhydra
-    image: linuxserver/hydra
+    image: hotio/suitarr
     published_ports:
-      - "127.0.0.1:5075:5075"
+      - "127.0.0.1:5075:8080"
     env:
+      APP: "nzbhydra"
+      VERSION: "unstable"
+      BACKUP: "yes"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "hydra.{{domain}}"
-      VIRTUAL_PORT: 5075
+      VIRTUAL_PORT: 8080
       LETSENCRYPT_HOST: "hydra.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:

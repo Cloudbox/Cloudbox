@@ -7,14 +7,17 @@
 - name: Create and start container
   docker_container:
     name: jackett
-    image: linuxserver/jackett
+    image: hotio/suitarr
     published_ports:
-      - "127.0.0.1:9117:9117"
+      - "127.0.0.1:9117:8080"
     env:
+      APP: "jackett"
+      VERSION: "unstable"
+      BACKUP: "yes"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "jackett.{{domain}}"
-      VIRTUAL_PORT: 9117
+      VIRTUAL_PORT: 8080
       LETSENCRYPT_HOST: "jackett.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:

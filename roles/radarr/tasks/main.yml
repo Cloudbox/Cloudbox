@@ -7,16 +7,19 @@
 - name: Create and start container
   docker_container:
     name: radarr
-    image: hotio/radarr
+    image: hotio/suitarr
     published_ports:
-      - "127.0.0.1:7878:7878"
+      - "127.0.0.1:7878:8080"
     env:
+      APP: "radarr"
+      VERSION: "unstable"
+      BACKUP: "yes"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VERSION: latest
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "radarr.{{domain}}"
-      VIRTUAL_PORT: 7878
+      VIRTUAL_PORT: 8080
       LETSENCRYPT_HOST: "radarr.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
