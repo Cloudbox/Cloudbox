@@ -13,10 +13,9 @@
     env:
       APP: "radarr"
       VERSION: "unstable"
-      BACKUP: "yes"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VERSION: latest
+      BACKUP: "yes"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "radarr.{{domain}}"
       VIRTUAL_PORT: 8080
