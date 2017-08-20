@@ -84,19 +84,3 @@
       group: "{{user}}"
       recurse: true
     when: plexdrive_mnt.stat.exists == False
-
-  - name: Check unionfs mount folder exist
-    stat:
-      path: /mnt/unionfs
-    register: unionfs_mnt
-
-  - name: Create /mnt/unionfs and subdirs
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
-    with_items:
-      - /mnt/unionfs
-      - /mnt/unionfs/Media
-      - /mnt/unionfs/Media/Movies
-      - /mnt/unionfs/Media/TV
-      - "{{nzbget.downloads}}"
-      - "{{rutorrent.downloads}}"
-    when: unionfs_mnt.stat.exists == False
