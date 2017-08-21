@@ -27,23 +27,23 @@
       group: "{{user}}"
     when: backup_lock.stat.exists == False
 
-  - name: "Check {{backup.tgz_dest}}/cloudbox.tgz exists"
+  - name: "Check {{backup.tgz_dest}}/cloudbox.tar exists"
     stat:
-      path: "{{backup.tgz_dest}}/cloudbox.tgz"
+      path: "{{backup.tgz_dest}}/cloudbox.tar"
     register: backup_previous_tgz
 
-  - name: "Copying cloudbox.tgz to cloudbox.tgz.backup"
+  - name: "Copying cloudbox.tgz to cloudbox.tar.backup"
     copy:
-      src: "{{backup.tgz_dest}}/cloudbox.tgz"
-      dest: "{{backup.tgz_dest}}/cloudbox.tgz.backup"
+      src: "{{backup.tgz_dest}}/cloudbox.tar"
+      dest: "{{backup.tgz_dest}}/cloudbox.tar.backup"
       force: yes
       group: "{{user}}"
       owner: "{{user}}"
     when: backup_previous_tgz.stat.exists
 
-  - name: "Remove previous cloudbox.tgz"
+  - name: "Remove previous cloudbox.tar"
     file:
-      path: "{{backup.tgz_dest}}/cloudbox.tgz"
+      path: "{{backup.tgz_dest}}/cloudbox.tar"
       state: absent
     when: backup_previous_tgz.stat.exists
 
@@ -64,7 +64,7 @@
 
   - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tar"
     shell: "tar -cf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
-    
+
   - name: "Start Plex"
     docker_container:
       name: plex

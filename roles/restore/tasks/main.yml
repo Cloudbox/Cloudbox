@@ -36,15 +36,15 @@
   fail: msg="rclone was not installed and there was no rclone.conf in the same path as cloudbox.yml, so could not install rclone automatically..."
   when: backup.use_rclone and rclone_bin.stat.exists == False and rclone_conf.stat.exists == False
 
-- name: "Fetch cloudbox.tgz from {{backup.rclone_dest}}"
-  command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tgz' '{{backup.tgz_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
+- name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
+  command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tgz_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: true
   become_user: "{{user}}"
   when: (backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)
 
-- name: "Fetch cloudbox.tgz from {{backup.rsync_dest}}"
+- name: "Fetch cloudbox.tar from {{backup.rsync_dest}}"
   synchronize:
-    src: "{{backup.rsync_dest}}/cloudbox.tgz"
+    src: "{{backup.rsync_dest}}/cloudbox.tar"
     dest: "{{backup.tgz_dest}}/"
     rsync_opts:
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
@@ -52,20 +52,20 @@
   become_user: "{{user}}"
   when: backup.use_rclone == False and backup.use_rsync
 
-- name: "Check cloudbox.tgz exists"
+- name: "Check cloudbox.tar exists"
   stat:
-    path: "{{backup.tgz_dest}}/cloudbox.tgz"
+    path: "{{backup.tgz_dest}}/cloudbox.tar"
   register: cloudbox_tgz
 
-- name: "Fail cloudbox.tgz doesnt exist"
-  fail: msg="There must have been an issue retrieving the cloudbox.tgz file... as it does not exist at {{backup.tgz_dest}}/cloudbox.tgz"
+- name: "Fail cloudbox.tar doesnt exist"
+  fail: msg="There must have been an issue retrieving the cloudbox.tar file... as it does not exist at {{backup.tgz_dest}}/cloudbox.tar"
   when: cloudbox_tgz.stat.exists == False
 
 - name: "Wait for 10 seconds before unarchiving"
   wait_for:
     timeout: 10
 
-- name: "Unarchive cloudbox.tgz to /opt"
+- name: "Unarchive cloudbox.tar to /opt"
   shell: "tar -xf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
 
 - name: Set /opt permissions
@@ -77,4 +77,4 @@
     recurse: yes
 
 - debug:
-    msg: Finished unarchiving cloudbox.tgz to /opt, you should now be ready to perform an installation!
+    msg: Finished unarchiving cloudbox.tar to /opt, you should now be ready to perform an installation!
