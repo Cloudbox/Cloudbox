@@ -32,7 +32,7 @@
       path: "{{backup.tgz_dest}}/cloudbox.tar"
     register: backup_previous_tgz
 
-  - name: "Copying cloudbox.tgz to cloudbox.tar.backup"
+  - name: "Copying cloudbox.tar to cloudbox.tar.backup"
     copy:
       src: "{{backup.tgz_dest}}/cloudbox.tar"
       dest: "{{backup.tgz_dest}}/cloudbox.tar.backup"
