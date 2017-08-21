@@ -62,13 +62,9 @@
       state: stopped
     when: backup.stop_plex
 
-  - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tgz"
-    archive:
-      path: "/opt/*"
-      dest: "{{backup.tgz_dest}}/cloudbox.tgz"
-      owner: "{{user}}"
-      group: "{{user}}"
-
+  - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tar"
+    shell: "tar -cf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
+    
   - name: "Start Plex"
     docker_container:
       name: plex
