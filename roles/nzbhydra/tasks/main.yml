@@ -16,9 +16,9 @@
       BACKUP: "yes"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "hydra.{{domain}}"
+      VIRTUAL_HOST: "nzbhydra.{{domain}}"
       VIRTUAL_PORT: 8080
-      LETSENCRYPT_HOST: "hydra.{{domain}}"
+      LETSENCRYPT_HOST: "nzbhydra.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
