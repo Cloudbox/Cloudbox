@@ -5,7 +5,15 @@
     state: absent
 
 - name: Create nzbget download directory
-  file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+
+- name: Set nzbget download directory permissions
+  file: 
+    path: "{{nzbget.downloads}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    recurse: yes
 
 - name: Check nzbget.conf exists
   stat:

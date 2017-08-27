@@ -40,7 +40,7 @@
       - docker-py
 
   - name: Create common directories
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
       - /mnt/local
       - /mnt/local/.unionfs-fuse
@@ -84,3 +84,11 @@
       group: "{{user}}"
       recurse: true
     when: plexdrive_mnt.stat.exists == False
+
+  - name: Set /opt permissions
+    file: 
+      path: /opt
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      recurse: yes

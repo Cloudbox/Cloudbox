@@ -5,7 +5,15 @@
     state: absent
 
 - name: Create rutorrent download directory
-  file: "path={{rutorrent.downloads}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  file: "path={{rutorrent.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+
+- name: Set rutorrent download directory permissions
+  file: 
+    path: "{{rutorrent.downloads}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    recurse: yes
 
 - name: Check rtorrent.rc exists
   stat:
