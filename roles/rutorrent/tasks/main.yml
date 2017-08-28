@@ -7,13 +7,11 @@
 - name: Create rutorrent download directory
   file: "path={{rutorrent.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
 
-- name: Set rutorrent download directory permissions
-  file: 
-    path: "{{rutorrent.downloads}}"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    recurse: yes
+- name: "Set {{rutorrent.downloads}} permissions"
+  shell: "chmod -R 775 {{rutorrent.downloads}}"
+
+- name: "Set {{rutorrent.downloads}} owner"
+  shell: "chown -R {{user}}:{{user}} {{rutorrent.downloads}}"
 
 - name: Check rtorrent.rc exists
   stat:

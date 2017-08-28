@@ -7,14 +7,12 @@
 - name: Create nzbget download directory
   file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
 
-- name: Set nzbget download directory permissions
-  file: 
-    path: "{{nzbget.downloads}}"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    recurse: yes
+- name: "Set {{nzbget.downloads}} permissions"
+  shell: "chmod -R 775 {{nzbget.downloads}}"
 
+- name: "Set {{nzbget.downloads}} owner"
+  shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
+  
 - name: Check nzbget.conf exists
   stat:
     path: "/opt/nzbget/nzbget.conf"

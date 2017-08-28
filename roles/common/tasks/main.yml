@@ -86,9 +86,7 @@
     when: plexdrive_mnt.stat.exists == False
 
   - name: Set /opt permissions
-    file: 
-      path: /opt
-      owner: "{{user}}"
-      group: "{{user}}"
-      mode: 0775
-      recurse: yes
+    shell: "chmod -R 775 /opt"
+    
+  - name: Set /opt owner
+    shell: "chown -R {{user}}:{{user}} /opt"
