@@ -30,6 +30,10 @@
   - name: "Check {{backup.tgz_dest}}/cloudbox.tar exists"
     stat:
       path: "{{backup.tgz_dest}}/cloudbox.tar"
+      get_attributes: false
+      get_checksum: false
+      get_md5: false
+      get_mime: false
     register: backup_previous_tgz
 
   - name: "Copying cloudbox.tar to cloudbox.tar.backup"

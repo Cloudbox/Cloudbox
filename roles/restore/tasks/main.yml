@@ -6,6 +6,10 @@
 - name: "Check {{backup.tgz_dest}} exists"
   stat:
     path: "{{backup.tgz_dest}}"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
   register: backup_location
 
 - name: "Create backup location {{backup.tgz_dest}}"
@@ -55,6 +59,10 @@
 - name: "Check cloudbox.tar exists"
   stat:
     path: "{{backup.tgz_dest}}/cloudbox.tar"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
   register: cloudbox_tgz
 
 - name: "Fail cloudbox.tar doesnt exist"
