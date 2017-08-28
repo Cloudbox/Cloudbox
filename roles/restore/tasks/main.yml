@@ -69,12 +69,10 @@
   shell: "tar -xf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
 
 - name: Set /opt permissions
-  file: 
-    path: /opt
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    recurse: yes
+  shell: "chmod -R 775 /opt"
+  
+- name: Set /opt owner
+  shell: "chown -R {{user}}:{{user}} /opt"
 
 - debug:
     msg: Finished unarchiving cloudbox.tar to /opt, you should now be ready to perform an installation!
