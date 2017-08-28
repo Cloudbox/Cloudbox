@@ -60,7 +60,6 @@
         aliases:
           - plex
     state: started
-  when: plex_prefs.stat.exists == False
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
 - name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
