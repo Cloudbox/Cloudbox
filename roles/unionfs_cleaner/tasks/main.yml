@@ -12,7 +12,7 @@
   git:
     repo: https://github.com/l3uddz/unionfs_cleaner/
     dest: /opt/unionfs_cleaner
-    version: dev
+    version: master
     force: yes
     
 - name: Install pip requirements
