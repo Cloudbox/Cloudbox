@@ -48,6 +48,7 @@
       VIRTUAL_PORT: 32400
       LETSENCRYPT_HOST: "plex.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
+      HTTPS_METHOD: noredirect
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
