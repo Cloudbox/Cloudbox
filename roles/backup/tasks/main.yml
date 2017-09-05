@@ -60,20 +60,16 @@
       owner: "{{user}}"
       mode: 0775
 
-  - name: "Stop Plex"
-    docker_container:
-      name: plex
-      state: stopped
-    when: backup.stop_plex
+  - name: "Stop all containers"
+    shell: "docker stop $(docker ps -aq)"
+    ignore_errors: yes
 
   - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tar"
     shell: "tar -cf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
 
-  - name: "Start Plex"
-    docker_container:
-      name: plex
-      state: started
-    when: backup.stop_plex
+  - name: "Start all containers"
+    shell: "docker start $(docker ps -aq)"
+    ignore_errors: yes
 
   - name: "Wait for 10 seconds before uploads"
     wait_for:
