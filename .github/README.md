@@ -12,25 +12,25 @@ _If you find this this project helpful, feel free to make a small [donation via 
 
 |                                                                 | Full | Feeder | Plex |
 |:--------------------------------------------------------------- |:----:|:------:|:----:|
-| [Docker][627bd283]                                              |  v   |   v    |  v   |
-| [Plex][10952c53] ([docker][d369f92b])                           |  v   |        |  v   |
-| [PlexPy][363c0adc] ([docker][cda70c13])                         |  v   |        |  v   |
-| [Plex_AutoScan][96e27fd1]                                       |  v   |        |  v   |
-| [Sonarr: develop][8ae81bb6] ([docker][a9b9645e])                |  v   |   v    |      |
-| [Radarr: nightly][8211f62c] ([docker][a9b9645e])                |  v   |   v    |      |
-| [NZBGet][2e2bad08] ([docker][a9b9645e])                         |  v   |   v    |      |
-| [NZBHydra][a0cc8c46] ([docker][50ba3cbb])                       |  v   |   v    |      |
-| [rTorrent][512b104c]/[ruTorrent][8d6ce857] ([docker][344a7c4b]) |  v   |   v    |      |
-| [Jackett][1caa43a0] ([docker][a9b9645e])                        |  v   |   v    |      |
-| [Rclone][b4cef019]                                              |  v   |   v    |      |
-| [Plexdrive][0367302f]                                           |  v   |   v    |  v   |
-| [PlexRequests][458fc748] ([docker][0044f8e1])                   |  v   |        |  v   |
-| [Organizr][d328b256] ([docker][1e468891])                       |  v   |   v    |  v   |
-| [Portainer][726e0b6f]                                           |  v   |   v    |  v   |
-| [UnionFS-Fuse][6e8f308f]                                        |  v   |   v    |  v   |
-| [UnionFS_Cleaner][f20acc3e]                                     |  v   |   v    |      |
-| [Watchtower][a98faaaf]                                          |  v   |   v    |  v   |
-| Kernel, motd, sysctl, etc...                                    |  v   |   v    |  v   |
+| [Docker][627bd283]                                              |  √   |   √    |  √   |
+| [Plex][10952c53] ([docker][d369f92b])                           |  √   |        |  √   |
+| [PlexPy][363c0adc] ([docker][cda70c13])                         |  √   |        |  √   |
+| [Plex_AutoScan][96e27fd1]                                       |  √   |        |  √   |
+| [Sonarr: develop][8ae81bb6] ([docker][a9b9645e])                |  √   |   √    |      |
+| [Radarr: nightly][8211f62c] ([docker][a9b9645e])                |  √   |   √    |      |
+| [NZBGet][2e2bad08] ([docker][a9b9645e])                         |  √   |   √    |      |
+| [NZBHydra][a0cc8c46] ([docker][50ba3cbb])                       |  √   |   √    |      |
+| [rTorrent][512b104c]/[ruTorrent][8d6ce857] ([docker][344a7c4b]) |  √   |   √    |      |
+| [Jackett][1caa43a0] ([docker][a9b9645e])                        |  √   |   √    |      |
+| [Rclone][b4cef019]                                              |  √   |   √    |      |
+| [Plexdrive][0367302f]                                           |  √   |   √    |  √   |
+| [PlexRequests][458fc748] ([docker][0044f8e1])                   |  √   |        |  √   |
+| [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |  √   |
+| [Portainer][726e0b6f]                                           |  √   |   √    |  √   |
+| [UnionFS-Fuse][6e8f308f]                                        |  √   |   √    |  √   |
+| [UnionFS_Cleaner][f20acc3e]                                     |  √   |   √    |      |
+| [Watchtower][a98faaaf]                                          |  √   |   √    |  √   |
+| Kernel, motd, sysctl, etc...                                    |  √   |   √    |  √   |
 
   [627bd283]: https://www.docker.com "Docker"
   [10952c53]: https://www.plex.tv "Plex"
