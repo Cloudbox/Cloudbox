@@ -28,15 +28,21 @@
       - rsync
       - logrotate
       - htop
+      - iotop
+      - nload
+      - fail2ban
+      - ufw
+      - speedtest-cli
+      - python-ndg-httpsclient
       
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
     with_items:
       - docker-py
-      - speedtest-cli
+      - certbot
 
   - name: Create common directories
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
       - /mnt/local
       - /mnt/local/.unionfs-fuse
@@ -47,6 +53,7 @@
       - /opt/sonarr
       - /opt/radarr
       - /opt/nzbget
+      - /opt/nzbget/scripts
       - /opt/rutorrent
       - /opt/jackett
       - /opt/nzbhydra
@@ -55,9 +62,15 @@
       - /opt/plex_autoscan
       - /opt/unionfs_cleaner
       - /opt/rclone
+      - /opt/nginx-proxy
+      - /opt/plexrequests
+      - /opt/organizr
+      - /opt/portainer
+      - /opt/scripts
+      - /opt/scripts/torrent
+      - /opt/scripts/nzb
+      - /opt/scripts/nginx
       - "/home/{{user}}/.config/rclone"
-      - "{{nzbget.downloads}}"
-      - "{{rutorrent.downloads}}"
       - "{{plex.transcodes}}"
       
   - name: Check plexdrive mount folder exist
@@ -75,16 +88,8 @@
       recurse: true
     when: plexdrive_mnt.stat.exists == False
 
-  - name: Check unionfs mount folder exist
-    stat:
-      path: /mnt/unionfs
-    register: unionfs_mnt
-
-  - name: Create /mnt/unionfs and subdirs
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
-    with_items:
-      - /mnt/unionfs
-      - /mnt/unionfs/Media
-      - /mnt/unionfs/Media/Movies
-      - /mnt/unionfs/Media/TV
-    when: unionfs_mnt.stat.exists == False
+  - name: Set /opt permissions
+    shell: "chmod -R 775 /opt"
+    
+  - name: Set /opt owner
+    shell: "chown -R {{user}}:{{user}} /opt"

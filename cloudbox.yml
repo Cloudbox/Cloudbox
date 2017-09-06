@@ -8,11 +8,15 @@
     - { role: system, tags: ['full', 'feeder', 'plex'] }
     - { role: motd, tags: ['full', 'feeder', 'plex'] }
     - { role: common, tags: ['full', 'feeder', 'plex'] }
-    - { role: docker, tags: ['full', 'feeder', 'plex'] }
-    - { role: watchtower, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
+    - { role: docker, tags: ['full', 'feeder', 'plex'] }
+    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex'] }
+    - { role: watchtower, tags: ['full', 'feeder', 'plex'] }
+    - { role: portainer, tags: ['full', 'feeder', 'plex'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex'] }
+    - { role: organizr, tags: ['full', 'feeder', 'plex'] }
+    - { role: scripts, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder']}
     - { role: nzbget, tags: ['full', 'feeder'] }
     - { role: rutorrent, tags: ['full', 'feeder'] }
@@ -22,6 +26,8 @@
     - { role: radarr, tags: ['full', 'feeder'] }
     - { role: plex, tags: ['full', 'plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
+    - { role: plexrequests, tags: ['full', 'plex'] }
     - { role: plex_autoscan, tags: ['full', 'plex'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
+    

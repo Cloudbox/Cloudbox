@@ -14,10 +14,14 @@
     name: plexpy
     image: linuxserver/plexpy
     published_ports:
-      - "{{plexpy.port}}:8181"
+      - "127.0.0.1:8181:8181"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "plexpy.{{domain}}"
+      VIRTUAL_PORT: 8181
+      LETSENCRYPT_HOST: "plexpy.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexpy:/config"
@@ -25,6 +29,7 @@
     restart_policy: always
     networks:
       - name: cloudbox
+        ipv4_address: 172.18.0.16
         aliases:
           - plexpy
     state: started

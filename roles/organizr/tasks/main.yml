@@ -1,32 +1,29 @@
 ---
 - name: Stop and remove any existing container
   docker_container:
-    name: nzbhydra
+    name: organizr
     state: absent
 
 - name: Create and start container
   docker_container:
-    name: nzbhydra
-    image: hotio/suitarr
+    name: organizr
+    image: "lsiocommunity/organizr"
     published_ports:
-      - "127.0.0.1:5075:8080"
+      - "127.0.0.1:7421:80"
     env:
-      APP: "nzbhydra"
-      VERSION: "unstable"
-      BACKUP: "yes"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "nzbhydra.{{domain}}"
-      VIRTUAL_PORT: 8080
-      LETSENCRYPT_HOST: "nzbhydra.{{domain}}"
+      VIRTUAL_HOST: "organizr.{{domain}}"
+      VIRTUAL_PORT: 80
+      LETSENCRYPT_HOST: "organizr.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nzbhydra:/config"
-    restart_policy: always
+      - "/opt/organizr:/config"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.12
+        ipv4_address: 172.18.0.8
         aliases:
-          - nzbhydra
+          - organizr
+    restart_policy: always
     state: started

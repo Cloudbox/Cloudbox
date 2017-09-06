@@ -27,5 +27,13 @@
       dest: /etc/systemd/system/unionfs.service 
       force: yes
 
+  - name: Create /mnt/unionfs and subdirs
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+    with_items:
+      - /mnt/unionfs
+      - /mnt/unionfs/Media
+      - /mnt/unionfs/Media/Movies
+      - /mnt/unionfs/Media/TV
+
   - name: Start unionfs service
     systemd: state=started name=unionfs daemon_reload=yes enabled=yes
