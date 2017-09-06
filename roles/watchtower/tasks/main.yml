@@ -8,12 +8,14 @@
   docker_container:
     name: watchtower
     image: "v2tec/watchtower"
+    command: --cleanup
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
     restart_policy: always
     networks:
       - name: cloudbox
+        ipv4_address: 172.18.0.5
         aliases:
           - watchtower
     state: started

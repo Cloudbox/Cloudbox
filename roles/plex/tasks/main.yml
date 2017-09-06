@@ -4,12 +4,6 @@
     name: plex
     state: absent
 
-- name: Retrieve public ip
-  ipify_facts:
-  
-- name: Show ADVERTISE_IP to be used
-  debug: msg="Will use ADVERTISE_IP with plex container http://{{ipify_public_ip}}:{{plex.port}}/"
-
 - name: Retreive plex docker iamge
   docker_image:
     name: "plexinc/pms-docker:{{plex.tag}}"
@@ -28,12 +22,12 @@
 - debug: msg="Using plex claim token {{plex_claim.user_input}}"
   when: plex_prefs.stat.exists == False
 
-- name: Create and start container for fresh install
+- name: Create and start container
   docker_container:
     name: plex
     image: "plexinc/pms-docker:{{plex.tag}}"
     published_ports:
-      - "{{plex.port}}:32400/tcp"
+      - "127.0.0.1:32400:32400/tcp"
       - "3005:3005/tcp"
       - "8324:8324/tcp"
       - "32469:32469/tcp"
@@ -47,9 +41,14 @@
     env:
       PLEX_UID: "{{uid.stdout}}"
       PLEX_GID: "{{gid.stdout}}"
-      PLEX_CLAIM: "{{plex_claim.user_input}}"
+      PLEX_CLAIM: "{{plex_claim.user_input| default (omit)}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://{{ipify_public_ip}}:{{plex.port}}/"
+      ADVERTISE_IP: "http://plex.{{domain}}:80/,https://plex.{{domain}}:443/"
+      VIRTUAL_HOST: "plex.{{domain}}"
+      VIRTUAL_PORT: 32400
+      LETSENCRYPT_HOST: "plex.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+      HTTPS_METHOD: noredirect
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
@@ -58,44 +57,10 @@
     restart_policy: always
     networks:
       - name: cloudbox
+        ipv4_address: 172.18.0.15
         aliases:
           - plex
     state: started
-  when: plex_prefs.stat.exists == False
-
-- name: Create and start container for existing install
-  docker_container:
-    name: plex
-    image: "plexinc/pms-docker:{{plex.tag}}"
-    published_ports:
-      - "{{plex.port}}:32400/tcp"
-      - "3005:3005/tcp"
-      - "8324:8324/tcp"
-      - "32469:32469/tcp"
-      - "1900:1900/udp"
-      - "32410:32410/udp"
-      - "32412:32412/udp"
-      - "32413:32413/udp"
-      - "32414:32414/udp"
-      - "33400:33400/tcp"
-      - "33443:33443/tcp"
-    env:
-      PLEX_UID: "{{uid.stdout}}"
-      PLEX_GID: "{{gid.stdout}}"
-      CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://{{ipify_public_ip}}:{{plex.port}}/"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/plex:/config"
-      - "{{plex.transcodes}}:/transcode"
-      - "/mnt/unionfs/Media:/data"
-    restart_policy: always
-    networks:
-      - name: cloudbox
-        aliases:
-          - plex
-    state: started
-  when: plex_prefs.stat.exists
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
 - name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"

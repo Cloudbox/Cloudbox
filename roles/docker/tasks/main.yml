@@ -14,7 +14,7 @@
 - name: Add official repository
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable" 
-
+    
 - name: Install docker
   apt:
     name: docker-ce
@@ -33,3 +33,7 @@
 - name: Create cloudbox network
   docker_network:
     name: cloudbox
+    ipam_options:
+      subnet: '172.18.0.0/16'
+      gateway: '172.18.0.254'
+      iprange: '172.18.0.0/24'

@@ -8,7 +8,7 @@
     "PLEX_EMPTY_TRASH_MAX_FILES": 100,
     "PLEX_EMPTY_TRASH_ZERO_DELETED": false,
     "PLEX_LD_LIBRARY_PATH": "/usr/lib/plexmediaserver",
-    "PLEX_LOCAL_URL": "http://127.0.0.1:{{plex.port}}",
+    "PLEX_LOCAL_URL": "http://plex.{{domain}}",
     "PLEX_SCANNER": "/usr/lib/plexmediaserver/Plex\\ Media\\ Scanner",
     "PLEX_SECTION_PATH_MAPPINGS": {
         "1": [
@@ -39,7 +39,7 @@
             "/movies/"
         ]
     },
-    "SERVER_PORT": {{plex_autoscan.port}},
+    "SERVER_PORT": 3468,
     "SERVER_SCAN_DELAY": 5,
     "USE_DOCKER": true,
     "USE_SUDO": false

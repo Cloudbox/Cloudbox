@@ -4,6 +4,15 @@
     name: nzbget
     state: absent
 
+- name: Create nzbget download directory
+  file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+
+- name: "Set {{nzbget.downloads}} permissions"
+  shell: "chmod -R 775 {{nzbget.downloads}}"
+
+- name: "Set {{nzbget.downloads}} owner"
+  shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
+  
 - name: Check nzbget.conf exists
   stat:
     path: "/opt/nzbget/nzbget.conf"
@@ -14,17 +23,23 @@
     name: nzbget
     image: linuxserver/nzbget
     published_ports:
-      - "{{nzbget.port}}:6789"
+      - "127.0.0.1:6789:6789"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "nzbget.{{domain}}"
+      VIRTUAL_PORT: 6789
+      LETSENCRYPT_HOST: "nzbget.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbget:/config"
       - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "/opt/scripts/nzb:/scripts"
     restart_policy: always
     networks:
       - name: cloudbox
+        ipv4_address: 172.18.0.9
         aliases:
           - nzbget
     state: started
@@ -33,6 +48,11 @@
   wait_for:
     path: "/opt/nzbget/nzbget.conf"
     state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: "Wait for 10 seconds before stopping nzbget container"
+  wait_for:
+    timeout: 10
   when: nzbget_conf.stat.exists == False
 
 - name: Stop container to customize nzbget.conf
@@ -49,6 +69,14 @@
     state: present
   when: nzbget_conf.stat.exists == False
 
+- name: Change scripts directory
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ScriptDir\s?='
+    line: 'ScriptDir=/scripts'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
 - name: Rename Movies category
   lineinfile:
     path: "/opt/nzbget/nzbget.conf"
@@ -62,6 +90,22 @@
     path: "/opt/nzbget/nzbget.conf"
     regexp: '^Category2.Name\s?='
     line: 'Category2.Name=sonarr'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Remove default Username
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ControlUsername\s?='
+    line: 'ControlUsername='
+    state: present
+  when: nzbget_conf.stat.exists == False
+
+- name: Remove default Password
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^ControlPassword=\s?='
+    line: 'ControlPassword='
     state: present
   when: nzbget_conf.stat.exists == False
 

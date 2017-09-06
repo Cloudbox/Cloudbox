@@ -1,32 +1,29 @@
 ---
 - name: Stop and remove any existing container
   docker_container:
-    name: nzbhydra
+    name: plexrequests
     state: absent
 
 - name: Create and start container
   docker_container:
-    name: nzbhydra
-    image: hotio/suitarr
+    name: plexrequests
+    image: "linuxserver/plexrequests"
     published_ports:
-      - "127.0.0.1:5075:8080"
+      - "127.0.0.1:3000:3000"
     env:
-      APP: "nzbhydra"
-      VERSION: "unstable"
-      BACKUP: "yes"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "nzbhydra.{{domain}}"
-      VIRTUAL_PORT: 8080
-      LETSENCRYPT_HOST: "nzbhydra.{{domain}}"
+      VIRTUAL_HOST: "plexrequests.{{domain}}"
+      VIRTUAL_PORT: 3000
+      LETSENCRYPT_HOST: "plexrequests.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nzbhydra:/config"
-    restart_policy: always
+      - "/opt/plexrequests:/config"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.12
+        ipv4_address: 172.18.0.17
         aliases:
-          - nzbhydra
+          - plexrequests
+    restart_policy: always
     state: started
