@@ -8,7 +8,7 @@
   docker_container:
     name: watchtower
     image: "v2tec/watchtower"
-    command: --cleanup --schedule @weekly
+    command: sonarr radarr jackett nzbhydra nzbget organizr plexpy plexrequests portainer watchtower nginx-proxy letsencrypt --cleanup --schedule @weekly
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
