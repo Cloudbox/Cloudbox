@@ -4,6 +4,8 @@ domain={{domain}}
 
 cd /opt/nginx-proxy
 
+sudo docker stop $(docker ps -aq)
+
 for i in *.${domain}.chain.pem;
   do
     base=${i%%??????????}
