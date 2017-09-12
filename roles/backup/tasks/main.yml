@@ -76,7 +76,7 @@
       timeout: 10
   
   - name: "Upload backups with rclone to {{backup.rclone_dest}}"
-    command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=32M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone
