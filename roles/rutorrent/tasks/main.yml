@@ -7,9 +7,6 @@
 - name: Create rutorrent download directory
   file: "path={{rutorrent.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
 
-- name: Create rutorrent watched directory
-  file: "path={{rutorrent.downloads}}/watched state=directory mode=0775 owner={{user}} group={{user}}"
-
 - name: "Set {{rutorrent.downloads}} permissions"
   shell: "chmod -R 775 {{rutorrent.downloads}}"
 
