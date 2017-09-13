@@ -37,6 +37,7 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/opt/scripts/torrent:/scripts"
     networks:
       - name: cloudbox
         ipv4_address: 172.18.0.10
