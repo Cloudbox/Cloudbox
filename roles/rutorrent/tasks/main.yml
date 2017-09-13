@@ -181,6 +181,14 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
+- name: Set http_max_open size to 512
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^network.http.max_open.set\s?='
+    line: 'network.http.max_open.set = 512'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
 - name: Set encryption parameters
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
