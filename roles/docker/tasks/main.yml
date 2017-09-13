@@ -21,6 +21,23 @@
     state: installed
     update_cache: yes
 
+- name: Check docker daemon.json exists
+  stat:
+    path: /etc/docker/daemon.json
+  register: docker_daemon
+
+- name: Stop docker to enable overlay2
+  systemd: state=stopped name=docker enabled=yes
+  when: docker_daemon.stat.exists == False
+
+- name: Import daemon.json
+  copy: "src=daemon.json dest=/etc/docker/daemon.json force=yes mode=0775"
+  when: docker_daemon.stat.exists == False
+
+- name: Start docker
+  systemd: state=started name=docker enabled=yes
+  when: docker_daemon.stat.exists == False
+
 - name: Install ctop
   get_url:
     url:  https://github.com/bcicen/ctop/releases/download/v0.6.0/ctop-0.6.0-linux-amd64
