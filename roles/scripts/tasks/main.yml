@@ -2,6 +2,15 @@
 - name: Import TorrentCleanup.py
   copy: "src=TorrentCleanup.py dest=/opt/scripts/torrent/TorrentCleanup.py force=yes owner={{user}} group={{user}} mode=0775"
 
+- name: Import arrpush.sh
+  template:
+    src: arrpush.sh.js2
+    dest: /opt/scripts/torrent/arrpush.sh
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+
 - name: Import revoke_certs.sh
   template:
     src: revoke_certs.sh.js2
