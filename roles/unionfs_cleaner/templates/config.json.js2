@@ -13,6 +13,7 @@
     "pushover_user_token": "",
     "rclone_bwlimit": "",
     "rclone_checkers": 16,
+    "rclone_chunk_size": "8M",
     "rclone_excludes": [
         "**partial~",
         "**_HIDDEN",
