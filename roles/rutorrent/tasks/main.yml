@@ -21,7 +21,7 @@
 - name: Create and start container
   docker_container:
     name: rutorrent
-    image: linuxserver/rutorrent
+    image: l3uddz/docker-rutorrent-cloudbox
     published_ports:
       - "127.0.0.1:3111:80"
       - "51413:51413"
@@ -37,6 +37,7 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/opt/scripts/torrent:/scripts"
     networks:
       - name: cloudbox
         ipv4_address: 172.18.0.10
@@ -129,6 +130,62 @@
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^download_rate\s?='
     line: 'download_rate = 0'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set global upload_rate to unlimited
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^throttle.global_up.max_rate.set_kb\s?='
+    line: 'throttle.global_up.max_rate.set_kb = 0'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set global download_rate to unlimited
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^throttle.global_down.max_rate.set_kb\s?='
+    line: 'throttle.global_down.max_rate.set_kb = 0'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set max_open_files to 1024
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^network.max_open_files.set\s?='
+    line: 'network.max_open_files.set = 1024'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set max_open_sockets to 1024
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^network.max_open_sockets.set\s?='
+    line: 'network.max_open_sockets.set = 1024'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set send_buffer size to 16M
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^network.send_buffer.size.set\s?='
+    line: 'network.send_buffer.size.set = 16M'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set receive_buffer size to 4M
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^network.receive_buffer.size.set\s?='
+    line: 'network.receive_buffer.size.set = 4M'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set http_max_open size to 512
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^network.http.max_open.set\s?='
+    line: 'network.http.max_open.set = 512'
     state: present
   when: rtorrent_rc.stat.exists == False
 

@@ -14,6 +14,7 @@
   apt:
     name: linux-generic-hwe-16.04
     state: latest
+  when: no_kernel is not defined
 
 - name: Purge old kernels on reboot
   cron:
