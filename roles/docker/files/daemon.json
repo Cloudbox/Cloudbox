@@ -1,3 +1,4 @@
 {
-    "storage-driver": "overlay2"
+    "storage-driver": "overlay2",
+    "userland-proxy": false
 }
