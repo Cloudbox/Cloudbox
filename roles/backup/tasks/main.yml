@@ -64,8 +64,46 @@
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
 
+  - name: Check if plexdrive is running
+    command: systemctl status plexdrive
+    ignore_errors: yes
+    register: plexdrive_status
+
+  - name: Check if unionfs_cleaner is running
+    command: systemctl status unionfs_cleaner
+    ignore_errors: yes
+    register: unionfs_cleaner_status
+
+  - name: Stop unionfs_cleaner service
+    systemd:
+      name: unionfs_cleaner
+      state: stopped
+    when: unionfs_cleaner_status|success
+
+  - name: Stop plexdrive service
+    systemd:
+      name: plexdrive
+      state: stopped
+    when: plexdrive_status|success
+
   - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tar"
     shell: "tar -cf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
+
+  - name: Start plexdrive service
+    systemd:
+      name: plexdrive
+      state: started
+    when: plexdrive_status|success
+
+  - name: Start unionfs_cleaner service
+    systemd:
+      name: unionfs_cleaner
+      state: started
+    when: unionfs_cleaner_status|success
+
+  - name: "Wait for 5 seconds before starting containers"
+    wait_for:
+      timeout: 5
 
   - name: "Start all containers"
     shell: "docker start $(docker ps -aq)"
@@ -76,7 +114,7 @@
       timeout: 10
   
   - name: "Upload backups with rclone to {{backup.rclone_dest}}"
-    command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=32M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone
