@@ -70,6 +70,7 @@
       - /opt/scripts/torrent
       - /opt/scripts/nzb
       - /opt/scripts/nginx
+      - /opt/scripts/plex
       - "/home/{{user}}/.config/rclone"
       - "{{plex.transcodes}}"
       
