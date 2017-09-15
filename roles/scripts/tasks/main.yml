@@ -11,6 +11,9 @@
     mode: 0775
     force: yes
 
+- name: Import plex_token.sh
+  copy: "src=plex_token.sh dest=/opt/scripts/plex/plex_token.sh force=yes owner={{user}} group={{user}} mode=0775"
+
 - name: Import revoke_certs.sh
   template:
     src: revoke_certs.sh.js2
