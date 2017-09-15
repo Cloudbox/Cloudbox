@@ -2,6 +2,15 @@
 - name: Import TorrentCleanup.py
   copy: "src=TorrentCleanup.py dest=/opt/scripts/torrent/TorrentCleanup.py force=yes owner={{user}} group={{user}} mode=0775"
 
+- name: Check arrpush.sh exists
+  stat:
+    path: /opt/scripts/torrent/arrpush.sh
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: arrpush_script
+  
 - name: Import arrpush.sh
   template:
     src: arrpush.sh.js2
@@ -10,6 +19,7 @@
     group: "{{user}}"
     mode: 0775
     force: yes
+  when: arrpush_script.stat.exists == False
 
 - name: Import plex_token.sh
   copy: "src=plex_token.sh dest=/opt/scripts/plex/plex_token.sh force=yes owner={{user}} group={{user}} mode=0775"
