@@ -2,9 +2,9 @@
 # autodl script: /scripts/arrpush.sh
 # autodl args: radarr OR sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
 # settings
-sonarrUrl=https://sonarr:8080/api/release/push
+sonarrUrl=http://sonarr:8080/api/release/push
 sonarrApiKey=YOUR_API_KEY
-radarrUrl=https://radarr:8080/api/release/push
+radarrUrl=http://radarr:8080/api/release/push
 radarrApiKey=YOUR_API_KEY
 
 # args
