@@ -21,6 +21,10 @@
     state: installed
     update_cache: yes
 
+- name: "Wait for 15 seconds before commencing"
+  wait_for:
+    timeout: 15
+
 - name: Check override folder exists
   stat:
     path: /etc/systemd/system/docker.service.d
@@ -32,10 +36,6 @@
 
 - name: Import override file
   copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
-
-- name: "Wait for 15 seconds before commencing"
-  wait_for:
-    timeout: 15
 
 - name: Check docker daemon.json exists
   stat:
