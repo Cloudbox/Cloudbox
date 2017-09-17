@@ -157,22 +157,6 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
-- name: Set send_buffer size to 16M
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.send_buffer.size.set\s?='
-    line: 'network.send_buffer.size.set = 16M'
-    state: present
-  when: rtorrent_rc.stat.exists == False
-
-- name: Set receive_buffer size to 4M
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.receive_buffer.size.set\s?='
-    line: 'network.receive_buffer.size.set = 4M'
-    state: present
-  when: rtorrent_rc.stat.exists == False
-
 - name: Set encryption parameters
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
