@@ -157,14 +157,6 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
-- name: Set max_open_sockets to 1024
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.max_open_sockets.set\s?='
-    line: 'network.max_open_sockets.set = 1024'
-    state: present
-  when: rtorrent_rc.stat.exists == False
-
 - name: Set send_buffer size to 16M
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
@@ -181,19 +173,19 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
-- name: Set http_max_open size to 512
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.http.max_open.set\s?='
-    line: 'network.http.max_open.set = 512'
-    state: present
-  when: rtorrent_rc.stat.exists == False
-
 - name: Set encryption parameters
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^encryption\s?='
     line: 'encryption = allow_incoming,enable_retry,prefer_plaintext'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set file_allocate to no
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^system.file_allocate.set\s?='
+    line: 'system.file_allocate.set = no'
     state: present
   when: rtorrent_rc.stat.exists == False
 
