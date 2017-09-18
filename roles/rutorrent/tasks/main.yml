@@ -52,6 +52,12 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
+- name: Wait for php.ini to be created
+  wait_for:
+    path: "/opt/rutorrent/php/php.ini"
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
 - name: Wait for nginx.conf to be created
   wait_for:
     path: "/opt/rutorrent/nginx/nginx.conf"
@@ -191,6 +197,14 @@
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set upload_max_filesize to 8M
+  lineinfile:
+    path: "/opt/rutorrent/php/php.ini"
+    regexp: '^upload_max_filesize\s?='
+    line: 'upload_max_filesize = 8M'
+    state: present
   when: rtorrent_rc.stat.exists == False
 
 - name: Start container to apply changes
