@@ -106,7 +106,7 @@
       timeout: 5
 
   - name: "Start all containers"
-    shell: 'docker start  $(comm -13 <(docker ps -a -q --filter="name=watchtower" | sort) <(docker ps -a -q | sort))'
+    shell: 'docker start  $(comm -13 <(docker ps -a -q --filter=\"name=watchtower\" | sort) <(docker ps -a -q | sort))'
     ignore_errors: yes
 
   - name: "Wait for 10 seconds before uploads"
