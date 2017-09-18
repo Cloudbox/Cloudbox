@@ -8,6 +8,7 @@
   docker_container:
     name: watchtower
     image: "v2tec/watchtower"
+    pull: yes
     command: sonarr radarr jackett nzbhydra nzbget organizr plexpy plexrequests portainer watchtower nginx-proxy letsencrypt --cleanup --interval 15
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

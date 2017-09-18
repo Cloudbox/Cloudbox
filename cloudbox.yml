@@ -4,6 +4,7 @@
     - settings.yml
   roles:
     - { role: sanity_check }
+    - { role: kernel, tags: ['kernel'] }
     - { role: pre_install, tags: ['full', 'feeder', 'plex'] }
     - { role: system, tags: ['full', 'feeder', 'plex'] }
     - { role: motd, tags: ['full', 'feeder', 'plex'] }

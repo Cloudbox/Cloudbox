@@ -1,4 +1,7 @@
 ---
+- name: Import proxy.conf
+  copy: "src=proxy.conf dest=/opt/nginx-proxy/proxy.conf force=yes owner={{user}} group={{user}} mode=0775"
+
 - name: Stop and remove any existing container
   docker_container:
     name: nginx-proxy
@@ -13,6 +16,7 @@
   docker_container:
     name: nginx-proxy
     image: "jwilder/nginx-proxy"
+    pull: yes
     published_ports:
       - "80:80"
       - "443:443"
@@ -22,6 +26,7 @@
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "/etc/nginx/vhost.d"
       - "/usr/share/nginx/html"
+      - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf"
     labels:
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     networks:
@@ -36,6 +41,7 @@
   docker_container:
     name: letsencrypt
     image: "jrcs/letsencrypt-nginx-proxy-companion"
+    pull: yes
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:rw"

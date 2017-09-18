@@ -8,6 +8,7 @@
   docker_container:
     name: jackett
     image: hotio/suitarr
+    pull: yes
     published_ports:
       - "127.0.0.1:9117:8080"
     env:
