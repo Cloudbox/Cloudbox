@@ -26,14 +26,7 @@
     },
     "rclone_transfers": 8,
     "remote_folder": "{{unionfs_cleaner.rclone_remote}}",
-    "rsync_backup_interval": 1,
-    "rsync_backups": {
-        "/opt": [
-        ]
-    },
-    "rsync_remote": "/home/{{user}}/backup",
     "unionfs_folder": "/mnt/local/.unionfs-fuse",
-    "use_backup_manager": false,
     "use_config_manager": true,
     "use_git_autoupdater": true,
     "use_upload_manager": true

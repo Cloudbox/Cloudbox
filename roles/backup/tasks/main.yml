@@ -87,7 +87,7 @@
     when: plexdrive_status|success
 
   - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tar"
-    shell: "tar -cf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
+    shell: "tar --ignore-failed-read -cf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
 
   - name: Start plexdrive service
     systemd:
@@ -105,8 +105,8 @@
     wait_for:
       timeout: 5
 
-  - name: "Start all containers"
-    shell: 'docker start  $(comm -13 <(docker ps -a -q --filter="name=watchtower" | sort) <(docker ps -a -q | sort))'
+  - name: "Start containers"
+    shell: 'docker start plexrequests plexpy plex radarr sonarr nzbhydra jackett rutorrent nzbget organizr portainer letsencrypt nginx-proxy'
     ignore_errors: yes
 
   - name: "Wait for 10 seconds before uploads"

@@ -8,6 +8,7 @@
   docker_container:
     name: nzbhydra
     image: hotio/suitarr
+    pull: yes
     published_ports:
       - "127.0.0.1:5075:8080"
     env:

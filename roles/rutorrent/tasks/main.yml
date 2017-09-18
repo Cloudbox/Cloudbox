@@ -22,6 +22,7 @@
   docker_container:
     name: rutorrent
     image: l3uddz/docker-rutorrent-cloudbox
+    pull: yes
     published_ports:
       - "127.0.0.1:3111:80"
       - "51413:51413"
@@ -49,6 +50,12 @@
 - name: Wait for rtorrent.rc to be created
   wait_for:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Wait for php.ini to be created
+  wait_for:
+    path: "/opt/rutorrent/php/php.ini"
     state: present
   when: rtorrent_rc.stat.exists == False
 
@@ -157,43 +164,43 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
-- name: Set max_open_sockets to 1024
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.max_open_sockets.set\s?='
-    line: 'network.max_open_sockets.set = 1024'
-    state: present
-  when: rtorrent_rc.stat.exists == False
-
-- name: Set send_buffer size to 16M
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.send_buffer.size.set\s?='
-    line: 'network.send_buffer.size.set = 16M'
-    state: present
-  when: rtorrent_rc.stat.exists == False
-
-- name: Set receive_buffer size to 4M
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.receive_buffer.size.set\s?='
-    line: 'network.receive_buffer.size.set = 4M'
-    state: present
-  when: rtorrent_rc.stat.exists == False
-
-- name: Set http_max_open size to 512
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.http.max_open.set\s?='
-    line: 'network.http.max_open.set = 512'
-    state: present
-  when: rtorrent_rc.stat.exists == False
-
 - name: Set encryption parameters
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^encryption\s?='
     line: 'encryption = allow_incoming,enable_retry,prefer_plaintext'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set max_downloads_global to 0
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^max_downloads_global\s?='
+    line: 'max_downloads_global = 0'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set max_uploads_global to 0
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^max_uploads_global\s?='
+    line: 'max_uploads_global = 0'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set file_allocate to no
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^system.file_allocate.set\s?='
+    line: 'system.file_allocate.set = no'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set upload_max_filesize to 8M
+  lineinfile:
+    path: "/opt/rutorrent/php/php.ini"
+    regexp: '^upload_max_filesize\s?='
+    line: 'upload_max_filesize = 8M'
     state: present
   when: rtorrent_rc.stat.exists == False
 
