@@ -13,6 +13,7 @@
   docker_container:
     name: plexpy
     image: linuxserver/plexpy
+    pull: yes
     published_ports:
       - "127.0.0.1:8181:8181"
     env:

@@ -22,6 +22,7 @@
   docker_container:
     name: nzbget
     image: linuxserver/nzbget
+    pull: yes
     published_ports:
       - "127.0.0.1:6789:6789"
     env:
