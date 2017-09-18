@@ -172,11 +172,35 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
+- name: Set max_downloads_global to 0
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^max_downloads_global\s?='
+    line: 'max_downloads_global = 0'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set max_uploads_global to 0
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^max_uploads_global\s?='
+    line: 'max_uploads_global = 0'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
 - name: Set file_allocate to no
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^system.file_allocate.set\s?='
     line: 'system.file_allocate.set = no'
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Set upload_max_filesize to 8M
+  lineinfile:
+    path: "/opt/rutorrent/php/php.ini"
+    regexp: '^upload_max_filesize\s?='
+    line: 'upload_max_filesize = 8M'
     state: present
   when: rtorrent_rc.stat.exists == False
 
@@ -198,14 +222,6 @@
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
-  when: rtorrent_rc.stat.exists == False
-
-- name: Set upload_max_filesize to 8M
-  lineinfile:
-    path: "/opt/rutorrent/php/php.ini"
-    regexp: '^upload_max_filesize\s?='
-    line: 'upload_max_filesize = 8M'
-    state: present
   when: rtorrent_rc.stat.exists == False
 
 - name: Start container to apply changes
