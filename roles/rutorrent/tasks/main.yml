@@ -22,6 +22,7 @@
   docker_container:
     name: rutorrent
     image: l3uddz/docker-rutorrent-cloudbox
+    pull: yes
     published_ports:
       - "127.0.0.1:3111:80"
       - "51413:51413"

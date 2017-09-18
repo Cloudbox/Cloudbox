@@ -16,6 +16,7 @@
   docker_container:
     name: nginx-proxy
     image: "jwilder/nginx-proxy"
+    pull: yes
     published_ports:
       - "80:80"
       - "443:443"
@@ -40,6 +41,7 @@
   docker_container:
     name: letsencrypt
     image: "jrcs/letsencrypt-nginx-proxy-companion"
+    pull: yes
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:rw"
