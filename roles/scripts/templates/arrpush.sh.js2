@@ -19,12 +19,12 @@ date=$(date -u +"%Y-%m-%d %H:%M:%SZ")
 if [ $type = "sonarr" ]
 then
 	{
-	/usr/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $sonarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $sonarrUrl
+	/usr/local/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $sonarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $sonarrUrl
 	} &> /dev/null
 elif [ $type = "radarr" ]
 then
 	{
-	/usr/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $radarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $radarrUrl
+	/usr/local/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $radarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $radarrUrl
 	} &> /dev/null
 else
 	echo "Unknown type: $type"
