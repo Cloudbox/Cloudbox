@@ -172,19 +172,19 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
-- name: Set max_downloads_global to 0
+- name: Set max_downloads_global to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^max_downloads_global\s?='
-    line: 'max_downloads_global = 0'
+    line: 'max_downloads_global = 1024'
     state: present
   when: rtorrent_rc.stat.exists == False
 
-- name: Set max_uploads_global to 0
+- name: Set max_uploads_global to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^max_uploads_global\s?='
-    line: 'max_uploads_global = 0'
+    line: 'max_uploads_global = 1024'
     state: present
   when: rtorrent_rc.stat.exists == False
 
