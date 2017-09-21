@@ -32,6 +32,7 @@
       - nload
       - fail2ban
       - ufw
+      - ncdu
       - speedtest-cli
       - python-ndg-httpsclient
       
