@@ -22,6 +22,7 @@
       src: plexdrive.service.js2
       dest: /etc/systemd/system/plexdrive.service 
       force: yes
+    when: plexdrive_service.stat.exists == False
 
   - name: Systemd daemon-reload
     systemd: state=stopped name=plexdrive daemon_reload=yes enabled=no
