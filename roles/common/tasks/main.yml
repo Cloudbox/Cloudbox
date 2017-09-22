@@ -33,6 +33,7 @@
       - fail2ban
       - ufw
       - ncdu
+      - mc
       - speedtest-cli
       - python-ndg-httpsclient
       
