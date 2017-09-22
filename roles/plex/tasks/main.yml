@@ -56,6 +56,7 @@
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
     restart_policy: always
+    etc_hosts: {'metric.plex.tv': '127.0.0.1', 'metrics.plex.tv': '127.0.0.1'}
     networks:
       - name: cloudbox
         ipv4_address: 172.18.0.15
