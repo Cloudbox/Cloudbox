@@ -26,6 +26,7 @@
       src: unionfs.service.js2
       dest: /etc/systemd/system/unionfs.service 
       force: yes
+    when: unionfs_service.stat.exists == False
 
   - name: Create /mnt/unionfs and subdirs
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
