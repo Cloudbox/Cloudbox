@@ -45,11 +45,6 @@
 - name: Set directory permissions
   file: "path=/opt/plex_autoscan state=directory owner={{user}} group={{user}} recurse=yes"
 
-- name: Check plex_autoscan.service
-  stat:
-    path: "/etc/systemd/system/plex_autoscan.service"
-  register: plex_autoscan_service
-
 - name: Import plex_autoscan service
   template:
     src: plex_autoscan.service.js2
