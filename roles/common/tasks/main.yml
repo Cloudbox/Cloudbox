@@ -42,6 +42,15 @@
       - docker-py
       - certbot
 
+  - name: Install hostess
+    get_url:
+      url:  https://github.com/cbednarski/hostess/releases/download/v0.2.0/hostess_linux_amd64
+      dest: /usr/local/bin/hostess
+      mode: 0755
+      owner: root
+      group: root
+      force: yes
+
   - name: Create common directories
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
