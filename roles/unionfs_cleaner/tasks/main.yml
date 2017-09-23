@@ -45,6 +45,7 @@
     src: unionfs_cleaner.service.js2
     dest: /etc/systemd/system/unionfs_cleaner.service 
     force: yes
+  when: unionfs_cleaner_service.stat.exists == False
 
 - name: Start unionfs_cleaner service
   systemd: state=started name=unionfs_cleaner daemon_reload=yes enabled=yes

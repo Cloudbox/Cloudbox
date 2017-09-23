@@ -112,6 +112,12 @@
   - name: "Wait for 10 seconds before uploads"
     wait_for:
       timeout: 10
+
+  - name: "Set {{backup.tgz_dest}} permissions"
+    shell: "chmod -R 775 {{backup.tgz_dest}}"
+    
+  - name: "Set {{backup.tgz_dest}} owner"
+    shell: "chown -R {{user}}:{{user}} {{backup.tgz_dest}}"
   
   - name: "Upload backups with rclone to {{backup.rclone_dest}}"
     command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
@@ -129,11 +135,15 @@
     become_user: "{{user}}"
     when: backup.use_rsync
 
+  - name: "Get ansible-playbook binary path"
+    shell: "which ansible-playbook"
+    register: playbook_binary
+
   - name: "Schedule cron backup for state: {{backup.cron_state}}, when: {{backup.cron_time}}"
     cron:
       name: "Backup Cloudbox"
       special_time: "{{backup.cron_time}}"
-      job: "ansible-playbook {{playbook_dir}}/cloudbox.yml --tags backup"
+      job: "{{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup"
       state: "{{backup.cron_state}}"
 
   always:
