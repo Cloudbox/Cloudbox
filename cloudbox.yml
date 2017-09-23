@@ -25,7 +25,7 @@
     - { role: nzbhydra, tags: ['full', 'feeder'] }
     - { role: sonarr, tags: ['full', 'feeder'] }
     - { role: radarr, tags: ['full', 'feeder'] }
-    - { role: plex, tags: ['full', 'plex'] }
+    - { role: plex, tags: ['full', 'plex', 'update-plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
     - { role: plexrequests, tags: ['full', 'plex'] }
     - { role: plex_autoscan, tags: ['full', 'plex'] }
