@@ -50,6 +50,7 @@
     src: plex_autoscan.service.js2
     dest: /etc/systemd/system/plex_autoscan.service 
     force: yes
+  when: plex_autoscan_service.stat.exists == False
 
 - name: Start plex_autoscan service
   systemd: state=started name=plex_autoscan daemon_reload=yes enabled=yes
