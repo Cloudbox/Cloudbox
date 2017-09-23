@@ -137,7 +137,7 @@
     cron:
       name: "Backup Cloudbox"
       special_time: "{{backup.cron_time}}"
-      job: "{{playbook_binary}} {{playbook_dir}}/cloudbox.yml --tags backup"
+      job: "{{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup"
       state: "{{backup.cron_state}}"
 
   always:
