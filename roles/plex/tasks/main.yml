@@ -2,12 +2,10 @@
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
-  when: uid is not defined
 
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-  when: gid is not defined
 
 - name: Stop and remove any existing container
   docker_container:
