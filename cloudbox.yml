@@ -27,7 +27,7 @@
     - { role: radarr, tags: ['full', 'feeder'] }
     - { role: plex, tags: ['full', 'plex', 'update-plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
-    - { role: plexrequests, tags: ['full', 'plex'] }
+    - { role: plexrequests, tags: ['full', 'plex', 'update-plexrequests'] }
     - { role: plex_autoscan, tags: ['full', 'plex'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
