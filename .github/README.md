@@ -60,11 +60,19 @@ _If you find this this project helpful, feel free to make a small [donation via 
   [a9b9645e]: https://github.com/hotio/docker-suitarr "hotio/suitarr"
 
 
+## History
 
+- See [changelog](CHANGELOG.md)
 
 ## How To Guides
 
 - See the [wiki](https://github.com/l3uddz/cloudbox/wiki) page.
+
+## Credits
+
+- l3uddz (creator)
+- desimaniac (contributor)
+
 
 ## Contributing
 
@@ -74,11 +82,8 @@ _If you find this this project helpful, feel free to make a small [donation via 
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-## History
 
-- See [changelog](CHANGELOG.md)
 
-## Credits
+## Community Chat
+- [Slack Channel](https://join.slack.com/t/cloud-box/shared_invite/MjM1NTI2OTEwMzIyLTE1MDQzOTAyNDAtYWNhOWY2NzNiZA)
 
-- l3uddz (creator)
-- desimaniac (contributor)
