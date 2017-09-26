@@ -1,4 +1,4 @@
-<img src="/.github/cb_logo_1.gif" loop=0 width="200" alt="Cloudbox">
+<img src="docs/cb_logo_1.gif" loop=0 width="200" alt="Cloudbox">
 
 
 Cloudbox is an Ansible playbook for deploying a cloud media server stack on an Ubuntu server with the use of Docker containers.
@@ -62,7 +62,7 @@ _If you find this this project helpful, feel free to make a small [donation via 
 
 ## History
 
-- See [changelog](/.github/CHANGELOG.md)
+- See [changelog](docs/CHANGELOG.md)
 
 ## How To Guides
 
