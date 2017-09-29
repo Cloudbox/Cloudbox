@@ -21,6 +21,11 @@
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
   register: plex_prefs
 
+- name: Check /dev/dri exists
+  stat:
+    path: "/dev/dri"
+  register: dev_dri
+
 - name: Ask user for his plex server claim id
   pause: 
     prompt: "To continue the plex installation, you must visit https://plex.tv/claim and retrieve a claim token, paste it below and press enter"
@@ -63,6 +68,7 @@
       - "/opt/plex:/config"
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
+    devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
     restart_policy: always
     etc_hosts: {'metric.plex.tv': '127.0.0.1', 'metrics.plex.tv': '127.0.0.1'}
     networks:
