@@ -52,6 +52,14 @@
       group: root
       force: yes
 
+  - name: Install ngrok
+    unarchive:
+      src: https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+      dest: /usr/local/bin
+      copy: no
+      mode: 0775
+      validate_certs: no
+
   - name: Create common directories
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
