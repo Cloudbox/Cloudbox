@@ -36,6 +36,7 @@
       - mc
       - speedtest-cli
       - python-ndg-httpsclient
+      - nethogs
       
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
