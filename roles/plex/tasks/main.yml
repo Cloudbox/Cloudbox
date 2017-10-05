@@ -68,6 +68,7 @@
       - "/opt/plex:/config"
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
+      - "/tmp:/tmp"
     devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
     restart_policy: always
     etc_hosts: {'metric.plex.tv': '127.0.0.1', 'metrics.plex.tv': '127.0.0.1'}
