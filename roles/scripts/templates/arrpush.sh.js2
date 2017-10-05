@@ -11,21 +11,33 @@ radarrApiKey=YOUR_API_KEY
 type=$1
 title=$2
 downloadUrl=$3
-size=$4
 indexer=$5
 date=$(date -u +"%Y-%m-%d %H:%M:%SZ")
+
+# calculate provided size
+conv_size=($4)
+if [ ${conv_size[1]} = "GB" ]
+then
+        size=$(echo ${conv_size[0]} 1073741824 | awk '{printf "%.0f",$1*$2}')
+elif [  ${conv_size[1]} = "MB" ]
+then
+        size=$(echo ${conv_size[0]} 1048576 | awk '{printf "%.0f",$1*$2}')
+else
+        echo "Unexpected release size: $4, skipping..."
+        exit
+fi
 
 # push to sonarr/radarr
 if [ $type = "sonarr" ]
 then
-	{
-	/usr/local/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $sonarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $sonarrUrl
-	} &> /dev/null
+        {
+        /usr/local/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $sonarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","size":"'"$size"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $sonarrUrl
+        } &> /dev/null
 elif [ $type = "radarr" ]
 then
-	{
-	/usr/local/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $radarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $radarrUrl
-	} &> /dev/null
+        {
+        /usr/local/bin/curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Api-Key: $radarrApiKey" -X POST -d '{"title":"'"$title"'","downloadUrl":"'"$downloadUrl"'","size":"'"$size"'","indexer":"'"$indexer"'","downloadProtocol":"torrent","publishDate":"'"$date"'"}' $radarrUrl
+        } &> /dev/null
 else
-	echo "Unknown type: $type"
+        echo "Unknown type: $type"
 fi
