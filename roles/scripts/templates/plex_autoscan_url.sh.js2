@@ -1,0 +1,7 @@
+#!/bin/bash
+
+domain={{domain}}
+port=$(cat /opt/plex_autoscan/config/config.json | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["'SERVER_PORT'"]';)
+token=$(grep -m 1 -oP '0.0.0.0:3468/\K.*' /opt/plex_autoscan/*.log)
+echo "Your Plex Autoscan URL:"
+echo "http://${domain}:${port}/${token}"

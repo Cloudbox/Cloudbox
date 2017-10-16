@@ -6,7 +6,7 @@
   - name: "Get {{user}} gid"
     shell: "id -g {{user}}"
     register: gid
-      
+
   - name: Install common packages
     apt: "name={{item}} state=installed"
     with_items:
@@ -37,7 +37,7 @@
       - speedtest-cli
       - python-ndg-httpsclient
       - nethogs
-      
+
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
     with_items:
@@ -91,9 +91,10 @@
       - /opt/scripts/nzb
       - /opt/scripts/nginx
       - /opt/scripts/plex
+      - /opt/scripts/plex_autoscan
       - "/home/{{user}}/.config/rclone"
       - "{{plex.transcodes}}"
-      
+
   - name: Check plexdrive mount folder exist
     stat:
       path: /mnt/plexdrive
@@ -111,6 +112,6 @@
 
   - name: Set /opt permissions
     shell: "chmod -R 775 /opt"
-    
+
   - name: Set /opt owner
     shell: "chown -R {{user}}:{{user}} /opt"
