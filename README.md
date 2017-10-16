@@ -45,7 +45,7 @@ _If you find this this project helpful, feel free to make a small donation via [
   [50ba3cbb]: https://github.com/linuxserver/docker-hydra "linuxserver/hydra"
   [512b104c]: https://github.com/rakshasa/rtorrent/wiki "rTorrent"
   [8d6ce857]: https://github.com/Novik/ruTorrent "ruTorrent"
-  [344a7c4b]: https://github.com/linuxserver/docker-rutorrent "linuxserver/rutorrent"
+  [344a7c4b]: https://github.com/l3uddz/docker-rutorrent "forked version of linuxserver/rutorrent"
   [1caa43a0]: https://github.com/Jackett/Jackett "Jackett"
   [b4cef019]: https://rclone.org "Rclone"
   [0367302f]: https://github.com/dweidenfeld/plexdrive "Plexdrive"
