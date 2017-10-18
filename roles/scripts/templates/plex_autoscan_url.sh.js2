@@ -1,7 +1,22 @@
 #!/bin/bash
 
-publicip="$(curl -s http://checkip.amazonaws.com)"
+server_ip=$(cat /opt/plex_autoscan/config/config.json | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["'SERVER_IP'"]';)
+
+if [ $server_ip = 0.0.0.0 ]; then
+  plex_server_ip="$(curl -s http://checkip.amazonaws.com)"
+else
+  plex_server_ip=$server_ip
+fi
+
 port=$(cat /opt/plex_autoscan/config/config.json | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["'SERVER_PORT'"]';)
-key=$(grep -m 1 -oP '0.0.0.0:3468/\K.*' /opt/plex_autoscan/*.log)
+
+key=$(grep -m 1 -oP '0.0.0.0:3468/\K.*' /opt/plex_autoscan/plex_autoscan.log)
+if [ !$key ]; then
+  i=1
+  until [ $key ]; do
+    key=$(grep -m 1 -oP '0.0.0.0:3468/\K.*' /opt/plex_autoscan/plex_autoscan.log.$i)
+    let i++
+  done
+fi
 echo "Your Plex Autoscan URL:"
-echo "http://${publicip}:${port}/${key}"
+echo "http://${plex_server_ip}:${port}/${key}"
