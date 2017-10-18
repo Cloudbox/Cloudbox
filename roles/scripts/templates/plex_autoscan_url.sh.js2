@@ -10,15 +10,20 @@ fi
 
 port=$(cat /opt/plex_autoscan/config/config.json | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["'SERVER_PORT'"]';)
 
-key=$(grep -m 1 -oP '0.0.0.0:3468/\K.*' /opt/plex_autoscan/plex_autoscan.log)
+key=$(cat /opt/plex_autoscan/plex_autoscan.log 2>/dev/null | awk '/3468/ {print $11;}' | sed 's:.*/::')
 
-if [ !$key ]; then
+if [ -z $key ]; then
   i=1
-  until [ $key ]; do
-    key=$(grep -m 1 -oP '0.0.0.0:3468/\K.*' /opt/plex_autoscan/plex_autoscan.log.$i)
+  until [ $key ] || [ $i -gt 20 ]; do
+    key=$(cat /opt/plex_autoscan/plex_autoscan.log.$i 2>/dev/null | awk '/3468/ {print $11;}' | sed 's:.*/::')
     let i++
   done
+  if [ -z $key ]; then
+    echo No Plex Autoscan log files found.
+    exit 1
+  fi
 fi
 
-echo "Your Plex Autoscan URL:"
+
+echo "Plex Autoscan URL:"
 echo "http://${plex_server_ip}:${port}/${key}"
