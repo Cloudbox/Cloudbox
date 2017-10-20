@@ -26,6 +26,12 @@
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf
 
+- name: "Check /home/{{user}}/.config/rclone/rclone.conf"
+  stat:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+  register: rclone_conf
+  when: rclone_conf.stat.exists == False
+
 - name: Check rclone installed
   stat:
     path: "/opt/rclone/rclone"
