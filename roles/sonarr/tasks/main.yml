@@ -28,6 +28,7 @@
       - "/mnt/unionfs/Media/TV:/tv"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/mnt/unionfs:/unionfs"
       - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox
