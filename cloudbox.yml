@@ -19,12 +19,12 @@
     - { role: organizr, tags: ['full', 'feeder', 'plex'] }
     - { role: scripts, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder']}
-    - { role: nzbget, tags: ['full', 'feeder'] }
+    - { role: nzbget, tags: ['full', 'feeder', 'update-nzbget'] }
     - { role: rutorrent, tags: ['full', 'feeder', 'update-rutorrent'] }
     - { role: jackett, tags: ['full', 'feeder'] }
     - { role: nzbhydra, tags: ['full', 'feeder'] }
-    - { role: sonarr, tags: ['full', 'feeder'] }
-    - { role: radarr, tags: ['full', 'feeder'] }
+    - { role: sonarr, tags: ['full', 'feeder', 'update-sonarr'] }
+    - { role: radarr, tags: ['full', 'feeder', 'update-radarr'] }
     - { role: plex, tags: ['full', 'plex', 'update-plex'] }
     - { role: plexpy, tags: ['full', 'plex'] }
     - { role: plexrequests, tags: ['full', 'plex', 'update-plexrequests'] }
