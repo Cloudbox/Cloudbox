@@ -32,3 +32,16 @@
     group: "{{user}}"
     mode: 0775
     force: yes
+
+- name: Check cloudflared.py exists
+  stat:
+    path: /opt/scripts/cloudflare/cloudflared.py
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: cloudflare_script
+
+- name: Import cloudflared.py
+  copy: "src=cloudflared.py dest=/opt/scripts/cloudflare/cloudflared.py force=yes owner={{user}} group={{user}} mode=0775"
+  when: cloudflare_script.stat.exists == False
