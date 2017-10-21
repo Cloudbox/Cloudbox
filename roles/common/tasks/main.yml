@@ -92,6 +92,7 @@
       - /opt/scripts/nginx
       - /opt/scripts/plex
       - /opt/scripts/plex_autoscan
+      - /opt/scripts/cloudflare
       - "/home/{{user}}/.config/rclone"
       - "{{plex.transcodes}}"
 
