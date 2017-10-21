@@ -91,6 +91,7 @@
       - /opt/scripts/nzb
       - /opt/scripts/nginx
       - /opt/scripts/plex
+      - /opt/scripts/cloudflare
       - "/home/{{user}}/.config/rclone"
       - "{{plex.transcodes}}"
       
