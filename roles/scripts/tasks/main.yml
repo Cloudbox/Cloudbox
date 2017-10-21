@@ -34,10 +34,4 @@
     force: yes
 
 - name: Import plex_autoscan_url.sh
-  template:
-    src: plex_autoscan_url.sh.js2
-    dest: /opt/scripts/plex_autoscan/plex_autoscan_url.sh
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
+  copy: "src=plex_autoscan_url.sh dest=/opt/scripts/plex_autoscan/plex_autoscan_url.sh force=yes owner={{user}} group={{user}} mode=0775"
