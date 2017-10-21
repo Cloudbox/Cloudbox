@@ -12,13 +12,13 @@ port=$(cat /opt/plex_autoscan/config/config.json | python -c 'import json,sys;ob
 
 key=$(cat /opt/plex_autoscan/plex_autoscan.log 2>/dev/null | awk '/'"$port"'/' | sed 's:.*/::')
 
-if [ -z $key ]; then
+if [ -z "$key" ]; then
   i=1
   until [ $key ] || [ $i -gt 20 ]; do
     key=$(cat /opt/plex_autoscan/plex_autoscan.log.$i 2>/dev/null | awk '/'"$port"'/' | sed 's:.*/::')
     let i++
   done
-  if [ -z $key ]; then
+  if [ -z "$key" ]; then
     echo No Plex Autoscan log files found.
     exit 1
   fi
