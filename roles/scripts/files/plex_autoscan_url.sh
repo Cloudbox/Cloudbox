@@ -25,5 +25,4 @@ if [ -z "$key" ]; then
 fi
 
 
-echo "Plex Autoscan URL:"
 echo "http://${plex_server_ip}:${port}/${key}"
