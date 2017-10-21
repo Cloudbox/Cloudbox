@@ -19,7 +19,7 @@ if [ -z "$key" ]; then
     let i++
   done
   if [ -z "$key" ]; then
-    echo No Plex Autoscan log files found.
+    echo "No Plex Autoscan token found."
     exit 1
   fi
 fi
