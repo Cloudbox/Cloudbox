@@ -10,12 +10,12 @@ fi
 
 port=$(cat /opt/plex_autoscan/config/config.json | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["'SERVER_PORT'"]';)
 
-key=$(cat /opt/plex_autoscan/plex_autoscan.log 2>/dev/null | awk '/'"$port"'/' | sed 's:.*/::')
+key=$(grep -m 1 "$port" /opt/plex_autoscan/plex_autoscan.log 2>/dev/null | sed 's:.*/::')
 
 if [ -z "$key" ]; then
   i=1
-  until [ $key ] || [ $i -gt 20 ]; do
-    key=$(cat /opt/plex_autoscan/plex_autoscan.log.$i 2>/dev/null | awk '/'"$port"'/' | sed 's:.*/::')
+  until [ "$key" ] || [ $i -gt 20 ]; do
+    key=$(grep -m 1 "$port" /opt/plex_autoscan/plex_autoscan.log.$i 2>/dev/null | sed 's:.*/::')
     let i++
   done
   if [ -z "$key" ]; then
