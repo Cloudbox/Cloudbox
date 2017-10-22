@@ -1,4 +1,12 @@
 ---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+ 
 - name: Stop and remove any existing container
   docker_container:
     name: radarr
@@ -28,6 +36,7 @@
       - "/mnt/unionfs/Media/Movies:/movies"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/mnt/unionfs:/unionfs"
       - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox

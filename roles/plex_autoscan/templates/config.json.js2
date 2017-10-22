@@ -22,6 +22,7 @@
     "PLEX_TOKEN": "",
     "PLEX_USER": "plex",
     "PLEX_WAIT_FOR_EXTERNAL_SCANNERS": true,
+    'PLEX_ANALYZE_FILE': false,
     "SERVER_ALLOW_MANUAL_SCAN": false,
     "SERVER_FILE_EXIST_PATH_MAPPINGS": {
         "/mnt/unionfs/Media": [
@@ -32,13 +33,21 @@
     "SERVER_MAX_FILE_CHECKS": 10,
     "SERVER_PASS": "{{plex_autoscan_pass.stdout}}",
     "SERVER_PATH_MAPPINGS": {
-        "/data/TV/": [
-            "/tv/"
-        ], 
         "/data/Movies/": [
-            "/movies/"
+            "/movies/",
+            "/unionfs/Media/Movies/"
+        ],
+        "/data/TV/": [
+            "/tv/",
+            "/unionfs/Media/TV/"
         ]
     },
+    "SERVER_IGNORE_LIST": [
+        "/.grab/",
+        ".DS_Store",
+        "Thumbs.db"
+    ],    
+    "SERVER_USE_SQLITE": false,
     "SERVER_PORT": 3468,
     "SERVER_SCAN_DELAY": 5,
     "USE_DOCKER": true,
