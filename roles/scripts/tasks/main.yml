@@ -10,7 +10,7 @@
     get_md5: false
     get_mime: false
   register: arrpush_script
-  
+
 - name: Import arrpush.sh
   template:
     src: arrpush.sh.js2
@@ -45,3 +45,6 @@
 - name: Import cloudflared.py
   copy: "src=cloudflared.py dest=/opt/scripts/cloudflare/cloudflared.py force=yes owner={{user}} group={{user}} mode=0775"
   when: cloudflare_script.stat.exists == False
+
+- name: Import plex_autoscan_url.sh
+  copy: "src=plex_autoscan_url.sh dest=/opt/scripts/plex_autoscan/plex_autoscan_url.sh force=yes owner={{user}} group={{user}} mode=0775"
