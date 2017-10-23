@@ -1,5 +1,0 @@
-#!/bin/sh
-
-stamp="/var/lib/update-notifier/updates-available"
-
-[ ! -r "$stamp" ] || cat "$stamp"
