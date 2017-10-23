@@ -4,7 +4,7 @@
   with_items:
     - lsb-release
     - figlet
-    - update-motd
+    - update-motd-common
     - update-notifier
 
 - name: Remove existing motd
@@ -20,7 +20,7 @@
     state: directory
     mode: 0775
 
-- name: Import dynamic motd files 
+- name: Import dynamic motd files
   copy: "src={{item}} dest=/etc/update-motd.d/{{item}} force=yes mode=0775"
   with_items:
     - 00-header
