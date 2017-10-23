@@ -4,12 +4,15 @@
   with_items:
     - lsb-release
     - figlet
+    - update-motd
+    - update-notifier
 
 - name: Remove existing motd
   file: "path={{item}} state=absent"
   with_items:
     - /etc/update-motd.d
     - /etc/motd
+    - /etc/motd.dynamic
 
 - name: Create dynamic motd directory
   file:
@@ -22,8 +25,6 @@
   with_items:
     - 00-header
     - 10-sysinfo
-    - 20-package-updates
-    - 30-security-updates
     - 90-footer
 
 - name: Create symlink to dynamic motd
