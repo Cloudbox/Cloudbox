@@ -4,8 +4,8 @@
   with_items:
     - lsb-release
     - figlet
-    - update-motd-common
-    - update-notifier
+    - update-motd
+    - update-notifier-common
 
 - name: Remove existing motd
   file: "path={{item}} state=absent"
