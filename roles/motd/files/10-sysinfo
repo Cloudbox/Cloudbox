@@ -35,3 +35,7 @@ printf "System load:\t%s\tIP Address:\t%s\n" $load $ip
 printf "Memory usage:\t%s\tSystem uptime:\t%s\n" $memory_usage "$time"
 printf "Usage on /:\t%s\tSwap usage:\t%s\n" $root_usage $swap_usage
 printf "Local Users:\t%s\tProcesses:\t%s\n" $users $processes
+echo
+ /usr/lib/update-notifier/update-motd-reboot-required
+ /usr/lib/update-notifier/apt-check --human-readable
+ echo
