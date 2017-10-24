@@ -5,7 +5,7 @@ Cloudbox is an Ansible playbook for deploying a cloud media server stack on an U
 
 This project is limited to specifically 16.04 Ubuntu LTS and AMD64/Intel64 (no ARM support) machines and designed for fresh systems. Do not install on an already setup server, or prepare for unintended consequences.
 
-_If you find this this project helpful, feel free to make a small [donation via PayPal](https://www.paypal.me/l3uddz) or bitcoin: 15sKj1qi5PWvviTbCDJJKYoeQBQRv535Gb. Other forms of support are also appreciated (e.g. bugfixes, pull requests, etc)._
+_If you find this project helpful, feel free to make a small donation via [PayPal](https://www.paypal.me/l3uddz) or bitcoin: 15sKj1qi5PWvviTbCDJJKYoeQBQRv535Gb. Other forms of support are also appreciated (e.g. bugfixes, pull requests, etc)._
 
 ## Tools Installed
 
@@ -19,12 +19,12 @@ _If you find this this project helpful, feel free to make a small [donation via 
 | [Sonarr: develop][8ae81bb6] ([docker][a9b9645e])                |  √   |   √    |      |
 | [Radarr: nightly][8211f62c] ([docker][a9b9645e])                |  √   |   √    |      |
 | [NZBGet][2e2bad08] ([docker][a9b9645e])                         |  √   |   √    |      |
-| [NZBHydra][a0cc8c46] ([docker][50ba3cbb])                       |  √   |   √    |      |
+| [NZB Hydra][a0cc8c46] ([docker][50ba3cbb])                       |  √   |   √    |      |
 | [rTorrent][512b104c]/[ruTorrent][8d6ce857] ([docker][344a7c4b]) |  √   |   √    |      |
 | [Jackett][1caa43a0] ([docker][a9b9645e])                        |  √   |   √    |      |
 | [Rclone][b4cef019]                                              |  √   |   √    |      |
 | [Plexdrive][0367302f]                                           |  √   |   √    |  √   |
-| [PlexRequests][458fc748] ([docker][0044f8e1])                   |  √   |        |  √   |
+| [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])                   |  √   |        |  √   |
 | [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |  √   |
 | [Portainer][726e0b6f]                                           |  √   |   √    |  √   |
 | [UnionFS-Fuse][6e8f308f]                                        |  √   |   √    |  √   |
@@ -45,7 +45,7 @@ _If you find this this project helpful, feel free to make a small [donation via 
   [50ba3cbb]: https://github.com/linuxserver/docker-hydra "linuxserver/hydra"
   [512b104c]: https://github.com/rakshasa/rtorrent/wiki "rTorrent"
   [8d6ce857]: https://github.com/Novik/ruTorrent "ruTorrent"
-  [344a7c4b]: https://github.com/linuxserver/docker-rutorrent "linuxserver/rutorrent"
+  [344a7c4b]: https://github.com/l3uddz/docker-rutorrent "forked version of linuxserver/rutorrent"
   [1caa43a0]: https://github.com/Jackett/Jackett "Jackett"
   [b4cef019]: https://rclone.org "Rclone"
   [0367302f]: https://github.com/dweidenfeld/plexdrive "Plexdrive"
@@ -86,4 +86,3 @@ _If you find this this project helpful, feel free to make a small [donation via 
 
 ## Community Chat
 - [Slack Channel](https://join.slack.com/t/cloud-box/shared_invite/MjM1NTI2OTEwMzIyLTE1MDQzOTAyNDAtYWNhOWY2NzNiZA)
-
