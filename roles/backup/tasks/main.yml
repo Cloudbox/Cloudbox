@@ -36,13 +36,8 @@
       get_mime: false
     register: backup_previous_tgz
 
-  - name: "Copying cloudbox.tar to cloudbox.tar.backup"
-    copy:
-      src: "{{backup.tgz_dest}}/cloudbox.tar"
-      dest: "{{backup.tgz_dest}}/cloudbox.tar.backup"
-      force: yes
-      group: "{{user}}"
-      owner: "{{user}}"
+  - name: "Moving cloudbox.tar to cloudbox.tar.backup"
+    shell: "mv '{{backup.tgz_dest}}/cloudbox.tar' '{{backup.tgz_dest}}/cloudbox.tar.backup'"
     when: backup_previous_tgz.stat.exists
 
   - name: "Remove previous cloudbox.tar"
@@ -115,17 +110,17 @@
 
   - name: "Set {{backup.tgz_dest}} permissions"
     shell: "chmod -R 775 {{backup.tgz_dest}}"
-    
+
   - name: "Set {{backup.tgz_dest}} owner"
     shell: "chown -R {{user}}:{{user}} {{backup.tgz_dest}}"
-  
-  - name: "Upload backups with rclone to {{backup.rclone_dest}}"
+
+  - name: "Upload backup with rclone to {{backup.rclone_dest}}"
     command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone
 
-  - name: "Upload backups with rsync to {{backup.rsync_dest}}"
+  - name: "Upload backup with rsync to {{backup.rsync_dest}}"
     synchronize:
       src: "{{backup.tgz_dest}}/"
       dest: "{{backup.rsync_dest}}/"
