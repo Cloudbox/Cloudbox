@@ -60,6 +60,15 @@
       owner: "{{user}}"
       mode: 0775
 
+  - name: "Copy /etc/systemd/system to /opt/systemd for inclusion in backup"
+    copy:
+      src: "/etc/systemd/system"
+      dest: "/opt/systemd"
+      force: yes
+      group: "{{user}}"
+      owner: "{{user}}"
+      mode: 0775
+
   - name: "Stop all containers"
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
