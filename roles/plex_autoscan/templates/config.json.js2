@@ -22,7 +22,7 @@
     "PLEX_TOKEN": "",
     "PLEX_USER": "plex",
     "PLEX_WAIT_FOR_EXTERNAL_SCANNERS": true,
-    'PLEX_ANALYZE_FILE': false,
+    "PLEX_ANALYZE_FILE": false,
     "SERVER_ALLOW_MANUAL_SCAN": false,
     "SERVER_FILE_EXIST_PATH_MAPPINGS": {
         "/mnt/unionfs/Media": [
