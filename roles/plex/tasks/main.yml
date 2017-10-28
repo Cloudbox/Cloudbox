@@ -68,6 +68,7 @@
       - "/opt/plex:/config"
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
+      - "/mnt/unionfs:/unionfs"
       - "/tmp:/tmp"
     devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
     restart_policy: always
