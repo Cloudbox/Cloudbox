@@ -6,7 +6,7 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
- 
+
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
@@ -20,7 +20,7 @@
 
 - name: "Set {{nzbget.downloads}} owner"
   shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
-  
+
 - name: Check nzbget.conf exists
   stat:
     path: "/opt/nzbget/nzbget.conf"
@@ -29,15 +29,18 @@
 - name: Create and start container
   docker_container:
     name: nzbget
-    image: linuxserver/nzbget
+    image: hotio/suitarr
     pull: yes
     published_ports:
-      - "127.0.0.1:6789:6789"
+      - "127.0.0.1:6789:8080"
     env:
+      APP: "nzbget"
+      VERSION: "unstable"
+      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "nzbget.{{domain}}"
-      VIRTUAL_PORT: 6789
+      VIRTUAL_PORT: 8080
       LETSENCRYPT_HOST: "nzbget.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
@@ -124,5 +127,3 @@
     name: nzbget
     state: started
   when: nzbget_conf.stat.exists == False
-
-
