@@ -141,7 +141,7 @@
       get_mime: false
     register: backup_new_tgz
 
-  - name: "Pushover Message: Backup archive created (size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)"
+  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)"
     pushover:
       msg: "Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)"
       app_token: "{{backup.pushover_app_token}}"
