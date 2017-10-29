@@ -18,7 +18,8 @@
       group: "{{user}}"
     when: backup_lock.stat.exists == False
 
-  - pushover:
+  - name: "Pushover Message: Started Cloudbox backup."
+    pushover:
       msg: "Started Cloudbox backup."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
@@ -87,7 +88,8 @@
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
 
-  - pushover:
+  - name: "Pushover Message: Stopped Cloudbox containers."
+    pushover:
       msg: "Stopped Cloudbox containers."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
@@ -130,8 +132,18 @@
   - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tar"
     shell: "tar --ignore-failed-read -cf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
 
-  - pushover:
-      msg: "Backup archive created."
+  - name: "Get new {{backup.tgz_dest}}/cloudbox.tar stats"
+    stat:
+      path: "{{backup.tgz_dest}}/cloudbox.tar"
+      get_attributes: false
+      get_checksum: false
+      get_md5: false
+      get_mime: false
+    register: backup_new_tgz
+
+  - name: "Pushover Message: Backup archive created (size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)"
+    pushover:
+      msg: "Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)"
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
@@ -146,6 +158,8 @@
         (backup.pushover_user_key is none)
         or
         (backup.pushover_user_key | trim == '')
+        or
+        (backup_new_tgz is undefined)
       )
 
   - name: Start plexdrive service
@@ -168,7 +182,8 @@
     shell: 'docker start plexrequests plexpy plex radarr sonarr nzbhydra jackett rutorrent nzbget organizr portainer letsencrypt nginx-proxy'
     ignore_errors: yes
 
-  - pushover:
+  - name: "Pushover Message: Started Cloudbox containers."
+    pushover:
       msg: "Started Cloudbox containers."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
@@ -202,8 +217,9 @@
     become_user: "{{user}}"
     when: backup.use_rclone
 
-  - pushover:
-      msg: "Uploaded backup via rclone."
+  - name: "Pushover Message: Uploaded backup with rclone to {{backup.rclone_dest}}"
+    pushover:
+      msg: "Uploaded backup archive to {{backup.rclone_dest}}"
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
@@ -232,7 +248,8 @@
     become_user: "{{user}}"
     when: backup.use_rsync
 
-  - pushover:
+  - name: "Pushover Message: Uploaded backup with rsync to {{backup.rsync_dest}}"
+    pushover:
       msg: "Uploaded backup via rsync."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
@@ -262,8 +279,9 @@
       special_time: "{{backup.cron_time}}"
       job: "{{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup"
       state: "{{backup.cron_state}}"
-      
-  - pushover:
+
+  - name: "Pushover Message: Completed Cloudbox backup."
+    pushover:
       msg: "Completed Cloudbox backup."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
