@@ -18,7 +18,7 @@
   - name: Create and start container
   docker_container:
     name: deluge
-    image: l3uddz/docker-rutorrent-cloudbox
+    image: linuxserver/deluge
     pull: yes
     published_ports:
       - "58846:58846"
@@ -31,6 +31,8 @@
       VIRTUAL_PORT: 8112
       LETSENCRYPT_HOST: "deluge.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
+      
+      
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/deluge:/config"
