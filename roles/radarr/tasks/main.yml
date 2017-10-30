@@ -34,8 +34,7 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarr:/config"
       - "/mnt/unionfs/Media/Movies:/movies"
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "{{downloads.path}}:/downloads/"
       - "/mnt/unionfs:/unionfs"
       - "/opt/scripts:/scripts"
     networks:
