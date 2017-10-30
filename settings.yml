@@ -3,13 +3,15 @@
   passwd: password123
   domain: testcloudbox.ml
   email: your@email.com
+  downloads:
+    path: "/home/{{user}}/downloads/
   nzbget:
-    downloads: "/home/{{user}}/downloads/nzbget"
+    downloads: "{{downloads.path}}/nzbget"
   rutorrent:
     passwd: password321
-    downloads: "/home/{{user}}/downloads/rutorrent"
+    downloads: "{{downloads.path}}/rutorrent"
   deluge:
-    downloads: "/home/{{user}}/downloads/deluge"
+    downloads: "{{downloads.path}}/deluge"
   plex:
     tag: public
     transcodes: "/home/{{user}}/transcodes"
