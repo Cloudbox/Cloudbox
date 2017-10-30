@@ -114,7 +114,7 @@
   when: webtools_bundle.stat.exists == False
 
 - name : Install Unrar & Unzip
-  shell : docker exec -it plex apt install unzip unrar -y
+  shell : docker exec -it plex apt-get update && apt install unzip unrar -y
     args:
         executable: /bin/bash
   
