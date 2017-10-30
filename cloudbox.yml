@@ -31,4 +31,5 @@
     - { role: plex_autoscan, tags: ['full', 'plex'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
+    - { role: deluge, tags: ['install-deluge', 'update-rutorrent'] }
     
