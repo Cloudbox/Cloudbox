@@ -11,7 +11,7 @@
     - { role: common, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
     - { role: docker, tags: ['full', 'feeder', 'plex'] }
-    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex'] }
+    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx-proxy'] }
     - { role: watchtower, tags: ['full', 'feeder', 'plex'] }
     - { role: portainer, tags: ['full', 'feeder'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
@@ -28,7 +28,7 @@
     - { role: plex, tags: ['full', 'plex', 'update-plex'] }
     - { role: plexpy, tags: ['full', 'plex', 'update-plexpy'] }
     - { role: plexrequests, tags: ['full', 'plex', 'update-plexrequests'] }
-    - { role: plex_autoscan, tags: ['full', 'plex'] }
+    - { role: plex_autoscan, tags: ['full', 'plex', 'update-plex-autoscan'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
     - { role: deluge, tags: ['install-deluge', 'update-deluge'] }
