@@ -4,7 +4,7 @@
   domain: testcloudbox.ml
   email: your@email.com
   downloads:
-    path: "/home/{{user}}/downloads/
+    path: "/home/{{user}}/downloads/"
   nzbget:
     downloads: "{{downloads.path}}/nzbget"
   rutorrent:
