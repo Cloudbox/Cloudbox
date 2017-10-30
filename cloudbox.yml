@@ -18,18 +18,18 @@
     - { role: rclone, tags: ['full', 'feeder', 'plex'] }
     - { role: organizr, tags: ['full', 'feeder'] }
     - { role: scripts, tags: ['full', 'feeder', 'plex'] }
-    - { role: unionfs_cleaner, tags: ['full', 'feeder']}
+    - { role: unionfs_cleaner, tags: ['full', 'feeder', 'update-unionfs_cleaner']}
     - { role: nzbget, tags: ['full', 'feeder', 'update-nzbget'] }
     - { role: rutorrent, tags: ['full', 'feeder', 'update-rutorrent'] }
-    - { role: jackett, tags: ['full', 'feeder'] }
-    - { role: nzbhydra, tags: ['full', 'feeder'] }
+    - { role: jackett, tags: ['full', 'feeder', 'update-jackett'] }
+    - { role: nzbhydra, tags: ['full', 'feeder', 'update-nzbhydra] }
     - { role: sonarr, tags: ['full', 'feeder', 'update-sonarr'] }
     - { role: radarr, tags: ['full', 'feeder', 'update-radarr'] }
     - { role: plex, tags: ['full', 'plex', 'update-plex'] }
-    - { role: plexpy, tags: ['full', 'plex'] }
+    - { role: plexpy, tags: ['full', 'plex', 'update-plexpy'] }
     - { role: plexrequests, tags: ['full', 'plex', 'update-plexrequests'] }
     - { role: plex_autoscan, tags: ['full', 'plex'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
-    - { role: deluge, tags: ['install-deluge', 'update-rutorrent'] }
+    - { role: deluge, tags: ['install-deluge', 'update-deluge'] }
     
