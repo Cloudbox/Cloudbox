@@ -1,0 +1,46 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+  
+- name: Stop and remove any existing container
+  docker_container:
+    name: deluge
+    state: absent
+
+- name: Create deluge download directory
+  file: "path={{deluge.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+  
+  - name: Create and start container
+  docker_container:
+    name: deluge
+    image: l3uddz/docker-rutorrent-cloudbox
+    pull: yes
+    published_ports:
+      - "58846:58846"
+      - "8112:8112/udp"
+      - "15000:15000"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "deluge.{{domain}}"
+      VIRTUAL_PORT: 8112
+      LETSENCRYPT_HOST: "deluge.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/deluge:/config"
+      - "{{deluge.downloads}}:/downloads"
+      - "/opt/scripts/torrent:/scripts"
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.80
+        aliases:
+          - deluge
+    restart_policy: always
+    state: started
+
