@@ -8,6 +8,8 @@
   rutorrent:
     passwd: password321
     downloads: "/home/{{user}}/downloads/rutorrent"
+  deluge:
+    downloads: "/home/{{user}}/downloads/deluge"
   plex:
     tag: public
     transcodes: "/home/{{user}}/transcodes"
