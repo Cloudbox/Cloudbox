@@ -48,6 +48,7 @@
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
       - "/mnt/unionfs:/unionfs"
       - "/opt/scripts/torrent:/scripts"
+      - "/opt/rutorrent/plugins:/usr/share/webapps/rutorrent/plugins"
     networks:
       - name: cloudbox
         ipv4_address: 172.18.0.10
