@@ -141,9 +141,9 @@
       get_mime: false
     register: backup_new_tgz
 
-  - name: "Pushover Message: Backup archive created (size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)"
+  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
     pushover:
-      msg: "Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)"
+      msg: "Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
@@ -217,9 +217,9 @@
     become_user: "{{user}}"
     when: backup.use_rclone
 
-  - name: "Pushover Message: Uploaded backup with rclone to {{backup.rclone_dest}}"
+  - name: "Pushover Message: Uploaded backup with rclone to {{backup.rclone_dest}}."
     pushover:
-      msg: "Uploaded backup archive to {{backup.rclone_dest}}"
+      msg: "Uploaded backup with rclone to {{backup.rclone_dest}}."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
@@ -248,9 +248,9 @@
     become_user: "{{user}}"
     when: backup.use_rsync
 
-  - name: "Pushover Message: Uploaded backup with rsync to {{backup.rsync_dest}}"
+  - name: "Pushover Message: Uploaded backup with rsync to {{backup.rsync_dest}}."
     pushover:
-      msg: "Uploaded backup via rsync."
+      msg: "Uploaded backup with rsync to {{backup.rsync_dest}}."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
