@@ -18,7 +18,10 @@
       group: "{{user}}"
     when: backup_lock.stat.exists == False
 
-  - name: "Pushover Message: Started Cloudbox backup."
+  - name: "Getting Start Time"
+    set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
+
+  - name: "Pushover Message: Started Cloudbox backup task."
     pushover:
       msg: "Started Cloudbox backup."
       app_token: "{{backup.pushover_app_token}}"
@@ -280,9 +283,12 @@
       job: "{{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup"
       state: "{{backup.cron_state}}"
 
-  - name: "Pushover Message: Completed Cloudbox backup."
+  - name: "Getting End Time"
+    set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
+
+  - name: "Pushover Message: Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
     pushover:
-      msg: "Completed Cloudbox backup."
+      msg: "Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
