@@ -19,18 +19,18 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 | [Sonarr: develop][8ae81bb6] ([docker][a9b9645e])                |  √   |   √    |      |
 | [Radarr: nightly][8211f62c] ([docker][a9b9645e])                |  √   |   √    |      |
 | [NZBGet][2e2bad08] ([docker][a9b9645e])                         |  √   |   √    |      |
-| [NZB Hydra][a0cc8c46] ([docker][50ba3cbb])                       |  √   |   √    |      |
+| [NZB Hydra][a0cc8c46] ([docker][50ba3cbb])                      |  √   |   √    |      |
 | [rTorrent][512b104c]/[ruTorrent][8d6ce857] ([docker][344a7c4b]) |  √   |   √    |      |
 | [Jackett][1caa43a0] ([docker][a9b9645e])                        |  √   |   √    |      |
 | [Rclone][b4cef019]                                              |  √   |   √    |      |
 | [Plexdrive][0367302f]                                           |  √   |   √    |  √   |
-| [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])                   |  √   |        |  √   |
-| [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |  √   |
-| [Portainer][726e0b6f]                                           |  √   |   √    |  √   |
+| [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])         |  √   |        |  √   |
+| [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |      |
+| [Portainer][726e0b6f]                                           |  √   |   √    |      |
 | [UnionFS-Fuse][6e8f308f]                                        |  √   |   √    |  √   |
 | [UnionFS_Cleaner][f20acc3e]                                     |  √   |   √    |      |
 | [Watchtower][a98faaaf]                                          |  √   |   √    |  √   |
-| Kernel, motd, sysctl, etc...                                    |  √   |   √    |  √   |
+| Misc: Kernel, motd, sysctl, mc, ngrok, speedtest-cli, and more. |  √   |   √    |  √   |
 
   [627bd283]: https://www.docker.com "Docker"
   [10952c53]: https://www.plex.tv "Plex"
