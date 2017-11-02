@@ -35,18 +35,18 @@
     "SERVER_PATH_MAPPINGS": {
         "/data/Movies/": [
             "/movies/",
-            "/unionfs/Media/Movies/"
+            "/mnt/unionfs/Media/Movies/"
         ],
         "/data/TV/": [
             "/tv/",
-            "/unionfs/Media/TV/"
+            "/mnt/unionfs/Media/TV/"
         ]
     },
     "SERVER_IGNORE_LIST": [
         "/.grab/",
         ".DS_Store",
         "Thumbs.db"
-    ],    
+    ],
     "SERVER_USE_SQLITE": false,
     "SERVER_PORT": 3468,
     "SERVER_SCAN_DELAY": 5,
