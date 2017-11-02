@@ -23,7 +23,7 @@
 
   - name: "Pushover Message: Started Cloudbox backup task."
     pushover:
-      msg: "Started Cloudbox backup."
+      msg: "Started Cloudbox backup task."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
@@ -214,15 +214,15 @@
   - name: "Set {{backup.tgz_dest}} owner"
     shell: "chown -R {{user}}:{{user}} {{backup.tgz_dest}}"
 
-  - name: "Upload backup with rclone to {{backup.rclone_dest}}"
+  - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
     command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone
 
-  - name: "Pushover Message: Uploaded backup with rclone to {{backup.rclone_dest}}."
+  - name: "Pushover Message: Uploaded backup with rclone to \"{{backup.rclone_dest}}\"."
     pushover:
-      msg: "Uploaded backup with rclone to {{backup.rclone_dest}}."
+      msg: "Uploaded backup with rclone to \"{{backup.rclone_dest}}\"."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
@@ -241,7 +241,7 @@
         (backup.use_rclone == false)
       )
 
-  - name: "Upload backup with rsync to {{backup.rsync_dest}}"
+  - name: "Upload backup with rsync to \"{{backup.rsync_dest}}\""
     synchronize:
       src: "{{backup.tgz_dest}}/"
       dest: "{{backup.rsync_dest}}/"
@@ -251,9 +251,9 @@
     become_user: "{{user}}"
     when: backup.use_rsync
 
-  - name: "Pushover Message: Uploaded backup with rsync to {{backup.rsync_dest}}."
+  - name: "Pushover Message: Uploaded backup with rsync to \"{{backup.rsync_dest}}\"."
     pushover:
-      msg: "Uploaded backup with rsync to {{backup.rsync_dest}}."
+      msg: "Uploaded backup with rsync to \"{{backup.rsync_dest}}\"."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
