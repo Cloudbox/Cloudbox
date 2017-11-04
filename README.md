@@ -10,18 +10,20 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 ## Tools Installed
 
 
+
+
 |                                                                 | Full | Feeder | Plex |
 |:--------------------------------------------------------------- |:----:|:------:|:----:|
 | [Docker][627bd283]                                              |  √   |   √    |  √   |
 | [Plex][10952c53] ([docker][d369f92b])                           |  √   |        |  √   |
 | [PlexPy][363c0adc] ([docker][cda70c13])                         |  √   |        |  √   |
 | [Plex_AutoScan][96e27fd1]                                       |  √   |        |  √   |
-| [Sonarr: develop][8ae81bb6] ([docker][a9b9645e])                |  √   |   √    |      |
-| [Radarr: nightly][8211f62c] ([docker][a9b9645e])                |  √   |   √    |      |
+| [Sonarr][8ae81bb6] ([docker][a9b9645e])                         |  √   |   √    |      |
+| [Radarr][8211f62c] ([docker][a9b9645e])                         |  √   |   √    |      |
 | [NZBGet][2e2bad08] ([docker][a9b9645e])                         |  √   |   √    |      |
-| [NZB Hydra][a0cc8c46] ([docker][50ba3cbb])                      |  √   |   √    |      |
 | [rTorrent][512b104c]/[ruTorrent][8d6ce857] ([docker][344a7c4b]) |  √   |   √    |      |
 | [Jackett][1caa43a0] ([docker][a9b9645e])                        |  √   |   √    |      |
+| [NZB Hydra][a0cc8c46] ([docker][50ba3cbb])                      |  √   |   √    |      |
 | [Rclone][b4cef019]                                              |  √   |   √    |      |
 | [Plexdrive][0367302f]                                           |  √   |   √    |  √   |
 | [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])         |  √   |        |  √   |
@@ -59,10 +61,11 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
   [726e0b6f]: https://portainer.io "Portainer"
   [a9b9645e]: https://github.com/hotio/docker-suitarr "hotio/suitarr"
 
+\* Sonarr, Radarr, NZBGet, Jackett, and NZBHydra use the latest releases, including beta and nightly builds.
 
 ## History
 
-- See [changelog](CHANGELOG.md)
+- See [CHANGELOG.md](CHANGELOG.md)
 
 ## How To Guides
 
