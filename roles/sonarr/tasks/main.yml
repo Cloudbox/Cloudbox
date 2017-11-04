@@ -6,7 +6,7 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
- 
+
 - name: Stop and remove any existing container
   docker_container:
     name: sonarr
@@ -19,10 +19,10 @@
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8080"
-    env:      
+    env:
       APP: "sonarr"
       VERSION: "unstable"
-      BACKUP: "yes"
+      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       MONO_TLS_PROVIDER: legacy
@@ -36,7 +36,7 @@
       - "/mnt/unionfs/Media/TV:/tv"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
-      - "/mnt/unionfs:/unionfs"
+      - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox
