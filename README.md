@@ -61,7 +61,7 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
   [726e0b6f]: https://portainer.io "Portainer"
   [a9b9645e]: https://github.com/hotio/docker-suitarr "hotio/suitarr"
 
-\* Sonarr, Radarr, NZBGet, Jackett, and NZBHydra include all the latest releases, including beta and nightly builds.
+\* Sonarr, Radarr, NZBGet, Jackett, and NZBHydra use the latest releases, including beta and nightly builds.
 
 ## History
 
