@@ -65,7 +65,7 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 
 ## History
 
-- See [changelog](CHANGELOG.md)
+- See [CHANGELOG.md](CHANGELOG.md)
 
 ## How To Guides
 
