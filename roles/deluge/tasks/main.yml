@@ -18,12 +18,12 @@
   - name: Create and start container
   docker_container:
     name: deluge
-    image: linuxserver/deluge
+    image: nottt/easy-deluge
     pull: yes
     published_ports:
       - "58846:58846"
       - "8112:8112/udp"
-      - "15000:15000"
+      - "50000:15000"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -38,6 +38,7 @@
       - "/opt/deluge:/config"
       - "{{deluge.downloads}}:/downloads"
       - "/opt/scripts/torrent:/scripts"
+      - "/mnt/unionfs/:/unionfs"
     networks:
       - name: cloudbox
         ipv4_address: 172.18.0.80
