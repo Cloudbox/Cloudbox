@@ -27,6 +27,8 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 | [Rclone][b4cef019]                                              |  √   |   √    |      |
 | [Plexdrive][0367302f]                                           |  √   |   √    |  √   |
 | [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])         |  √   |        |  √   |
+| [Nginx Proxy][08902ab1]                                         |  √   |   √    |  √   |
+| [Let's Encrypt Companion for Nginx Proxy][bb8ae44f]             |  √   |   √    |  √   |
 | [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |      |
 | [Portainer][726e0b6f]                                           |  √   |   √    |      |
 | [UnionFS-Fuse][6e8f308f]                                        |  √   |   √    |  √   |
@@ -60,16 +62,18 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
   [1e468891]: https://github.com/linuxserver/docker-organizr "lsiocommunity/organizr"
   [726e0b6f]: https://portainer.io "Portainer"
   [a9b9645e]: https://github.com/hotio/docker-suitarr "hotio/suitarr"
+  [08902ab1]: https://github.com/jwilder/nginx-proxy "Nginx Proxy"
+  [bb8ae44f]: https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion "Let's Encrypt companion for Nginx Proxy"
 
 \* Sonarr, Radarr, NZBGet, Jackett, and NZBHydra use the latest releases, including beta and nightly builds.
 
 ## History
 
-- See [CHANGELOG.md](CHANGELOG.md)
+- See [Changelog](CHANGELOG.md)
 
 ## How To Guides
 
-- See the [wiki](https://github.com/l3uddz/cloudbox/wiki) page.
+- See [Wiki](https://github.com/l3uddz/cloudbox/wiki)
 
 ## Credits
 
