@@ -40,19 +40,19 @@
         (backup.pushover_user_key | trim == '')
       )
 
-  - name: "Check {{backup.tgz_dest}} exists"
+  - name: "Check {{backup.tar_dest}} exists"
     stat:
-      path: "{{backup.tgz_dest}}"
+      path: "{{backup.tar_dest}}"
     register: backup_location
 
-  - name: "Create backup location {{backup.tgz_dest}}"
-    file: path={{backup.tgz_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
+  - name: "Create backup location {{backup.tar_dest}}"
+    file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
     when: backup_location.stat.exists == False
 
 
-  - name: "Check {{backup.tgz_dest}}/cloudbox.tar exists"
+  - name: "Check {{backup.tar_dest}}/cloudbox.tar exists"
     stat:
-      path: "{{backup.tgz_dest}}/cloudbox.tar"
+      path: "{{backup.tar_dest}}/cloudbox.tar"
       get_attributes: false
       get_checksum: false
       get_md5: false
@@ -60,12 +60,12 @@
     register: backup_previous_tgz
 
   - name: "Moving cloudbox.tar to cloudbox.tar.backup"
-    shell: "mv '{{backup.tgz_dest}}/cloudbox.tar' '{{backup.tgz_dest}}/cloudbox.tar.backup'"
+    shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
     when: backup_previous_tgz.stat.exists
 
   - name: "Remove previous cloudbox.tar"
     file:
-      path: "{{backup.tgz_dest}}/cloudbox.tar"
+      path: "{{backup.tar_dest}}/cloudbox.tar"
       state: absent
     when: backup_previous_tgz.stat.exists
 
@@ -132,12 +132,12 @@
       state: stopped
     when: plexdrive_status|success
 
-  - name: "Archiving /opt to {{backup.tgz_dest}}/cloudbox.tar"
-    shell: "tar --ignore-failed-read -cf '{{backup.tgz_dest}}/cloudbox.tar' -C /opt ."
+  - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
+    shell: "tar --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
 
-  - name: "Get new {{backup.tgz_dest}}/cloudbox.tar stats"
+  - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
     stat:
-      path: "{{backup.tgz_dest}}/cloudbox.tar"
+      path: "{{backup.tar_dest}}/cloudbox.tar"
       get_attributes: false
       get_checksum: false
       get_md5: false
@@ -208,14 +208,14 @@
     wait_for:
       timeout: 10
 
-  - name: "Set {{backup.tgz_dest}} permissions"
-    shell: "chmod -R 775 {{backup.tgz_dest}}"
+  - name: "Set {{backup.tar_dest}} permissions"
+    shell: "chmod -R 775 {{backup.tar_dest}}"
 
-  - name: "Set {{backup.tgz_dest}} owner"
-    shell: "chown -R {{user}}:{{user}} {{backup.tgz_dest}}"
+  - name: "Set {{backup.tar_dest}} owner"
+    shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}"
 
   - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
-    command: "rclone copy '{{backup.tgz_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -243,7 +243,7 @@
 
   - name: "Upload backup with rsync to \"{{backup.rsync_dest}}\""
     synchronize:
-      src: "{{backup.tgz_dest}}/"
+      src: "{{backup.tar_dest}}/"
       dest: "{{backup.rsync_dest}}/"
       rsync_opts:
         - "--log-file='{{playbook_dir}}/backup_rsync.log'"
