@@ -20,7 +20,7 @@
     size_check_mins: 30
     rclone_remote: "google:"
   backup:
-    tgz_dest: "/home/{{user}}/Backups"
+    tar_dest: "/home/{{user}}/Backups"
     rsync_dest: rsync://somehost.com/Backups
     rclone_dest: google:/Backups
     use_rsync: false
