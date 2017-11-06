@@ -28,7 +28,7 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 | [Plexdrive][0367302f]                                           |  √   |   √    |  √   |
 | [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])         |  √   |        |  √   |
 | [Nginx Proxy][08902ab1]                                         |  √   |   √    |  √   |
-| [Let's Encrypt companion for Nginx Proxy][bb8ae44f]             |  √   |   √    |  √   |
+| [Let's Encrypt Companion for Nginx Proxy][bb8ae44f]             |  √   |   √    |  √   |
 | [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |      |
 | [Portainer][726e0b6f]                                           |  √   |   √    |      |
 | [UnionFS-Fuse][6e8f308f]                                        |  √   |   √    |  √   |
