@@ -33,7 +33,7 @@
       - "/opt/sonarr:/config"
       - "/mnt/unionfs/Media/TV:/tv"
       - "{{downloads.path}}:/downloads/"
-      - "/mnt/unionfs:/unionfs"
+      - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox

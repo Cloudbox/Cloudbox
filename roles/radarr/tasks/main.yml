@@ -35,7 +35,7 @@
       - "/opt/radarr:/config"
       - "/mnt/unionfs/Media/Movies:/movies"
       - "{{downloads.path}}:/downloads/"
-      - "/mnt/unionfs:/unionfs"
+      - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox
