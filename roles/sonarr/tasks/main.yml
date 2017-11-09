@@ -22,6 +22,7 @@
       VERSION: "unstable"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
+      BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "sonarr.{{domain}}"
       VIRTUAL_PORT: 8080

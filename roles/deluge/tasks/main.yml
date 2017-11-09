@@ -21,17 +21,16 @@
     image: nottt/easy-deluge
     pull: yes
     published_ports:
+      - "127.0.0.1:8112:8112"
       - "58846:58846"
-      - "8112:8112/udp"
-      - "50000:15000"
+      - "50000:50000"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "deluge.{{domain}}"
       VIRTUAL_PORT: 8112
       LETSENCRYPT_HOST: "deluge.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
-      
+      LETSENCRYPT_EMAIL: "{{email}}"   
       
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
