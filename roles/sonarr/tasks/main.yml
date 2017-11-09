@@ -6,7 +6,6 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
- 
 - name: Stop and remove any existing container
   docker_container:
     name: sonarr
@@ -19,10 +18,8 @@
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8080"
-    env:      
       APP: "sonarr"
       VERSION: "unstable"
-      BACKUP: "yes"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       MONO_TLS_PROVIDER: legacy
