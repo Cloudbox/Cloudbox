@@ -1,4 +1,4 @@
-<img src="docs/cb_logo_1.gif" loop=0 width="200" alt="Cloudbox">
+<img src=".github/cb_logo_1.gif" loop=0 width="200" alt="Cloudbox">
 
 
 Cloudbox is an Ansible playbook for deploying a cloud media server stack on an Ubuntu server with the use of Docker containers.
@@ -10,27 +10,31 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 ## Tools Installed
 
 
+
+
 |                                                                 | Full | Feeder | Plex |
 |:--------------------------------------------------------------- |:----:|:------:|:----:|
 | [Docker][627bd283]                                              |  √   |   √    |  √   |
 | [Plex][10952c53] ([docker][d369f92b])                           |  √   |        |  √   |
 | [PlexPy][363c0adc] ([docker][cda70c13])                         |  √   |        |  √   |
 | [Plex_AutoScan][96e27fd1]                                       |  √   |        |  √   |
-| [Sonarr: develop][8ae81bb6] ([docker][a9b9645e])                |  √   |   √    |      |
-| [Radarr: nightly][8211f62c] ([docker][a9b9645e])                |  √   |   √    |      |
+| [Sonarr][8ae81bb6] ([docker][a9b9645e])                         |  √   |   √    |      |
+| [Radarr][8211f62c] ([docker][a9b9645e])                         |  √   |   √    |      |
 | [NZBGet][2e2bad08] ([docker][a9b9645e])                         |  √   |   √    |      |
-| [NZB Hydra][a0cc8c46] ([docker][50ba3cbb])                       |  √   |   √    |      |
 | [rTorrent][512b104c]/[ruTorrent][8d6ce857] ([docker][344a7c4b]) |  √   |   √    |      |
 | [Jackett][1caa43a0] ([docker][a9b9645e])                        |  √   |   √    |      |
+| [NZB Hydra][a0cc8c46] ([docker][50ba3cbb])                      |  √   |   √    |      |
 | [Rclone][b4cef019]                                              |  √   |   √    |      |
 | [Plexdrive][0367302f]                                           |  √   |   √    |  √   |
-| [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])                   |  √   |        |  √   |
-| [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |  √   |
-| [Portainer][726e0b6f]                                           |  √   |   √    |  √   |
+| [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])         |  √   |        |  √   |
+| [Nginx Proxy][08902ab1]                                         |  √   |   √    |  √   |
+| [Let's Encrypt Companion for Nginx Proxy][bb8ae44f]             |  √   |   √    |  √   |
+| [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |      |
+| [Portainer][726e0b6f]                                           |  √   |   √    |      |
 | [UnionFS-Fuse][6e8f308f]                                        |  √   |   √    |  √   |
 | [UnionFS_Cleaner][f20acc3e]                                     |  √   |   √    |      |
 | [Watchtower][a98faaaf]                                          |  √   |   √    |  √   |
-| Kernel, motd, sysctl, etc...                                    |  √   |   √    |  √   |
+| Misc: Kernel, motd, sysctl, mc, ngrok, speedtest-cli, and more. |  √   |   √    |  √   |
 
   [627bd283]: https://www.docker.com "Docker"
   [10952c53]: https://www.plex.tv "Plex"
@@ -58,15 +62,18 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
   [1e468891]: https://github.com/linuxserver/docker-organizr "lsiocommunity/organizr"
   [726e0b6f]: https://portainer.io "Portainer"
   [a9b9645e]: https://github.com/hotio/docker-suitarr "hotio/suitarr"
+  [08902ab1]: https://github.com/jwilder/nginx-proxy "Nginx Proxy"
+  [bb8ae44f]: https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion "Let's Encrypt companion for Nginx Proxy"
 
+\* Sonarr, Radarr, NZBGet, Jackett, and NZBHydra use the latest releases, including beta and nightly builds.
 
 ## History
 
-- See [changelog](docs/CHANGELOG.md)
+- See [Changelog](CHANGELOG.md)
 
 ## How To Guides
 
-- See the [wiki](https://github.com/l3uddz/cloudbox/wiki) page.
+- See [Wiki](https://github.com/l3uddz/cloudbox/wiki)
 
 ## Credits
 

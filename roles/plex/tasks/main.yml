@@ -27,7 +27,7 @@
   register: dev_dri
 
 - name: Ask user for his plex server claim id
-  pause: 
+  pause:
     prompt: "To continue the plex installation, you must visit https://plex.tv/claim and retrieve a claim token, paste it below and press enter"
   register: plex_claim
   when: plex_prefs.stat.exists == False
@@ -68,6 +68,7 @@
       - "/opt/plex:/config"
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
+      - "/mnt:/mnt"
       - "/tmp:/tmp"
     devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
     restart_policy: always

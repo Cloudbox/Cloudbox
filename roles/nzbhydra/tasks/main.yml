@@ -22,7 +22,7 @@
     env:
       APP: "nzbhydra"
       VERSION: "unstable"
-      BACKUP: "yes"
+      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "nzbhydra.{{domain}}"
