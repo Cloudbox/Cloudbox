@@ -18,6 +18,7 @@
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8080"
+    env:
       APP: "sonarr"
       VERSION: "unstable"
       PUID: "{{uid.stdout}}"
