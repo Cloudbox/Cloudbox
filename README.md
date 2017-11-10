@@ -7,17 +7,15 @@ This project is limited to specifically 16.04 Ubuntu LTS and AMD64/Intel64 (no A
 
 _If you find this project helpful, feel free to make a small donation via [PayPal](https://www.paypal.me/l3uddz) or bitcoin: 15sKj1qi5PWvviTbCDJJKYoeQBQRv535Gb. Other forms of support are also appreciated (e.g. bugfixes, pull requests, etc)._
 
-## Tools Installed
 
+## Cloudbox Install Types
 
-
-
-|                                                                 | Full | Feeder | Plex |
+| What's Installed                                                | Full | Feeder | Plex |
 |:--------------------------------------------------------------- |:----:|:------:|:----:|
 | [Docker][627bd283]                                              |  √   |   √    |  √   |
 | [Plex][10952c53] ([docker][d369f92b])                           |  √   |        |  √   |
 | [PlexPy][363c0adc] ([docker][cda70c13])                         |  √   |        |  √   |
-| [Plex_AutoScan][96e27fd1]                                       |  √   |        |  √   |
+| [Plex AutoScan][96e27fd1]                                       |  √   |        |  √   |
 | [Sonarr][8ae81bb6] ([docker][a9b9645e])                         |  √   |   √    |      |
 | [Radarr][8211f62c] ([docker][a9b9645e])                         |  √   |   √    |      |
 | [NZBGet][2e2bad08] ([docker][a9b9645e])                         |  √   |   √    |      |
@@ -31,10 +29,10 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 | [Let's Encrypt Companion for Nginx Proxy][bb8ae44f]             |  √   |   √    |  √   |
 | [Organizr][d328b256] ([docker][1e468891])                       |  √   |   √    |      |
 | [Portainer][726e0b6f]                                           |  √   |   √    |      |
-| [UnionFS-Fuse][6e8f308f]                                        |  √   |   √    |  √   |
-| [UnionFS_Cleaner][f20acc3e]                                     |  √   |   √    |      |
+| [UnionFS][6e8f308f]                                             |  √   |   √    |  √   |
+| [UnionFS Cleaner][f20acc3e]                                     |  √   |   √    |      |
 | [Watchtower][a98faaaf]                                          |  √   |   √    |  √   |
-| Misc: Kernel, motd, sysctl, mc, ngrok, speedtest-cli, and more. |  √   |   √    |  √   |
+| Misc tools and server tweaks (e.g. kernel, motd, mc, ngrok)     |  √   |   √    |  √   |
 
   [627bd283]: https://www.docker.com "Docker"
   [10952c53]: https://www.plex.tv "Plex"
