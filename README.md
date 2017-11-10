@@ -82,7 +82,7 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 ## Contributing
 
 1. Fork it.
-1. Clone the project: `git clone http://github.com/l3uddz/cloudbox`
+1. Clone the project: `git clone http://github.com/<your_name>/cloudbox`
 1. Create your feature branch (off of the develop branch): `git checkout -b my-new-feature develop`
 1. Commit your changes: `git commit -am 'Added some feature'`
 1. Push to the branch: `git push origin my-new-feature`
