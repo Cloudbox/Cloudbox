@@ -21,7 +21,7 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 | [NZBGet][2e2bad08] ([docker][a9b9645e])                         |  √   |   √    |      |
 | [rTorrent][512b104c]/[ruTorrent][8d6ce857] ([docker][344a7c4b]) |  √   |   √    |      |
 | [Jackett][1caa43a0] ([docker][a9b9645e])                        |  √   |   √    |      |
-| [NZB Hydra][a0cc8c46] ([docker][50ba3cbb])                      |  √   |   √    |      |
+| [NZB Hydra][a0cc8c46] ([docker][a9b9645e])                      |  √   |   √    |      |
 | [Rclone][b4cef019]                                              |  √   |   √    |      |
 | [Plexdrive][0367302f]                                           |  √   |   √    |  √   |
 | [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])         |  √   |        |  √   |
@@ -44,7 +44,6 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
   [8211f62c]: https://radarr.video "Radarr"
   [2e2bad08]: https://nzbget.net "NZBGet"
   [a0cc8c46]: https://github.com/theotherp/nzbhydra "NZBHydra"
-  [50ba3cbb]: https://github.com/linuxserver/docker-hydra "linuxserver/hydra"
   [512b104c]: https://github.com/rakshasa/rtorrent/wiki "rTorrent"
   [8d6ce857]: https://github.com/Novik/ruTorrent "ruTorrent"
   [344a7c4b]: https://github.com/l3uddz/docker-rutorrent "forked version of linuxserver/rutorrent"
