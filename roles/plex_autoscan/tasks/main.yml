@@ -18,7 +18,7 @@
 - name: Install pip requirements
   pip:
     requirements: /opt/plex_autoscan/requirements.txt
-    executable: pip
+    executable: pip2
 
 - name: Check config exists
   stat:
