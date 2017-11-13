@@ -50,4 +50,4 @@
   copy: "src=plex_autoscan_url.sh dest=/opt/scripts/plex_autoscan/plex_autoscan_url.sh force=yes owner={{user}} group={{user}} mode=0775"
 
 - name: Import restart_containers.sh
-  copy: "src=plex_autoscan_url.sh dest=/opt/scripts/docker/restart_containers.sh force=yes owner={{user}} group={{user}} mode=0775"
+  copy: "src=restart_containers.sh dest=/opt/scripts/docker/restart_containers.sh force=yes owner={{user}} group={{user}} mode=0775"
