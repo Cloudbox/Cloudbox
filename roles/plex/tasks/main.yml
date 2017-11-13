@@ -113,3 +113,11 @@
     group: "{{user}}"
     mode: 0775
   when: webtools_bundle.stat.exists == False
+
+- name: Create plex_autoscan Logs folder
+  file: 
+    path: "/opt/plex/Library/Logs/Plex Media Server"
+    state: directory
+    mode: 0775
+    owner: {{user}}
+    group=: {user}}
