@@ -119,5 +119,5 @@
     path: "/opt/plex/Library/Logs/Plex Media Server"
     state: directory
     mode: 0775
-    owner: {{user}}
-    group=: {user}}
+    owner: "{{user}}"
+    group: "{{user}}"
