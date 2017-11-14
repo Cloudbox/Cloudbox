@@ -65,7 +65,7 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
   [08902ab1]: https://github.com/jwilder/nginx-proxy "Nginx Proxy"
   [bb8ae44f]: https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion "Let's Encrypt companion for Nginx Proxy"
 
-\* Sonarr, Radarr, NZBGet, Jackett, and NZBHydra use the latest releases, including beta and nightly builds.
+\* Sonarr, Radarr, NZBGet, Jackett, and NZB Hydra use the latest releases, including beta and nightly builds.
 
 ## History
 
