@@ -43,7 +43,10 @@
     with_items:
       - docker-py
       - certbot
-
+      
+  - name: Install Ansible-Toolbox
+    shell: "sudo pip install git+https://github.com/larsks/ansible-toolbox"
+      
   - name: Install hostess
     get_url:
       url:  https://github.com/cbednarski/hostess/releases/download/v0.2.0/hostess_linux_amd64
