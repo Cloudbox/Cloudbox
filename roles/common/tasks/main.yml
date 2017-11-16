@@ -40,16 +40,17 @@
       - nodejs-legacy
       - npm
 
-  - name: Install common pip modules
-    pip: "name={{item}} state=latest"
-    with_items:
-      - docker-py
-      - certbot
-
-  - name: Install common npm modules
-    npm: "name={{item}} global=yes"
-    with_items:
-      - frontail
+- name: Install common pip modules
+  pip: "name={{item}} state=latest"
+  with_items:
+    - docker-py
+    - certbot
+    - "ansible-toolbox"
+    
+- name: Install common npm modules
+  npm: "name={{item}} global=yes"
+  with_items:
+    - frontail
 
   - name: Install hostess
     get_url:
@@ -102,8 +103,6 @@
       - /opt/scripts/cloudflare
       - /opt/scripts/docker
       - /opt/scripts/frontail
-      - "/home/{{user}}/.config/rclone"
-      - "{{plex.transcodes}}"
 
   - name: Check plexdrive mount folder exist
     stat:
