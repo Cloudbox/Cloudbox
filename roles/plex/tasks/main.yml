@@ -11,6 +11,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/plex
+    - "{{plex.transcodes}}"
 
 - name: Stop and remove any existing container
   docker_container:

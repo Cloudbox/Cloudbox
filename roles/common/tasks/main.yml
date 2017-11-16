@@ -72,10 +72,6 @@
       - /mnt/local/Media/TV
       - /mnt/local/Media/Movies
       - /opt
-      - /opt/plex_autoscan
-      - /opt/unionfs_cleaner
-      - /opt/rclone
-      - /opt/nginx-proxy
       - /opt/scripts
       - /opt/scripts/torrent
       - /opt/scripts/nzb
@@ -84,8 +80,6 @@
       - /opt/scripts/plex_autoscan
       - /opt/scripts/cloudflare
       - /opt/scripts/docker
-      - "/home/{{user}}/.config/rclone"
-      - "{{plex.transcodes}}"
 
   - name: Check plexdrive mount folder exist
     stat:
