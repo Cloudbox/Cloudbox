@@ -17,6 +17,10 @@
     path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
     state: present
 
+- name: Create directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/plexpy
 - name: Create and start container
   docker_container:
     name: plexpy
@@ -38,8 +42,8 @@
     restart_policy: always
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.16
         aliases:
           - plexpy
+    purge_networks: yes
     state: started
 

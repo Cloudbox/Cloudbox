@@ -12,6 +12,10 @@
     name: organizr
     state: absent
 
+- name: Create directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/organizr
 - name: Create and start container
   docker_container:
     name: organizr
@@ -31,8 +35,8 @@
       - "/opt/organizr:/config"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.8
         aliases:
           - organizr
+    purge_networks: yes
     restart_policy: always
     state: started

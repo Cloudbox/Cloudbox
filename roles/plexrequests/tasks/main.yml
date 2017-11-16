@@ -12,6 +12,11 @@
     name: plexrequests
     state: absent
 
+- name: Create directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/plexrequests
+      
 - name: Create and start container
   docker_container:
     name: plexrequests
@@ -31,8 +36,8 @@
       - "/opt/plexrequests:/config"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.17
         aliases:
           - plexrequests
+    purge_networks: yes
     restart_policy: always
     state: started
