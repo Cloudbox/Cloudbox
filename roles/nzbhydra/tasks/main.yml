@@ -12,6 +12,10 @@
     name: nzbhydra
     state: absent
 
+- name: Create directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nzbhydra
 - name: Create and start container
   docker_container:
     name: nzbhydra
@@ -35,7 +39,7 @@
     restart_policy: always
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.12
         aliases:
           - nzbhydra
+    purge_networks: yes
     state: started

@@ -39,9 +39,9 @@
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.6
         aliases:
           - nginx-proxy
+    purge_networks: yes
     restart_policy: always
     state: started
 
@@ -60,8 +60,8 @@
       DEBUG: true
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.19
         aliases:
           - letsencrypt
+    purge_networks: yes
     restart_policy: always
     state: started

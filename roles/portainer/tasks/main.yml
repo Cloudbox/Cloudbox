@@ -12,6 +12,11 @@
     name: portainer
     state: absent
 
+- name: Create directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/portainer
+   
 - name: Create and start container
   docker_container:
     name: portainer
@@ -30,8 +35,8 @@
       LETSENCRYPT_EMAIL: "{{email}}"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.18
         aliases:
           - portainer
+    purge_networks: yes
     restart_policy: always
     state: started

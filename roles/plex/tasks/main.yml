@@ -6,6 +6,11 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
+  
+- name: Create directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/plex
 
 - name: Stop and remove any existing container
   docker_container:
@@ -75,9 +80,9 @@
     etc_hosts: {'metric.plex.tv': '127.0.0.1', 'metrics.plex.tv': '127.0.0.1'}
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.15
         aliases:
           - plex
+    purge_networks: yes
     state: started
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
