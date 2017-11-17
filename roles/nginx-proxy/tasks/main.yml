@@ -7,11 +7,11 @@
   shell: "id -g {{user}}"
   register: gid
 
-- name: Ensure rclone folders exists
+- name: Ensure nginx-proxy folders exists
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
   with_items:
     - /opt/nginx-proxy
-  
+
 - name: Import proxy.conf
   copy: "src=proxy.conf dest=/opt/nginx-proxy/proxy.conf force=yes owner={{user}} group={{user}} mode=0775"
 

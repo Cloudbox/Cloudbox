@@ -12,7 +12,7 @@
   with_items:
     - /opt/nzbget
     - /opt/nzbget/scripts
-      
+    
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
