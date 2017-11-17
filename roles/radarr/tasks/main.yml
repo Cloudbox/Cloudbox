@@ -16,7 +16,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/radarr
-      
+
 - name: Create and start container
   docker_container:
     name: radarr
