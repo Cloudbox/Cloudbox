@@ -13,5 +13,5 @@ sleep 10
 for container in $containers;
 do
     echo Starting $container
-    docker=$(docker start -a $container)
+    docker=$(docker start $container)
 done
