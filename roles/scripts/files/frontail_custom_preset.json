@@ -1,0 +1,10 @@
+{
+    "words": {
+        "ERROR": "color: red;",
+        "WARNING": "color: yellow;"
+
+    },
+    "lines": {
+
+    }
+}
