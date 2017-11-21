@@ -51,3 +51,16 @@
 
 - name: Import restart_containers.sh
   copy: "src=restart_containers.sh dest=/opt/scripts/docker/restart_containers.sh force=yes owner={{user}} group={{user}} mode=0775"
+
+- name: Check frontail_custom_preset.json exists
+  stat:
+    path: /opt/scripts/frontail/frontail_custom_preset.json
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: frontail_preset
+
+- name: Import frontail_custom_preset.json
+  copy: "src=frontail_custom_preset.json dest=/opt/scripts/frontail/frontail_custom_preset.json force=yes owner={{user}} group={{user}} mode=0775"
+  when: frontail_preset.stat.exists == False
