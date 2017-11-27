@@ -12,6 +12,8 @@
     downloads: "{{downloads.path}}/rutorrent"
   deluge:
     downloads: "{{downloads.path}}/deluge"
+  headphones:
+    downloads: "{{downloads.path}}/headphones"
   plex:
     tag: public
     transcodes: "/home/{{user}}/transcodes"

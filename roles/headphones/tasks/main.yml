@@ -1,0 +1,46 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+  
+- name: Stop and remove any existing container
+  docker_container:
+    name: headphones
+    state: absent
+
+- name: Create headphones download directory
+  file: "path={{headphones.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+  
+- name: Create and start container
+  docker_container:
+    name: headphones
+    image: linuxserver/headphones
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8181:8181"
+   env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "headphones.{{domain}}"
+      VIRTUAL_PORT: 8181
+      LETSENCRYPT_HOST: "headphones.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"   
+      
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/headphones:/config"
+      - "{{headphones.downloads}}:/downloads"
+      - "/opt/scripts/torrent:/scripts"
+      - "/mnt/:/mnt"
+    networks:
+      - name: cloudbox
+        ipv4_address: 172.18.0.81
+        aliases:
+          - headphones
+    restart_policy: always
+    state: started
+
