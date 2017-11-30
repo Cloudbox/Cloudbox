@@ -46,6 +46,11 @@
       
   - name: Install Ansible-Toolbox
     shell: "sudo pip install git+https://github.com/larsks/ansible-toolbox"
+
+  - name: Install common npm modules
+    npm: "name={{item}} global=yes"
+    with_items:
+      - frontail
       
   - name: Install hostess
     get_url:
@@ -80,6 +85,8 @@
       - /opt/scripts/plex_autoscan
       - /opt/scripts/cloudflare
       - /opt/scripts/docker
+      - /opt/scripts/frontail
+
 
   - name: Check plexdrive mount folder exist
     stat:
