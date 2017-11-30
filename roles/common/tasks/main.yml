@@ -37,6 +37,8 @@
       - speedtest-cli
       - python-ndg-httpsclient
       - nethogs
+      - nodejs-legacy
+      - npm
 
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
@@ -51,7 +53,7 @@
     npm: "name={{item}} global=yes"
     with_items:
       - frontail
-      
+
   - name: Install hostess
     get_url:
       url:  https://github.com/cbednarski/hostess/releases/download/v0.2.0/hostess_linux_amd64
