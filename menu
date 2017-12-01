@@ -48,12 +48,32 @@ function _function() {
 }
 
 function _install() {
+  appsa=()
+  rolesa=()
+  apps=()
+  containersa=()
   installa=()
-  locks=($(find roles -type f -name .menu -printf '%h\0' | sed -z 's/$/\n/'| cut -d'/' -f2| sort -d))
-  for i in "${locks[@]}"; do
+rolesa=($(find roles -type f -name .menu -printf '%h\0' | sed -z 's/$/\n/'| cut -d'/' -f2| sort -d))
+
+containersa=($(sudo docker ps -a --format '{{.Names}}' | sort -d))
+
+ for i in "${rolesa[@]}"; do
+     skip=
+     for j in "${containersa[@]}"; do
+         [[ $i == $j ]] && { skip=1; break; }
+     done
+     [[ -n $skip ]] || apps+=("$i")
+ done
+
+  for i in "${apps[@]}"; do
     app=${i}
     installa+=("$i" '""')
   done
+
+if [ ${#installa[@]} -eq 0 ]; then
+NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+whiptail --title "Install Software" --msgbox "There isnt anything to install, you have it all installed" 15 50
+else
   NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
   whiptail --title "Install Software" --checklist --noitem --separate-output "Make some choices:" 15 50 10 "${installa[@]}" 2>results
   readarray result < results
@@ -64,6 +84,8 @@ function _install() {
   done
 
    rm results
+
+fi
   _function
 }
 
