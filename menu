@@ -14,12 +14,26 @@
 #
 #################################################################################
 
+readarray -t newtcols < /etc/newt/palette
+
+#color theme
+newtcols_menu=(
+   root=,black
+   title=black,
+   window=,black
+   border=white,blue
+   textbox=white,black
+   checkbox=white,black
+)
+
 function _intro() {
-  whiptail --title "CloudBox Package Manager" --msgbox "Welcome to the Box! Using this script you can choose to install and remove the packages contained within the package repository. Use the arrow keys to navigate, spacebar to toggle the currently selected item and enter to continue." 15 50
+NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+whiptail --title "CloudBox Package Manager" --msgbox "Welcome to the Box! Using this script you can choose to install and remove the packages contained within the package repository. Use the arrow keys to navigate, spacebar to toggle the currently selected item and enter to continue." 15 50
 }
 
 function _function() {
-  function=$(whiptail --title "CloudBox" --menu "Choose an option:" --ok-button "Continue" --nocancel 12 50 3 \
+  function=$(NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+		whiptail --title "CloudBox" --menu "Choose an option:" --ok-button "Continue" --nocancel 15 50 3 \
                Install "packages" \
                Remove "packages" \
                Exit "" 3>&1 1>&2 2>&3)
@@ -35,14 +49,13 @@ function _function() {
 
 function _install() {
   installa=()
-  locks=($(find roles -type f -name .menu -printf '%h\0' | sed -z 's/$/\n/'| cut -d'/' -f2))
+  locks=($(find roles -type f -name .menu -printf '%h\0' | sed -z 's/$/\n/'| cut -d'/' -f2| sort -d))
   for i in "${locks[@]}"; do
     app=${i}
-    if [[ ! -f /install/.$app.lock ]]; then
-      installa+=("$i" '""')
-    fi
+    installa+=("$i" '""')
   done
-  whiptail --title "Install Software" --checklist --noitem --separate-output "Make some choices:" 15 26 7 "${installa[@]}" 2>results
+  NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+  whiptail --title "Install Software" --checklist --noitem --separate-output "Make some choices:" 15 50 10 "${installa[@]}" 2>results
   readarray result < results
   for i in "${result[@]}"; do
     result=$(echo $i)
@@ -56,8 +69,14 @@ function _install() {
 
 function _remove() {
 removea=()
-removea=($(docker ps -a --format '{{.Names}}' | sort -d))
-whiptail --title "Remove Software" --noitem --checklist --separate-output "Make some choices:" 15 26 7 "${removea[@]}" 2>results
+containers=()
+containers=($(sudo docker ps -a --format '{{.Names}}' | sort -d))
+  for i in "${containers[@]}"; do
+    app=${i}
+      removea+=("$i" '""')
+  done
+NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+whiptail --title "Remove Software" --checklist --noitem --separate-output "Make some choices:" 15 50 10 "${removea[@]}" 2>results
   readarray result < results
   for i in "${result[@]}"; do
     result=$(echo $i)
