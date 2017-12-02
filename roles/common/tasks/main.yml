@@ -46,7 +46,12 @@
       - docker-py
       - certbot
 
-  - name: Install Ansible-Toolbox
+  - name: Install common npm modules
+    npm: "name={{item}} global=yes"
+    with_items:
+      - frontail
+
+- name: Install Ansible-Toolbox
     shell: "sudo pip install git+https://github.com/larsks/ansible-toolbox"
     
   - name: Install hostess
