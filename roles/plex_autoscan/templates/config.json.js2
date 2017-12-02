@@ -22,7 +22,7 @@
     "PLEX_TOKEN": "",
     "PLEX_USER": "plex",
     "PLEX_WAIT_FOR_EXTERNAL_SCANNERS": true,
-    "PLEX_ANALYZE_FILE": false,
+    "PLEX_ANALYZE_FILE": true,
     "SERVER_ALLOW_MANUAL_SCAN": false,
     "SERVER_FILE_EXIST_PATH_MAPPINGS": {
         "/mnt/unionfs/Media": [
@@ -47,9 +47,9 @@
         ".DS_Store",
         "Thumbs.db"
     ],
-    "SERVER_USE_SQLITE": false,
+    "SERVER_USE_SQLITE": true,
     "SERVER_PORT": 3468,
-    "SERVER_SCAN_DELAY": 5,
+    "SERVER_SCAN_DELAY": 180,
     "USE_DOCKER": true,
     "USE_SUDO": false
 }

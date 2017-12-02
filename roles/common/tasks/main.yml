@@ -37,16 +37,18 @@
       - speedtest-cli
       - python-ndg-httpsclient
       - nethogs
+      - nodejs-legacy
+      - npm
 
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
     with_items:
       - docker-py
       - certbot
-      
+
   - name: Install Ansible-Toolbox
     shell: "sudo pip install git+https://github.com/larsks/ansible-toolbox"
-      
+    
   - name: Install hostess
     get_url:
       url:  https://github.com/cbednarski/hostess/releases/download/v0.2.0/hostess_linux_amd64
@@ -80,6 +82,7 @@
       - /opt/scripts/plex_autoscan
       - /opt/scripts/cloudflare
       - /opt/scripts/docker
+      - /opt/scripts/frontail
 
   - name: Check plexdrive mount folder exist
     stat:
