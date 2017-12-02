@@ -1,0 +1,43 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+  
+- name: Stop and remove any existing container
+  docker_container:
+    name: ombi
+    state: absent
+
+- name: Create directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/ombi
+
+- name: Create and start container
+  docker_container:
+    name: ombi
+    image: "lsiodev/ombi-preview"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:3579:3579"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "ombi.{{domain}}"
+      VIRTUAL_PORT: 3579
+      LETSENCRYPT_HOST: "ombi.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/ombi:/config"
+    networks:
+      - name: cloudbox
+        aliases:
+          - ombi
+    purge_networks: yes
+    restart_policy: always
+    state: started
