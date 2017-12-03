@@ -17,7 +17,7 @@
     path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
     state: present
 
-- name: Create directories
+- name: Create plexpy directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/plexpy

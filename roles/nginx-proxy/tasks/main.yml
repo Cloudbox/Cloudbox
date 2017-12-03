@@ -7,7 +7,7 @@
   shell: "id -g {{user}}"
   register: gid
 
-- name: Ensure nginx-proxy folders exists
+- name: Create nginx-proxy directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
   with_items:
     - /opt/nginx-proxy
