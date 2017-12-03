@@ -8,7 +8,7 @@
     systemd: state=stopped name=plexdrive
     when: plexdrive_service.stat.exists
 
-  - name: Create common directories
+  - name: Create plexdrive directories
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
       - /opt/plexdrive
