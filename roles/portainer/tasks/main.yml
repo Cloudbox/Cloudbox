@@ -37,6 +37,5 @@
       - name: cloudbox
         aliases:
           - portainer
-    purge_networks: yes
     restart_policy: always
     state: started

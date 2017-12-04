@@ -45,6 +45,5 @@
       - name: cloudbox
         aliases:
           - plexpy
-    purge_networks: yes
     state: started
 
