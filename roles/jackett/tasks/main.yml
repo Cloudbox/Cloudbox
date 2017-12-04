@@ -30,9 +30,9 @@
       BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "jackett.{{domain}}"
+      VIRTUAL_HOST: "{{subdomain}.{{domain}}"
       VIRTUAL_PORT: 8080
-      LETSENCRYPT_HOST: "jackett.{{domain}}"
+      LETSENCRYPT_HOST: "{{subdomain}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

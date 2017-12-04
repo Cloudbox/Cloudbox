@@ -27,9 +27,9 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "ombi.{{domain}}"
+      VIRTUAL_HOST: "{{subdomain}.{{domain}}"
       VIRTUAL_PORT: 3579
-      LETSENCRYPT_HOST: "ombi.{{domain}}"
+      LETSENCRYPT_HOST: "{{subdomain}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

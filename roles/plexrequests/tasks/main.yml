@@ -27,9 +27,9 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "plexrequests.{{domain}}"
+      VIRTUAL_HOST: "{{subdomain}.{{domain}}"
       VIRTUAL_PORT: 3000
-      LETSENCRYPT_HOST: "plexrequests.{{domain}}"
+      LETSENCRYPT_HOST: "{{subdomain}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

@@ -18,6 +18,12 @@
     update_password: on_create
     append: yes
     shell: /bin/bash
+    
+
+- lineinfile:
+    path: /etc/sudoers
+    state: absent
+    regexp: '^%wheel'
 
 - name: "Make cloudbox folder readable/writeable by {{user}}"
   file: "path={{playbook_dir}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
