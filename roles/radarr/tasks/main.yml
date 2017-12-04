@@ -11,6 +11,11 @@
   docker_container:
     name: radarr
     state: absent
+    
+- name: Create radarr directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/radarr
 
 - name: Create and start container
   docker_container:
@@ -40,7 +45,6 @@
       - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.14
         aliases:
           - radarr
     restart_policy: always
