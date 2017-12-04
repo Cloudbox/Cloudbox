@@ -19,7 +19,7 @@ size=$(echo $4 | awk '/[0-9.]$/{print $1;next};/ MB$/{printf "%u", $1*(1024*1024
 
 # parse release name from download link headers, for the trackers that do not provide it in their announcements... (looking at you PTP)
 if [ $indexer = "PassThePopcorn" ]; then
-  title=$(curl -X HEAD -sI $downloadUrl | grep -oE 'filename=.*$' | sed -e 's/^filename="\(.*\).torrent"\s$/\1/')
+  title=$(curl -X HEAD -sI $downloadUrl | grep -oE 'filename=.*$' | sed -e 's/^filename="\(.*\)\.[0-9]*\.torrent"\s*$/\1/')
 fi
 
 # push to sonarr/radarr
