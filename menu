@@ -145,22 +145,23 @@ function _clr() {
 function _update() {
   echo -e "Updating cloudbox local repository"
   cd ~/cloudbox
-	mkdir /opt/settings/roles
-	mv settings.yml /opt/settings/settings.yml
-  rm -rf /opt/settings/roles/*
+	rm -rf /tmp/settings
+  mkdir -p /tmp/settings/roles
+	mv settings.yml /tmp/settings/settings.yml
   rolesa=($(find roles -type f -name settings.yml -printf '%h\0' | sed -z 's/$/\n/'| cut -d'/' -f2| sort -d))
 	for i in "${rolesa[@]}"; do
 	mv roles/$i/settings.yml /opt/settings/roles/$i"_settings.yml"
 	done
 	git reset --hard
   git pull
-	merge-yaml -i ~/cloudbox/settings.yml /opt/settings/settings.yml  -o ~/cloudbox/settings.yml
+	merge-yaml -i ~/cloudbox/settings.yml /tmp/settings/settings.yml  -o ~/cloudbox/settings.yml > /dev/null 2>&1 
 	role_settingsa=($(find /opt/settings/roles/ -type f -printf "%f\n" | cut -d "_" -f 1 | sort -d))
   for i in "${role_settingsa[@]}"; do
-  merge-yaml -i ~/cloudbox/roles/$i/settings.yml /opt/settings/roles/$i"_settings.yml" -o ~/cloudbox/roles/$i/settings.yml
+  merge-yaml -i ~/cloudbox/roles/$i/settings.yml /opt/settings/roles/$i"_settings.yml" -o ~/cloudbox/roles/$i/settings.yml > /dev/null 2>&1 
   done
 	chmod -R 700 ~/cloudbox
 }
+
 function _upgrade() {
   arg=("$@")
   packages=("${arg[@]:1}")
