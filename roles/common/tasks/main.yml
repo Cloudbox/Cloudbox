@@ -37,8 +37,9 @@
       - speedtest-cli
       - python-ndg-httpsclient
       - nethogs
-      - nodejs-legacy
-      - npm
+
+- name: Install NodeJS 8.x:
+    shell: "curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && sudo apt-get install -y nodejs"
 
   - name: Install common pip modules
     pip: "name={{item}} state=latest"
@@ -46,17 +47,15 @@
       - docker-py
       - certbot
       
-  - name: Install Ansible-Toolbox
-    shell: "sudo pip install git+https://github.com/larsks/ansible-toolbox"
-
   - name: Install common npm modules
     npm: "name={{item}} global=yes"
     with_items:
       - frontail
+      - merge-yaml-cli
 
 - name: Install Ansible-Toolbox
     shell: "sudo pip install git+https://github.com/larsks/ansible-toolbox"
-    
+     
   - name: Install hostess
     get_url:
       url:  https://github.com/cbednarski/hostess/releases/download/v0.2.0/hostess_linux_amd64
