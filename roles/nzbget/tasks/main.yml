@@ -7,6 +7,12 @@
   shell: "id -g {{user}}"
   register: gid
 
+- name: Create nzbget directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nzbget
+    - /opt/nzbget/scripts
+    
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
@@ -52,7 +58,6 @@
     restart_policy: always
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.9
         aliases:
           - nzbget
     state: started
