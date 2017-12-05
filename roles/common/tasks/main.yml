@@ -91,6 +91,15 @@
       - /opt/scripts/docker
       - /opt/scripts/frontail
 
+- name: Add cloudbox to $PATH
+  lineinfile: dest={{home_directory}}/.bashrc regexp="^export PATH\=\$HOME\/local\/bin" line="export PATH=$HOME/cloudbox:$PATH"
+
+- name: sudo nopasswd
+- lineinfile:
+   path: /etc/sudoers
+   state: present
+   regexp: '^%sudo\s'
+   line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
   - name: Check plexdrive mount folder exist
     stat:

@@ -29,9 +29,9 @@
       - "/opt/portainer:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
     env:
-      VIRTUAL_HOST: "{{subdomain}.{{domain}}"
+      VIRTUAL_HOST: "{{subdomain}}.{{domain}}"
       VIRTUAL_PORT: 9000
-      LETSENCRYPT_HOST: "{{subdomain}.{{domain}}"
+      LETSENCRYPT_HOST: "{{subdomain}}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     networks:
       - name: cloudbox
