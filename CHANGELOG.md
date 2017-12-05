@@ -26,7 +26,6 @@ Changelog Format:
 # Changelog
 
 ## [Unreleased]
-
 ### Added
 - Ombi
   - Simple run cloudbox install with `--tags update-ombi` command.
@@ -38,3 +37,9 @@ Changelog Format:
 
 ## [1.0.0] - 2017-12-01
 - Initial Release
+
+
+
+[Unreleased]: https://github.com/cloudbox/cloudbox/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/cloudbox/cloudbox/compare/9af69ab...v1.0.0
+
