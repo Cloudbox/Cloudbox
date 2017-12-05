@@ -29,13 +29,12 @@ Changelog Format:
 
 ## [Unreleased]
 ### Added
-- Ombi
+- Ansible-Toolbox
+- [Ombi](http://www.ombi.io/)
   - To install, run the Cloudbox install command with `--tags install-ombi`.
 - [Resilio Sync](https://www.resilio.com/)
   - To install, run the Cloudbox install command with `--tags install-resilio`.
-- [glances](https://nicolargo.github.io/glances/)
-- [Nextcloud](https://nextcloud.com/)
-  - To install, run the Cloudbox install command with `--tags install-nextcloud`.
+- [glances](https://nicolargo.github.io/glances/) 
 
 ### Changed
 - Arrpush adjustments.
