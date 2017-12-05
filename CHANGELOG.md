@@ -21,6 +21,8 @@ Changelog Format:
 ### Fixed
 - entry.
 
+
+[X.X.X]: https://github.com/Cloudbox/Cloudbox/compare/(vX.X.X)-1...vX.X.X
 -->
 
 # Changelog
@@ -40,6 +42,6 @@ Changelog Format:
 
 
 
-[Unreleased]: https://github.com/cloudbox/cloudbox/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/cloudbox/cloudbox/compare/9af69ab...v1.0.0
+[Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
+[1.0.0]: https://github.com/Cloudbox/Cloudbox/compare/9af69ab...v1.0.0
 
