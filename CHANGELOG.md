@@ -30,7 +30,7 @@ Changelog Format:
 ## [Unreleased]
 ### Added
 - Ombi
-  - To install, run the Cloudbox install command with `--tags update-ombi`.
+  - To install, run the Cloudbox install command with `--tags install-ombi`.
 - Ansible-Toolbox
 
 ### Changed
