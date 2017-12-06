@@ -39,14 +39,15 @@
     - nethogs
     - nodejs-legacy
     - npm
+    - glances
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
   with_items:
     - docker-py
     - certbot
-    - "git+https://github.com/larsks/ansible-toolbox"
-    
+    - "ansible-toolbox"
+
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
   with_items:
