@@ -6,44 +6,39 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-
+  
 - name: Stop and remove any existing container
   docker_container:
-    name: plexpy
+    name: resilio
     state: absent
 
-- name: Wait for Plex Logs folder to be created by Plex
-  wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
-    state: present
-
-- name: Create plexpy directories
+- name: Create resilio directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/plexpy
+    - /opt/resilio
 
 - name: Create and start container
   docker_container:
-    name: plexpy
-    image: linuxserver/plexpy
+    name: resilio
+    image: "linuxserver/resilio-sync"
     pull: yes
     published_ports:
-      - "127.0.0.1:8181:8181"
+      - "127.0.0.1:8888:8888"
+      - "55555:55555"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: {{subdomain}}.{{domain}}"
-      VIRTUAL_PORT: 8181
-      LETSENCRYPT_HOST: "{{subdomain}}.{{domain}}"
+      VIRTUAL_HOST: "resilio.{{domain}}"
+      VIRTUAL_PORT: 8888
+      LETSENCRYPT_HOST: "resilio.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/plexpy:/config"
-      - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
-    restart_policy: always
+      - "/opt/resilio:/config"
+      - "/mnt:/sync"
     networks:
       - name: cloudbox
         aliases:
-          - plexpy
+          - resilio
+    restart_policy: always
     state: started
-

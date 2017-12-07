@@ -8,7 +8,7 @@
   systemd: state=stopped name=unionfs_cleaner
   when: unionfs_cleaner_service.stat.exists
 
-- name: Ensure unionfs_cleaner folders exists
+- name: Create unionfs_cleaner directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
   with_items:
     - /opt/unionfs_cleaner

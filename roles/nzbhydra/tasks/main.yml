@@ -42,5 +42,4 @@
       - name: cloudbox
         aliases:
           - nzbhydra
-    purge_networks: yes
     state: started

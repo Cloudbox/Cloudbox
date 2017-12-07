@@ -7,7 +7,7 @@
   shell: "id -g {{user}}"
   register: gid
   
-- name: Create directories
+- name: Create plex directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/plex
@@ -83,7 +83,6 @@
       - name: cloudbox
         aliases:
           - plex
-    purge_networks: yes
     state: started
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...

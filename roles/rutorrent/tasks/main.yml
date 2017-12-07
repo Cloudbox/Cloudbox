@@ -7,7 +7,7 @@
   shell: "id -g {{user}}"
   register: gid
 
-- name: Create directories
+- name: Create rutorrent directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/rutorrent
@@ -57,7 +57,6 @@
       - name: cloudbox
         aliases:
           - rutorrent
-    purge_networks: yes
     restart_policy: always
     state: started
 

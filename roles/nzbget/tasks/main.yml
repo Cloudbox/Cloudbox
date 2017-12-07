@@ -7,7 +7,7 @@
   shell: "id -g {{user}}"
   register: gid
 
-- name: Create directories
+- name: Create nzbget directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/nzbget
@@ -60,7 +60,6 @@
       - name: cloudbox
         aliases:
           - nzbget
-    purge_networks: yes
     state: started
 
 - name: Wait for nzbget.conf to be created

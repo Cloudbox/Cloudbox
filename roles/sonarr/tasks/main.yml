@@ -12,7 +12,7 @@
     name: sonarr
     state: absent
 
-- name: Create directories
+- name: Create sonarr directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/sonarr
@@ -47,6 +47,5 @@
       - name: cloudbox
         aliases:
           - sonarr
-    purge_networks: yes
     restart_policy: always
     state: started

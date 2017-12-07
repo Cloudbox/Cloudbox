@@ -12,7 +12,7 @@
     name: portainer
     state: absent
 
-- name: Create directories
+- name: Create portainer directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/portainer
@@ -37,6 +37,5 @@
       - name: cloudbox
         aliases:
           - portainer
-    purge_networks: yes
     restart_policy: always
     state: started

@@ -8,7 +8,7 @@
   systemd: state=stopped name=plex_autoscan
   when: plex_autoscan_service.stat.exists
 
-- name: Ensure plex_autoscan folders exists
+- name: Create plex_autoscan directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
   with_items:
     - /opt/plex_autoscan
