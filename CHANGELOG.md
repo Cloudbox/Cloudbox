@@ -34,11 +34,13 @@ Changelog Format:
   - To install, run the Cloudbox install command with `--tags install-ombi`.
 - [Resilio Sync](https://www.resilio.com/)
   - To install, run the Cloudbox install command with `--tags install-resilio`.
-- [glances](https://nicolargo.github.io/glances/) 
+- [glances](https://nicolargo.github.io/glances/)
+- [Nextcloud](https://nextcloud.com/)
+  - To install, run the Cloudbox install command with `--tags install-nextcloud`.
 
 ### Changed
 - Arrpush adjustments.
-- Docker containers now using dynamic IPs. 
+- Docker containers now use dynamic IP addresses.
 
 ## [1.0.0] - 2017-12-01
 - Initial Release
@@ -47,4 +49,3 @@ Changelog Format:
 
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
 [1.0.0]: https://github.com/Cloudbox/Cloudbox/compare/9af69ab...v1.0.0
-
