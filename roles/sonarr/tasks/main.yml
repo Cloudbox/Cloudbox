@@ -23,7 +23,7 @@
     image: "hotio/suitarr"
     pull: yes
     published_ports:
-      - "127.0.0.1:8989:8080"
+      - "127.0.0.1:8989:8989"
     env:
       APP: "sonarr"
       VERSION: "unstable"
@@ -32,7 +32,7 @@
       PGID: "{{gid.stdout}}"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "sonarr.{{domain}}"
-      VIRTUAL_PORT: 8080
+      VIRTUAL_PORT: 8989
       LETSENCRYPT_HOST: "sonarr.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
