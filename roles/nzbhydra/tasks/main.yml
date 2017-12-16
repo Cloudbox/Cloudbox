@@ -23,7 +23,7 @@
     image: hotio/suitarr
     pull: yes
     published_ports:
-      - "127.0.0.1:5075:8080"
+      - "127.0.0.1:5075:5075"
     env:
       APP: "nzbhydra"
       VERSION: "unstable"
@@ -31,7 +31,7 @@
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "{{subdomain}}.{{domain}}"
-      VIRTUAL_PORT: 8080
+      VIRTUAL_PORT: 5075
       LETSENCRYPT_HOST: "{{subdomain}}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:

@@ -38,7 +38,7 @@
     image: hotio/suitarr
     pull: yes
     published_ports:
-      - "127.0.0.1:6789:8080"
+      - "127.0.0.1:6789:6789"
     env:
       APP: "nzbget"
       VERSION: "unstable"
@@ -46,7 +46,7 @@
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "{{subdomain}}.{{domain}}"
-      VIRTUAL_PORT: 8080
+      VIRTUAL_PORT: 6789
       LETSENCRYPT_HOST: "{{subdomain}}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
