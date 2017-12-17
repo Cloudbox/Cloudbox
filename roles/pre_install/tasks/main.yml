@@ -33,6 +33,15 @@
 - name: "Make cloudbox folder readable/writeable by {{user}}"
   file: "path={{playbook_dir}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
 
+- lineinfile:
+    path: /home/{{user}}/.profile
+    state: present
+    regexp: '(cloudbox:)'
+    line: 'PATH="$HOME/cloudbox:$PATH"
+    
+- name: source profile
+  shell: "source /home/{{user}}/.profile"
+
 - name: Check plexdrive.service exists
   stat:
     path: "/etc/systemd/system/plexdrive.service"
