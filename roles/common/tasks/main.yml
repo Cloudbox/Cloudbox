@@ -39,8 +39,8 @@
     - nethogs
     - glances
 
-- name: Install NodeJS 8.x:
-    shell: "curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && sudo apt-get install -y nodejs"
+- name: Install NodeJS 8
+  shell: "curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && sudo apt-get install -y nodejs"
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
