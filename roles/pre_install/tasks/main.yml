@@ -36,8 +36,8 @@
 - lineinfile:
     path: /home/{{user}}/.profile
     state: present
-    regexp: '(cloudbox:)'
-    line: 'PATH="$HOME/cloudbox:$PATH"
+    regexp: '(PATH="\$HOME\/cloudbox:\$PATH)"'
+    line: 'PATH="$HOME/cloudbox:$PATH"'
     
 - name: source profile
   shell: "source /home/{{user}}/.profile"
