@@ -28,9 +28,9 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "resilio.{{domain}}"
+      VIRTUAL_HOST: "{{subdomain}}.{{domain}}"
       VIRTUAL_PORT: 8888
-      LETSENCRYPT_HOST: "resilio.{{domain}}"
+      LETSENCRYPT_HOST: "{{subdomain}}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
