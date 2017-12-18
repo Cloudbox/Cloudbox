@@ -16,6 +16,8 @@
 
 readarray -t newtcols < /etc/newt/palette
 
+cd ~/cloudbox
+ 
 #color theme
 newtcols_menu=(
    root=,black
@@ -79,7 +81,7 @@ else
   for i in "${result[@]}"; do
     result=$(echo $i)
     echo -e "Installing ${result}"
-    sudo ansible-role ${result} --extra-vars "@./settings.yml" --extra-vars  "@./roles/${result}/settings.yml"
+    sudo ansible-role ${result} --extra-vars "@./settings.yml"
   done
 
    rm results
@@ -144,7 +146,7 @@ function _clr() {
 
 function _update() {
   echo -e "Updating cloudbox local repository"
-  cd ~/cloudbox
+ 
 	rm -rf /tmp/settings
   mkdir -p /tmp/settings/roles
 	mv settings.yml /tmp/settings/settings.yml
