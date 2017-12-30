@@ -7,6 +7,12 @@
   shell: "id -g {{user}}"
   register: gid
 
+- name: Create nzbget directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nzbget
+    - /opt/nzbget/scripts
+    
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
@@ -32,7 +38,7 @@
     image: hotio/suitarr
     pull: yes
     published_ports:
-      - "127.0.0.1:6789:8080"
+      - "127.0.0.1:6789:6789"
     env:
       APP: "nzbget"
       VERSION: "unstable"
@@ -40,7 +46,7 @@
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "nzbget.{{domain}}"
-      VIRTUAL_PORT: 8080
+      VIRTUAL_PORT: 6789
       LETSENCRYPT_HOST: "nzbget.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
@@ -52,7 +58,6 @@
     restart_policy: always
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.9
         aliases:
           - nzbget
     state: started
