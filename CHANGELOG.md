@@ -48,7 +48,7 @@ Changelog Format:
 - Use default app ports for Suitarr containers due to Docker image changes. 
 
 ## [1.0.0] - 2017-12-01
-- Initial Release
+### Initial Release
 
 
 
