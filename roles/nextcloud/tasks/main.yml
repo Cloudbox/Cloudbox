@@ -1,0 +1,70 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+  
+- name: Stop and remove any existing containers
+  docker_container: "name={{item}} state=absent"
+  with_items:
+    - nextcloud
+    - mariadb
+
+- name: Create required directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nextcloud
+    - /opt/nextcloud/conf
+    - /opt/nextcloud/data
+    - /opt/mariadb
+
+- name: Create and start mariadb container
+  docker_container:
+    name: mariadb
+    image: "linuxserver/mariadb"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:3306:3306"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      MYSQL_ROOT_PASSWORD: "password321"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/mariadb:/config"
+    networks:
+      - name: cloudbox
+        aliases:
+          - mariadb
+    restart_policy: always
+    state: started
+
+- name: Create and start nextcloud container
+  docker_container:
+    name: nextcloud
+    image: "linuxserver/nextcloud"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:4645:443"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "nextcloud.{{domain}}"
+      VIRTUAL_PORT: 443
+      VIRTUAL_PROTO: https
+      LETSENCRYPT_HOST: "nextcloud.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nextcloud/conf:/config"
+      - "/opt/nextcloud/data:/data"
+      - "/mnt:/mnt"
+    networks:
+      - name: cloudbox
+        aliases:
+          - nextcloud
+    restart_policy: always
+    state: started

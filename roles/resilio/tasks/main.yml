@@ -6,46 +6,39 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-
+  
 - name: Stop and remove any existing container
   docker_container:
-    name: radarr
+    name: resilio
     state: absent
-    
-- name: Create radarr directories
+
+- name: Create resilio directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/radarr
+    - /opt/resilio
 
 - name: Create and start container
   docker_container:
-    name: radarr
-    image: hotio/suitarr
+    name: resilio
+    image: "linuxserver/resilio-sync"
     pull: yes
     published_ports:
-      - "127.0.0.1:7878:7878"
+      - "127.0.0.1:8888:8888"
+      - "55555:55555"
     env:
-      APP: "radarr"
-      VERSION: "unstable"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      BACKUP: "no"
-      MONO_TLS_PROVIDER: legacy
-      VIRTUAL_HOST: "radarr.{{domain}}"
-      VIRTUAL_PORT: 7878
-      LETSENCRYPT_HOST: "radarr.{{domain}}"
+      VIRTUAL_HOST: "resilio.{{domain}}"
+      VIRTUAL_PORT: 8888
+      LETSENCRYPT_HOST: "resilio.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/radarr:/config"
-      - "/mnt/unionfs/Media/Movies:/movies"
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
+      - "/opt/resilio:/config"
+      - "/mnt:/sync"
     networks:
       - name: cloudbox
         aliases:
-          - radarr
+          - resilio
     restart_policy: always
     state: started

@@ -7,7 +7,12 @@
   - name: Stop existing plexdrive service
     systemd: state=stopped name=plexdrive
     when: plexdrive_service.stat.exists
-    
+
+  - name: Create plexdrive directories
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+    with_items:
+      - /opt/plexdrive
+
   - name: Install plexdrive
     get_url:
       url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64

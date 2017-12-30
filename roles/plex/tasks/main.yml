@@ -6,6 +6,12 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
+  
+- name: Create plex directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/plex
+    - "{{plex.transcodes}}"
 
 - name: Stop and remove any existing container
   docker_container:
@@ -75,7 +81,6 @@
     etc_hosts: {'metric.plex.tv': '127.0.0.1', 'metrics.plex.tv': '127.0.0.1', 'analytics.plex.tv': '127.0.0.1'}
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.15
         aliases:
           - plex
     state: started

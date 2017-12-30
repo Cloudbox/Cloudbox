@@ -91,6 +91,6 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 1. Submit a pull request.
 
 
-
-## Community Chat
-- [Slack Channel](https://join.slack.com/t/cloud-box/shared_invite/MjM1NTI2OTEwMzIyLTE1MDQzOTAyNDAtYWNhOWY2NzNiZA)
+## Community
+- [Forum](https://forums.cloudbox.rocks/)
+- [Slackchat](https://join.slack.com/t/cloud-box/shared_invite/enQtMjg0NTM4NTc2ODA1LTliOTdmMzM5YmNiZjU0ZDQxOWU0ZGQxN2E1MGE5NDIyM2VkZjE1MjQ1NmQ3ZjFhZTNhOGEzMmY1ZDViZTkyMzg)
