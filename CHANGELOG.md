@@ -38,7 +38,7 @@ Changelog Format:
   - To install, run the Cloudbox install command with `--tags install-ombi`.
 - [Resilio Sync](https://www.resilio.com/)
   - To install, run the Cloudbox install command with `--tags install-resilio`.
-- [glances](https://nicolargo.github.io/glances/)
+- [Glances](https://nicolargo.github.io/glances/)
 - [Nextcloud](https://nextcloud.com/)
   - To install, run the Cloudbox install command with `--tags install-nextcloud`.
 
