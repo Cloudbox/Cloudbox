@@ -22,12 +22,16 @@ Changelog Format:
 - entry.
 
 
-[X.X.X]: https://github.com/Cloudbox/Cloudbox/compare/(vX.X.X)-1...vX.X.X
+[X.X.X]: https://github.com/Cloudbox/Cloudbox/compare/vX.X.X-1...vX.X.X
 -->
 
 # Changelog
 
+
 ## [Unreleased]
+
+
+## [1.0.1]
 ### Added
 - Ansible-Toolbox
 - [Ombi](http://www.ombi.io/)
@@ -49,4 +53,5 @@ Changelog Format:
 
 
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
+[1.0.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Cloudbox/Cloudbox/compare/9af69ab...v1.0.0
