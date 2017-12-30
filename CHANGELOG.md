@@ -31,7 +31,7 @@ Changelog Format:
 ## [Unreleased]
 
 
-## [1.0.1]
+## [1.0.1] - 2017-12-30
 ### Added
 - Ansible-Toolbox
 - [Ombi](http://www.ombi.io/)
