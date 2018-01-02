@@ -29,6 +29,8 @@ Changelog Format:
 
 
 ## [Unreleased]
+### Added
+- Update rclone tag (`--tags update-rclone`).
 
 
 ## [1.0.1] - 2017-12-30
