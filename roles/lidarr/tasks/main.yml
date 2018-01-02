@@ -1,0 +1,50 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: lidarr
+    state: absent
+    
+- name: Create lidarr directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/lidarr
+
+- name: Create and start container
+  docker_container:
+    name: lidarr
+    image: hotio/suitarr
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8686:8686"
+    env:
+      APP: "lidarr"
+      VERSION: "unstable"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      BACKUP: "no"
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "lidarr.{{domain}}"
+      VIRTUAL_PORT: 8686
+      LETSENCRYPT_HOST: "lidarr.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/lidarr:/config"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+    networks:
+      - name: cloudbox
+        aliases:
+          - lidarr
+    restart_policy: always
+    state: started
