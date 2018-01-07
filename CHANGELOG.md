@@ -30,8 +30,12 @@ Changelog Format:
 
 ## [Unreleased]
 ### Added
-- Update rclone tag (`--tags update-rclone`).
-
+- Rclone: update tag (`--tags update-rclone`).
+- [Lidarr](http://lidarr.audio/)
+  - To install, run the Cloudbox install command with `--tags install-lidarr`.
+  
+### Changed
+- ruTorrent: Now uses [horjulf/rutorrent-autodl](https://github.com/horjulf/docker-rutorrent-autodl) Docker image.
 
 ## [1.0.1] - 2017-12-30
 ### Added
