@@ -6,7 +6,7 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-  
+
 - name: Create plex directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
@@ -98,29 +98,23 @@
     mode: 0775
     recurse: true
 
-- name: Check WebTools exists
-  stat:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
-  register: webtools_bundle
 
 - name: Wait for Plug-ins folder to be created by Plex
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
     state: present
-  when: webtools_bundle.stat.exists == False
 
 - name: Install WebTools
   unarchive:
-    src: https://github.com/ukdtom/WebTools.bundle/releases/download/2.4.1/WebTools.bundle.zip
+    src: https://github.com/ukdtom/WebTools.bundle/releases/download/3.0.0/WebTools.bundle.zip
     dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
     copy: no
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
-  when: webtools_bundle.stat.exists == False
 
 - name: Create plex_autoscan Logs folder
-  file: 
+  file:
     path: "/opt/plex/Library/Logs/Plex Media Server"
     state: directory
     mode: 0775
