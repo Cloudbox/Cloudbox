@@ -98,11 +98,16 @@
     mode: 0775
     recurse: true
 
+- name: Check WebTools exists
+  stat:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
+  register: webtools_bundle
 
 - name: Wait for Plug-ins folder to be created by Plex
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
     state: present
+  when: webtools_bundle.stat.exists == False
 
 - name: Install WebTools
   unarchive:
@@ -112,6 +117,7 @@
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
+  when: webtools_bundle.stat.exists == False
 
 - name: Create plex_autoscan Logs folder
   file:
