@@ -36,6 +36,7 @@ Changelog Format:
   
 ### Changed
 - ruTorrent: Now uses [horjulf/rutorrent-autodl](https://github.com/horjulf/docker-rutorrent-autodl) Docker image.
+- WebTools: Updated to v3.0.0
 
 ## [1.0.1] - 2017-12-30
 ### Added
