@@ -25,8 +25,9 @@
     published_ports:
       - "127.0.0.1:8096:8096"
     env:
+      APP_USER: "{{user}}"
       APP_UID: "{{uid.stdout}}"
-      APP_UID: "{{gid.stdout}}"
+      APP_GID: "{{gid.stdout}}"
       VIRTUAL_HOST: "emby.{{domain}}"
       VIRTUAL_PORT: 8096
       LETSENCRYPT_HOST: "emby.{{domain}}"
