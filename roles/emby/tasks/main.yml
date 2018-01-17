@@ -1,0 +1,72 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: "Get video gid"
+  shell: "getent group video  | cut -d: -f3"
+  register: vgid
+
+- name: Create emby directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/emby
+    - "{{plex.transcodes}}"
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: emby
+    state: absent
+
+- name: Check /dev/dri/renderD128 exists
+  stat:
+    path: "/dev/dri/renderD128"
+  register: dev_dri
+
+
+- name: Create and start container
+  docker_container:
+    name: emby
+    image: "emby/embyserver_netcore:latest"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8096:8096"
+    env:
+      UID: "{{uid.stdout}}"
+      GID: "{{gid.stdout}}"
+      GIDLIST: "{{vgid.stdout}}"
+      VIRTUAL_HOST: "emby.{{domain}}"
+      VIRTUAL_PORT: 8096
+      LETSENCRYPT_HOST: "emby.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+      HTTPS_METHOD: noredirect
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/emby:/config"
+      - "{{plex.transcodes}}:/transcode"
+      - "/mnt/unionfs/Media:/data"
+      - "/mnt:/mnt"
+    devices: "{{ '/dev/dri/renderD128:/dev/dri/renderD128' if dev_dri.stat.exists == True | default(false) else omit }}"
+    networks:
+      - name: cloudbox
+        aliases:
+          - emby
+    restart_policy: always
+    state: started
+
+# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
+- name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
+  wait_for:
+    timeout: 5
+
+- name: "Ensure transcodes folder has the correct permissions"
+  file:
+    path: "{{plex.transcodes}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    recurse: true

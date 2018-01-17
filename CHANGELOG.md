@@ -33,7 +33,9 @@ Changelog Format:
 - Rclone: update tag (`--tags update-rclone`).
 - [Lidarr](http://lidarr.audio/)
   - To install, run the Cloudbox install command with `--tags install-lidarr`.
-  
+- [Emby](https://emby.media/)
+  - To install, run the Cloudbox install command with `--tags install-emby`.
+
 ### Changed
 - ruTorrent: Now uses [horjulf/rutorrent-autodl](https://github.com/horjulf/docker-rutorrent-autodl) Docker image.
 - WebTools: Updated to v3.0.0
@@ -52,7 +54,7 @@ Changelog Format:
 ### Changed
 - Arrpush adjustments.
 - Docker containers now use dynamic IP addresses.
-- Use default app ports for Suitarr containers due to Docker image changes. 
+- Use default app ports for Suitarr containers due to Docker image changes.
 
 ## [1.0.0] - 2017-12-01
 ### Initial Release
