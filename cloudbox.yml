@@ -35,3 +35,4 @@
     - { role: resilio, tags: ['install-resilio', 'update-resilio'] }
     - { role: nextcloud, tags: ['install-nextcloud', 'update-nextcloud'] }
     - { role: lidarr, tags: ['install-lidarr', 'update-lidarr'] }
+    - { role: emby, tags: ['install-emby', 'update-emby'] }
