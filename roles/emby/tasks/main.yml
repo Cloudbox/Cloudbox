@@ -37,6 +37,7 @@
       - "/opt/emby:/config"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
+    devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
     networks:
       - name: cloudbox
         aliases:
