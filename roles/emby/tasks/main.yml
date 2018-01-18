@@ -7,6 +7,10 @@
   shell: "id -g {{user}}"
   register: gid
 
+- name: "Get video gid"
+  shell: "getent group video  | cut -d: -f3"
+  register: vgid
+
 - name: Create emby directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
@@ -34,6 +38,7 @@
     env:
       UID: "{{uid.stdout}}"
       GID: "{{gid.stdout}}"
+      GIDLIST: "{{vgid.stdout}}"
       VIRTUAL_HOST: "emby.{{domain}}"
       VIRTUAL_PORT: 8096
       LETSENCRYPT_HOST: "emby.{{domain}}"
