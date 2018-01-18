@@ -14,7 +14,7 @@
 
 - name: Check /dev/dri exists
   stat:
-    path: "/dev/dri"
+    path: "/dev/dri/renderD128"
   register: dev_dri
 
 - name: Create emby directories
@@ -41,7 +41,7 @@
       - "/opt/emby:/config"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
-    devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
+    devices: "{{ '/dev/dri/renderD128:/dev/dri/renderD128' if dev_dri.stat.exists == True | default(false) else omit }}"
     networks:
       - name: cloudbox
         aliases:
