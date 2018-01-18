@@ -7,6 +7,12 @@
   shell: "id -g {{user}}"
   register: gid
 
+- name: Create emby directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/emby
+    - "{{plex.transcodes}}"
+
 - name: Stop and remove any existing container
   docker_container:
     name: emby
@@ -17,10 +23,6 @@
     path: "/dev/dri/renderD128"
   register: dev_dri
 
-- name: Create emby directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt/emby
 
 - name: Create and start container
   docker_container:
@@ -39,6 +41,7 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/emby:/config"
+      - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
     devices: "{{ '/dev/dri/renderD128:/dev/dri/renderD128' if dev_dri.stat.exists == True | default(false) else omit }}"
@@ -48,3 +51,16 @@
           - emby
     restart_policy: always
     state: started
+
+# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
+- name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
+  wait_for:
+    timeout: 5
+
+- name: "Ensure transcodes folder has the correct permissions"
+  file:
+    path: "{{plex.transcodes}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    recurse: true
