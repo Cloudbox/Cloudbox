@@ -22,7 +22,7 @@
     name: emby
     state: absent
 
-- name: Check /dev/dri exists
+- name: Check /dev/dri/renderD128 exists
   stat:
     path: "/dev/dri/renderD128"
   register: dev_dri
@@ -43,6 +43,7 @@
       VIRTUAL_PORT: 8096
       LETSENCRYPT_HOST: "emby.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
+      HTTPS_METHOD: noredirect
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/emby:/config"
