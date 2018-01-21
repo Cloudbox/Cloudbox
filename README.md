@@ -92,6 +92,5 @@ _If you find this project helpful, feel free to make a small donation via Paypal
 
 
 ### Community
-- [Website](https://www.cloudbox.rocks)
 - [Forums](https://forums.cloudbox.rocks)
 - [Discord](https://discord.gg/xmNYmSJ)
