@@ -49,7 +49,7 @@ _If you find this project helpful, feel free to make a small donation via Paypal
   [a0cc8c46]: https://github.com/theotherp/nzbhydra "NZBHydra"
   [512b104c]: https://github.com/rakshasa/rtorrent/wiki "rTorrent"
   [8d6ce857]: https://github.com/Novik/ruTorrent "ruTorrent"
-  [344a7c4b]: https://github.com/l3uddz/docker-rutorrent "forked version of linuxserver/rutorrent"
+  [344a7c4b]: https://github.com/horjulf/docker-rutorrent-autodl "Horjulf's forked version of linuxserver/rutorrent"
   [1caa43a0]: https://github.com/Jackett/Jackett "Jackett"
   [b4cef019]: https://rclone.org "Rclone"
   [0367302f]: https://github.com/dweidenfeld/plexdrive "Plexdrive"
@@ -91,6 +91,6 @@ _If you find this project helpful, feel free to make a small donation via Paypal
 1. Submit a pull request.
 
 
-## Community
-- [Forum](https://forums.cloudbox.rocks/)
-- [Slackchat](https://join.slack.com/t/cloud-box/shared_invite/enQtMjg0NTM4NTc2ODA1LTliOTdmMzM5YmNiZjU0ZDQxOWU0ZGQxN2E1MGE5NDIyM2VkZjE1MjQ1NmQ3ZjFhZTNhOGEzMmY1ZDViZTkyMzg)
+### Community
+- [Forums](https://forums.cloudbox.rocks)
+- [Discord](https://discord.gg/xmNYmSJ)
