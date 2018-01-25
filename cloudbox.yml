@@ -15,7 +15,7 @@
     - { role: watchtower, tags: ['full', 'feeder', 'plex', 'update-watchtower'] }
     - { role: portainer, tags: ['full', 'feeder', 'update-portainer'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
-    - { role: rclone, tags: ['full', 'feeder', 'plex'] }
+    - { role: rclone, tags: ['full', 'feeder', 'plex', 'update-rclone'] }
     - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
     - { role: scripts, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder']}
@@ -34,3 +34,5 @@
     - { role: ombi, tags: ['install-ombi', 'update-ombi'] }
     - { role: resilio, tags: ['install-resilio', 'update-resilio'] }
     - { role: nextcloud, tags: ['install-nextcloud', 'update-nextcloud'] }
+    - { role: lidarr, tags: ['install-lidarr', 'update-lidarr'] }
+    - { role: emby, tags: ['install-emby', 'update-emby'] }

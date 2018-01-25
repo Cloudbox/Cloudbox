@@ -64,6 +64,7 @@
     owner: root
     group: root
     force: yes
+    validate_certs: no
 
 - name: Install ngrok
   unarchive:

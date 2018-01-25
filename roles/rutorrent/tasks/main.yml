@@ -37,7 +37,7 @@
 - name: Create and start container
   docker_container:
     name: rutorrent
-    image: l3uddz/docker-rutorrent-cloudbox
+    image: horjulf/rutorrent-autodl
     pull: yes
     published_ports:
       - "127.0.0.1:3111:80"
