@@ -1,4 +1,7 @@
 ---
+- name: include setting.yml
+  include_vars: settings.yml
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -30,9 +33,9 @@
       BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "nzbhydra.{{domain}}"
+      VIRTUAL_HOST: "{{subdomain}}.{{domain}}"
       VIRTUAL_PORT: 5075
-      LETSENCRYPT_HOST: "nzbhydra.{{domain}}"
+      LETSENCRYPT_HOST: "{{subdomain}}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

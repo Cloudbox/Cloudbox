@@ -1,4 +1,7 @@
 ---
+- name: include setting.yml
+  include_vars: settings.yml
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -27,9 +30,9 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "ombi.{{domain}}"
+      VIRTUAL_HOST: "{{subdomain}}.{{domain}}"
       VIRTUAL_PORT: 3579
-      LETSENCRYPT_HOST: "ombi.{{domain}}"
+      LETSENCRYPT_HOST: "{{subdomain}}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

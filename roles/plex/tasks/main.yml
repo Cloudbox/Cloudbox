@@ -1,4 +1,7 @@
 ---
+- name: include setting.yml
+  include_vars: settings.yml
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -64,9 +67,9 @@
       PLEX_CLAIM: "{{plex_claim.user_input| default (omit)}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
       ADVERTISE_IP: "http://plex.{{domain}}:80/,https://plex.{{domain}}:443/"
-      VIRTUAL_HOST: "plex.{{domain}}"
+      VIRTUAL_HOST: "{{subdomain}}.{{domain}}"
       VIRTUAL_PORT: 32400
-      LETSENCRYPT_HOST: "plex.{{domain}}"
+      LETSENCRYPT_HOST: "{{subdomain}}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       HTTPS_METHOD: noredirect
     volumes:

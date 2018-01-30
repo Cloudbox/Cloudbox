@@ -1,0 +1,479 @@
+#!/bin/bash
+#
+# [swizzin :: box management solution]
+# `box -h` for commands and info
+#
+# Author             :   swizzin | liara
+# Editor             :   cloudbox | RXWatcher
+# Licensed under GNU General Public License v3.0 GPL-3 (in short)
+#
+#   You may copy, distribute and modify the software as long as you track
+#   changes/dates in source files. Any modifications to our software
+#   including (via compiler) GPL-licensed code must also be made available
+#   under the GPL along with build & install instructions.
+#
+#################################################################################
+
+readarray -t newtcols < /etc/newt/palette
+
+cd ~/cloudbox
+ 
+#color theme
+newtcols_menu=(
+   root=,black
+   title=black,
+   window=,black
+   border=white,blue
+   textbox=white,black
+   checkbox=white,black
+)
+
+function _intro() {
+NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+whiptail --title "CloudBox Package Manager" --msgbox "Welcome to the Box! Using this script you can choose to install and remove the packages contained within the package repository. Use the arrow keys to navigate, spacebar to toggle the currently selected item and enter to continue." 15 50
+}
+
+function _function() {
+  function=$(NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+		whiptail --title "CloudBox" --menu "Choose an option:" --ok-button "Continue" --nocancel 15 50 3 \
+               Install "packages" \
+               Remove "packages" \
+               Exit "" 3>&1 1>&2 2>&3)
+
+    if [[ $function == Install ]]; then
+      _install
+    elif [[ $function == Remove ]]; then
+      _remove
+    elif [[ $function == Exit ]]; then
+      exit 0
+    fi
+}
+
+function _install() {
+  appsa=()
+  rolesa=()
+  apps=()
+  containersa=()
+  installa=()
+  rolesa=($(find roles -type f -name .menu -printf '%h\0' | sed -z 's/$/\n/'| cut -d'/' -f2| sort -d))
+  containersa=($(sudo docker ps -a --format '{{.Names}}' | sort -d))
+
+ for i in "${rolesa[@]}"; do
+     skip=
+     for j in "${containersa[@]}"; do
+         [[ $i == $j ]] && { skip=1; break; }
+     done
+     [[ -n $skip ]] || apps+=("$i")
+ done
+
+  for i in "${apps[@]}"; do
+    app=${i}
+    installa+=("$i" '""')
+  done
+
+if [ ${#installa[@]} -eq 0 ]; then
+NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+whiptail --title "Install Software" --msgbox "There isnt anything new to install" 15 50
+else
+  NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+  whiptail --title "Install Software" --checklist --noitem --separate-output "Make some choices:" 15 50 10 "${installa[@]}" 2>results
+  readarray result < results
+  for i in "${result[@]}"; do
+    result=$(echo $i)
+    echo -e "Installing ${result}"
+    sudo ansible-role ${result} --extra-vars "@./settings.yml"
+  done
+
+   rm results
+
+fi
+  _function
+}
+
+function _remove() {
+removea=()
+containers=()
+containers=($(sudo docker ps -a --format '{{.Names}}' | sort -d))
+  for i in "${containers[@]}"; do
+    app=${i}
+      removea+=("$i" '""')
+  done
+NEWT_COLORS="${newtcols[@]} ${newtcols_menu[@]}" \
+whiptail --title "Remove Software" --checklist --noitem --separate-output "Make some choices:" 15 50 10 "${removea[@]}" 2>results
+  readarray result < results
+  for i in "${result[@]}"; do
+    result=$(echo $i)
+    echo -e "Removing ${result}"
+    sudo docker stop "${result}"
+    sudo docker rm "${result}"
+  done
+rm results
+_function
+}
+
+function _cli() {
+  arg=("$@")
+  packages=("${arg[@]:1}")
+  repo=($(find roles -type f -name .menu -printf '%h\0' | sed -z 's/$/\n/'| cut -d'/' -f2))
+  for i in "${packages[@]}"; do
+    app=${i}
+    if [[ -f /install/.${app}.lock ]]; then
+      echo -e "Package $i already installed"
+    else
+      if [[ "${repo[@]}" =~ $i ]]; then
+        echo -e "Installing $i "
+        bash /usr/local/bin/swizzin/install/$i.sh
+      else
+        echo -e "Package $i not found"
+      fi
+    fi
+  done
+}
+
+function _clr() {
+  arg=("$@")
+  packages=("${arg[@]:1}")
+  for i in "${packages[@]}"; do
+    app=${i}
+    if [[ -f /install/.$app.lock ]]; then
+      echo -e "Removing $i "
+      bash /usr/local/bin/swizzin/remove/$i.sh
+    else
+      echo -e "Package $i not installed"
+    fi
+  done
+}
+
+function _update() {
+  echo -e "Updating cloudbox local repository"
+ 
+	rm -rf /tmp/settings
+  mkdir -p /tmp/settings/roles
+	mv settings.yml /tmp/settings/settings.yml
+  rolesa=($(find roles -type f -name settings.yml -printf '%h\0' | sed -z 's/$/\n/'| cut -d'/' -f2| sort -d))
+	for i in "${rolesa[@]}"; do
+	mv roles/$i/settings.yml /opt/settings/roles/$i"_settings.yml"
+	done
+	git reset --hard
+  git pull
+	merge-yaml -i ~/cloudbox/settings.yml /tmp/settings/settings.yml  -o ~/cloudbox/settings.yml > /dev/null 2>&1 
+	role_settingsa=($(find /opt/settings/roles/ -type f -printf "%f\n" | cut -d "_" -f 1 | sort -d))
+  for i in "${role_settingsa[@]}"; do
+  merge-yaml -i ~/cloudbox/roles/$i/settings.yml /opt/settings/roles/$i"_settings.yml" -o ~/cloudbox/roles/$i/settings.yml > /dev/null 2>&1 
+  done
+	chmod -R 700 ~/cloudbox
+}
+
+function _upgrade() {
+  arg=("$@")
+  packages=("${arg[@]:1}")
+  repo=($(find /usr/local/bin/swizzin/upgrade -type f -printf "%f\n" | cut -d "." -f 1))
+  for i in "${packages[@]}"; do
+    app=${i}
+    if [[ "${repo[@]}" =~ $i ]]; then
+      echo -e "Upgrading $i "
+      bash /usr/local/bin/swizzin/upgrade/$i.sh
+    else
+      echo -e "Upgrade script for $i does not exist"
+    fi
+  done
+}
+
+function _help() {
+  sgformat="${bold}%-15s${normal}"
+  spacing=$(echo $'\t' | pr -Te15)
+
+  echo -e "Usage: `basename $0` [ install | remove | upgrade ] ${bold}pkg1 pkg2 [...]${normal}\n"
+  echo -e "       `basename $0` [ adduser | deluser | chpasswd ] ${bold}username${normal}\n"
+  echo -e "       `basename $0` [ list | update ]\n"
+  echo -e "       `basename $0` panel fix-disk [ root | home ]\n"
+  echo -e "       `basename $0`\n"
+  echo -e "Note: Only install and remove functions accept package arguments. List and update must be run without modifiers\n" | fmt --goal=66 --tagged-paragraph
+  echo -e "\n"
+  printf "${sgformat}" "install"
+  echo -e "The install function requires at least one package name as an argument but will accept multiples\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  echo -e "               Example: box install quassel syncthing znc\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  printf "${sgformat}" "remove"
+  echo -e "The remove function requires at least one package name as an argument but will accept multiples\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  echo -e "               Example: box remove quassel syncthing znc\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+   printf "${sgformat}" "adduser"
+  echo -e "The adduser function requires a single user to be specified, this user will be created\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  echo -e "               Example: box adduser freeloadingfriend\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+   printf "${sgformat}" "deluser"
+  echo -e "The deluser function requires a single user to be specified, this user will be removed\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  echo -e "               Example: box deluser exgirlfriend\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+   printf "${sgformat}" "chpasswd"
+  echo -e "The chpasswd function requires a single user to be specified, their password will be changed\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  echo -e "               Example: box chpasswd forgetfulfriend\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  printf "${sgformat}" "update"
+  echo -e "The update command will update your local QuickBox repository to the latest version\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  printf "${sgformat}" "upgrade"
+  echo -e "Runs the associated upgrade script.\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  printf "${sgformat}" "panel fix-disk"
+  echo -e "The panel fix-disk command change the disk widget in the web panel to root or home\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+  printf "${sgformat}" "list"
+  echo -e "The list command will list packages available to be managed by box\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+}
+
+function _list() {
+  repo=($(find /usr/local/bin/swizzin/install -type f -printf "%f\n" | cut -d. -f 1 | sort -d))
+  if [[ -f /srv/panel/inc/localize.php ]]; then
+    lang=$(cat /srv/panel/inc/localize.php | grep language | cut -d "'" -f 2)
+    locale=/srv/panel/lang/$lang
+  else
+    locale=/etc/swizzin/sources/lang_en
+  fi
+  for i in "${repo[@]}"; do
+    app=$i
+    if [[ $i == ombi ]]; then app=ombi; fi
+    sgformat="${bold}%-15s${normal}"
+    spacing=$(echo $'\t' | pr -Te15)
+    description=$(cat $locale | grep -i -m 1 \\\[\'$app | cut -d= -f2 | sed "s/ '//g" | sed "s/';//g" | sed "s/\\\'/'/g")
+    if [[ -z $description ]]; then description="Description missing";fi
+    printf "${sgformat}" "$i"
+    echo -e "${description}\n" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
+
+  done
+}
+
+function _adduser {
+  if [[ -z $2 ]]; then
+    echo "Error: You must specify a user"
+    exit 1
+  fi
+  user=$2
+  if [[ $user =~ [A-Z] ]]; then
+    echo "Usernames must not contain capital letters. Please try again."
+    exit 1
+  fi
+  echo -e "Enter password for ${user}. (leave empty to generate a password)"; read 'pass'
+  if [[ -z "${pass}" ]]; then
+    pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c16)"
+  fi
+  if [[ -n $(which cracklib-check) ]]; then 
+    echo "Cracklib detected. Checking password strength."
+    sleep 1
+    str="$(cracklib-check <<<"$pass")"
+    check=$(grep OK <<<"$str")
+    if [[ -z $check ]]; then
+      read -n 1 -s -r -p "Password did not pass cracklib check. Press any key to enter a new password"
+      printf "\n"
+      _adduser "$@"
+    else
+      echo "OK"
+    fi
+  fi
+  echo "$user:$pass" > /root/${user}.info
+  useradd "${user}" -m -G www-data -s /bin/bash
+  chpasswd<<<"${user}:${pass}"
+  htpasswd -b /etc/htpasswd $user $pass
+  mkdir -p /etc/htpasswd.d/
+  htpasswd -b -c /etc/htpasswd.d/htpasswd.${user} $user $pass
+
+  if [[ -f /install/.rtorrent.lock ]]; then
+    /usr/local/bin/swizzin/install/rtorrent.sh ${user}
+    systemctl enable rtorrent@${user}
+    systemctl start rtorrent@${user}
+  fi
+  if [[ -d /srv/rutorrent ]] || [[ -f /install/.rutorrent.lock ]]; then
+    if [[ ! -f /install/.rutorrent.lock ]]; then touch /install/.rutorrent.lock; fi
+    /usr/local/bin/swizzin/install/rutorrent.sh
+  fi
+  if [[ -f /install/.deluge.lock ]]; then
+    /usr/local/bin/swizzin/install/deluge.sh ${user}
+    systemctl enable deluged@${user}
+    systemctl enable deluge-web@${user}
+    systemctl start deluged@${user}
+    systemctl start deluge-web@${user}
+  fi
+  if [[ -f /install/.autodl.lock ]]; then
+    /usr/local/bin/swizzin/install/autodl.sh ${user}
+    systemctl enable irssi@${user}
+    systemctl start irssi@${user}
+  fi
+  if [[ -f /install/.flood.lock ]]; then
+    /usr/local/bin/swizzin/install/flood.sh
+    systemctl enable flood@${user}
+    systemctl start flood@${user}
+  fi
+  USER=${user^^}
+  cat > /etc/sudoers.d/${user} <<SUD
+Cmnd_Alias   ${USER}CMDS = /bin/systemctl start rtorrent@${user}, /bin/systemctl stop rtorrent@${user}, /bin/systemctl restart rtorrent@${user}, /bin/systemctl start deluged@${user}, /bin/systemctl stop deluged@${user}, /bin/systemctl restart deluged@${user}, /bin/systemctl start deluge-web@${user}, /bin/systemctl stop deluge-web@${user}, /bin/systemctl restart deluge-web@${user}, /bin/systemctl start irssi@${user}, /bin/systemctl stop irssi@${user}, /bin/systemctl restart irssi@${user}, /usr/local/bin/swizzin/box chpasswd ${user}
+
+${user}     ALL = (ALL) NOPASSWD: ${USER}CMNDS
+SUD
+if [[ -f /install/.nginx.lock ]]; then
+  systemctl reload nginx
+fi
+
+echo "export PATH=$PATH:/usr/local/bin/swizzin" >> /home/$user/.profile
+chown $user: /home/$user/.profile
+}
+
+function _deluser {
+  user=$2
+  read -rep $'WARNING: This will delete the user '${user}$' and all associated configs and subdirectories.\n\nPress enter to continue.'
+  if [[ -f /install/.rtorrent.lock ]]; then
+    systemctl disable rtorrent@${user}
+    systemctl stop rtorrent@${user}
+  fi
+  if [[ -d /srv/rutorrent ]] || [[ -f /install/.rutorrent.lock ]]; then
+    if [[ ! -f /install/.rutorrent.lock ]]; then touch /install/.rutorrent.lock; fi
+    rm -rf /srv/rutorrent/conf/users/${user}
+    rm -f /etc/nginx/apps/${user}*
+    systemctl reload nginx
+  fi
+  if [[ -f /install/.deluge.lock ]]; then
+    systemctl disable deluged@${user}
+    systemctl disable deluge-web@${user}
+    systemctl stop deluged@${user}
+    systemctl stop deluge-web@${user}
+  fi
+  if [[ -f /install/.autodl.lock ]]; then
+    systemctl disable irssi@${user}
+    systemctl stop irssi@${user}
+  fi
+  if [[ -f /install/.flood.lock ]]; then
+    systemctl disable flood@${user}
+    systemctl stop flood@${user}
+  fi  
+  deluser --force ${user}
+  groupdel ${user}
+  rm -f /etc/htpasswd.d/htpasswd.${user}
+  htpasswd -D /etc/htpasswd ${user}
+  rm -rf /etc/nginx/conf.d/${user}*
+  rm -rf /etc/sudoers.d/${user}
+  rm -rf /home/${user}
+  rm /root/${user}.info
+  service nginx reload
+}
+
+function _chpasswd {
+  user=$2
+  echo -e "Enter new password for ${user}. Leave empty to generate a password"; read 'pass'
+  if [[ -z "${pass}" ]]; then
+    pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c16)"
+  fi
+  if [[ -n $(which cracklib-check) ]]; then 
+    echo "Cracklib detected. Checking password strength."
+    sleep 1
+    str="$(cracklib-check <<<"$pass")"
+    check=$(grep OK <<<"$str")
+    if [[ -z $check ]]; then
+      read -n 1 -s -r -p "Password did not pass cracklib check. Press any key to enter a new password"
+      printf "\n"
+      _chpasswd "$@"
+    else
+      echo "OK"
+    fi
+  fi
+  echo "$user:$pass" > /root/${user}.info
+  chpasswd<<<"${user}:${pass}"
+  htpasswd -b /etc/htpasswd $user $pass
+  mkdir -p /etc/htpasswd.d/
+  htpasswd -b -c /etc/htpasswd.d/htpasswd.${user} $user $pass
+  if [[ -e /install/.deluge.lock ]]; then
+    systemctl stop deluged@${user}
+    systemctl stop deluge-web@${user}
+    DWSALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+    DWP=$(python /usr/local/bin/swizzin/deluge.Userpass.py ${pass} ${DWSALT})
+    sed -i "s/.*${user}.*/${user}:${pass}:10/" /home/$user/.config/deluge/auth
+    sed -i "s/.*pwd_salt.*/  \"pwd_salt\": \"${DWSALT}\",/" /home/$user/.config/deluge/web.conf
+    sed -i "s/.*pwd_sha1.*/  \"pwd_sha1\": \"${DWP}\",/" /home/$user/.config/deluge/web.conf
+    sed -i "/$user/{n;s/.*/      \"${pass}\"/}" /home/${user}/.config/deluge/hostlist.conf.1.2
+    systemctl start deluged@${user}
+    systemctl start deluge-web@${user}
+  fi
+
+}
+
+function _panel () {
+  if [[ $2 != "fix-disk" ]]; then
+    echo "fix-disk is the only acceptable panel argument at this time"
+    exit 1
+  fi
+  /usr/local/bin/swizzin/panel/fix-disk $3
+}
+
+normal=$(tput sgr0)
+yellow=$(tput setaf 3)
+bold=$(tput bold)
+
+case "$1" in
+  "")
+    _intro
+    _function
+    exit 0
+  ;;
+  "help"|"-h")
+    _help "$0"
+    exit 0
+  ;;
+  "install"|"it")
+    if [[ -z $2 ]]; then
+      echo "Error: You must choose some packages"
+      exit 1
+    fi
+    _cli "$@"
+    exit 0
+  ;;
+  "remove"|"rm")
+    if [[ -z $2 ]]; then
+      echo "Error: You must choose some packages"
+      exit 1
+    fi
+    _clr "$@"
+    exit 0
+  ;;
+  "adduser")
+    if [[ -n $3 ]]; then
+      echo -e "Error: too many arguments\nCorrect usage: box adduser <username>"
+      exit 1
+    fi
+  _adduser "$@"
+  exit 0
+  ;;
+  "deluser")
+    if [[ -n $3 ]]; then
+      echo -e "Error: too many arguments\nCorrect usage: box deluser <username>"
+      exit 1
+    fi
+    _deluser "$@"
+    exit 0
+  ;;
+  "chpasswd")
+    if [[ -n $3 ]]; then
+      echo -e "Error: too many arguments\nCorrect usage: box chpasswd <username>"
+      exit 1
+    fi
+    _chpasswd "$@"
+    exit 0
+  ;;
+  "panel")
+    if [[ ! -f /install/.panel.lock ]]; then
+      echo "Panel not installed..."
+      exit 1
+    fi
+    _panel "$@"
+    exit 0
+  ;;
+  "update")
+    _update
+    exit 0
+  ;;
+  "upgrade")
+    if [[ ! $2 ]]; then echo "You must choose at least one package to update."; exit 1; fi
+    _update
+    _upgrade "$@"
+    exit 0
+  ;;
+  "list")
+    _list
+    exit 0
+  ;;
+  *)
+    echo "Error: $1 invalid command"
+    exit 1
+  ;;
+esac
+

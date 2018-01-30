@@ -37,9 +37,16 @@
     - speedtest-cli
     - python-ndg-httpsclient
     - nethogs
-    - nodejs-legacy
-    - npm
     - glances
+
+- name: Install NodeJS 8
+  shell: "curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && sudo apt-get install -y nodejs"
+
+- name: Install common npm modules
+  npm: "name={{item}} global=yes"
+  with_items:
+    - frontail
+    - merge-yaml-cli
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
@@ -48,10 +55,6 @@
     - certbot
     - "ansible-toolbox"
 
-- name: Install common npm modules
-  npm: "name={{item}} global=yes"
-  with_items:
-    - frontail
 
 - name: Install hostess
   get_url:
