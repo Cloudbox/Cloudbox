@@ -215,14 +215,12 @@
     shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}"
 
   - name: "Check rclone cloudbox.tar datestamp"
-    shell: "rclone lsl {{backup.rclone_dest}}/cloudbox.tar|cut -d ' ' -f 2,3|cut -d '.' -f 1|sed s/' '/_/g"
-    environment:
-    tags: timestamp
-    register: rclone
+    shell: "rclone lsl {{backup.rclone_dest}}/cloudbox.tar|cut -d ' ' -f 2,3|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
+    register: rclone_timestamp
     when: backup.use_rclone
 
   - name: "Move off old cloudbox.tar on \"{{backup.rclone_dest}}\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone.stdout}}.tar' 2>/dev/null"
+    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone_timestamp.stdout}}.tar' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
 
