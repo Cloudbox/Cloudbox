@@ -217,7 +217,7 @@
   - name: "Check rclone cloudbox.tar datestamp"
     shell: "rclone lsl {{backup.rclone_dest}}/cloudbox.tar|cut -d ' ' -f 2,3|cut -d '.' -f 1|sed s/' '/_/g"
     environment:
-    tags: something
+    tags: timestamp
     register: rclone
     when: backup.use_rclone
 
@@ -227,7 +227,7 @@
     when: backup.use_rclone
 
   - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
-    command: "rclone copy '{{backup.tar_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tar_dest}}/cloudbox.tar' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone
