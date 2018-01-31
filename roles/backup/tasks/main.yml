@@ -87,6 +87,11 @@
       owner: "{{user}}"
       mode: 0775
 
+  - name: "Gathering list of running containers"
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+    register: docker_running_containers
+    ignore_errors: yes
+    
   - name: "Stop all containers"
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
@@ -182,7 +187,7 @@
       timeout: 5
 
   - name: "Start containers"
-    shell: 'docker start plexrequests plexpy plex radarr sonarr nzbhydra jackett rutorrent nzbget organizr portainer letsencrypt nginx-proxy'
+    shell: 'docker start {{docker_running_containers.stdout}}'
     ignore_errors: yes
 
   - name: "Pushover Message: Started Cloudbox containers."
