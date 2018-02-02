@@ -93,4 +93,4 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 
 ## Community
 - [Forum](https://forums.cloudbox.rocks/)
-- [Slackchat](https://join.slack.com/t/cloud-box/shared_invite/enQtMjg0NTM4NTc2ODA1LTliOTdmMzM5YmNiZjU0ZDQxOWU0ZGQxN2E1MGE5NDIyM2VkZjE1MjQ1NmQ3ZjFhZTNhOGEzMmY1ZDViZTkyMzg)
+- [Discord](https://discord.gg/kC3X8Qa)
