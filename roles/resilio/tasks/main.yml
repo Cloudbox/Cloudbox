@@ -35,7 +35,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/resilio:/config"
-      - "/mnt:/sync"
+      - "/mnt:/sync/mnt"
+      - "/home/{{user}}:/sync/home/{{user}}"
     networks:
       - name: cloudbox
         aliases:
