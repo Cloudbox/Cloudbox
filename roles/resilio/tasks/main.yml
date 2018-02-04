@@ -6,7 +6,7 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-  
+
 - name: Stop and remove any existing container
   docker_container:
     name: resilio
@@ -35,7 +35,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/resilio:/config"
-      - "/mnt:/sync"
+      - "/mnt:/mnt"
+      - "/home/{{user}}:/home/{{user}}"
     networks:
       - name: cloudbox
         aliases:
