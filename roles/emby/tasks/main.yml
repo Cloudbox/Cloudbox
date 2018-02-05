@@ -31,7 +31,7 @@
 - name: Create and start container
   docker_container:
     name: emby
-    image: "emby/embyserver_netcore:latest"
+    image: "emby/embyserver:latest"
     pull: yes
     published_ports:
       - "127.0.0.1:8096:8096"
