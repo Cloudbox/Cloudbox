@@ -39,7 +39,7 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/lidarr:/config"
-      - "/mnt/local/Media/Music:/music"
+      - "/mnt/unionfs/Media/Music:/music"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
       - "/mnt:/mnt"
