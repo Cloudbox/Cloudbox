@@ -1,0 +1,45 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: nzbhydra2
+    state: absent
+
+- name: Create nzbhydra2 directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nzbhydra2
+
+- name: Create and start container
+  docker_container:
+    name: nzbhydra2
+    image: hotio/suitarr
+    pull: yes
+    published_ports:
+      - "127.0.0.1:5076:5076"
+    env:
+      APP: "nzbhydra2"
+      VERSION: "unstable"
+      BACKUP: "no"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "nzbhydra2.{{domain}}"
+      VIRTUAL_PORT: 5076
+      LETSENCRYPT_HOST: "nzbhydra2.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbhydra2:/config"
+    restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - nzbhydra2
+    state: started
