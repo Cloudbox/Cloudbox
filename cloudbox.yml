@@ -36,3 +36,4 @@
     - { role: nextcloud, tags: ['install-nextcloud', 'update-nextcloud'] }
     - { role: lidarr, tags: ['install-lidarr', 'update-lidarr'] }
     - { role: emby, tags: ['install-emby', 'update-emby'] }
+    - { role: nzbhydra2, tags: ['install-nzbhydra2', 'update-nzbhydra2'] }
