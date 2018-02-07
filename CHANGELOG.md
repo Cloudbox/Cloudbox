@@ -30,7 +30,7 @@ Changelog Format:
 
 ## [Unreleased]
 ### Added
-- Rclone: Added the "update" tag (`--tags update-rclone`).
+- Rclone: Added the "update-rclone" tag (`--tags update-rclone`).
 - [Lidarr](http://lidarr.audio/)
   - subdomain: `lidarr`
   - install: `--tags install-lidarr`
