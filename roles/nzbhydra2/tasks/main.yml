@@ -9,40 +9,37 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: plexpy
+    name: nzbhydra2
     state: absent
 
-- name: Wait for Plex Logs folder to be created by Plex
-  wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
-    state: present
-
-- name: Create plexpy directories
+- name: Create nzbhydra2 directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/plexpy
+    - /opt/nzbhydra2
 
 - name: Create and start container
   docker_container:
-    name: plexpy
-    image: shiggins8/tautulli
+    name: nzbhydra2
+    image: hotio/suitarr
     pull: yes
     published_ports:
-      - "127.0.0.1:8181:8181"
+      - "127.0.0.1:5076:5076"
     env:
+      APP: "nzbhydra2"
+      VERSION: "unstable"
+      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "plexpy.{{domain}}"
-      VIRTUAL_PORT: 8181
-      LETSENCRYPT_HOST: "plexpy.{{domain}}"
+      VIRTUAL_HOST: "nzbhydra2.{{domain}}"
+      VIRTUAL_PORT: 5076
+      LETSENCRYPT_HOST: "nzbhydra2.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/plexpy:/config"
-      - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
+      - "/opt/nzbhydra2:/config"
     restart_policy: always
     networks:
       - name: cloudbox
         aliases:
-          - plexpy
+          - nzbhydra2
     state: started
