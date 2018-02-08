@@ -30,7 +30,7 @@ Changelog Format:
 
 ## [Unreleased]
 ### Added
-- Rclone: Added the "update-rclone" tag (`--tags update-rclone`).
+- [Rclone](https://rclone.org/): Added the "update-rclone" tag (`--tags update-rclone`).
 - [Lidarr](http://lidarr.audio/)
   - subdomain: `lidarr`
   - install: `--tags install-lidarr`
@@ -49,7 +49,7 @@ Changelog Format:
   * subdomain: `rutorrent`
   - install: `--tags update-rutorrent`
   - folder: `/opt/rutorrent`
-- WebTools: Updated to v3.0.0
+- [WebTools](https://github.com/ukdtom/WebTools.bundle): Updated to v3.0.0 (to update read [this](https://github.com/Cloudbox/Cloudbox/wiki/FAQ#update-webtools))
 - [PlexPy](http://tautulli.com/): Now installs PlexPy v2 (aka Tautulli)
   - subdomain: `plexpy`
   - install: `--tags update-plexpy`
