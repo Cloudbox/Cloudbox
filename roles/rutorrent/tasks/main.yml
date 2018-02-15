@@ -6,7 +6,12 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-  
+
+- name: Create rutorrent directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/rutorrent
+
 - name: Stop and remove any existing container
   docker_container:
     name: rutorrent
@@ -46,10 +51,10 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/mnt:/mnt"
       - "/opt/scripts/torrent:/scripts"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.10
         aliases:
           - rutorrent
     restart_policy: always

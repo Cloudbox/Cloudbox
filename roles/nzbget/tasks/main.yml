@@ -1,4 +1,18 @@
 ---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Create nzbget directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nzbget
+    - /opt/nzbget/scripts
+    
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
@@ -12,7 +26,7 @@
 
 - name: "Set {{nzbget.downloads}} owner"
   shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
-  
+
 - name: Check nzbget.conf exists
   stat:
     path: "/opt/nzbget/nzbget.conf"
@@ -21,11 +35,14 @@
 - name: Create and start container
   docker_container:
     name: nzbget
-    image: linuxserver/nzbget
+    image: hotio/suitarr
     pull: yes
     published_ports:
       - "127.0.0.1:6789:6789"
     env:
+      APP: "nzbget"
+      VERSION: "unstable"
+      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "nzbget.{{domain}}"
@@ -36,11 +53,11 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbget:/config"
       - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "/mnt:/mnt"
       - "/opt/scripts/nzb:/scripts"
     restart_policy: always
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.9
         aliases:
           - nzbget
     state: started
@@ -115,5 +132,3 @@
     name: nzbget
     state: started
   when: nzbget_conf.stat.exists == False
-
-
