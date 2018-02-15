@@ -1,4 +1,17 @@
 ---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Create nginx-proxy directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  with_items:
+    - /opt/nginx-proxy
+
 - name: Import proxy.conf
   copy: "src=proxy.conf dest=/opt/nginx-proxy/proxy.conf force=yes owner={{user}} group={{user}} mode=0775"
 
@@ -15,7 +28,7 @@
 - name: Create and start container
   docker_container:
     name: nginx-proxy
-    image: "jwilder/nginx-proxy"
+    image: "jwilder/nginx-proxy@sha256:76d9ed11c131fadc7546e3b9b085970e13ff45186171b975ad60830f5ca0d689" 
     pull: yes
     published_ports:
       - "80:80"
@@ -31,7 +44,6 @@
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.6
         aliases:
           - nginx-proxy
     restart_policy: always
@@ -52,7 +64,6 @@
       DEBUG: true
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.19
         aliases:
           - letsencrypt
     restart_policy: always

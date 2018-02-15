@@ -1,4 +1,12 @@
 ---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
 - name: Stop and remove any existing container
   docker_container:
     name: plexpy
@@ -8,6 +16,11 @@
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
     state: present
+
+- name: Create plexpy directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/plexpy
 
 - name: Create and start container
   docker_container:
@@ -30,7 +43,6 @@
     restart_policy: always
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.16
         aliases:
           - plexpy
     state: started

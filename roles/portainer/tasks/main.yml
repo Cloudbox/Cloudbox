@@ -1,8 +1,21 @@
 ---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
 - name: Stop and remove any existing container
   docker_container:
     name: portainer
     state: absent
+
+- name: Create portainer directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/portainer
 
 - name: Create and start container
   docker_container:
@@ -22,7 +35,6 @@
       LETSENCRYPT_EMAIL: "{{email}}"
     networks:
       - name: cloudbox
-        ipv4_address: 172.18.0.18
         aliases:
           - portainer
     restart_policy: always
