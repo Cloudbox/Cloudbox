@@ -40,6 +40,7 @@
     - nodejs-legacy
     - npm
     - glances
+    - dnsutils
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
