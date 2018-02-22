@@ -1,0 +1,37 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: couchpotato
+    state: absent
+
+- name: Create couchpotato directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/couchpotato
+
+- name: Create and start container
+  docker_container:
+    name: couchpotato
+    image: "linuxserver/couchpotato:latest"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:5050:5050"
+    volumes:
+      - "/mnt/virtual/downloads:/downloads"
+      - "/opt/couchpotato:/config"
+      - "/mnt/virtual:/mnt/virtual"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - name: cloudbox
+        aliases:
+          - couchpotato
+    restart_policy: always
+    state: started

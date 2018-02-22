@@ -1,0 +1,38 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: sickrage
+    state: absent
+
+- name: Create sickrage directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/sickrage
+
+- name: Create and start container
+  docker_container:
+    name: sickrage
+    image: "linuxserver/sickrage:latest"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8081:8081"
+    volumes:
+      - "/mnt/virtual/downloads:/downloads"
+      - "/opt/sickrage:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt/virtual:/mnt/virtual"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - name: cloudbox
+        aliases:
+          - sickrage
+    restart_policy: always
+    state: started
