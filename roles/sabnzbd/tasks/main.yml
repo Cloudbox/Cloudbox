@@ -1,0 +1,39 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: sabnzbd
+    state: absent
+
+- name: Create sabnzbd directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/sabnzbd
+
+- name: Create and start container
+  docker_container:
+    name: sabnzbd
+    image: "linuxserver/sabnzbd:latest"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - "/mnt/virtual/downloads:/downloads"
+      - "/opt/sabnzbd:/config"
+      - "/mnt/virtual/downloads/incomplete:/incomplete-downloads"
+      - "/mnt/virtual:/mnt/virtual"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - name: cloudbox
+        aliases:
+          - sabnzbd
+    restart_policy: always
+    state: started
