@@ -30,7 +30,7 @@ Changelog Format:
 # Changelog
 
 
-## [1.02]
+## [1.02] - 2018-2-22
 ### Added
 - [Rclone](https://rclone.org/): Added the "update-rclone" tag (`--tags update-rclone`).
 - [Lidarr](http://lidarr.audio/)
