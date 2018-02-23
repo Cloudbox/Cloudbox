@@ -18,7 +18,7 @@
     - { role: rclone, tags: ['full', 'feeder', 'plex', 'update-rclone'] }
     - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
     - { role: scripts, tags: ['full', 'feeder', 'plex'] }
-    - { role: unionfs_cleaner, tags: ['full', 'feeder']}
+    - { role: unionfs_cleaner, tags: ['full', 'feeder', 'update-unionfs_cleaner']}
     - { role: nzbget, tags: ['full', 'feeder', 'update-nzbget'] }
     - { role: rutorrent, tags: ['full', 'feeder', 'update-rutorrent'] }
     - { role: jackett, tags: ['full', 'feeder', 'update-jackett'] }
@@ -28,9 +28,12 @@
     - { role: plex, tags: ['full', 'plex', 'update-plex'] }
     - { role: plexpy, tags: ['full', 'plex', 'update-plexpy'] }
     - { role: plexrequests, tags: ['full', 'plex', 'update-plexrequests'] }
-    - { role: plex_autoscan, tags: ['full', 'plex'] }
+    - { role: plex_autoscan, tags: ['full', 'plex', 'update-plex_autoscan'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
     - { role: ombi, tags: ['install-ombi', 'update-ombi'] }
     - { role: resilio, tags: ['install-resilio', 'update-resilio'] }
     - { role: nextcloud, tags: ['install-nextcloud', 'update-nextcloud'] }
+    - { role: lidarr, tags: ['install-lidarr', 'update-lidarr'] }
+    - { role: emby, tags: ['install-emby', 'update-emby'] }
+    - { role: nzbhydra2, tags: ['install-nzbhydra2', 'update-nzbhydra2'] }

@@ -5,7 +5,7 @@ Cloudbox is an Ansible playbook for deploying a cloud media server stack on an U
 
 This project is limited to specifically 16.04 Ubuntu LTS and AMD64/Intel64 (no ARM support) machines and designed for fresh systems. Do not install on an already setup server, or prepare for unintended consequences.
 
-_If you find this project helpful, feel free to make a small donation via [PayPal](https://www.paypal.me/l3uddz), bitcoin: 15sKj1qi5PWvviTbCDJJKYoeQBQRv535Gb or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp. Other forms of support are also appreciated (e.g. bugfixes/pull requests to develop branch, etc)._
+_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 15sKj1qi5PWvviTbCDJJKYoeQBQRv535Gb or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp. Other forms of support are also appreciated (e.g. bugfixes/pull requests to develop branch, etc)._
 
 
 ## Cloudbox Install Types
@@ -49,7 +49,7 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
   [a0cc8c46]: https://github.com/theotherp/nzbhydra "NZBHydra"
   [512b104c]: https://github.com/rakshasa/rtorrent/wiki "rTorrent"
   [8d6ce857]: https://github.com/Novik/ruTorrent "ruTorrent"
-  [344a7c4b]: https://github.com/l3uddz/docker-rutorrent "forked version of linuxserver/rutorrent"
+  [344a7c4b]: https://github.com/horjulf/docker-rutorrent-autodl "Horjulf's forked version of linuxserver/rutorrent"
   [1caa43a0]: https://github.com/Jackett/Jackett "Jackett"
   [b4cef019]: https://rclone.org "Rclone"
   [0367302f]: https://github.com/dweidenfeld/plexdrive "Plexdrive"
@@ -80,7 +80,6 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 - l3uddz (creator)
 - desimaniac (contributor)
 
-
 ## Contributing
 
 1. Fork it.
@@ -89,7 +88,6 @@ _If you find this project helpful, feel free to make a small donation via [PayPa
 1. Commit your changes: `git commit -am 'Added some feature'`
 1. Push to the branch: `git push origin my-new-feature`
 1. Submit a pull request.
-
 
 
 ## Community Chat

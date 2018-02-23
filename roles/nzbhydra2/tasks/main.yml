@@ -6,40 +6,40 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-  
+
 - name: Stop and remove any existing container
   docker_container:
-    name: resilio
+    name: nzbhydra2
     state: absent
 
-- name: Create resilio directories
+- name: Create nzbhydra2 directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/resilio
+    - /opt/nzbhydra2
 
 - name: Create and start container
   docker_container:
-    name: resilio
-    image: "linuxserver/resilio-sync"
+    name: nzbhydra2
+    image: hotio/suitarr
     pull: yes
     published_ports:
-      - "127.0.0.1:8888:8888"
-      - "55555:55555"
+      - "127.0.0.1:5076:5076"
     env:
+      APP: "nzbhydra2"
+      VERSION: "unstable"
+      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "resilio.{{domain}}"
-      VIRTUAL_PORT: 8888
-      LETSENCRYPT_HOST: "resilio.{{domain}}"
+      VIRTUAL_HOST: "nzbhydra2.{{domain}}"
+      VIRTUAL_PORT: 5076
+      LETSENCRYPT_HOST: "nzbhydra2.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/resilio:/config"
-      - "/mnt:/sync/mnt"
-      - "/home/{{user}}:/sync/home/{{user}}"
+      - "/opt/nzbhydra2:/config"
+    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
-          - resilio
-    restart_policy: always
+          - nzbhydra2
     state: started
