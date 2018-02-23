@@ -56,7 +56,7 @@ Changelog Format:
   - subdomain: `plexpy`
   - install: `--tags update-plexpy`
   - folder: `/opt/plexpy`
-- Backup Tasks
+- Backup Tasks (thanks RXWatcher1)
   - Rclone tasks uses up less bandwith.
   - Will archive older versions on Rclone remotes. 
 
