@@ -80,7 +80,6 @@ _If you find this project helpful, feel free to make a small donation via Paypal
 - l3uddz (creator)
 - desimaniac (contributor)
 
-
 ## Contributing
 
 1. Fork it.
@@ -91,6 +90,7 @@ _If you find this project helpful, feel free to make a small donation via Paypal
 1. Submit a pull request.
 
 
-### Community
-- [Forums](https://forums.cloudbox.rocks)
+## Community Chat
 - [Discord](https://discord.gg/xmNYmSJ)
+- [Reddit](https://reddit.com/r/Cloudbox)
+
