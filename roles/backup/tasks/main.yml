@@ -59,10 +59,6 @@
       get_mime: false
     register: backup_previous_tgz
 
-  - name: "Moving cloudbox.tar to cloudbox.tar.backup"
-    shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
-    when: backup_previous_tgz.stat.exists
-
   - name: "Remove previous cloudbox.tar"
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar"
@@ -139,6 +135,9 @@
 
   - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
     shell: "tar --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+
+  - name: "Copy rclone.conf and plexdrive.conf to backup directory"
+    shell: "cp /opt/rclone/rclone.conf '{{backup.tar_dest}}/'"
 
   - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
     stat:
@@ -221,16 +220,26 @@
 
   - name: "Check rclone cloudbox.tar datestamp"
     shell: "rclone lsl {{backup.rclone_dest}}/cloudbox.tar|cut -d ' ' -f 2,3|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
-    register: rclone_timestamp
+    register: rclone_cloudbox_timestamp
     when: backup.use_rclone
 
   - name: "Move off old cloudbox.tar on \"{{backup.rclone_dest}}\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone_timestamp.stdout}}.tar' 2>/dev/null"
+    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone_cloudbox_timestamp.stdout}}.tar' 2>/dev/null"
+    ignore_errors: yes
+    when: backup.use_rclone
+
+  - name: "Check rclone rclone.conf datestamp"
+    shell: "rclone lsl {{backup.rclone_dest}}/rclone.conf|cut -d ' ' -f 7,8|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
+    register: rclone_conf_timestamp
+    when: backup.use_rclone
+
+  - name: "Move off old rclone.conf on \"{{backup.rclone_dest}}\""
+    shell: "rclone moveto '{{backup.rclone_dest}}/rclone.conf' '{{backup.rclone_dest}}/rclone.{{rclone_conf_timestamp.stdout}}.conf' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
 
   - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
-    command: "rclone copy '{{backup.tar_dest}}/cloudbox.tar' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tar_dest}}/' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -329,3 +338,10 @@
       path: "{{playbook_dir}}/backup.lock"
       state: absent
     when: backup_lock.stat.exists == False
+
+  - name: "Remove cloudbox.tar"
+    file:
+      path: "{{backup.tar_dest}}/cloudbox.tar"
+      state: absent
+    when: backup_lock.stat.exists == False
+
