@@ -13,11 +13,11 @@
 
 - name: Add official repository
   apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable" 
-    
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+
 - name: Install docker
   apt:
-    name: docker-ce
+    name: docker-ce=17.09.0~ce-0~ubuntu
     state: installed
     update_cache: yes
 
