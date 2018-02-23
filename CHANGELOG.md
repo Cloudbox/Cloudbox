@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Changelog Format:
 
+## [Unreleased]
+
 ## [X.X.X] - YEAR-MM-DD
 
 ### Added
@@ -28,7 +30,7 @@ Changelog Format:
 # Changelog
 
 
-## [Unreleased]
+## [1.02]
 ### Added
 - [Rclone](https://rclone.org/): Added the "update-rclone" tag (`--tags update-rclone`).
 - [Lidarr](http://lidarr.audio/)
@@ -79,6 +81,9 @@ Changelog Format:
 - Arrpush adjustments.
 - Docker containers now use dynamic IP addresses.
 - Now use default app ports for Suitarr docker image containers.
+- Backup Tasks
+  - Rclone tasks uses up less bandwith.
+  - Will archive older versions on Rclone remotes. 
 
 ## [1.0.0] - 2017-12-01
 ### Initial Release
@@ -86,5 +91,6 @@ Changelog Format:
 
 
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
+[1.0.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Cloudbox/Cloudbox/compare/9af69ab...v1.0.0
