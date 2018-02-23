@@ -30,7 +30,7 @@ Changelog Format:
 # Changelog
 
 
-## [1.02]
+## [1.02] - 2018-2-22
 ### Added
 - [Rclone](https://rclone.org/): Added the "update-rclone" tag (`--tags update-rclone`).
 - [Lidarr](http://lidarr.audio/)
@@ -56,6 +56,9 @@ Changelog Format:
   - subdomain: `plexpy`
   - install: `--tags update-plexpy`
   - folder: `/opt/plexpy`
+- Backup Tasks (thanks RXWatcher1)
+  - Rclone tasks uses up less bandwith.
+  - Will archive older versions on Rclone remotes. 
 
 ## [1.0.1] - 2017-12-30
 ### Added
@@ -81,9 +84,6 @@ Changelog Format:
 - Arrpush adjustments.
 - Docker containers now use dynamic IP addresses.
 - Now use default app ports for Suitarr docker image containers.
-- Backup Tasks
-  - Rclone tasks uses up less bandwith.
-  - Will archive older versions on Rclone remotes. 
 
 ## [1.0.0] - 2017-12-01
 ### Initial Release
