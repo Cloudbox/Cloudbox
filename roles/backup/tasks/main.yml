@@ -87,6 +87,11 @@
       owner: "{{user}}"
       mode: 0775
 
+  - name: "Gathering list of running containers"
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+    register: docker_running_containers
+    ignore_errors: yes
+    
   - name: "Stop all containers"
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
@@ -182,7 +187,7 @@
       timeout: 5
 
   - name: "Start containers"
-    shell: 'docker start plexrequests plexpy plex radarr sonarr nzbhydra jackett rutorrent nzbget organizr portainer letsencrypt nginx-proxy'
+    shell: 'docker start {{docker_running_containers.stdout}}'
     ignore_errors: yes
 
   - name: "Pushover Message: Started Cloudbox containers."
@@ -214,8 +219,18 @@
   - name: "Set {{backup.tar_dest}} owner"
     shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}"
 
+  - name: "Check rclone cloudbox.tar datestamp"
+    shell: "rclone lsl {{backup.rclone_dest}}/cloudbox.tar|cut -d ' ' -f 2,3|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
+    register: rclone_timestamp
+    when: backup.use_rclone
+
+  - name: "Move off old cloudbox.tar on \"{{backup.rclone_dest}}\""
+    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone_timestamp.stdout}}.tar' 2>/dev/null"
+    ignore_errors: yes
+    when: backup.use_rclone
+
   - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tar_dest}}/cloudbox.tar' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone

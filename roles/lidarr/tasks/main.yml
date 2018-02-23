@@ -6,40 +6,47 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-  
+
 - name: Stop and remove any existing container
   docker_container:
-    name: resilio
+    name: lidarr
     state: absent
-
-- name: Create resilio directories
+    
+- name: Create lidarr directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/resilio
+    - /opt/lidarr
+    - /mnt/local/Media/Music
 
 - name: Create and start container
   docker_container:
-    name: resilio
-    image: "linuxserver/resilio-sync"
+    name: lidarr
+    image: hotio/suitarr
     pull: yes
     published_ports:
-      - "127.0.0.1:8888:8888"
-      - "55555:55555"
+      - "127.0.0.1:8686:8686"
     env:
+      APP: "lidarr"
+      VERSION: "unstable"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "resilio.{{domain}}"
-      VIRTUAL_PORT: 8888
-      LETSENCRYPT_HOST: "resilio.{{domain}}"
+      BACKUP: "no"
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "lidarr.{{domain}}"
+      VIRTUAL_PORT: 8686
+      LETSENCRYPT_HOST: "lidarr.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/resilio:/config"
-      - "/mnt:/sync/mnt"
-      - "/home/{{user}}:/sync/home/{{user}}"
+      - "/opt/lidarr:/config"
+      - "/mnt/unionfs/Media/Music:/music"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox
         aliases:
-          - resilio
+          - lidarr
     restart_policy: always
     state: started
