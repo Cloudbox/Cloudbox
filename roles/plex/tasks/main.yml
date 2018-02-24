@@ -117,6 +117,7 @@
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
+    validate_certs: no
   when: webtools_bundle.stat.exists == False
 
 - name: Create plex_autoscan Logs folder
