@@ -1,0 +1,4 @@
+#Cloudbox Related
+cloudbox.retry
+backup.lock
+*.log
