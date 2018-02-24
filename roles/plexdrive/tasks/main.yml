@@ -21,11 +21,12 @@
       owner: "{{user}}"
       group: "{{user}}"
       force: yes
+      validate_certs: no
 
   - name: Import plexdrive.service
     template:
       src: plexdrive.service.js2
-      dest: /etc/systemd/system/plexdrive.service 
+      dest: /etc/systemd/system/plexdrive.service
       force: yes
     when: plexdrive_service.stat.exists == False
 
@@ -40,4 +41,3 @@
   - name: Start plexdrive service
     systemd: state=started name=plexdrive enabled=yes
     when: plexdrive_config.stat.exists
-    
