@@ -20,6 +20,7 @@
     name: docker-ce=17.09.0~ce-0~ubuntu
     state: installed
     update_cache: yes
+    force: yes
 
 - name: Check docker daemon.json exists
   stat:
