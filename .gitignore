@@ -1,4 +1,4 @@
 #Cloudbox Related
 cloudbox.retry
-restore_rclone.log
-restore_rsync.log
+backup.lock
+*.log
