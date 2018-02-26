@@ -22,6 +22,11 @@
     update_cache: yes
     force: yes
 
+- name: Prevent docker-ce from being upgraded
+  dpkg_selections:
+    name: docker-ce
+    selection: hold
+
 - name: Check docker daemon.json exists
   stat:
     path: /etc/docker/daemon.json
