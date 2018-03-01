@@ -1,4 +1,4 @@
-<img src=".github/cb_logo_1.gif" loop=0 width="200" alt="Cloudbox">
+<img src="https://github.com/Cloudbox/Assets/blob/master/images/readme/cb_logo_1.gif" loop=0 width="200" alt="Cloudbox">
 
 
 [Website](https://cloudbox.rocks) |
