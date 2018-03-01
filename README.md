@@ -12,7 +12,7 @@
 
 Cloudbox is an Ansible playbook for deploying a cloud media server stack on an Ubuntu server with the use of Docker containers.
 
-This project is limited to an AMD64 machine running Ubuntu Server 16.04 LTS and designed for fresh systems.
+This project is designed for fresh systems and limited to AMD64 machines running Ubuntu Server 16.04 LTS.
 
 
 Featured Applications:
