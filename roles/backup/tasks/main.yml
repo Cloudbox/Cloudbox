@@ -63,12 +63,6 @@
     shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
     when: backup_previous.stat.exists
 
-  - name: "Remove previous cloudbox.tar"
-    file:
-      path: "{{backup.tar_dest}}/cloudbox.tar"
-      state: absent
-    when: backup_previous.stat.exists
-
   - name: "Copy settings.xml to /opt for inclusion in backup"
     copy:
       src: "{{playbook_dir}}/settings.yml"
@@ -91,7 +85,7 @@
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
     register: docker_running_containers
     ignore_errors: yes
-    
+
   - name: "Stop all containers"
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
