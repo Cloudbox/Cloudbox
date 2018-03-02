@@ -2,7 +2,7 @@
 
 [Unit]
 Description=Plex Autoscan
-After=network-online.target
+After=network-online.target unionfs.service
 
 [Service]
 User={{user}}
