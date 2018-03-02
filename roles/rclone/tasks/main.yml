@@ -36,10 +36,10 @@
   shell: ls -d /tmp/rclone-*-linux-amd64
   register: rclone_tmp_dir
 
-- name: Copy binary to /usr/sbin/rclone
+- name: Copy binary to /usr/bin/rclone
   copy:
     src: "{{ rclone_tmp_dir.stdout }}/rclone"
-    dest: "/usr/sbin/rclone"
+    dest: "/usr/bin/rclone"
     mode: 0755
     owner: root
     group: root

@@ -50,7 +50,7 @@
 
 - name: Check rclone installed
   stat:
-    path: "/usr/sbin/rclone"
+    path: "/usr/bin/rclone"
   register: rclone_bin
 
 - name: Install rclone
