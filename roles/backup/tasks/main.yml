@@ -18,7 +18,7 @@
       group: "{{user}}"
     when: backup_lock.stat.exists == False
 
-  - name: "Save Start Time"
+  - name: "Get Start Time"
     set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
 
   - name: "Pushover Message: Started Cloudbox backup task."
@@ -292,7 +292,7 @@
       state: absent
     when: backup_new.stat.exists
 
-  - name: "Save End Time"
+  - name: "Get End Time"
     set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
 
   - name: "Pushover Message: Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
