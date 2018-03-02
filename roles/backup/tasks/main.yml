@@ -18,7 +18,7 @@
       group: "{{user}}"
     when: backup_lock.stat.exists == False
 
-  - name: "Save Start Time"
+  - name: "Get Start Time"
     set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
 
   - name: "Pushover Message: Started Cloudbox backup task."
@@ -48,7 +48,6 @@
   - name: "Create backup location {{backup.tar_dest}}"
     file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
     when: backup_location.stat.exists == False
-
 
   - name: "Check {{backup.tar_dest}}/cloudbox.tar exists"
     stat:
@@ -285,15 +284,15 @@
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar"
       state: absent
-    when: backup.keep_local_copy == False
+    when: backup.keep_local_copy == False and backup_new.stat.exists
 
   - name: "Remove cloudbox.tar.backup from \"{{backup.tar_dest}}\""
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar.backup"
       state: absent
-    when: backup.keep_local_copy == False
+    when: backup_new.stat.exists
 
-  - name: "Save End Time"
+  - name: "Get End Time"
     set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
 
   - name: "Pushover Message: Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
