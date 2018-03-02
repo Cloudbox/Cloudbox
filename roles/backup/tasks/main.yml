@@ -49,7 +49,6 @@
     file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
     when: backup_location.stat.exists == False
 
-
   - name: "Check {{backup.tar_dest}}/cloudbox.tar exists"
     stat:
       path: "{{backup.tar_dest}}/cloudbox.tar"
@@ -285,13 +284,13 @@
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar"
       state: absent
-    when: backup.keep_local_copy == False
+    when: backup.keep_local_copy == False and backup_new.stat.exists
 
   - name: "Remove cloudbox.tar.backup from \"{{backup.tar_dest}}\""
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar.backup"
       state: absent
-    when: backup.keep_local_copy == False
+    when: backup_new.stat.exists
 
   - name: "Save End Time"
     set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
