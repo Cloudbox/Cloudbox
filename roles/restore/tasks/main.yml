@@ -1,7 +1,16 @@
 ---
-- name: Fail when no backup upload tool has been enabled
+- name: "Check cloudbox.tar exists"
+  stat:
+    path: "{{backup.tar_dest}}/cloudbox.tar"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: cloudbox_tar1
+
+- name: Fail when no backup upload tool has been enabled or no local backup copy exists
   fail: msg="You must set atleast one backup.use_* option in order to perform a restore"
-  when: backup.use_rclone == False and backup.use_rsync == False
+  when: (backup.use_rclone == False and backup.use_rsync == False) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
 - name: Check rclone.conf exists
   stat:
@@ -69,11 +78,13 @@
     state: absent
   when: rclone_conf_playbook_dir.stat.exists
 
+
+
 - name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: true
   become_user: "{{user}}"
-  when: (backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)
+  when: ((backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
 - name: "Fetch cloudbox.tar from {{backup.rsync_dest}}"
   synchronize:
@@ -83,7 +94,7 @@
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
   become: true
   become_user: "{{user}}"
-  when: backup.use_rclone == False and backup.use_rsync
+  when: (backup.use_rclone == False and backup.use_rsync) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
 - name: "Check cloudbox.tar exists"
   stat:
@@ -92,11 +103,11 @@
     get_checksum: false
     get_md5: false
     get_mime: false
-  register: cloudbox_tar
+  register: cloudbox_tar2
 
 - name: "Fail cloudbox.tar doesnt exist"
   fail: msg="There must have been an issue retrieving the cloudbox.tar file... as it does not exist at {{backup.tar_dest}}/cloudbox.tar"
-  when: cloudbox_tar.stat.exists == False
+  when: cloudbox_tar2.stat.exists == False
 
 - name: "Wait for 10 seconds before unarchiving"
   wait_for:
@@ -104,6 +115,12 @@
 
 - name: "Unarchive cloudbox.tar to /opt"
   shell: "tar -xf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+
+- name: Remove cloudbox.tar
+  file:
+    path: "{{backup.tar_dest}}/cloudbox.tar"
+    state: absent
+  when: backup.keep_local_copy == False
 
 - name: Set /opt permissions
   shell: "chmod -R 775 /opt"

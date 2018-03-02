@@ -57,17 +57,11 @@
       get_checksum: false
       get_md5: false
       get_mime: false
-    register: backup_previous_tgz
+    register: backup_previous
 
   - name: "Moving cloudbox.tar to cloudbox.tar.backup"
     shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
-    when: backup_previous_tgz.stat.exists
-
-  - name: "Remove previous cloudbox.tar"
-    file:
-      path: "{{backup.tar_dest}}/cloudbox.tar"
-      state: absent
-    when: backup_previous_tgz.stat.exists
+    when: backup_previous.stat.exists
 
   - name: "Copy settings.xml to /opt for inclusion in backup"
     copy:
@@ -91,7 +85,7 @@
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
     register: docker_running_containers
     ignore_errors: yes
-    
+
   - name: "Stop all containers"
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
@@ -147,11 +141,11 @@
       get_checksum: false
       get_md5: false
       get_mime: false
-    register: backup_new_tgz
+    register: backup_new
 
-  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
+  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
     pushover:
-      msg: "Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
+      msg: "Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
@@ -167,7 +161,7 @@
         or
         (backup.pushover_user_key | trim == '')
         or
-        (backup_new_tgz is undefined)
+        (backup_new is undefined)
       )
 
   - name: Start plexdrive service
@@ -286,6 +280,18 @@
         or
         (backup.use_rsync == false)
       )
+
+  - name: "Remove cloudbox.tar from \"{{backup.tar_dest}}\""
+    file:
+      path: "{{backup.tar_dest}}/cloudbox.tar"
+      state: absent
+    when: backup.keep_local_copy == False
+
+  - name: "Remove cloudbox.tar.backup from \"{{backup.tar_dest}}\""
+    file:
+      path: "{{backup.tar_dest}}/cloudbox.tar.backup"
+      state: absent
+    when: backup.keep_local_copy == False
 
   - name: "Save End Time"
     set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
