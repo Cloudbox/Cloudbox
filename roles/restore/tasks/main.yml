@@ -78,8 +78,6 @@
     state: absent
   when: rclone_conf_playbook_dir.stat.exists
 
-
-
 - name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: true
