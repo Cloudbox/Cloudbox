@@ -18,7 +18,7 @@
   register: gid
 
 
-- name: Cleanup Rclone tmp path
+- name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
 
 
@@ -32,19 +32,13 @@
     copy: no
     validate_certs: no
 
-- name: Find Rclone tmp dir
+- name: Find rclone tmp dir
   shell: ls -d /tmp/rclone-*-linux-amd64
   register: rclone_tmp_dir
 
-
-- name: Ensure rclone folders exists
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
-  with_items:
-    - "/home/{{user}}/.config/rclone"
-
 - name: Copy binary to /usr/sbin/rclone
   copy:
-    src: "{{ rclone_dir.stdout }}/rclone"
+    src: "{{ rclone_tmp_dir.stdout }}/rclone"
     dest: "/usr/sbin/rclone"
     mode: 0755
     owner: root
@@ -60,7 +54,7 @@
 
 - name: Copy manpage
   copy:
-    src: "{{ rclone_dir.stdout }}/rclone.1"
+    src: "{{ rclone_tmp_dir.stdout }}/rclone.1"
     dest: /usr/local/share/man/man1/rclone.1
     mode: 0644
     owner: root
@@ -70,5 +64,5 @@
   shell: mandb
   changed_when: false
 
-- name: Cleanup Rclone tmp path
+- name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64

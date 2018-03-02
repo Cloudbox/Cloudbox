@@ -10,15 +10,15 @@
 
 - name: Check rclone.conf exists
   stat:
-    path: "/home/{{user}}/.config/rclone/"
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
   register: rclone_conf_user_dir
 
 - name: Fail when no rclone.conf is found
   fail: msg="You must place your rclone.conf file in {{playbook_dir}} or setup Rclone via rclone config"
   when: backup.use_rclone and not(
-      (rclone_conf_playbook_dir.exists)
+      (rclone_conf_playbook_dir.stat.exists)
       or
-      (rclone_conf_user_dir.exists)
+      (rclone_conf_user_dir.stat.exists)
     )
 
 - name: Ensure unzip is installed
@@ -39,21 +39,6 @@
   file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
   when: backup_location.stat.exists == False
 
-- name: Restore rclone.conf
-  copy:
-    src: "{{playbook_dir}}/rclone.conf"
-    dest: "/home/{{user}}/.config/rclone/rclone.conf"
-    mode: 0775
-    owner: "{{user}}"
-    group: "{{user}}"
-  when: rclone_conf_playbook_dir.exists
-
-- name: Remove rclone.conf
-  file:
-    path: "{{playbook_dir}}/rclone.conf"
-    state: absent
-  when: rclone_conf_playbook_dir.exists
-
 - name: Check rclone installed
   stat:
     path: "/usr/sbin/rclone"
@@ -63,6 +48,26 @@
   include_role:
     name: rclone
   when: backup.use_rclone and rclone_bin.stat.exists == False
+
+- name: Ensure rclone folders exists
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  with_items:
+    - "/home/{{user}}/.config/rclone"
+
+- name: Restore rclone.conf
+  copy:
+    src: "{{playbook_dir}}/rclone.conf"
+    dest: "/home/{{user}}/.config/rclone/rclone.conf"
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+  when: rclone_conf_playbook_dir.stat.exists
+
+- name: Remove rclone.conf
+  file:
+    path: "{{playbook_dir}}/rclone.conf"
+    state: absent
+  when: rclone_conf_playbook_dir.stat.exists
 
 - name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
