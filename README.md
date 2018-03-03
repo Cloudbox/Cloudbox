@@ -7,7 +7,7 @@
 [Wiki](https://github.com/Cloudbox/Cloudbox/wiki) |
 [Changelog](CHANGELOG.md) |
 [Contributing](CONTRIBUTING.md) |
-[Credits](CREDITS.md) |
+[Credits](CREDITS.md)
 
 
 Cloudbox is an Ansible playbook for deploying a cloud media server stack on an Ubuntu server with the use of Docker containers.
