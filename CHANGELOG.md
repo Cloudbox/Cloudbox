@@ -85,9 +85,9 @@ Changelog Format:
 - Docker containers now use dynamic IP addresses.
 - Now use default app ports for Suitarr docker image containers.
 
+
 ## [1.0.0] - 2017-12-01
 ### Initial Release
-
 
 
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
