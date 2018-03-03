@@ -63,6 +63,3 @@
 - name: Install manpage
   shell: mandb
   changed_when: false
-
-- name: Cleanup rclone tmp path
-  shell: rm -rf /tmp/rclone-*-linux-amd64

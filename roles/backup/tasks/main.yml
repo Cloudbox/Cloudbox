@@ -58,8 +58,19 @@
       get_mime: false
     register: backup_previous
 
-  - name: "Moving cloudbox.tar to cloudbox.tar.backup"
-    shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
+  - name: "Copying cloudbox.tar to cloudbox.tar.backup"
+    copy:
+      src: "{{backup.tar_dest}}/cloudbox.tar"
+      dest: "{{backup.tar_dest}}/cloudbox.tar.backup"
+      force: yes
+      group: "{{user}}"
+      owner: "{{user}}"
+    when: backup_previous.stat.exists
+
+  - name: "Remove previous cloudbox.tar"
+    file:
+      path: "{{backup.tar_dest}}/cloudbox.tar"
+      state: absent
     when: backup_previous.stat.exists
 
   - name: "Copy settings.xml to /opt for inclusion in backup"
