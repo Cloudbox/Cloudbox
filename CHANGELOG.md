@@ -90,7 +90,6 @@ Changelog Format:
 ### Initial Release
 
 
-
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
 [1.0.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.0...v1.0.1
