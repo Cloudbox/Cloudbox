@@ -30,7 +30,7 @@ Changelog Format:
 # Changelog
 
 
-## [1.02] - 2018-2-22
+## [1.0.2] - 2018-2-22
 ### Added
 - [Rclone](https://rclone.org/): Added the "update-rclone" tag (`--tags update-rclone`).
 - [Lidarr](http://lidarr.audio/)
@@ -58,7 +58,7 @@ Changelog Format:
   - folder: `/opt/plexpy`
 - Backup Tasks (thanks RXWatcher1)
   - Rclone tasks uses up less bandwith.
-  - Will archive older versions on Rclone remotes. 
+  - Will archive older versions on Rclone remotes.
 
 ## [1.0.1] - 2017-12-30
 ### Added
