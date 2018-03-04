@@ -248,7 +248,7 @@
     when: backup.use_rclone
 
   - name: "Archive previous \"{{backup.rclone_dest}}/settings.yml\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/settings.yml' '{{backup.rclone_dest}}/rclone.{{rclone_conf_timestamp.stdout}}.conf' 2>/dev/null"
+    shell: "rclone moveto '{{backup.rclone_dest}}/settings.yml' '{{backup.rclone_dest}}/settings.{{rclone_conf_timestamp.stdout}}.yml' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
 
