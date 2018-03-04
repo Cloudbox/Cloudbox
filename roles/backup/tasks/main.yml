@@ -156,12 +156,6 @@
       get_mime: false
     register: backup_new
 
-  - name: "Remove cloudbox.tar.backup from \"{{backup.tar_dest}}\""
-    file:
-      path: "{{backup.tar_dest}}/cloudbox.tar.backup"
-      state: absent
-    when: backup_new.stat.exists
-
   - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
     pushover:
       msg: "Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
@@ -182,6 +176,12 @@
         or
         (backup_new is undefined)
       )
+
+  - name: "Remove cloudbox.tar.backup from \"{{backup.tar_dest}}\""
+    file:
+      path: "{{backup.tar_dest}}/cloudbox.tar.backup"
+      state: absent
+    when: backup_new.stat.exists
 
   - name: Start plexdrive service
     systemd:
