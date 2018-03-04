@@ -23,5 +23,6 @@
     name: "{{user}}"
     shell: /bin/zsh
 
-- debug:
+- name: Message
+  debug:
     msg: "You will need to relogin for changes to take effect."
