@@ -234,31 +234,31 @@
 
   - name: "Get datestamp for previous \"{{backup.rclone_dest}}/cloudbox.tar\""
     shell: "rclone lsl {{backup.rclone_dest}}/cloudbox.tar|cut -d ' ' -f 2,3|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
-    register: rclone_cloudbox_timestamp
+    register: rclone_cloudbox_tar_timestamp
     when: backup.use_rclone
 
   - name: "Archive previous \"{{backup.rclone_dest}}/cloudbox.tar\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone_cloudbox_timestamp.stdout}}.tar' 2>/dev/null"
+    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone_cloudbox_tar_timestamp.stdout}}.tar' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
 
   - name: "Get datestamp for previous \"{{backup.rclone_dest}}/settings.yml\""
     shell: "rclone lsl {{backup.rclone_dest}}/settings.yml|cut -d ' ' -f 7,8|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
-    register: rclone_conf_timestamp
+    register: rclone_settings_yml_timestamp
     when: backup.use_rclone
 
   - name: "Archive previous \"{{backup.rclone_dest}}/settings.yml\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/settings.yml' '{{backup.rclone_dest}}/settings.{{rclone_conf_timestamp.stdout}}.yml' 2>/dev/null"
+    shell: "rclone moveto '{{backup.rclone_dest}}/settings.yml' '{{backup.rclone_dest}}/settings.{{rclone_settings_yml_timestamp.stdout}}.yml' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
 
   - name: "Get datestamp for previous \"{{backup.rclone_dest}}/rclone.conf\""
     shell: "rclone lsl {{backup.rclone_dest}}/rclone.conf|cut -d ' ' -f 7,8|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
-    register: rclone_conf_timestamp
+    register: rclone_rclone_conf_timestamp
     when: backup.use_rclone
 
   - name: "Archive previous \"{{backup.rclone_dest}}/rclone.conf\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/rclone.conf' '{{backup.rclone_dest}}/rclone.{{rclone_conf_timestamp.stdout}}.conf' 2>/dev/null"
+    shell: "rclone moveto '{{backup.rclone_dest}}/rclone.conf' '{{backup.rclone_dest}}/rclone.{{rclone_rclone_conf_timestamp.stdout}}.conf' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
 
