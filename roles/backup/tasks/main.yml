@@ -346,7 +346,7 @@
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar"
       state: absent
-    when: backup.keep_local_copy == False and backup_new.stat.exists
+    when: backup_new.stat.exists and backup.keep_local_copy == False
 
   - name: "Get ansible-playbook binary path"
     shell: "which ansible-playbook"
