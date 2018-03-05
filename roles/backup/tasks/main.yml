@@ -49,7 +49,7 @@
     file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
     when: backup_location.stat.exists == False
 
-  - name: "Copy {{item}} to {{backup.tar_dest}}"
+  - name: "Copy settings.yml and rclone.conf to \"{{backup.tar_dest}}\""
     copy:
       src: "{{item}}"
       dest: "{{backup.tar_dest}}"
