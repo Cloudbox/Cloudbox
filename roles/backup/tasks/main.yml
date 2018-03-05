@@ -70,13 +70,8 @@
       get_mime: false
     register: backup_previous
 
-  - name: "Copying cloudbox.tar to cloudbox.tar.backup"
-    copy:
-      src: "{{backup.tar_dest}}/cloudbox.tar"
-      dest: "{{backup.tar_dest}}/cloudbox.tar.backup"
-      force: yes
-      group: "{{user}}"
-      owner: "{{user}}"
+  - name: "Moving cloudbox.tar to cloudbox.tar.backup"
+    shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
     when: backup_previous.stat.exists
 
   - name: "Remove previous cloudbox.tar"
