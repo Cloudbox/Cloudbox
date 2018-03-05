@@ -74,12 +74,6 @@
     shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
     when: backup_previous.stat.exists
 
-  - name: "Remove previous cloudbox.tar"
-    file:
-      path: "{{backup.tar_dest}}/cloudbox.tar"
-      state: absent
-    when: backup_previous.stat.exists
-
   - name: "Copy /etc/systemd/system to /opt/systemd for inclusion in backup"
     copy:
       src: "/etc/systemd/system"
