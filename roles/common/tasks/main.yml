@@ -47,6 +47,7 @@
     - docker-py
     - certbot
     - "ansible-toolbox"
+    - dnspython
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
