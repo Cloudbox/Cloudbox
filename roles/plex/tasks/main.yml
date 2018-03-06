@@ -46,11 +46,11 @@
     plex_default_hosts: { "metric.plex.tv": "127.0.0.1", "metrics.plex.tv": "127.0.0.1", "analytics.plex.tv": "127.0.0.1" }
 
 - name: Grab IP for Lazyman
-  set_fact: lazyman_ip="{{ lookup('dig', 'powersports.ml.', '@8.8.8.8')}}"
+  set_fact: lazyman_ip="{{ lookup('dig', 'powersports.ml.', '@8.8.8.8', 'qtype=A') }}"
 
 - name: Set custom hosts
   set_fact:
-    plex_custom_hosts: { "mf.svc.nhl.com": "{{lazyman_ip}}", "mlb-ws-mf.media.mlb.com": "{{lazyman_ip}}" }
+    plex_custom_hosts: {  "mf.svc.nhl.com": "{{  (lazyman_ip|ipv4) | ternary(lazyman_ip,'127.0.0.1') }}",  "mlb-ws-mf.media.mlb.com": "{{  (lazyman_ip|ipv4) | ternary(lazyman_ip, '127.0.0.1') }}" }
 
 - name: Create and start container
   docker_container:
