@@ -54,7 +54,7 @@ Changelog Format:
    - `rclone.conf` location: `~/.config/rclone/rclone.conf`.
    - Removed the use of `/opt/rclone/` folder (and the symlinks within it).
 * Backup
-  - Rclone uses less bandwidth, due to archiving older backups server-side (_RXWatcher1_).
+  - Rclone uses less bandwidth, due to server-side move commands (_RXWatcher1_).
   - Will archive older versions of `cloudbox.tar` on Rclone remotes (_RXWatcher1_).
   - Systemd files will be saved to `/opt/systemd-backup` (vs `/opt/systemd`). The name makes the purpose of the folder clearer.
   - `cloudbox.tar.backup` is now deleted after a successful tar task.
