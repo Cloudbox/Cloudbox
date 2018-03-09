@@ -41,7 +41,7 @@ Changelog Format:
   * To install: Run CB with `--tags install-zsh`
 - Python modules
   * netaddr - for Ansible's `ipv4` filter
-  * dnspython - for Ansible dig lookup.
+  * dnspython - for Ansible's `dig` lookup.
 
 
 ### Changed
@@ -50,11 +50,11 @@ Changelog Format:
   * Moved chart of installed items to the Wiki (i.e. [Cloudbox Install Types](https://github.com/Cloudbox/Cloudbox/wiki/Basics%3A-Cloudbox-Install-Types)).
 - Rclone
    - Use `latest` (in `settings.yml`) to always install the newest version.
-   - `rclone` binary location: `/usr/bin/rclone` (as https://rclone.org/install/ pefers).
+   - `rclone` binary location: `/usr/bin/rclone` (as https://rclone.org/install/ prefers).
    - `rclone.conf` location: `~/.config/rclone/rclone.conf`.
-   - Removed te use of `/opt/rclone/` folder (removed the use of symlinks).
+   - Removed the use of `/opt/rclone/` folder (and the symlinks within it).
 * Backup
-  - Rclone uses up less bandwith (_RXWatcher1_).
+  - Rclone uses less bandwidth, due to archiving older backups server-side (_RXWatcher1_).
   - Will archive older versions of `cloudbox.tar` on Rclone remotes (_RXWatcher1_).
   - Systemd files will be saved to `/opt/systemd-backup` (vs `/opt/systemd`). The name makes the purpose of the folder clearer.
   - `cloudbox.tar.backup` is now deleted after a successful tar task.
@@ -68,7 +68,7 @@ Changelog Format:
   - Restore looks for `rclone.conf` in `~/cloudbox/` and `~/.config/rclone/`.
   - If `rclone.conf` exists in both locations, `~/cloudbox/rclone.conf` will take precedence for restore task and be be copied over `~/.config/rclone/rclone.conf` (overwriting the previous one).
  - Plex
-   - Added Lazyman hosts (i.e `mf.svc.nhl.com` and `mlb-ws-mf.media.mlb.com`)
+   - Added Lazyman hosts (i.e `mf.svc.nhl.com` and `mlb-ws-mf.media.mlb.com`).
  - Service Files
    - Modified `unionfs.service` file to added 30 second wait to start to UnionFS.
      - Gives extra time for other mounts to be loaded before Unionfs starts.
