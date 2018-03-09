@@ -83,10 +83,12 @@ Changelog Format:
    - version updated to `0.7`.
 
 ### Removed
-- `.github` folder from the repo.
+- Github
+  - removed `.github` folder from the repo.
 
 ### Fixed
-- Misc SSL errors with Github links.
+- Ansible
+  - Fixed misc SSL errors with Github links.
 
 
 ## [1.0.2] - 2018-2-22
@@ -123,7 +125,8 @@ Changelog Format:
 
 ## [1.0.1] - 2017-12-30
 ### Added
-- Ansible-Toolbox
+- Anisble
+  - Ansible-Toolbox
 - [Ombi](http://www.ombi.io/)
   - subdomain: `ombi`
   - install: `--tags install-ombi`
@@ -142,9 +145,11 @@ Changelog Format:
   - folder: `/opt/nextcloud`
 
 ### Changed
-- Arrpush adjustments.
-- Docker containers now use dynamic IP addresses.
-- Now use default app ports for Suitarr docker image containers.
+- Arrpush
+  - minor adjustments
+- Docker
+  - containers now use dynamic IP addresses.
+  * Suitarr docker containers now use default app ports). This effects Sonarr, Radarr, NZBGet, NZBHydra, and Jackett.
 
 ## [1.0.0] - 2017-12-01
 ### Initial Release
