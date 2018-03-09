@@ -46,7 +46,9 @@
   with_items:
     - docker-py
     - certbot
-    - "ansible-toolbox"
+    - ansible-toolbox
+    - dnspython
+    - netaddr
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
