@@ -40,7 +40,7 @@ Changelog Format:
   * Will install Zsh & [Oh My Zsh](http://ohmyz.sh), and set Zsh as the default shell (this role is not run by by default).
   * To install: Run CB with `--tags install-zsh`
 - Python modules
-  * netaddr - for Ansible's `ipv4` filter
+  * netaddr - for Ansible's `ipv4` filter.
   * dnspython - for Ansible's `dig` lookup.
 
 
@@ -63,7 +63,7 @@ Changelog Format:
       - During backup, if use_rclone/rsync is `false` and `keep_local_copy` is set to `true`, then backup will still continue, but will be made to local file only.
       - During restore, if `keep_local_copy` is set to `true` and a local `cloudbox.tar` exists, then that will be preferred over an rclone/rsync copy (i.e. no rclone/rsync task will run/need to run).
          - This is handy for when you just want to drop in a backup file and restore from it.
-   - Backup of `rclone.conf` and `settings.yml` separate from `cloudbox.tar` file. Older versions of these files will also be archived on rclone remotes..
+   - Backup of `rclone.conf` and `settings.yml` separate from `cloudbox.tar` file. Older versions of these files will also be archived on rclone remotes.
 - Restore
   - Restore looks for `rclone.conf` in `~/cloudbox/` and `~/.config/rclone/`.
   - If `rclone.conf` exists in both locations, `~/cloudbox/rclone.conf` will take precedence for restore task and be be copied over `~/.config/rclone/rclone.conf` (overwriting the previous one).
