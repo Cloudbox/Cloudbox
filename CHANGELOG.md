@@ -37,7 +37,7 @@ Changelog Format:
 - `CONTRIBUTING.md`
   * guide on how to submit Pull Requests (to develop branch).
 - `Zsh` role
-  * Will install Zsh & [Oh My Zsh](http://ohmyz.sh), and set it as your default shell (this is not installed by default).
+  * Will install Zsh & [Oh My Zsh](http://ohmyz.sh), and set Zsh as the default shell (this role is not run by by default).
   * To install: Run CB with `--tags install-zsh`
 - Python modules
   * netaddr - for Ansible's `ipv4` filter
