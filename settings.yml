@@ -30,3 +30,6 @@
     cron_state: absent
     pushover_app_token:
     pushover_user_key:
+  telly:
+    streams: "1"
+    playlist: "/opt/file.m3u or URL2M3U"    
