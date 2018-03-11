@@ -80,15 +80,6 @@
     - /mnt/local/Media/TV
     - /mnt/local/Media/Movies
     - /opt
-    - /opt/scripts
-    - /opt/scripts/torrent
-    - /opt/scripts/nzb
-    - /opt/scripts/nginx
-    - /opt/scripts/plex
-    - /opt/scripts/plex_autoscan
-    - /opt/scripts/cloudflare
-    - /opt/scripts/docker
-    - /opt/scripts/frontail
 
 - name: Check plexdrive mount folder exist
   stat:
