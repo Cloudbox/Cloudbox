@@ -1,6 +1,10 @@
 #!/bin/sh
-# autodl script: /scripts/arrpush.sh
-# autodl args: radarr OR sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
+# autodl script: /scripts/torrents/arrpush.legacy.sh
+# autodl args: sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
+# or
+# autodl args: radarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
+
+
 # settings
 sonarrUrl=http://sonarr:8989/api/release/push
 sonarrApiKey=YOUR_API_KEY

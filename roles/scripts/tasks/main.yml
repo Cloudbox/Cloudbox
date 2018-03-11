@@ -1,25 +1,46 @@
 ---
-- name: Import TorrentCleanup.py
-  copy: "src=TorrentCleanup.py dest=/opt/scripts/torrent/TorrentCleanup.py force=yes owner={{user}} group={{user}} mode=0775"
+- name: Create script directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/scripts
+    - /opt/scripts/cloudflare
+    - /opt/scripts/docker
+    - /opt/scripts/frontail
+    - /opt/scripts/nzb
+    - /opt/scripts/nginx
+    - /opt/scripts/plex
+    - /opt/scripts/plex_autoscan
+    - /opt/scripts/torrents
 
-- name: Check arrpush.sh exists
+
+- name: Import TorrentCleanup.py
+  copy: "src=TorrentCleanup.py dest=/opt/scripts/torrents/TorrentCleanup.py force=yes owner={{user}} group={{user}} mode=0775"
+
+- name: Check if arrpush.py exists
   stat:
-    path: /opt/scripts/torrent/arrpush.sh
+    path: /opt/scripts/torrents/arrpush.py
     get_attributes: false
     get_checksum: false
     get_md5: false
     get_mime: false
   register: arrpush_script
 
-- name: Import arrpush.sh
-  template:
-    src: arrpush.sh.js2
-    dest: /opt/scripts/torrent/arrpush.sh
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
+- name: Import arrpush.py
+  copy: "src: arrpush.py dest: /opt/scripts/torrents/arrpush.py force=yes owner={{user}} group={{user}} mode=0775"
   when: arrpush_script.stat.exists == False
+
+- name: Check if arrpush.legacy.sh exists
+  stat:
+    path: /opt/scripts/torrents/arrpush.legacy.sh
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: arrpush_legacy_script
+
+- name: Import arrpush.legacy.sh
+  copy: "src: arrpush.legacy.sh dest: /opt/scripts/torrents/arrpush.legacy.sh force=yes owner={{user}} group={{user}} mode=0775"
+  when: arrpush_legacy_script.stat.exists == False
 
 - name: Import plex_token.sh
   copy: "src=plex_token.sh dest=/opt/scripts/plex/plex_token.sh force=yes owner={{user}} group={{user}} mode=0775"
@@ -33,7 +54,7 @@
     mode: 0775
     force: yes
 
-- name: Check cloudflared.py exists
+- name: Check if cloudflared.py exists
   stat:
     path: /opt/scripts/cloudflare/cloudflared.py
     get_attributes: false
@@ -52,7 +73,7 @@
 - name: Import restart_containers.sh
   copy: "src=restart_containers.sh dest=/opt/scripts/docker/restart_containers.sh force=yes owner={{user}} group={{user}} mode=0775"
 
-- name: Check frontail_custom_preset.json exists
+- name: Check if frontail_custom_preset.json exists
   stat:
     path: /opt/scripts/frontail/frontail_custom_preset.json
     get_attributes: false

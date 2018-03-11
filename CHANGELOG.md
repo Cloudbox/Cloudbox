@@ -68,7 +68,7 @@ Changelog Format:
   - Restore looks for `rclone.conf` in `~/cloudbox/` and `~/.config/rclone/`.
   - If `rclone.conf` exists in both locations, `~/cloudbox/rclone.conf` will take precedence for restore task and be be copied over `~/.config/rclone/rclone.conf` (overwriting the previous one).
  - Plex
-   - Added Lazyman hosts (i.e `mf.svc.nhl.com` and `mlb-ws-mf.media.mlb.com`).
+   - Added hosts required for [Lazyman Plex Channel](https://github.com/nomego/Lazyman.bundle) (i.e `mf.svc.nhl.com` and `mlb-ws-mf.media.mlb.com`).
  - Service Files
    - Modified `unionfs.service` file to added 30 second wait to start to UnionFS.
      - Gives extra time for other mounts to be loaded before Unionfs starts.
