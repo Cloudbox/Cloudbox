@@ -14,6 +14,7 @@ import os
 import re
 import string
 import sys
+import time
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 from urllib.parse import urljoin
@@ -151,6 +152,8 @@ def get_bytes(size, suffix):
 
 def push_release(arr_url, arr_api_key, download_url, title, size, indexer):
     try:
+        tries = 0
+
         # build payload and headers
         payload = {'title': title,
                    'downloadUrl': download_url,
@@ -160,15 +163,21 @@ def push_release(arr_url, arr_api_key, download_url, title, size, indexer):
                    'publishDate': datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')}
         headers = {'Content-Type': 'application/json',
                    'X-Api-Key': arr_api_key}
-        # make request
-        req = requests.post(urljoin(arr_url, 'api/release/push'), json=payload, headers=headers, timeout=30,
-                            verify=False)
-        if req.status_code == 200:
-            log.info("Successfully pushed %s (%s) to %s", title, indexer, arr_url)
-            return True
 
-        log.error("Failed pushing %s (%s) to %s, response status_code: %d", title, download_url, arr_url,
-                  req.status_code)
+        while tries < 5:
+            tries += 1
+
+            # make request
+            req = requests.post(urljoin(arr_url, 'api/release/push'), json=payload, headers=headers, timeout=60,
+                                verify=False)
+            if req.status_code == 200:
+                log.info("Successfully pushed %s (%s) to %s", title, indexer, arr_url)
+                return True
+
+            log.error("Failed pushing %s (%s) to %s, Attempt %d/5. Response status_code: %d, response text:\n%s", title,
+                      download_url, arr_url, tries, req.status_code, req.text)
+            time.sleep(10)
+
         return False
     except Exception:
         log.error("Exception pushing %s to %s: ", download_url, arr_url)
