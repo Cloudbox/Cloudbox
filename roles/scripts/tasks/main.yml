@@ -1,6 +1,6 @@
 ---
 - name: Create script directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/scripts
     - /opt/scripts/cloudflare
@@ -10,45 +10,34 @@
     - /opt/scripts/nginx
     - /opt/scripts/plex
     - /opt/scripts/plex_autoscan
-    - /opt/scripts/torrents
+    - /opt/scripts/torrent
 
-
-- name: Import TorrentCleanup.py
-  copy: "src=TorrentCleanup.py dest=/opt/scripts/torrents/TorrentCleanup.py force=yes owner={{user}} group={{user}} mode=0775"
-
-- name: Check if arrpush.py exists
-  stat:
-    path: /opt/scripts/torrents/arrpush.py
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: arrpush_script
-
-- name: Import arrpush.py
-  copy: "src=arrpush.py dest=/opt/scripts/torrents/arrpush.py force=yes owner={{user}} group={{user}} mode=0775"
-  when: arrpush_script.stat.exists == False
-
-- name: Check if arrpush.legacy.sh exists
-  stat:
-    path: /opt/scripts/torrents/arrpush.legacy.sh
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: arrpush_legacy_script
-
-- name: Import arrpush.legacy.sh
-  copy: "src=arrpush.legacy.sh dest=/opt/scripts/torrents/arrpush.legacy.sh force=yes owner={{user}} group={{user}} mode=0775"
-  when: arrpush_legacy_script.stat.exists == False
+- name: Import torrent scripts
+  copy:
+    src: "{{item}}"
+    dest: "/opt/scripts/torrent/{{item}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  with_items:
+    - "arrpush.py"
+    - "arrpush.legacy.sh"
+    - "TorrentCleanup.py"
 
 - name: Import plex_token.sh
-  copy: "src=plex_token.sh dest=/opt/scripts/plex/plex_token.sh force=yes owner={{user}} group={{user}} mode=0775"
+  copy:
+    src: "plex_token.sh"
+    dest: "/opt/scripts/plex/plex_token.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
 
 - name: Import revoke_certs.sh
   template:
-    src: revoke_certs.sh.js2
-    dest: /opt/scripts/nginx/revoke_certs.sh
+    src: "revoke_certs.sh.js2"
+    dest: "/opt/scripts/nginx/revoke_certs.sh"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
@@ -56,7 +45,7 @@
 
 - name: Check if cloudflared.py exists
   stat:
-    path: /opt/scripts/cloudflare/cloudflared.py
+    path: "/opt/scripts/cloudflare/cloudflared.py"
     get_attributes: false
     get_checksum: false
     get_md5: false
@@ -64,18 +53,46 @@
   register: cloudflare_script
 
 - name: Import cloudflared.py
-  copy: "src=cloudflared.py dest=/opt/scripts/cloudflare/cloudflared.py force=yes owner={{user}} group={{user}} mode=0775"
+  copy:
+    src: "cloudflared.py"
+    dest: "/opt/scripts/cloudflare/cloudflared.py"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
   when: cloudflare_script.stat.exists == False
 
 - name: Import plex_autoscan_url.sh
-  copy: "src=plex_autoscan_url.sh dest=/opt/scripts/plex_autoscan/plex_autoscan_url.sh force=yes owner={{user}} group={{user}} mode=0775"
+  copy:
+    src: "plex_autoscan_url.sh"
+    dest: "/opt/scripts/plex_autoscan/plex_autoscan_url.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+
+- name: Check if restart_containers.sh exists
+  stat:
+    path: "/opt/scripts/docker/restart_containers.sh"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: restart_containers
 
 - name: Import restart_containers.sh
-  copy: "src=restart_containers.sh dest=/opt/scripts/docker/restart_containers.sh force=yes owner={{user}} group={{user}} mode=0775"
+  copy:
+    src: "restart_containers.sh"
+    dest: "/opt/scripts/docker/restart_containers.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: restart_containers.stat.exists == False
 
 - name: Check if frontail_custom_preset.json exists
   stat:
-    path: /opt/scripts/frontail/frontail_custom_preset.json
+    path: "/opt/scripts/frontail/frontail_custom_preset.json"
     get_attributes: false
     get_checksum: false
     get_md5: false
@@ -83,5 +100,11 @@
   register: frontail_preset
 
 - name: Import frontail_custom_preset.json
-  copy: "src=frontail_custom_preset.json dest=/opt/scripts/frontail/frontail_custom_preset.json force=yes owner={{user}} group={{user}} mode=0775"
+  copy:
+    src: "frontail_custom_preset.json"
+    dest: "/opt/scripts/frontail/frontail_custom_preset.json"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
   when: frontail_preset.stat.exists == False
