@@ -246,7 +246,7 @@
     ignore_errors: yes
     when: backup.use_rclone
 
-  # If rclone_timestamp is blank (would happen if cloudbox.tar did not exist), default naming of other files to 'filename.old.ext'.
+  # If rclone_timestamp is blank (would happen if cloudbox.tar did not exist), default the naming of other files to 'filename.old.ext'.
   - name: "Archive previous files in \"{{backup.rclone_dest}}/\""
     shell: "rclone lsl '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/{{ (item | splitext)[0] }}.{{ rclone_timestamp.stdout | default('old', true) }}{{ (item | splitext)[1] }}' 2>/dev/null"
     ignore_errors: yes
