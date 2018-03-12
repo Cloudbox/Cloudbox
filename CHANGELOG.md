@@ -37,10 +37,10 @@ Changelog Format:
 - `CONTRIBUTING.md`
   * guide on how to submit Pull Requests (to develop branch).
 - `Zsh` role
-  * Will install Zsh & [Oh My Zsh](http://ohmyz.sh), and set it as your default shell (this is not installed by default).
+  * Will install Zsh & [Oh My Zsh](http://ohmyz.sh), and set Zsh as the default shell (this role is not run by by default).
   * To install: Run CB with `--tags install-zsh`
 - Python modules
-  * netaddr - for Ansible's `ipv4` filter
+  * netaddr - for Ansible's `ipv4` filter.
   * dnspython - for Ansible's `dig` lookup.
 
 
@@ -63,12 +63,12 @@ Changelog Format:
       - During backup, if use_rclone/rsync is `false` and `keep_local_copy` is set to `true`, then backup will still continue, but will be made to local file only.
       - During restore, if `keep_local_copy` is set to `true` and a local `cloudbox.tar` exists, then that will be preferred over an rclone/rsync copy (i.e. no rclone/rsync task will run/need to run).
          - This is handy for when you just want to drop in a backup file and restore from it.
-   - Backup of `rclone.conf` and `settings.yml` separate from `cloudbox.tar` file. Older versions of these files will also be archived.
+   - Backup of `rclone.conf` and `settings.yml` separate from `cloudbox.tar` file. Older versions of these files will also be archived on rclone remotes.
 - Restore
   - Restore looks for `rclone.conf` in `~/cloudbox/` and `~/.config/rclone/`.
   - If `rclone.conf` exists in both locations, `~/cloudbox/rclone.conf` will take precedence for restore task and be be copied over `~/.config/rclone/rclone.conf` (overwriting the previous one).
  - Plex
-   - Added Lazyman hosts (i.e `mf.svc.nhl.com` and `mlb-ws-mf.media.mlb.com`).
+   - Added hosts required for [Lazyman Plex Channel](https://github.com/nomego/Lazyman.bundle) (i.e `mf.svc.nhl.com` and `mlb-ws-mf.media.mlb.com`).
  - Service Files
    - Modified `unionfs.service` file to added 30 second wait to start to UnionFS.
      - Gives extra time for other mounts to be loaded before Unionfs starts.
@@ -81,12 +81,24 @@ Changelog Format:
    - Prevent `docker-ce` from being upgraded.
  - ctop
    - version updated to `0.7`.
+ - Scripts:
+    - Added new script: `arrpush.py` (for ruTorrent autodl-irssi)
+      - COMMAND: `/scripts/arrpush.py`
+      - ARGUMENTS: `"http://sonarr:8989" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"`
+      - ARGUMENTS: `"http://radarr:7878" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"`
+    - Renamed `arrpush.sh` (the previous script) to `arrpush.legacy.sh`.
+      - COMMAND: `/scripts/arrpush.legacy.sh`
+      - ARGUMENTS: `sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"`
+      - ARGUMENTS: `radarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"`
+    - Simplified code.
 
 ### Removed
-- `.github` folder from the repo.
+- Github
+  - removed `.github` folder from the repo.
 
 ### Fixed
-- Misc SSL errors with Github links.
+- Ansible
+  - Fixed misc SSL errors with Github links.
 
 
 ## [1.0.2] - 2018-2-22
@@ -123,7 +135,8 @@ Changelog Format:
 
 ## [1.0.1] - 2017-12-30
 ### Added
-- Ansible-Toolbox
+- Anisble
+  - Ansible-Toolbox
 - [Ombi](http://www.ombi.io/)
   - subdomain: `ombi`
   - install: `--tags install-ombi`
@@ -142,9 +155,11 @@ Changelog Format:
   - folder: `/opt/nextcloud`
 
 ### Changed
-- Arrpush adjustments.
-- Docker containers now use dynamic IP addresses.
-- Now use default app ports for Suitarr docker image containers.
+- Arrpush
+  - minor adjustments
+- Docker
+  - containers now use dynamic IP addresses.
+  * Suitarr docker containers now use default app ports). This effects Sonarr, Radarr, NZBGet, NZBHydra, and Jackett.
 
 ## [1.0.0] - 2017-12-01
 ### Initial Release
