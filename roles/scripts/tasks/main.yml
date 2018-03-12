@@ -12,7 +12,26 @@
     - /opt/scripts/plex_autoscan
     - /opt/scripts/torrent
 
-- name: Import torrent scripts
+- name: Check arrpush.legacy.sh exists
+  stat:
+    path: "/opt/scripts/torrent/arrpush.legacy.sh"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: arrpush_legacy_script
+
+- name: Import arrpush.legacy.sh
+  copy:
+    src: "arrpush.legacy.sh"
+    dest: "/opt/scripts/torrent/arrpush.legacy.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: arrpush_legacy_script.stat.exists == False
+
+- name: Import remaining torrent scripts
   copy:
     src: "{{item}}"
     dest: "/opt/scripts/torrent/{{item}}"
@@ -22,7 +41,6 @@
     force: yes
   with_items:
     - "arrpush.py"
-    - "arrpush.legacy.sh"
     - "TorrentCleanup.py"
 
 - name: Import plex_token.sh
