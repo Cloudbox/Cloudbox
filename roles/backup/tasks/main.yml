@@ -16,6 +16,7 @@
       state: touch
       owner: "{{user}}"
       group: "{{user}}"
+      mode: 0775
     when: backup_lock.stat.exists == False
 
   - name: "Get Start Time"
@@ -46,17 +47,23 @@
     register: backup_location
 
   - name: "Create backup location {{backup.tar_dest}}"
-    file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
+    file:
+      path: "{{backup.tar_dest}}"
+      state: directory
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      recurse: yes
     when: backup_location.stat.exists == False
 
-  - name: "Copy settings.yml and rclone.conf to \"{{backup.tar_dest}}\""
+  - name: "Copy files to \"{{backup.tar_dest}}\""
     copy:
       src: "{{item}}"
       dest: "{{backup.tar_dest}}"
-      force: yes
-      group: "{{user}}"
       owner: "{{user}}"
+      group: "{{user}}"
       mode: 0775
+      force: yes
     with_items:
      - "{{playbook_dir}}/settings.yml"
      - "/home/{{user}}/.config/rclone/rclone.conf"
@@ -70,6 +77,7 @@
       get_mime: false
     register: backup_previous
 
+  # Use mv because Ansible copy & delete takes a lot longer.
   - name: "Moving cloudbox.tar to cloudbox.tar.backup"
     shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
     when: backup_previous.stat.exists
@@ -78,10 +86,10 @@
     copy:
       src: "/etc/systemd/system"
       dest: "/opt/systemd-backup"
-      force: yes
-      group: "{{user}}"
       owner: "{{user}}"
+      group: "{{user}}"
       mode: 0775
+      force: yes
 
   - name: "Gathering list of running containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
@@ -221,35 +229,32 @@
   - name: "Set {{backup.tar_dest}} owner"
     shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}"
 
+  # Reset permissions; reset mod dates to avoid conflicts during rclone backup.
+  - name: "Touch and set permissions to {{backup.tar_dest}}"
+    file:
+      path: "{{backup.tar_dest}}"
+      state: touch
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0755
+      recurse: yes
+
+  # Due to a previously ran touch command, all files have same mod dates, therefore, only one file's mod date is needed.
   - name: "Get datestamp for previous \"{{backup.rclone_dest}}/cloudbox.tar\""
-    shell: "rclone lsl {{backup.rclone_dest}}/cloudbox.tar|cut -d ' ' -f 2,3|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
-    register: rclone_cloudbox_tar_timestamp
-    when: backup.use_rclone
-
-  - name: "Archive previous \"{{backup.rclone_dest}}/cloudbox.tar\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone_cloudbox_tar_timestamp.stdout}}.tar' 2>/dev/null"
+    shell: "rclone lsl {{ backup.rclone_dest }}/cloudbox.tar | cut -d ' ' -f 2,3 | cut -d '.' -f 1 | sed s/' '/_/g | sed s/':'/./g"
+    register: rclone_timestamp
     ignore_errors: yes
     when: backup.use_rclone
 
-  - name: "Get datestamp for previous \"{{backup.rclone_dest}}/settings.yml\""
-    shell: "rclone lsl {{backup.rclone_dest}}/settings.yml|cut -d ' ' -f 7,8|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
-    register: rclone_settings_yml_timestamp
-    when: backup.use_rclone
-
-  - name: "Archive previous \"{{backup.rclone_dest}}/settings.yml\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/settings.yml' '{{backup.rclone_dest}}/settings.{{rclone_settings_yml_timestamp.stdout}}.yml' 2>/dev/null"
+  # If rclone_timestamp is blank (would happen if cloudbox.tar did not exist), default naming of other files to 'filename.old.ext'.
+  - name: "Archive previous files in \"{{backup.rclone_dest}}/\""
+    shell: "rclone lsl '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/{{ (item | splitext)[0] }}.{{ rclone_timestamp.stdout | default('old', true) }}{{ (item | splitext)[1] }}' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
-
-  - name: "Get datestamp for previous \"{{backup.rclone_dest}}/rclone.conf\""
-    shell: "rclone lsl {{backup.rclone_dest}}/rclone.conf|cut -d ' ' -f 7,8|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
-    register: rclone_rclone_conf_timestamp
-    when: backup.use_rclone
-
-  - name: "Archive previous \"{{backup.rclone_dest}}/rclone.conf\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/rclone.conf' '{{backup.rclone_dest}}/rclone.{{rclone_rclone_conf_timestamp.stdout}}.conf' 2>/dev/null"
-    ignore_errors: yes
-    when: backup.use_rclone
+    with_items:
+     - "settings.yml"
+     - "rclone.conf"
+     - "cloudbox.tar"
 
   - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
     command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
