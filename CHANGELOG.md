@@ -81,6 +81,16 @@ Changelog Format:
    - Prevent `docker-ce` from being upgraded.
  - ctop
    - version updated to `0.7`.
+ - Scripts:
+    - Added new script: `arrpush.py` (for ruTorrent autodl-irssi)
+      - COMMAND: `/scripts/arrpush.py`
+      - ARGUMENTS: `"http://sonarr:8989" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"`
+      - ARGUMENTS: `"http://radarr:7878" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"`
+    - Renamed `arrpush.sh` (the previous script) to `arrpush.legacy.sh`.
+      - COMMAND: `/scripts/arrpush.legacy.sh`
+      - ARGUMENTS: `sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"`
+      - ARGUMENTS: `radarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"`
+    - Simplified code.
 
 ### Removed
 - Github
