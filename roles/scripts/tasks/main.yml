@@ -26,7 +26,7 @@
   register: arrpush_script
 
 - name: Import arrpush.py
-  copy: "src: arrpush.py dest: /opt/scripts/torrents/arrpush.py force=yes owner={{user}} group={{user}} mode=0775"
+  copy: "src=arrpush.py dest=/opt/scripts/torrents/arrpush.py force=yes owner={{user}} group={{user}} mode=0775"
   when: arrpush_script.stat.exists == False
 
 - name: Check if arrpush.legacy.sh exists
@@ -39,7 +39,7 @@
   register: arrpush_legacy_script
 
 - name: Import arrpush.legacy.sh
-  copy: "src: arrpush.legacy.sh dest: /opt/scripts/torrents/arrpush.legacy.sh force=yes owner={{user}} group={{user}} mode=0775"
+  copy: "src=arrpush.legacy.sh dest=/opt/scripts/torrents/arrpush.legacy.sh force=yes owner={{user}} group={{user}} mode=0775"
   when: arrpush_legacy_script.stat.exists == False
 
 - name: Import plex_token.sh
