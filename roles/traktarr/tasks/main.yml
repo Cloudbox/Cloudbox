@@ -47,9 +47,9 @@
 
 - name: "Create /usr/local/bin symlink"
   file:
-    - src: "/opt/traktarr/traktarr.py"
-    - dest: "/usr/local/bin/traktarr"
-    - state: link
+    src: "/opt/traktarr/traktarr.py"
+    dest: "/usr/local/bin/traktarr"
+    state: link
 
 - name: Import traktarr service
   template:
