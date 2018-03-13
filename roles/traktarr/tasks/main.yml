@@ -45,7 +45,7 @@
 - name: Set directory permissions
   file: "path=/opt/traktarr state=directory owner={{user}} group={{user}} recurse=yes"
 
-- name: Create /usr/local/bin symlink
+- name: "Create /usr/local/bin symlink"
   file:
     - src: "/opt/traktarr/traktarr.py"
     - dest: "/usr/local/bin/traktarr"
