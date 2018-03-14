@@ -1,0 +1,17 @@
+# /etc/systemd/system/traktarr.service
+
+[Unit]
+Description=traktarr
+After=network-online.target unionfs.service
+
+[Service]
+User={{user}}
+Group={{user}}
+Type=simple
+WorkingDirectory=/opt/traktarr/
+ExecStart=/usr/bin/python3 /opt/traktarr/traktarr.py run
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

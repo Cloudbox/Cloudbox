@@ -1,0 +1,62 @@
+---
+- name: Check service exists
+  stat:
+    path: "/etc/systemd/system/traktarr.service"
+  register: traktarr_service
+
+- name: Stop existing traktarr service
+  systemd: state=stopped name=traktarr
+  when: traktarr_service.stat.exists
+
+- name: Create traktarr directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  with_items:
+    - /opt/traktarr
+    
+- name: Clone traktarr
+  git:
+    repo: https://github.com/l3uddz/traktarr/
+    dest: /opt/traktarr
+    version: master
+    force: yes
+    
+- name: Install pip requirements
+  pip:
+    requirements: /opt/traktarr/requirements.txt
+    executable: pip3
+
+- name: Check config exists
+  stat:
+    path: "/opt/traktarr/config.json"
+  register: traktarr_config
+
+- name: Import default config
+  template:
+    src: config.json.js2
+    dest: /opt/traktarr/config.json
+    force: yes
+  when: traktarr_config.stat.exists == False
+
+- name: Set traktarr.py as executable
+  file:
+    path: /opt/traktarr/traktarr.py
+    mode: a+x
+
+- name: Set directory permissions
+  file: "path=/opt/traktarr state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: "Create /usr/local/bin symlink"
+  file:
+    src: "/opt/traktarr/traktarr.py"
+    dest: "/usr/local/bin/traktarr"
+    state: link
+
+- name: Import traktarr service
+  template:
+    src: traktarr.service.js2
+    dest: /etc/systemd/system/traktarr.service 
+    force: yes
+  when: traktarr_service.stat.exists == False
+
+- name: Load service file
+  systemd: state=stopped name=traktarr daemon_reload=yes enabled=no
