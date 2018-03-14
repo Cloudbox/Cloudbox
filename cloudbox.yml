@@ -1,9 +1,10 @@
 ---
 - hosts: localhost
   vars_files:
-    - settings.yml
+    - ['settings.yml', 'settings.yml.default']
   roles:
-    - { role: sanity_check }
+    - { role: sanity_check, tags: ['always'] }
+    - { role: settings, tags: ['always'] }
     - { role: kernel, tags: ['kernel'] }
     - { role: pre_install, tags: ['full', 'feeder', 'plex'] }
     - { role: system, tags: ['full', 'feeder', 'plex'] }

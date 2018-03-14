@@ -7,5 +7,5 @@
   when: ansible_distribution_version | version_compare('16.04', '!=')
 
 - name: Verify a tag was provided
-  fail: msg="You must supply a tag, e.g. full/feeder/plex/backup/restore via the --tags option"
+  fail: msg="You must supply a tag via '--tags OPTION' (e.g. --tags full/feeder/plex/backup/restore/update-XXXX/install-XXXX)"
   when: tags is not defined
