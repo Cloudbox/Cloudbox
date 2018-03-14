@@ -3,6 +3,7 @@
   pip:
     name: ruamel.yaml
     version: 0.15.35
+    executable: pip3
 
 - name: Check if 'settings.yml' exists
   stat:
