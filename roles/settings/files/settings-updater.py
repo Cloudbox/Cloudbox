@@ -98,23 +98,25 @@ def upgrade_settings(defaults, current):
 
 if __name__ == "__main__":
     # get playbook dir
-    if not len(sys.argv) >= 2:
-        print("Playbook dir must be passed as an argument")
+    if not len(sys.argv) >= 4:
+        print("3 arguments must be supplied, playbook_dir default_settings current_settings")
         sys.exit(1)
     playbook_dir = sys.argv[1]
+    default_file = sys.argv[2]
+    current_file = sys.argv[3]
 
     # init logging
     log = init_logging(playbook_dir)
 
     # load settings
-    default_settings = load_settings(os.path.join(playbook_dir, "settings.yml.default"))
+    default_settings = load_settings(os.path.join(playbook_dir, default_file))
     if not default_settings:
-        log.error("Failed loading settings.yml.default, aborting...")
+        log.error("Failed loading %s, aborting...", default_file)
         sys.exit(1)
 
-    current_settings = load_settings(os.path.join(playbook_dir, "settings.yml"))
+    current_settings = load_settings(os.path.join(playbook_dir, current_file))
     if not current_settings:
-        log.error("Failed loading settings.yml, aborting...")
+        log.error("Failed loading %s, aborting...", current_file)
         sys.exit(1)
 
     # compare/upgrade settings
@@ -123,8 +125,8 @@ if __name__ == "__main__":
         log.info("There were no settings changes to apply.")
         sys.exit(0)
     else:
-        if not dump_settings(upgraded_settings, os.path.join(playbook_dir, "settings.yml")):
-            log.error("Failed dumping updated settings.yml")
+        if not dump_settings(upgraded_settings, os.path.join(playbook_dir, current_file)):
+            log.error("Failed dumping updated %s", current_file)
             sys.exit(1)
-        log.info("Successfully upgraded settings.yml")
+        log.info("Successfully upgraded %s", current_file)
         sys.exit(2)

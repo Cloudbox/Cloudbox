@@ -40,7 +40,7 @@
   when: settings_yml.stat.exists == False
   
 - name: Run 'settings-updater.py'
-  script: roles/settings/files/settings-updater.py "{{playbook_dir}}"
+  script: roles/settings/files/settings-updater.py "{{playbook_dir}}" "settings.yml.default" "settings.yml"
   become: true
   become_user: "{{cloudbox_info.stat.pw_name}}"
   register: settings_updater
