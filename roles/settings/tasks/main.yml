@@ -29,6 +29,7 @@
   stat:
     path: "{{playbook_dir}}/settings.yml.default"
   register: settings_yml_default
+  when: settings_yml.stat.exists == False
 
 - name: Exit when new 'settings.yml' is made
   assert:
@@ -36,8 +37,8 @@
       - settings_yml.stat.exists
       - settings_yml.stat.checksum != settings_yml_default.stat.checksum
     msg: "Please edit your 'settings.yml' file. For more info, see the Wiki page: 'Configuring Settings'."
-
-    
+  when: settings_yml.stat.exists == False
+  
 - name: Run 'settings-updater.py'
   script: roles/settings/files/settings-updater.py "{{playbook_dir}}"
   become: true
@@ -45,10 +46,10 @@
   register: settings_updater
   ignore_errors: yes
 
-- name: Check 'settings-updater.py' run status
+- name: Check 'settings-updater.py' run status for errors
   fail: msg="The script 'settings_updater.py' exited with an error. Check `settings-updater.log` for details why."
   when: settings_updater.rc == 1
 
-- name: Check 'settings-updater.py' run status
+- name: Check 'settings-updater.py' run status for new settings
   fail: msg="The script 'settings_updater.py' added new settings. Check `settings-updater.log` for details of new setting names added."
   when: settings_updater.rc == 2
