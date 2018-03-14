@@ -14,7 +14,6 @@
   stat:
     path: "{{playbook_dir}}/cloudbox.yml"
   register: cloudbox_info
-  when: settings_yml.stat.exists == False
 
 - name: Copy 'settings.yml.default' to 'settings.yml'
   copy:
@@ -38,8 +37,11 @@
       - settings_yml.stat.checksum != settings_yml_default.stat.checksum
     msg: "Please edit your 'settings.yml' file. For more info, see the Wiki page: 'Configuring Settings'."
 
+    
 - name: Run 'settings-updater.py'
   script: roles/settings/files/settings-updater.py "{{playbook_dir}}"
+  become: true
+  become_user: "{{cloudbox_info.stat.pw_name}}"
   register: settings_updater
   ignore_errors: yes
 
