@@ -11,35 +11,39 @@ import ruamel.yaml
 ############################################################
 
 
-# log settings
-log_format = '%(asctime)s - %(levelname)-10s - %(name)-35s - %(funcName)-35s - %(message)s'
-log_file_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "settings-updater.log")
-log_level = logging.DEBUG
+log = None
 
-# init root_logger
-log_formatter = logging.Formatter(log_format)
-root_logger = logging.getLogger()
-root_logger.setLevel(log_level)
 
-# init console_logger
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setFormatter(log_formatter)
-root_logger.addHandler(console_handler)
+def init_logging(playbook_path):
+    # log settings
+    log_format = '%(asctime)s - %(levelname)-10s - %(name)-35s - %(funcName)-35s - %(message)s'
+    log_file_path = os.path.join(playbook_path, "settings-updater.log")
+    log_level = logging.DEBUG
 
-# init file_logger
-file_handler = RotatingFileHandler(
-    log_file_path,
-    maxBytes=1024 * 1024 * 5,
-    backupCount=5
-)
-file_handler.setFormatter(log_formatter)
-root_logger.addHandler(file_handler)
+    # init root_logger
+    log_formatter = logging.Formatter(log_format)
+    root_logger = logging.getLogger()
+    root_logger.setLevel(log_level)
 
-# Set chosen logging level
-root_logger.setLevel(log_level)
+    # init console_logger
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(log_formatter)
+    root_logger.addHandler(console_handler)
 
-# Get logger
-log = root_logger.getChild("settings-updater")
+    # init file_logger
+    file_handler = RotatingFileHandler(
+        log_file_path,
+        maxBytes=1024 * 1024 * 5,
+        backupCount=5
+    )
+    file_handler.setFormatter(log_formatter)
+    root_logger.addHandler(file_handler)
+
+    # Set chosen logging level
+    root_logger.setLevel(log_level)
+
+    # Get logger
+    return root_logger.getChild("settings-updater")
 
 
 ############################################################
@@ -95,9 +99,12 @@ def upgrade_settings(defaults, current):
 if __name__ == "__main__":
     # get playbook dir
     if not len(sys.argv) >= 2:
-        log.error("Playbook dir must be passed as an argument")
+        print("Playbook dir must be passed as an argument")
         sys.exit(1)
     playbook_dir = sys.argv[1]
+
+    # init logging
+    log = init_logging(playbook_dir)
 
     # load settings
     default_settings = load_settings(os.path.join(playbook_dir, "settings.yml.default"))
