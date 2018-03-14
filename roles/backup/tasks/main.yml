@@ -223,12 +223,6 @@
     wait_for:
       timeout: 10
 
-  - name: "Set {{backup.tar_dest}} permissions"
-    shell: "chmod -R 775 {{backup.tar_dest}}"
-
-  - name: "Set {{backup.tar_dest}} owner"
-    shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}"
-
   # Reset mod dates to avoid conflicts during rclone backup. Ansible module doesn't touch folder contents via wildcard.
   - name: "Reset permissions and mod dates to files in {{backup.tar_dest}}"
     file:
@@ -252,7 +246,7 @@
 
   # If rclone_timestamp is blank (would happen if cloudbox.tar did not exist), default the naming of other files to 'filename.old.ext'.
   - name: "Archive previous files in \"{{backup.rclone_dest}}/\""
-    shell: "rclone lsl '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/{{ (item | splitext)[0] }}.{{ rclone_timestamp.stdout | default('old', true) }}{{ (item | splitext)[1] }}' 2>/dev/null"
+    shell: "rclone moveto '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/{{ (item | splitext)[0] }}.{{ rclone_timestamp.stdout | default('old', true) }}{{ (item | splitext)[1] }}' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
     with_items:
