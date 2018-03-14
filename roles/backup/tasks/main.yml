@@ -82,7 +82,7 @@
     shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
     when: backup_previous.stat.exists
 
-  - name: "Copy /etc/systemd/system to /opt/systemd for inclusion in backup"
+  - name: "Copy '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
     copy:
       src: "/etc/systemd/system"
       dest: "/opt/systemd-backup"
@@ -229,15 +229,28 @@
   - name: "Set {{backup.tar_dest}} owner"
     shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}"
 
-  # Reset permissions; reset mod dates to avoid conflicts during rclone backup.
-  - name: "Touch and set permissions to {{backup.tar_dest}}"
+  # Reset permissions
+  - name: "Set permissions to {{backup.tar_dest}}"
     file:
       path: "{{backup.tar_dest}}"
-      state: touch
+      state: directory
       owner: "{{user}}"
       group: "{{user}}"
       mode: 0755
       recurse: yes
+
+  # Reset mod dates to avoid conflicts during rclone backup. Ansible module doesn't touch folder contents via wildcard.
+  - name: "Touch and reset mod dates to files in {{backup.tar_dest}}"
+    file:
+      path: "{{backup.tar_dest}}/{{item}}"
+      state: touch
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0755
+    with_items:
+     - "settings.yml"
+     - "rclone.conf"
+     - "cloudbox.tar"
 
   # Due to a previously ran touch command, all files have same mod dates, therefore, only one file's mod date is needed.
   - name: "Get datestamp for previous \"{{backup.rclone_dest}}/cloudbox.tar\""
