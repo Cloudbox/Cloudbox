@@ -100,9 +100,9 @@ if __name__ == "__main__":
     playbook_dir = sys.argv[1]
 
     # load settings
-    default_settings = load_settings(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "settings.yml.default"))
+    default_settings = load_settings(os.path.join(playbook_dir, "settings.yml.default"))
     if not default_settings:
-        log.error("Failed loading defaults.yml, aborting...")
+        log.error("Failed loading settings.yml.default, aborting...")
         sys.exit(1)
 
     current_settings = load_settings(os.path.join(playbook_dir, "settings.yml"))
