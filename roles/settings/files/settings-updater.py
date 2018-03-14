@@ -87,7 +87,6 @@ def upgrade_settings(defaults, current):
             else:
                 res[k] = v
                 upgraded = True
-                log.info("Added %s", k)
 
     return upgraded, res
 
