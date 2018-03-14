@@ -10,26 +10,23 @@
     path: "{{playbook_dir}}/settings.yml"
   register: settings_yml
 
-- name: "Get user"
-  set_fact: temp_user={{ playbook_dir.split('/')[2] }}
-  when: settings_yml.stat.exists == False
-
-- name: Get group
-  shell: "id -gn {{ temp_user }}"
-  register: temp_group
+- name: Get cloudbox.yml info
+  stat:
+    path: "{{ansible_playbook}}/cloudbox.yml"
+  register: cloudbox_info
   when: settings_yml.stat.exists == False
 
 - name: Copy 'settings.yml.default' to 'settings.yml'
   copy:
     src: "{{ playbook_dir }}/settings.yml.default"
     dest: "{{ playbook_dir }}/settings.yml"
-    owner: "{{ temp_user }}"
-    group: "{{ temp_group.stdout }}"
+    owner: "{{ cloudbox_info.stat.uid }}"
+    group: "{{ cloudbox_info.stat.gid }}"
     mode: 0664
     force: yes
   when: settings_yml.stat.exists == False
 
-- name: Get stats on 'defaults.yml'
+- name: Get stats on 'settings.yml.default'
   stat:
     path: "{{playbook_dir}}/settings.yml.default"
   register: settings_yml_default
@@ -47,4 +44,8 @@
 
 - name: Check 'settings-updater.py' run status
   fail: msg="The script 'settings_updater.py' exited with an error. Check `settings-updater.log` for details why."
-  when: settings_updater.rc < 2
+  when: settings_updater.rc == 1
+
+- name: Check 'settings-updater.py' run status
+  fail: msg="The script 'settings_updater.py' added new settings. Check `settings-updater.log` for details of setting names added."
+  when: settings_updater.rc == 2
