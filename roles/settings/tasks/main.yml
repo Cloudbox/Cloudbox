@@ -41,11 +41,12 @@
 - name: Run 'settings-updater.py'
   script: roles/settings/files/settings-updater.py "{{playbook_dir}}"
   register: settings_updater
+  ignore_errors: yes
 
 - name: Check 'settings-updater.py' run status
   fail: msg="The script 'settings_updater.py' exited with an error. Check `settings-updater.log` for details why."
   when: settings_updater.rc == 1
 
 - name: Check 'settings-updater.py' run status
-  fail: msg="The script 'settings_updater.py' added new settings. Check `settings-updater.log` for details of setting names added."
+  fail: msg="The script 'settings_updater.py' added new settings. Check `settings-updater.log` for details of new setting names added."
   when: settings_updater.rc == 2
