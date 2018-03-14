@@ -12,7 +12,7 @@
 
 - name: Get cloudbox.yml info
   stat:
-    path: "{{ansible_playbook}}/cloudbox.yml"
+    path: "{{playbook_dir}}/cloudbox.yml"
   register: cloudbox_info
   when: settings_yml.stat.exists == False
 
