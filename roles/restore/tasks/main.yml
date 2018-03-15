@@ -63,7 +63,7 @@
   with_items:
     - "/home/{{user}}/.config/rclone"
 
-- name: Restore rclone.conf
+- name: "Copy '{{playbook_dir}}/rclone.conf' to '/home/{{user}}/.config/rclone/rclone.conf'"
   copy:
     src: "{{playbook_dir}}/rclone.conf"
     dest: "/home/{{user}}/.config/rclone/rclone.conf"
@@ -72,7 +72,7 @@
     group: "{{user}}"
   when: rclone_conf_playbook_dir.stat.exists
 
-- name: Remove rclone.conf
+- name: "Remove '{{playbook_dir}}/rclone.conf'"
   file:
     path: "{{playbook_dir}}/rclone.conf"
     state: absent
