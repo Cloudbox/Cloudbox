@@ -40,14 +40,15 @@
     - nodejs-legacy
     - npm
     - glances
+    - python-netaddr
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
   with_items:
     - docker-py
     - certbot
-    - "ansible-toolbox"
-    - dnspython
+    - ansible-toolbox
+    - dnspython    
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
