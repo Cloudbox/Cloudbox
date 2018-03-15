@@ -17,7 +17,7 @@
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex', 'update-rclone'] }
     - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
-    - { role: scripts, tags: ['full', 'feeder', 'plex'] }
+    - { role: scripts, tags: ['full', 'feeder', 'plex', 'update-scripts'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder', 'update-unionfs_cleaner']}
     - { role: nzbget, tags: ['full', 'feeder', 'update-nzbget'] }
     - { role: rutorrent, tags: ['full', 'feeder', 'update-rutorrent'] }
