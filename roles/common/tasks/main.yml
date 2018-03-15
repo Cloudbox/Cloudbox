@@ -40,6 +40,7 @@
     - nodejs-legacy
     - npm
     - glances
+    - python-netaddr
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
@@ -47,8 +48,7 @@
     - docker-py
     - certbot
     - ansible-toolbox
-    - dnspython
-    - netaddr
+    - dnspython    
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
