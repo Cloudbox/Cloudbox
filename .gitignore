@@ -1,4 +1,5 @@
 #Cloudbox Related
+*.log
 cloudbox.retry
 backup.lock
-*.log
+rclone.conf
