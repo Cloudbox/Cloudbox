@@ -4,7 +4,7 @@
     - ['settings.yml', 'settings.yml.default']
   roles:
     - { role: sanity_check }
-    - { role: settings, tags: ['always'] }
+    - { role: settings, tags: ['always', 'update-settings'] }
     - { role: kernel, tags: ['kernel'] }
     - { role: pre_install, tags: ['full', 'feeder', 'plex'] }
     - { role: system, tags: ['full', 'feeder', 'plex'] }
