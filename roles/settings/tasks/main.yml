@@ -29,16 +29,14 @@
   stat:
     path: "{{playbook_dir}}/settings.yml.default"
   register: settings_yml_default
-  when: settings_yml.stat.exists == False
 
-- name: Exit when new 'settings.yml' is made
+- name: Exit when new 'settings.yml' is made or unchanged
   assert:
     that:
       - settings_yml.stat.exists
       - settings_yml.stat.checksum != settings_yml_default.stat.checksum
     msg: "Please edit your 'settings.yml' file. For more info, see the Wiki page: 'Configuring Settings'."
-  when: settings_yml.stat.exists == False
-  
+
 - name: Run 'settings-updater.py'
   script: roles/settings/files/settings-updater.py "{{playbook_dir}}" "settings.yml.default" "settings.yml"
   become: true
