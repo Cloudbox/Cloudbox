@@ -42,7 +42,7 @@
   become: true
   become_user: "{{cloudbox_info.stat.pw_name}}"
   register: settings_updater
-  ignore_errors: yes
+  failed_when: settings_updater.rc == 1
 
 - name: Check 'settings-updater.py' run status for errors
   fail: msg="The script 'settings_updater.py' exited with an error. Check `settings-updater.log` for details why."
