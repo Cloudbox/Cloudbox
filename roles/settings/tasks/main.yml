@@ -30,7 +30,7 @@
     path: "{{playbook_dir}}/settings.yml.default"
   register: settings_yml_default
 
-- name: Exit when new 'settings.yml' is made or unchanged
+- name: Exit when 'settings.yml' matches 'settings.yml.default'
   assert:
     that:
       - settings_yml.stat.exists
