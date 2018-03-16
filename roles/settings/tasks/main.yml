@@ -25,16 +25,29 @@
     force: yes
   when: settings_yml.stat.exists == False
 
+# Used for hash check
 - name: Get stats on 'settings.yml.default'
   stat:
     path: "{{playbook_dir}}/settings.yml.default"
   register: settings_yml_default
+
+# Diff both files just to be sure.
+- name: Verify 'settings.yml' does not match 'settings.yml.default'
+  shell: "diff <(sort {{ playbook_dir }}/settings.yml) <(sort {{ playbook_dir }}/settings.yml.default) -s"
+  args:
+    executable: /bin/bash
+  register: settings_yml_diff_result
+
+- name: Save results of above
+  set_fact: settings_yml_diff_check=False
+  when: settings_yml_diff_result.stdout.find('identical') != -1
 
 - name: Exit when 'settings.yml' matches 'settings.yml.default'
   assert:
     that:
       - settings_yml.stat.exists
       - settings_yml.stat.checksum != settings_yml_default.stat.checksum
+      - settings_yml_diff_check
     msg: "Please edit your 'settings.yml' file. For more info, see the Wiki page: 'Configuring Settings'."
 
 - name: Run 'settings-updater.py'
@@ -51,3 +64,4 @@
 - name: Check 'settings-updater.py' run status for new settings
   fail: msg="The script 'settings_updater.py' added new settings. Check `settings-updater.log` for details of new setting names added."
   when: settings_updater.rc == 2
+
