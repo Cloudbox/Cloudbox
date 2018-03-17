@@ -57,13 +57,14 @@
 
 - name: Install hostess
   get_url:
-    url:  https://github.com/cbednarski/hostess/releases/download/v0.2.0/hostess_linux_amd64
+    url:  https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64
     dest: /usr/local/bin/hostess
     mode: 0755
     owner: root
     group: root
     force: yes
     validate_certs: no
+  tags: update-hostess
 
 - name: Install ngrok
   unarchive:
@@ -72,6 +73,7 @@
     copy: no
     mode: 0775
     validate_certs: no
+  tags: update-ngrok
 
 - name: Create common directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
