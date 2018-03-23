@@ -40,6 +40,8 @@
     - nodejs-legacy
     - npm
     - glances
+    - screen
+    - tmux
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
