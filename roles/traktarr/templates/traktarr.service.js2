@@ -2,7 +2,7 @@
 
 [Unit]
 Description=traktarr
-After=network-online.target unionfs.service
+After=network-online.target
 
 [Service]
 User={{user}}
