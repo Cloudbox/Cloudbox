@@ -39,3 +39,5 @@
     - { role: nzbhydra2, tags: ['install-nzbhydra2', 'update-nzbhydra2'] }
     - { role: zsh, tags: ['install-zsh', 'update-zsh'] }
     - { role: traktarr, tags: ['install-traktarr', 'update-traktarr'] }
+    - { role: plex_dupefinder, tags: ['install-plex_dupefinder', 'update-plex_dupefinder'] }
+    

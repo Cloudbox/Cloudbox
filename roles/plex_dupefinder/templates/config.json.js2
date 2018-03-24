@@ -1,0 +1,24 @@
+{
+  "AUTO_DELETE": false,
+  "CODEC_SCORES": {
+    "Unknown": 0,
+    "aac": 1000,
+    "ac3": 1000,
+    "dca": 2000,
+    "dca-ma": 4000,
+    "eac3": 1250,
+    "flac": 2500,
+    "mp2": 500,
+    "mp3": 1000,
+    "pcm": 2500,
+    "truehd": 4500,
+    "wmapro": 200
+  },
+  "PLEX_SECTIONS": {
+    "Movies": 1,
+    "TV": 2
+  },
+  "PLEX_SERVER": "https://plex.{{domain}}",
+  "PLEX_TOKEN": "",
+  "SKIP_LIST": []
+}
