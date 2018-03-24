@@ -20,23 +20,22 @@
 - name: Create and start container
   docker_container:
     name: resilio
-    image: "linuxserver/resilio-sync"
+    image: "resilio/sync"
     pull: yes
     published_ports:
       - "127.0.0.1:8888:8888"
       - "55555:55555"
+    user: "{{uid.stdout}}:{{gid.stdout}}"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "resilio.{{domain}}"
       VIRTUAL_PORT: 8888
       LETSENCRYPT_HOST: "resilio.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/resilio:/config"
-      - "/mnt:/sync/mnt"
-      - "/home/{{user}}:/sync/home/{{user}}"
+      - "/opt/resilio:/mnt/sync"
+      - "/mnt:/mnt/mounted_folders/mnt"
+      - "/home:/mnt/mounted_folders/home"
     networks:
       - name: cloudbox
         aliases:
