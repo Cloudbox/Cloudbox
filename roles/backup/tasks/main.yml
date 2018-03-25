@@ -240,6 +240,8 @@
   # Due to a touch command in a previous backup, all files on backup.rclone_dest have same mod dates, therefore, only one file's mod date is needed.
   - name: "Get datestamp for previous \"{{backup.rclone_dest}}/cloudbox.tar\""
     shell: "rclone lsl {{ backup.rclone_dest }}/cloudbox.tar | cut -d ' ' -f 2,3 | cut -d '.' -f 1 | sed s/' '/_/g | sed s/':'/./g"
+    become: true
+    become_user: "{{user}}"
     register: rclone_timestamp
     ignore_errors: yes
     when: backup.use_rclone
@@ -247,6 +249,8 @@
   # If rclone_timestamp is blank (would happen if cloudbox.tar did not exist), default the naming of other files to 'filename.old.ext'.
   - name: "Archive previous files in \"{{backup.rclone_dest}}/\""
     shell: "rclone moveto '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/{{ item }}_{{ rclone_timestamp.stdout | default('old', true) }}' 2>/dev/null"
+    become: true
+    become_user: "{{user}}"
     ignore_errors: yes
     when: backup.use_rclone
     with_items:
