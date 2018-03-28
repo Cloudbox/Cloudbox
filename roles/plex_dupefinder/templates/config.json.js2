@@ -14,11 +14,24 @@
     "truehd": 4500,
     "wmapro": 200
   },
+  "FILENAME_SCORES": {
+    "*Remux*": 20000,
+    "*1080p*BluRay*": 10800,
+    "*720p*BluRay*": 7200,
+    "*WEB*NTB*": 5000,
+    "*WEB*VISUM*": 5000,
+    "*WEB*KINGS*": 5000,
+    "*WEB*CasStudio*": 5000,
+    "*WEB*SiGMA*": 5000,
+    "*WEB*QOQ*": 5000,
+    "*WEB*TROLLHD*": 2500
+  },
   "PLEX_SECTIONS": {
     "Movies": 1,
     "TV": 2
   },
   "PLEX_SERVER": "https://plex.{{domain}}",
   "PLEX_TOKEN": "",
-  "SKIP_LIST": []
+  "SKIP_LIST": [],
+  "SCORE_FILESIZE": true
 }
