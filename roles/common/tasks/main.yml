@@ -13,9 +13,6 @@
     - unrar
     - unzip
     - p7zip
-    - python-pip
-    - python3-pip
-    - python-passlib
     - curl
     - sqlite3
     - vnstat
@@ -35,7 +32,6 @@
     - ncdu
     - mc
     - speedtest-cli
-    - python-ndg-httpsclient
     - nethogs
     - nodejs-legacy
     - npm
@@ -46,11 +42,18 @@
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
   with_items:
+    - passlib
     - docker-py
     - certbot
     - ansible-toolbox
+    - ndg-httpsclient
     - dnspython
-    - netaddr    
+    - netaddr
+
+- name: Install common pip modules
+  pip: "name={{item}} state=latest executable=pip3"
+  with_items:
+    - netaddr
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
