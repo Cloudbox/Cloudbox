@@ -16,15 +16,21 @@
   },
   "FILENAME_SCORES": {
     "*Remux*": 20000,
-    "*1080p*BluRay*": 10800,
-    "*720p*BluRay*": 7200,
+    "*1080p*BluRay*": 15000,
+    "*720p*BluRay*": 10000,
     "*WEB*NTB*": 5000,
     "*WEB*VISUM*": 5000,
     "*WEB*KINGS*": 5000,
     "*WEB*CasStudio*": 5000,
     "*WEB*SiGMA*": 5000,
     "*WEB*QOQ*": 5000,
-    "*WEB*TROLLHD*": 2500
+    "*WEB*TROLLHD*": 2500,
+    "*WEB*TBS*": -1000,
+    "*HDTV*": -1000,
+    "*dvd*": -1000,
+    "*.avi": -1000,
+    "*.ts": -1000,
+    "*.vob": -5000
   },
   "PLEX_SECTIONS": {
     "Movies": 1,
