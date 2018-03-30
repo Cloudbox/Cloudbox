@@ -1,0 +1,37 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: heimdall
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: heimdall
+    image: linuxserver/heimdall
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8078:80"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "heimdall.{{domain}}"
+      VIRTUAL_PORT: 80
+      LETSENCRYPT_HOST: "heimdall.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/heimdall:/config"
+    networks:
+      - name: cloudbox
+        aliases:
+          - heimdall
+    restart_policy: always
+    state: started
