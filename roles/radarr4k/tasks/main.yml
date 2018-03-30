@@ -1,0 +1,50 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: radarr4k
+    state: absent
+
+- name: Create radarr4k directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/radarr4k
+
+- name: Create and start container
+  docker_container:
+    name: radarr4k
+    image: hotio/suitarr
+    pull: yes
+    published_ports:
+      - "127.0.0.1:7879:7878"
+    env:
+      APP: "radarr"
+      VERSION: "unstable"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      BACKUP: "no"
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "radarr4k.{{domain}}"
+      VIRTUAL_PORT: 7878
+      LETSENCRYPT_HOST: "radarr4k.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/radarr4k:/config"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+    networks:
+      - name: cloudbox
+        aliases:
+          - radarr4k
+    restart_policy: always
+    state: started
