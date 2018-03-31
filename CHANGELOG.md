@@ -42,6 +42,10 @@ Changelog Format:
 - Python modules
   * netaddr - for Ansible's `ipv4` filter.
   * dnspython - for Ansible's `dig` lookup.
+- [Heimdall](https://heimdall.site/) (Captain-NaCl)
+  - subdomain: `heimdall`
+  - install: `--tags install-heimdall`
+  - folder: `/opt/heimdall`
 
 
 ### Changed

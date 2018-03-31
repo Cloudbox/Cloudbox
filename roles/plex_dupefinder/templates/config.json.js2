@@ -1,7 +1,5 @@
 {
-  "AUTO_DELETE": false,
-  "CODEC_SCORES": {
-    "Unknown": 0,
+  "AUDIO_CODEC_SCORES": {
     "aac": 1000,
     "ac3": 1000,
     "dca": 2000,
@@ -12,8 +10,10 @@
     "mp3": 1000,
     "pcm": 2500,
     "truehd": 4500,
-    "wmapro": 200
+    "wmapro": 200,
+    "Unknown": 0
   },
+  "AUTO_DELETE": false,
   "FILENAME_SCORES": {
     "*Remux*": 20000,
     "*1080p*BluRay*": 15000,
@@ -38,6 +38,30 @@
   },
   "PLEX_SERVER": "https://plex.{{domain}}",
   "PLEX_TOKEN": "",
+  "SCORE_FILESIZE": true,
   "SKIP_LIST": [],
-  "SCORE_FILESIZE": true
+  "VIDEO_CODEC_SCORES": {
+    "h264": 10000,
+    "h265": 5000,
+    "hevc": 5000,
+    "mpeg1video": 250,
+    "mpeg2video": 250,
+    "mpeg4": 500,
+    "msmpeg4": 100,
+    "msmpeg4v2": 100,
+    "msmpeg4v3": 100,
+    "vc1": 3000,
+    "vp9": 1000,
+    "wmv2": 250,
+    "wmv3": 250,
+    "Unknown": 0
+  },
+  "VIDEO_RESOLUTION_SCORES": {
+    "4k": 20000,
+    "1080": 10000,
+    "720": 5000,
+    "480": 3000,
+    "sd": 1000,
+    "Unknown": 0
+  }
 }
