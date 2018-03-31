@@ -41,3 +41,4 @@
     - { role: traktarr, tags: ['install-traktarr', 'update-traktarr'] }
     - { role: plex_dupefinder, tags: ['install-plex_dupefinder', 'update-plex_dupefinder'] }
     - { role: radarr4k, tags: ['install-radarr4k', 'update-radarr4k'] }
+    - { role: heimdall, tags: ['install-heimdall', 'update-heimdall'] }
