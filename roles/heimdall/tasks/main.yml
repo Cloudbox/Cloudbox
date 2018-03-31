@@ -39,4 +39,4 @@
         aliases:
           - heimdall
     restart_policy: always
-state: started
+    state: started
