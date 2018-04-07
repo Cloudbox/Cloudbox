@@ -23,7 +23,7 @@
 
 
 - name: Build version tag
-  set_fact: rclone_version_tag="{{ ((rclone.version == 'latest') | ternary('current', 'v{{rclone.version}}')) }}"
+  set_fact: rclone_version_tag="{{ ((rclone.version == 'latest') | ternary('current', 'v{{ "%.2f"|format(rclone.version) }}')) }}"
 
 - name: "Unarchive rclone version: {{rclone.version}}"
   unarchive:
