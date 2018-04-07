@@ -50,7 +50,7 @@
 
 - name: Set custom hosts
   set_fact:
-    plex_custom_hosts: {  "mf.svc.nhl.com": "{{  (lazyman_ip|ipv4) | ternary(lazyman_ip,'127.0.0.1') }}",  "mlb-ws-mf.media.mlb.com": "{{  (lazyman_ip|ipv4) | ternary(lazyman_ip, '127.0.0.1') }}" }
+    plex_custom_hosts: { "playback.svcs.mlb.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip,'127.0.0.1') }}", "mf.svc.nhl.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip,'127.0.0.1') }}", "mlb-ws-mf.media.mlb.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip, '127.0.0.1') }}" }
 
 - name: Create and start container
   docker_container:
