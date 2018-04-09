@@ -1,4 +1,22 @@
 ---
+- name: Add DNS Record to Cloudflare
+  cloudflare_dns:
+    account_api_token: "{{cloudflare_api_token}}"
+    account_email: "{{email}}"
+    zone: "{{domain}}"
+    state: present
+    proxied: no
+    type: A
+    value: "{{ansible_default_ipv4.address}}"
+    record: resilio
+  when: not(
+      (cloudflare_api_token is undefined)
+      or
+      (cloudflare_api_token is none)
+      or
+      (cloudflare_api_token | trim == '')
+    )
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -6,7 +24,7 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-  
+
 - name: Stop and remove any existing container
   docker_container:
     name: resilio
