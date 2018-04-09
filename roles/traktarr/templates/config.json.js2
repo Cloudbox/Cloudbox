@@ -1,0 +1,130 @@
+{
+  "automatic": {
+    "movies": {
+      "anticipated": 5,
+      "interval": 12,
+      "popular": 2,
+      "trending": 3,
+      "boxoffice": 100
+    },
+    "shows": {
+      "anticipated": 10,
+      "interval": 20,
+      "popular": 1,
+      "trending": 1
+    }
+  },
+  "notifications": {
+    "verbose": true,
+    "pushover": {
+      "service": "pushover",
+      "app_token": "",
+      "user_token": ""
+    }
+  },
+  "filters": {
+    "shows": {
+      "allowed_countries": [
+        "us",
+        "gb",
+        "ca"
+      ],
+      "blacklisted_min_runtime": 15,
+      "blacklisted_min_year": 2010,
+      "blacklisted_max_year": 2019,
+      "blacklisted_genres": [
+        "animation",
+        "game-show",
+        "talk-show",
+        "home-and-garden",
+        "children",
+        "reality",
+        "anime",
+        "news",
+        "documentary",
+        "special-interest"
+      ],
+      "blacklisted_networks": [
+        "twitch",
+        "youtube",
+        "nickelodeon",
+        "hallmark",
+        "reelzchannel",
+        "disney",
+        "cnn",
+        "cbbc",
+        "the movie network",
+        "teletoon",
+        "cartoon network",
+        "espn",
+        "fox sports",
+        "yahoo!"
+      ]
+    },
+    "movies": {
+      "blacklisted_genres": [
+        "documentary",
+        "music"
+      ],
+      "blacklist_title_keywords": [
+        "untitled",
+        "barbie"
+      ],
+      "blacklisted_min_runtime": 60,
+      "blacklisted_min_year": 2000,
+      "blacklisted_max_year": 2019,
+      "allowed_countries": [
+        "us",
+        "gb",
+        "ca"
+      ]
+    }
+  },
+  "core": {
+    "debug": false
+  },
+  "radarr": {
+    "api_key": "",
+    "profile": "HD-1080p",
+    "url": "https://radarr.{{domain}}",
+    "root_folder": "/movies/"
+  },
+  "sonarr": {
+    "api_key": "",
+    "profile": "HD-1080p",
+    "url": "https://sonarr.{{domain}}",
+    "root_folder": "/tv/",
+    "tags": {
+      "amzn": [
+        "hbo",
+        "amc",
+        "usa network",
+        "tnt",
+        "starz",
+        "the cw",
+        "fx",
+        "fox",
+        "abc",
+        "nbc",
+        "cbs",
+        "tbs",
+        "amazon",
+        "syfy",
+        "cinemax",
+        "bravo",
+        "showtime",
+        "paramount network"
+      ],
+      "best": [
+        "netflix",
+        "freeform",
+        "bbc",
+        "sky",
+        "hulu"
+      ]
+    }
+  },
+  "trakt": {
+    "api_key": ""
+  }
+}

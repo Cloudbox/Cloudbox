@@ -18,7 +18,7 @@
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex', 'update-rclone'] }
     - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
-    - { role: scripts, tags: ['full', 'feeder', 'plex'] }
+    - { role: scripts, tags: ['full', 'feeder', 'plex', 'update-scripts'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder', 'update-unionfs_cleaner']}
     - { role: nzbget, tags: ['full', 'feeder', 'update-nzbget'] }
     - { role: rutorrent, tags: ['full', 'feeder', 'update-rutorrent'] }
@@ -38,3 +38,8 @@
     - { role: lidarr, tags: ['install-lidarr', 'update-lidarr'] }
     - { role: emby, tags: ['install-emby', 'update-emby'] }
     - { role: nzbhydra2, tags: ['install-nzbhydra2', 'update-nzbhydra2'] }
+    - { role: zsh, tags: ['install-zsh', 'update-zsh'] }
+    - { role: traktarr, tags: ['install-traktarr', 'update-traktarr'] }
+    - { role: plex_dupefinder, tags: ['install-plex_dupefinder', 'update-plex_dupefinder'] }
+    - { role: radarr4k, tags: ['install-radarr4k', 'update-radarr4k'] }
+    - { role: heimdall, tags: ['install-heimdall', 'update-heimdall'] }
