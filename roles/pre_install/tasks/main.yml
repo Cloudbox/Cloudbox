@@ -30,13 +30,38 @@
 - name: Stop all docker containers
   shell: "docker stop $(docker ps -aq)"
   ignore_errors: yes
-  when: plexdrive_service_check.stat.exists  
+  when: plexdrive_service_check.stat.exists
 
 - name: Stop plexdrive service
   systemd:
     name: plexdrive
     state: stopped
   when: plexdrive_service_check.stat.exists
+
+# This is handy for ssh/ftp, Webtools, etc; especially with a Feederbox/Plexbox setup.
+- name: "Create Cloudflare DNS Record for Cloudbox Type (\"{{cloudbox_type}}\")"
+  cloudflare_dns:
+    account_api_token: "{{cloudflare_api_token}}"
+    account_email: "{{email}}"
+    zone: "{{domain}}"
+    state: present
+    proxied: no
+    type: A
+    value: "{{ansible_default_ipv4.address}}"
+    record: "{{cloudbox_type}}"
+  when: not(
+      (cloudbox_type is undefined)
+      or
+      (cloudbox_type is none)
+      or
+      (cloudbox_type | trim == '')
+      or
+      (cloudflare_api_token is undefined)
+      or
+      (cloudflare_api_token is none)
+      or
+      (cloudflare_api_token | trim == '')
+    )
 
 # Will uncomment this when/if I ever figure out how to fix plexdrive_token_builder to generate a valid token that plexdrive is able to refresh after the 1hr has expired
 # currently it can use the supplied token for an hour, then it is unable to re-authorize - and not sure why as as far as I can tell, the script mimics plexdrive's auth url and token retrieval requests
@@ -140,4 +165,3 @@
 
 # - debug: msg="Successfully built and imported your config.json && token.json"
 #   when: plexdrive_token.stat.exists == False and plexdrive_built_token.stat.exists
-  
