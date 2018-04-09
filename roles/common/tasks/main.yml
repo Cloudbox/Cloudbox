@@ -38,6 +38,8 @@
     - glances
     - screen
     - tmux
+    - python-netaddr
+    - apache2-utils
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
@@ -48,12 +50,6 @@
     - ansible-toolbox
     - ndg-httpsclient
     - dnspython
-    - netaddr
-
-- name: Install common pip modules
-  pip: "name={{item}} state=latest executable=pip3"
-  with_items:
-    - netaddr
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
