@@ -30,7 +30,7 @@
 - name: Stop all docker containers
   shell: "docker stop $(docker ps -aq)"
   ignore_errors: yes
-  when: plexdrive_service_check.stat.exists  
+  when: plexdrive_service_check.stat.exists
 
 - name: Stop plexdrive service
   systemd:
@@ -140,4 +140,3 @@
 
 # - debug: msg="Successfully built and imported your config.json && token.json"
 #   when: plexdrive_token.stat.exists == False and plexdrive_built_token.stat.exists
-  
