@@ -15,14 +15,19 @@
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
 
-- name: Install docker
+- name: Release docker-ce from hold
+  dpkg_selections:
+    name: docker-ce
+    selection: install
+
+- name: Install docker-ce
   apt:
     name: docker-ce=17.09.0~ce-0~ubuntu
     state: installed
     update_cache: yes
     force: yes
 
-- name: Prevent docker-ce from being upgraded
+- name: Put docker-ce into hold
   dpkg_selections:
     name: docker-ce
     selection: hold
@@ -62,13 +67,14 @@
 
 - name: Install ctop
   get_url:
-    url:  https://github.com/bcicen/ctop/releases/download/v0.7/ctop-0.7-linux-arm64
+    url:  https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64
     dest: /usr/local/bin/ctop
     mode: 0755
     owner: root
     group: root
     force: yes
     validate_certs: no
+  tags: update-ctop
 
 - name: Create cloudbox network
   docker_network:

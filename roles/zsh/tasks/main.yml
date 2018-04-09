@@ -1,0 +1,28 @@
+---
+- name: Install required packages
+  apt: "name={{item}} state=installed"
+  with_items:
+    - zsh
+
+- name: Clone oh-my-zsh repo
+  git: "repo=https://github.com/robbyrussell/oh-my-zsh.git dest=/home/{{user}}/.oh-my-zsh"
+  sudo: no
+  register: cloning
+  ignore_errors: yes
+
+- name: Creating /home/{{user}}/.zshrc
+  copy:
+    src: /home/{{user}}/.oh-my-zsh/templates/zshrc.zsh-template
+    dest: /home/{{user}}/.zshrc
+    group: "{{user}}"
+    owner: "{{user}}"
+  when: cloning|success
+
+- name: Set zsh as default shell
+  user:
+    name: "{{user}}"
+    shell: /bin/zsh
+
+- name: Message
+  debug:
+    msg: "You will need to relogin for changes to take effect."

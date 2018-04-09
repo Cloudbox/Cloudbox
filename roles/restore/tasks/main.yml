@@ -1,7 +1,39 @@
 ---
-- name: Fail when no backup upload tool has been enabled
+- name: "Check cloudbox.tar exists"
+  stat:
+    path: "{{backup.tar_dest}}/cloudbox.tar"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: cloudbox_tar1
+
+- name: Fail when no backup upload tool has been enabled or no local backup copy exists
   fail: msg="You must set atleast one backup.use_* option in order to perform a restore"
-  when: backup.use_rclone == False and backup.use_rsync == False
+  when: (backup.use_rclone == False and backup.use_rsync == False) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
+
+- name: Check rclone.conf exists
+  stat:
+    path: "{{playbook_dir}}/rclone.conf"
+  register: rclone_conf_playbook_dir
+
+- name: Check rclone.conf exists
+  stat:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+  register: rclone_conf_user_dir
+
+- name: Fail when no rclone.conf is found
+  fail: msg="You must place your rclone.conf file in {{playbook_dir}} or setup Rclone via rclone config"
+  when: backup.use_rclone and not(
+      (rclone_conf_playbook_dir.stat.exists)
+      or
+      (rclone_conf_user_dir.stat.exists)
+    )
+
+- name: Ensure unzip is installed
+  apt:
+    name: unzip
+    state: installed
 
 - name: "Check {{backup.tar_dest}} exists"
   stat:
@@ -16,35 +48,41 @@
   file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
   when: backup_location.stat.exists == False
 
-- name: Ensure unzip is installed
-  apt:
-    name: unzip
-    state: installed
-
-- name: Check rclone.conf exists
-  stat:
-    path: "{{playbook_dir}}/rclone.conf"
-  register: rclone_conf
-
 - name: Check rclone installed
   stat:
-    path: "/opt/rclone/rclone"
+    path: "/usr/bin/rclone"
   register: rclone_bin
 
 - name: Install rclone
   include_role:
     name: rclone
-  when: backup.use_rclone and rclone_bin.stat.exists == False and rclone_conf.stat.exists
+  when: backup.use_rclone and rclone_bin.stat.exists == False
 
-- name: Fail because no rclone and no rclone.conf
-  fail: msg="rclone was not installed and there was no rclone.conf in the same path as cloudbox.yml, so could not install rclone automatically..."
-  when: backup.use_rclone and rclone_bin.stat.exists == False and rclone_conf.stat.exists == False
+- name: Ensure rclone folders exists
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  with_items:
+    - "/home/{{user}}/.config/rclone"
+
+- name: "Copy '{{playbook_dir}}/rclone.conf' to '/home/{{user}}/.config/rclone/rclone.conf'"
+  copy:
+    src: "{{playbook_dir}}/rclone.conf"
+    dest: "/home/{{user}}/.config/rclone/rclone.conf"
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+  when: rclone_conf_playbook_dir.stat.exists
+
+- name: "Remove '{{playbook_dir}}/rclone.conf'"
+  file:
+    path: "{{playbook_dir}}/rclone.conf"
+    state: absent
+  when: rclone_conf_playbook_dir.stat.exists
 
 - name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: true
   become_user: "{{user}}"
-  when: (backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)
+  when: ((backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
 - name: "Fetch cloudbox.tar from {{backup.rsync_dest}}"
   synchronize:
@@ -54,7 +92,7 @@
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
   become: true
   become_user: "{{user}}"
-  when: backup.use_rclone == False and backup.use_rsync
+  when: (backup.use_rclone == False and backup.use_rsync) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
 - name: "Check cloudbox.tar exists"
   stat:
@@ -63,11 +101,11 @@
     get_checksum: false
     get_md5: false
     get_mime: false
-  register: cloudbox_tgz
+  register: cloudbox_tar2
 
 - name: "Fail cloudbox.tar doesnt exist"
   fail: msg="There must have been an issue retrieving the cloudbox.tar file... as it does not exist at {{backup.tar_dest}}/cloudbox.tar"
-  when: cloudbox_tgz.stat.exists == False
+  when: cloudbox_tar2.stat.exists == False
 
 - name: "Wait for 10 seconds before unarchiving"
   wait_for:
@@ -76,6 +114,12 @@
 - name: "Unarchive cloudbox.tar to /opt"
   shell: "tar -xf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
 
+- name: Remove cloudbox.tar
+  file:
+    path: "{{backup.tar_dest}}/cloudbox.tar"
+    state: absent
+  when: backup.keep_local_copy == False
+
 - name: Set /opt permissions
   shell: "chmod -R 775 /opt"
 
@@ -83,4 +127,4 @@
   shell: "chown -R {{user}}:{{user}} /opt"
 
 - debug:
-    msg: Finished unarchiving cloudbox.tar to /opt, you should now be ready to perform an installation!
+    msg: Finished unarchiving the contents of cloudbox.tar to /opt/, you should now be ready to perform an installation (i.e. Full, Plex, or Feeder)!

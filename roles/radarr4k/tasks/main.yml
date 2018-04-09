@@ -9,34 +9,42 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: ombi
+    name: radarr4k
     state: absent
 
-- name: Create ombi directories
+- name: Create radarr4k directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/ombi
+    - /opt/radarr4k
 
 - name: Create and start container
   docker_container:
-    name: ombi
-    image: "linuxserver/ombi"
+    name: radarr4k
+    image: hotio/suitarr
     pull: yes
     published_ports:
-      - "127.0.0.1:3579:3579"
+      - "127.0.0.1:7879:7878"
     env:
+      APP: "radarr"
+      VERSION: "unstable"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "ombi.{{domain}}"
-      VIRTUAL_PORT: 3579
-      LETSENCRYPT_HOST: "ombi.{{domain}}"
+      BACKUP: "no"
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "radarr4k.{{domain}}"
+      VIRTUAL_PORT: 7878
+      LETSENCRYPT_HOST: "radarr4k.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/ombi:/config"
+      - "/opt/radarr4k:/config"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox
         aliases:
-          - ombi
+          - radarr4k
     restart_policy: always
     state: started

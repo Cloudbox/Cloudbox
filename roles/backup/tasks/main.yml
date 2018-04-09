@@ -16,9 +16,10 @@
       state: touch
       owner: "{{user}}"
       group: "{{user}}"
+      mode: 0775
     when: backup_lock.stat.exists == False
 
-  - name: "Save Start Time"
+  - name: "Get Start Time"
     set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
 
   - name: "Pushover Message: Started Cloudbox backup task."
@@ -46,9 +47,26 @@
     register: backup_location
 
   - name: "Create backup location {{backup.tar_dest}}"
-    file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
+    file:
+      path: "{{backup.tar_dest}}"
+      state: directory
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      recurse: yes
     when: backup_location.stat.exists == False
 
+  - name: "Copy files to \"{{backup.tar_dest}}\""
+    copy:
+      src: "{{item}}"
+      dest: "{{backup.tar_dest}}"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+    with_items:
+     - "{{playbook_dir}}/settings.yml"
+     - "/home/{{user}}/.config/rclone/rclone.conf"
 
   - name: "Check {{backup.tar_dest}}/cloudbox.tar exists"
     stat:
@@ -57,41 +75,27 @@
       get_checksum: false
       get_md5: false
       get_mime: false
-    register: backup_previous_tgz
+    register: backup_previous
 
+  # Use mv because Ansible copy & delete takes a lot longer.
   - name: "Moving cloudbox.tar to cloudbox.tar.backup"
     shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
-    when: backup_previous_tgz.stat.exists
+    when: backup_previous.stat.exists
 
-  - name: "Remove previous cloudbox.tar"
-    file:
-      path: "{{backup.tar_dest}}/cloudbox.tar"
-      state: absent
-    when: backup_previous_tgz.stat.exists
-
-  - name: "Copy settings.xml to /opt for inclusion in backup"
-    copy:
-      src: "{{playbook_dir}}/settings.yml"
-      dest: "/opt/settings.yml"
-      force: yes
-      group: "{{user}}"
-      owner: "{{user}}"
-      mode: 0775
-
-  - name: "Copy /etc/systemd/system to /opt/systemd for inclusion in backup"
+  - name: "Copy '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
     copy:
       src: "/etc/systemd/system"
-      dest: "/opt/systemd"
-      force: yes
-      group: "{{user}}"
+      dest: "/opt/systemd-backup"
       owner: "{{user}}"
+      group: "{{user}}"
       mode: 0775
+      force: yes
 
   - name: "Gathering list of running containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
     register: docker_running_containers
     ignore_errors: yes
-    
+
   - name: "Stop all containers"
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
@@ -147,11 +151,11 @@
       get_checksum: false
       get_md5: false
       get_mime: false
-    register: backup_new_tgz
+    register: backup_new
 
-  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
+  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
     pushover:
-      msg: "Backup archive created (file size: {{ ( ( backup_new_tgz.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
+      msg: "Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }}GB)."
       app_token: "{{backup.pushover_app_token}}"
       user_key: "{{backup.pushover_user_key}}"
     when: not(
@@ -167,8 +171,14 @@
         or
         (backup.pushover_user_key | trim == '')
         or
-        (backup_new_tgz is undefined)
+        (backup_new is undefined)
       )
+
+  - name: "Remove cloudbox.tar.backup from \"{{backup.tar_dest}}\""
+    file:
+      path: "{{backup.tar_dest}}/cloudbox.tar.backup"
+      state: absent
+    when: backup_new.stat.exists
 
   - name: Start plexdrive service
     systemd:
@@ -213,24 +223,43 @@
     wait_for:
       timeout: 10
 
-  - name: "Set {{backup.tar_dest}} permissions"
-    shell: "chmod -R 775 {{backup.tar_dest}}"
+  # Reset mod dates to avoid conflicts during rclone backup. Ansible module doesn't touch folder contents via wildcard.
+  - name: "Reset permissions and mod dates to files in {{backup.tar_dest}}"
+    file:
+      path: "{{backup.tar_dest}}/{{item}}"
+      state: touch
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0755
+      force: yes
+    with_items:
+     - "settings.yml"
+     - "rclone.conf"
+     - "cloudbox.tar"
 
-  - name: "Set {{backup.tar_dest}} owner"
-    shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}"
-
-  - name: "Check rclone cloudbox.tar datestamp"
-    shell: "rclone lsl {{backup.rclone_dest}}/cloudbox.tar|cut -d ' ' -f 2,3|cut -d '.' -f 1|sed s/' '/_/g|sed s/':'/./g"
+  # Due to a touch command in a previous backup, all files on backup.rclone_dest have same mod dates, therefore, only one file's mod date is needed.
+  - name: "Get datestamp for previous \"{{backup.rclone_dest}}/cloudbox.tar\""
+    shell: "rclone lsl {{ backup.rclone_dest }}/cloudbox.tar | cut -d ' ' -f 2,3 | cut -d '.' -f 1 | sed s/' '/_/g | sed s/':'/./g"
+    become: true
+    become_user: "{{user}}"
     register: rclone_timestamp
-    when: backup.use_rclone
-
-  - name: "Move off old cloudbox.tar on \"{{backup.rclone_dest}}\""
-    shell: "rclone moveto '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.rclone_dest}}/cloudbox.{{rclone_timestamp.stdout}}.tar' 2>/dev/null"
     ignore_errors: yes
     when: backup.use_rclone
 
+  # If rclone_timestamp is blank (would happen if cloudbox.tar did not exist), default the naming of other files to 'filename.old.ext'.
+  - name: "Archive previous files in \"{{backup.rclone_dest}}/\""
+    shell: "rclone moveto '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/{{ item }}_{{ rclone_timestamp.stdout | default('old', true) }}' 2>/dev/null"
+    become: true
+    become_user: "{{user}}"
+    ignore_errors: yes
+    when: backup.use_rclone
+    with_items:
+     - "settings.yml"
+     - "rclone.conf"
+     - "cloudbox.tar"
+
   - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
-    command: "rclone copy '{{backup.tar_dest}}/cloudbox.tar' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
     become: true
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -287,7 +316,7 @@
         (backup.use_rsync == false)
       )
 
-  - name: "Save End Time"
+  - name: "Get End Time"
     set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
 
   - name: "Pushover Message: Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
@@ -308,6 +337,12 @@
         or
         (backup.pushover_user_key | trim == '')
       )
+
+  - name: "Remove cloudbox.tar from \"{{backup.tar_dest}}\""
+    file:
+      path: "{{backup.tar_dest}}/cloudbox.tar"
+      state: absent
+    when: backup_new.stat.exists and backup.keep_local_copy == False
 
   - name: "Get ansible-playbook binary path"
     shell: "which ansible-playbook"

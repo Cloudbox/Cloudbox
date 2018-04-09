@@ -13,9 +13,6 @@
     - unrar
     - unzip
     - p7zip
-    - python-pip
-    - python3-pip
-    - python-passlib
     - curl
     - sqlite3
     - vnstat
@@ -35,18 +32,28 @@
     - ncdu
     - mc
     - speedtest-cli
-    - python-ndg-httpsclient
     - nethogs
     - nodejs-legacy
     - npm
     - glances
+    - screen
+    - tmux
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
   with_items:
+    - passlib
     - docker-py
     - certbot
-    - "ansible-toolbox"
+    - ansible-toolbox
+    - ndg-httpsclient
+    - dnspython
+    - netaddr
+
+- name: Install common pip modules
+  pip: "name={{item}} state=latest executable=pip3"
+  with_items:
+    - netaddr
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
@@ -55,13 +62,14 @@
 
 - name: Install hostess
   get_url:
-    url:  https://github.com/cbednarski/hostess/releases/download/v0.2.0/hostess_linux_amd64
+    url:  https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64
     dest: /usr/local/bin/hostess
     mode: 0755
     owner: root
     group: root
     force: yes
     validate_certs: no
+  tags: update-hostess
 
 - name: Install ngrok
   unarchive:
@@ -70,6 +78,7 @@
     copy: no
     mode: 0775
     validate_certs: no
+  tags: update-ngrok
 
 - name: Create common directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
@@ -79,15 +88,6 @@
     - /mnt/local/Media/TV
     - /mnt/local/Media/Movies
     - /opt
-    - /opt/scripts
-    - /opt/scripts/torrent
-    - /opt/scripts/nzb
-    - /opt/scripts/nginx
-    - /opt/scripts/plex
-    - /opt/scripts/plex_autoscan
-    - /opt/scripts/cloudflare
-    - /opt/scripts/docker
-    - /opt/scripts/frontail
 
 - name: Check plexdrive mount folder exist
   stat:
