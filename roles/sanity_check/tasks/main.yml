@@ -1,5 +1,6 @@
 ---
-- debug:
+- name: System Info
+  debug:
     msg: "System is running {{ ansible_distribution }} {{ ansible_distribution_version }}"
   tags: always
 
@@ -13,3 +14,18 @@
     that:
       - tags is defined
     msg: "You must supply a tag via '--tags OPTION' (e.g. --tags full/feeder/plex/backup/restore/update-XXXX/install-XXXX)"
+
+- name: "Set Cloudbox Type to \"plexbox\""
+  set_fact:
+    cloudbox_type: "plexbox"
+  tags: plex
+
+- name: "Set Cloudbox Type to \"feederbox\""
+  set_fact:
+    cloudbox_type: "feederbox"
+  tags: feeder
+
+- name: "Set Cloudbox Type to \"cloudbox\" (i.e. full)"
+  set_fact:
+    cloudbox_type: "cloudbox"
+  tags: full
