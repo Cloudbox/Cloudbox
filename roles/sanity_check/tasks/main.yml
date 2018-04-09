@@ -10,8 +10,10 @@
   tags: always
 
 - name: Verify a tag was provided
-  fail: msg="You must supply a tag, e.g. full/feeder/plex/backup/restore via the --tags option"
-  when: tags is not defined
+  assert:
+    that:
+      - tags is defined
+    msg: "You must supply a tag via '--tags OPTION' (e.g. --tags full/feeder/plex/backup/restore/update-XXXX/install-XXXX)"
 
 - name: "Set Cloudbox Type to \"plexbox\""
   set_fact:
