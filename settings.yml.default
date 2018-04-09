@@ -3,6 +3,7 @@ user: seed
 passwd: password123
 domain: testcloudbox.ml
 email: your@email.com
+cloudflare_api_token:
 nzbget:
   downloads: /mnt/local/downloads/nzbget
 rutorrent:
