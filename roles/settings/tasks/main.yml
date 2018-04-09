@@ -37,6 +37,7 @@
   args:
     executable: /bin/bash
   register: settings_yml_diff_result
+  ignore_errors: yes
 
 - name: Save results of above
   set_fact: settings_yml_diff_check=False
@@ -64,4 +65,3 @@
 - name: Check 'settings-updater.py' run status for new settings
   fail: msg="The script 'settings_updater.py' added new settings. Check `settings-updater.log` for details of new setting names added."
   when: settings_updater.rc == 2
-
