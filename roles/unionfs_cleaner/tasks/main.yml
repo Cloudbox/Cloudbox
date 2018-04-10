@@ -9,7 +9,7 @@
   when: unionfs_cleaner_service.stat.exists
 
 - name: Create unionfs_cleaner directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/unionfs_cleaner
     

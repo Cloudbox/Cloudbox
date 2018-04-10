@@ -86,4 +86,4 @@
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
-    recurse: true
+    recurse: yes
