@@ -20,7 +20,7 @@
     shell: /bin/bash
 
 - name: "Make cloudbox folder readable/writeable by {{user}}"
-  file: "path={{playbook_dir}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  file: "path={{playbook_dir}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
 
 - name: Check plexdrive.service exists
   stat:
@@ -76,7 +76,7 @@
 #   when: plexdrive_token.stat.exists == False and (plexdrive.client_id|default("") == "" or plexdrive.client_secret|default("") == "")
 
 # - name: "Install pip"
-#   apt: "name=python-pip state=installed"
+#   apt: "name=python-pip state=present"
 #   when: plexdrive_token.stat.exists == False
 
 # - name: "Install python requests module"
@@ -95,7 +95,7 @@
 
 # - name: "Generate plexdrive authorization link"
 #   command: "{{playbook_dir}}/plexdrive_token_builder.py {{plexdrive.client_id}} {{plexdrive.client_secret}}"
-#   become: true
+#   become: yes
 #   become_user: "{{user}}"
 #   register: plexdrive_auth_link
 #   when: plexdrive_token.stat.exists == False
@@ -108,7 +108,7 @@
 
 # - name: "Build plexdrive config.json && token.json"
 #   command: "{{playbook_dir}}/plexdrive_token_builder.py {{plexdrive.client_id}} {{plexdrive.client_secret}} {{plexdrive_auth_code.user_input}}"
-#   become: true
+#   become: yes
 #   become_user: "{{user}}"
 #   register: plexdrive_auth_link
 #   when: plexdrive_token.stat.exists == False
@@ -124,7 +124,7 @@
 #   when: plexdrive_token.stat.exists == False and plexdrive_built_token.stat.exists == False
 
 # - name: "Ensure plexdrive folder exists in /opt"
-#   file: "path=/opt/plexdrive state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+#   file: "path=/opt/plexdrive state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
 #   when: plexdrive_token.stat.exists == False and plexdrive_built_token.stat.exists
 
 # - name: Import generated token.json

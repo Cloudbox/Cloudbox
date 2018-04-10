@@ -1,6 +1,6 @@
 ---
 - name: Install required packages
-  apt: "name={{item}} state=installed"
+  apt: "name={{item}} state=present"
   with_items:
     - lsb-release
     - figlet
