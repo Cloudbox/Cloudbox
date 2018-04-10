@@ -8,7 +8,7 @@
   register: gid
 
 - name: Install common packages
-  apt: "name={{item}} state=installed"
+  apt: "name={{item}} state=present"
   with_items:
     - unrar
     - unzip
@@ -97,11 +97,15 @@
     mode: 0755
     owner: "{{user}}"
     group: "{{user}}"
-    recurse: true
+    recurse: yes
   when: plexdrive_mnt.stat.exists == False
 
 - name: Set /opt permissions
   shell: "chmod -R 775 /opt"
+  args:
+    warn: no
 
 - name: Set /opt owner
   shell: "chown -R {{user}}:{{user}} /opt"
+  args:
+    warn: no

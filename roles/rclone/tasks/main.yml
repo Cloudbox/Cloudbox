@@ -17,10 +17,10 @@
   shell: "id -g {{user}}"
   register: gid
 
-
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
-
+  args:
+    warn: no
 
 - name: Build version tag
   set_fact: rclone_version_tag="{{ ((rclone.version == 'latest') | ternary('current', 'v{{ "%.2f"|format(rclone.version) }}')) }}"

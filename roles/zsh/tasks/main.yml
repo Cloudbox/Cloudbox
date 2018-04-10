@@ -1,12 +1,12 @@
 ---
 - name: Install required packages
-  apt: "name={{item}} state=installed"
+  apt: "name={{item}} state=present"
   with_items:
     - zsh
 
 - name: Clone oh-my-zsh repo
   git: "repo=https://github.com/robbyrussell/oh-my-zsh.git dest=/home/{{user}}/.oh-my-zsh"
-  sudo: no
+  become: no
   register: cloning
   ignore_errors: yes
 

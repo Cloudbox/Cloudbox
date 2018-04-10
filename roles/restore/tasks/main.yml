@@ -33,7 +33,7 @@
 - name: Ensure unzip is installed
   apt:
     name: unzip
-    state: installed
+    state: present
 
 - name: "Check {{backup.tar_dest}} exists"
   stat:
@@ -45,7 +45,7 @@
   register: backup_location
 
 - name: "Create backup location {{backup.tar_dest}}"
-  file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true
+  file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
   when: backup_location.stat.exists == False
 
 - name: Check rclone installed
@@ -59,7 +59,7 @@
   when: backup.use_rclone and rclone_bin.stat.exists == False
 
 - name: Ensure rclone folders exists
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "/home/{{user}}/.config/rclone"
 
@@ -82,7 +82,7 @@
 
 - name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
-  become: true
+  become: yes
   become_user: "{{user}}"
   when: ((backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
@@ -92,7 +92,7 @@
     dest: "{{backup.tar_dest}}/"
     rsync_opts:
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
-  become: true
+  become: yes
   become_user: "{{user}}"
   when: (backup.use_rclone == False and backup.use_rsync) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 

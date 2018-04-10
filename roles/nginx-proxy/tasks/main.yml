@@ -8,7 +8,7 @@
   register: gid
 
 - name: Create nginx-proxy directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/nginx-proxy
     - /opt/nginx-proxy/htpasswd
@@ -29,7 +29,7 @@
 - name: Create and start container
   docker_container:
     name: nginx-proxy
-    image: "jwilder/nginx-proxy@sha256:76d9ed11c131fadc7546e3b9b085970e13ff45186171b975ad60830f5ca0d689" 
+    image: "jwilder/nginx-proxy@sha256:76d9ed11c131fadc7546e3b9b085970e13ff45186171b975ad60830f5ca0d689"
     pull: yes
     published_ports:
       - "80:80"
