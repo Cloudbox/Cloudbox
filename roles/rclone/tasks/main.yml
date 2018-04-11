@@ -25,9 +25,9 @@
 - name: Build version tag
   set_fact: rclone_version_tag="{{ ((rclone.version == 'latest') | ternary('current', 'v{{ "%.2f"|format(rclone.version) }}')) }}"
 
-- name: "Unarchive rclone version: {{rclone.version}}"
+- name: "Unarchive rclone version: {{rclone_version_tag}}"
   unarchive:
-    src: https://downloads.rclone.org/rclone-{{ rclone_version_tag }}-linux-amd64.zip
+    src: "https://downloads.rclone.org/{{ '' if rclone.version == 'latest' else rclone_version_tag + '/' }}rclone-{{ rclone_version_tag }}-linux-amd64.zip"
     dest: /tmp
     copy: no
     validate_certs: no
