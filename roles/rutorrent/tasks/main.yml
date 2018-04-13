@@ -104,7 +104,6 @@
 - name: Stop container to customize rtorrent.rc
   docker_container:
     name: rutorrent
-    image: horjulf/rutorrent-autodl
     state: stopped
   when: rtorrent_rc.stat.exists == False
 

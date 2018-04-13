@@ -6,7 +6,7 @@
 
 - name: Verify system is Ubuntu 16.04
   fail: msg="This playbook is specifically designed for Ubuntu 16.04. Please dont bother removing this sanity check as I dont want to be mass closing non issues because people have decided to bypass this check. If you do, your on your own."
-  when: ansible_distribution_version is version_compare('16.04', '!=')
+  when: ansible_distribution_version | version_compare('16.04', '!=')
   tags: always
 
 - name: Verify a tag was provided
