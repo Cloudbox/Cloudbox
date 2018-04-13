@@ -1,6 +1,6 @@
 ---
 - name: Create plex_dupefinder directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/plex_dupefinder
     
