@@ -16,7 +16,7 @@
     dest: /home/{{user}}/.zshrc
     group: "{{user}}"
     owner: "{{user}}"
-  when: cloning|success
+  when: cloning is success
 
 - name: Set zsh as default shell
   user:
