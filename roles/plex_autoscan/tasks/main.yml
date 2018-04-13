@@ -9,7 +9,7 @@
   when: plex_autoscan_service.stat.exists
 
 - name: Create plex_autoscan directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=true"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/plex_autoscan
 
