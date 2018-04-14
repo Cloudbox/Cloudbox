@@ -50,9 +50,8 @@
     name: plexdrive
     state: stopped
   when: plexdrive_service_check.stat.exists
-
-# This is handy for ssh/ftp, Webtools, etc; especially with a Feederbox/Plexbox setup.
-- name: "Setting CloudFlare DNS Record for Cloudbox Type"
+  
+- name: Setting CloudFlare DNS Record for Cloudbox Type
   include_role:
     name: cloudflare
   vars:
