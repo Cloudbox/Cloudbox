@@ -1,21 +1,9 @@
 ---
-- name: Add DNS Record to Cloudflare
-  cloudflare_dns:
-    account_api_token: "{{cloudflare_api_token}}"
-    account_email: "{{email}}"
-    zone: "{{domain}}"
-    state: present
-    proxied: no
-    type: A
-    value: "{{ansible_default_ipv4.address}}"
-    record: sonarr
-  when: not(
-      (cloudflare_api_token is undefined)
-      or
-      (cloudflare_api_token is none)
-      or
-      (cloudflare_api_token | trim == '')
-    )
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: sonarr
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
