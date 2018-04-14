@@ -44,3 +44,5 @@
     - { role: radarr4k, tags: ['install-radarr4k', 'update-radarr4k'] }
     - { role: heimdall, tags: ['install-heimdall', 'update-heimdall'] }
     - { role: thelounge, tags: ['install-thelounge', 'update-thelounge'] }
+    - { role: netdata, tags: ['install-netdata', 'update-netdata'] }
+    
