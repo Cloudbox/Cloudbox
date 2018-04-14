@@ -1,17 +1,17 @@
 {
   "automatic": {
     "movies": {
-      "anticipated": 5,
-      "interval": 12,
-      "popular": 2,
-      "trending": 3,
-      "boxoffice": 100
+      "anticipated": 3,
+      "boxoffice": 10,
+      "interval": 24,
+      "popular": 3,
+      "trending": 2
     },
     "shows": {
       "anticipated": 10,
-      "interval": 20,
+      "interval": 48,
       "popular": 1,
-      "trending": 1
+      "trending": 2
     }
   },
   "notifications": {
@@ -94,35 +94,7 @@
     "profile": "HD-1080p",
     "url": "https://sonarr.{{domain}}",
     "root_folder": "/tv/",
-    "tags": {
-      "amzn": [
-        "hbo",
-        "amc",
-        "usa network",
-        "tnt",
-        "starz",
-        "the cw",
-        "fx",
-        "fox",
-        "abc",
-        "nbc",
-        "cbs",
-        "tbs",
-        "amazon",
-        "syfy",
-        "cinemax",
-        "bravo",
-        "showtime",
-        "paramount network"
-      ],
-      "best": [
-        "netflix",
-        "freeform",
-        "bbc",
-        "sky",
-        "hulu"
-      ]
-    }
+    "tags": {}
   },
   "trakt": {
     "api_key": ""
