@@ -19,6 +19,19 @@
     append: yes
     shell: /bin/bash
 
+- name: Check sudoers exists
+  stat:
+    path: "/etc/sudoers"
+  register: sudoers
+
+- name: Set sudo group to NOPASSWD
+  lineinfile:
+    path: "/etc/sudoers"
+    regexp: '^%sudo\s'
+    line: '%sudo   ALL=(ALL) NOPASSWD:ALL'
+    state: present
+  when: sudoers.stat.exists == True
+
 - name: "Make cloudbox folder readable/writeable by {{user}}"
   file: "path={{playbook_dir}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
 
