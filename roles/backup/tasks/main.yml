@@ -40,6 +40,8 @@
         or
         (backup.pushover_user_key | trim == '')
       )
+    ignore_errors: yes
+
 
   - name: "Check {{backup.tar_dest}} exists"
     stat:
@@ -118,6 +120,8 @@
         or
         (backup.pushover_user_key | trim == '')
       )
+    ignore_errors: yes
+
 
   - name: Check if plexdrive is running
     command: systemctl status plexdrive
@@ -173,6 +177,7 @@
         or
         (backup_new is undefined)
       )
+    ignore_errors: yes
 
   - name: "Remove cloudbox.tar.backup from \"{{backup.tar_dest}}\""
     file:
@@ -218,6 +223,7 @@
         or
         (backup.pushover_user_key | trim == '')
       )
+    ignore_errors: yes
 
   - name: "Wait for 10 seconds before uploads"
     wait_for:
@@ -284,6 +290,7 @@
         or
         (backup.use_rclone == false)
       )
+    ignore_errors: yes
 
   - name: "Upload backup with rsync to \"{{backup.rsync_dest}}\""
     synchronize:
@@ -315,6 +322,7 @@
         or
         (backup.use_rsync == false)
       )
+    ignore_errors: yes
 
   - name: "Get End Time"
     set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
@@ -337,6 +345,7 @@
         or
         (backup.pushover_user_key | trim == '')
       )
+    ignore_errors: yes
 
   - name: "Remove cloudbox.tar from \"{{backup.tar_dest}}\""
     file:
