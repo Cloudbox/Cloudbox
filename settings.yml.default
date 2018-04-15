@@ -15,7 +15,7 @@ plex:
 plex_autoscan:
   ip: 0.0.0.0
 rclone:
-  version: 1.38
+  version: latest
 unionfs_cleaner:
   max_local_gigabytes: 200
   size_check_mins: 30
