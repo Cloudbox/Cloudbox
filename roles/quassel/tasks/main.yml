@@ -1,0 +1,44 @@
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: quassel
+
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: quassel
+    state: absent
+
+- name: Create quassel directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/quassel
+
+- name: Create and start container
+  docker_container:
+    name: quassel
+    image: linuxserver/quassel-core
+    pull: yes
+    published_ports:
+      - "4242:4242"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/quassel:/config"
+    restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - quassel
+    state: started

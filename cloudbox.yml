@@ -46,4 +46,5 @@
     - { role: thelounge, tags: ['install-thelounge', 'update-thelounge'] }
     - { role: netdata, tags: ['install-netdata', 'update-netdata'] }
     - { role: znc, tags: ['install-znc', 'update-znc'] }
+    - { role: quassel, tags: ['install-quassel', 'update-quassel'] }
     
