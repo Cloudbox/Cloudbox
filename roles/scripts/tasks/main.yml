@@ -3,7 +3,6 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/scripts
-    - /opt/scripts/cloudflare
     - /opt/scripts/docker
     - /opt/scripts/frontail
     - /opt/scripts/nzb
@@ -60,25 +59,6 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-
-- name: Check if cloudflared.py exists
-  stat:
-    path: "/opt/scripts/cloudflare/cloudflared.py"
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: cloudflare_script
-
-- name: Import cloudflared.py
-  copy:
-    src: "cloudflared.py"
-    dest: "/opt/scripts/cloudflare/cloudflared.py"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
-  when: cloudflare_script.stat.exists == False
 
 - name: Import plex_autoscan_url.sh
   copy:
