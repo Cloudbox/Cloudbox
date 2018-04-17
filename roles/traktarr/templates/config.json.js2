@@ -64,11 +64,16 @@
     "movies": {
       "blacklisted_genres": [
         "documentary",
-        "music"
+        "music",
+        "short",
+        "sporting-event",
+        "film-noir",
+        "fan-film"
       ],
       "blacklist_title_keywords": [
         "untitled",
-        "barbie"
+        "barbie",
+        "ufc fight night"
       ],
       "blacklisted_min_runtime": 60,
       "blacklisted_min_year": 2000,
