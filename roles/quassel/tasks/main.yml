@@ -22,6 +22,26 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/quassel
+    - /opt/scripts/quassel
+
+- name: Check clear_backlog.py exists
+  stat:
+    path: "/opt/scripts/quassel/clear_backlog.py"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: quassel_clear_backlog
+
+- name: Import clear_backlog.py
+  copy:
+    src: "clear_backlog.py"
+    dest: "/opt/scripts/quassel/clear_backlog.py"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: quassel_clear_backlog.stat.exists == False
 
 - name: Create and start container
   docker_container:
