@@ -4,7 +4,8 @@ import os
 import sys
 from logging.handlers import RotatingFileHandler
 
-import ruamel.yaml
+from ruamel import yaml
+from ruamel.yaml.comments import CommentedMap
 
 ############################################################
 # INIT
@@ -53,7 +54,7 @@ def init_logging(playbook_path):
 def load_settings(file_to_load):
     settings = None
     try:
-        settings = ruamel.yaml.round_trip_load(open(file_to_load, "r").read())
+        settings = yaml.round_trip_load(open(file_to_load, "r"), preserve_quotes=True)
     except Exception:
         log.exception("Exception loading %s: ", file_to_load)
     return settings
@@ -63,25 +64,28 @@ def dump_settings(settings, file_to_dump):
     dumped = False
     try:
         with open(file_to_dump, 'w') as fp:
-            fp.write(ruamel.yaml.round_trip_dump(settings, indent=2, block_seq_indent=2, explicit_start=True))
+            yaml.round_trip_dump(settings, fp, indent=2, block_seq_indent=2,
+                                 explicit_start=True, default_flow_style=False)
         dumped = True
     except Exception:
         log.exception("Exception dumping upgraded %s: ", file_to_dump)
     return dumped
 
 
-def upgrade_settings(defaults, current):
+def upgrade_settings(defaults, current, key=None):
     upgraded = False
-    res = current.copy()
+    res = CommentedMap()
     for k, v in defaults.items():
         if k not in current:
             res[k] = v
             upgraded = True
-            log.info("Added %s", k)
+            log.info("Added field %s%s", k, '' if not key else ' to %s' % key)
+        else:
+            res[k] = current[k]
 
         if hasattr(v, 'items'):
             if k in current:
-                sub_upgrade, res[k] = upgrade_settings(v, current[k])
+                sub_upgrade, res[k] = upgrade_settings(v, current[k], k)
                 if sub_upgrade:
                     upgraded = True
             else:
