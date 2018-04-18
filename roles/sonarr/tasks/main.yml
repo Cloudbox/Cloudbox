@@ -1,4 +1,10 @@
 ---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: sonarr
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid

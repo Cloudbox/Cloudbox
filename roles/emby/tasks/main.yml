@@ -1,4 +1,10 @@
 ---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: emby
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -26,7 +32,6 @@
   stat:
     path: "/dev/dri/renderD128"
   register: dev_dri
-
 
 - name: Create and start container
   docker_container:
@@ -69,4 +74,4 @@
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
-    recurse: true
+    recurse: yes

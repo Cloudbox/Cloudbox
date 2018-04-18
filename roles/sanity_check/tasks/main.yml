@@ -1,11 +1,31 @@
 ---
-- debug:
+- name: System Info
+  debug:
     msg: "System is running {{ ansible_distribution }} {{ ansible_distribution_version }}"
+  tags: always
 
 - name: Verify system is Ubuntu 16.04
   fail: msg="This playbook is specifically designed for Ubuntu 16.04. Please dont bother removing this sanity check as I dont want to be mass closing non issues because people have decided to bypass this check. If you do, your on your own."
   when: ansible_distribution_version | version_compare('16.04', '!=')
+  tags: always
 
 - name: Verify a tag was provided
-  fail: msg="You must supply a tag, e.g. full/feeder/plex/backup/restore via the --tags option"
-  when: tags is not defined
+  assert:
+    that:
+      - tags is defined
+    msg: "You must supply a tag via '--tags OPTION' (e.g. --tags full/feeder/plex/backup/restore/update-XXXX/install-XXXX)"
+
+- name: "Set Cloudbox Type to \"plexbox\""
+  set_fact:
+    cloudbox_type: "plexbox"
+  tags: plex
+
+- name: "Set Cloudbox Type to \"feederbox\""
+  set_fact:
+    cloudbox_type: "feederbox"
+  tags: feeder
+
+- name: "Set Cloudbox Type to \"cloudbox\" (i.e. full)"
+  set_fact:
+    cloudbox_type: "cloudbox"
+  tags: full

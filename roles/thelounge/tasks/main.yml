@@ -1,0 +1,48 @@
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: thelounge
+
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: thelounge
+    state: absent
+
+- name: Create thelounge directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/thelounge
+
+- name: Create and start container
+  docker_container:
+    name: thelounge
+    image: "linuxserver/thelounge"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:9500:9000"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "thelounge.{{domain}}"
+      VIRTUAL_PORT: 9000
+      LETSENCRYPT_HOST: "thelounge.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/thelounge:/config"
+    networks:
+      - name: cloudbox
+        aliases:
+          - thelounge
+    restart_policy: always
+    state: started

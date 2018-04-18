@@ -1,0 +1,37 @@
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: netdata
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: netdata
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: netdata
+    image: "titpetric/netdata:latest"
+    pull: yes
+    capabilities:
+      - SYS_PTRACE
+    published_ports:
+      - "127.0.0.1:19999:19999"
+    env:
+      VIRTUAL_HOST: "netdata.{{domain}}"
+      VIRTUAL_PORT: 19999
+      LETSENCRYPT_HOST: "netdata.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - name: cloudbox
+        aliases:
+          - netdata
+    restart_policy: always
+    state: started
