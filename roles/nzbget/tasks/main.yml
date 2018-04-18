@@ -1,4 +1,10 @@
 ---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: nzbget
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -12,7 +18,7 @@
   with_items:
     - /opt/nzbget
     - /opt/nzbget/scripts
-    
+
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
@@ -76,6 +82,7 @@
 - name: Stop container to customize nzbget.conf
   docker_container:
     name: nzbget
+    image: hotio/suitarr
     state: stopped
   when: nzbget_conf.stat.exists == False
 

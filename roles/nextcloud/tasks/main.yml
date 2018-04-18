@@ -1,4 +1,10 @@
 ---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: nextcloud
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -6,7 +12,7 @@
 - name: "Get {{user}} gid"
   shell: "id -g {{user}}"
   register: gid
-  
+
 - name: Stop and remove any existing containers
   docker_container: "name={{item}} state=absent"
   with_items:
