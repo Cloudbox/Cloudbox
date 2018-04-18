@@ -87,7 +87,7 @@
 
   - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
     synchronize:
-      src: "/etc/systemd/system"
+      src: "/etc/systemd/system/"
       dest: "/opt/systemd-backup"
       mode: push
       recursive: yes
