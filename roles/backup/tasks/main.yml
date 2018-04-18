@@ -69,6 +69,7 @@
     with_items:
      - "{{playbook_dir}}/settings.yml"
      - "/home/{{user}}/.config/rclone/rclone.conf"
+    ignore_errors: yes
 
   - name: "Check {{backup.tar_dest}}/cloudbox.tar exists"
     stat:
@@ -84,14 +85,15 @@
     shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
     when: backup_previous.stat.exists
 
-  - name: "Copy '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
-    copy:
+  - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
+    synchronize:
       src: "/etc/systemd/system"
       dest: "/opt/systemd-backup"
-      owner: "{{user}}"
-      group: "{{user}}"
-      mode: 0775
-      force: yes
+      mode: push
+      recursive: yes
+
+  - name: "Make systemd-backup folder readable/writeable by {{user}}"
+    file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
 
   - name: "Gathering list of running containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
