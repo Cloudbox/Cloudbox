@@ -6,17 +6,23 @@
 
 - name: Clone oh-my-zsh repo
   git: "repo=https://github.com/robbyrussell/oh-my-zsh.git dest=/home/{{user}}/.oh-my-zsh"
+  force: yes
   become: no
   register: cloning
   ignore_errors: yes
 
-- name: Creating /home/{{user}}/.zshrc
+- name: "Check if an existing .zshrc file is present"
+  stat:
+    path: "/home/{{user}}/.zshrc"
+  register: existing_zshrc
+
+- name: Create "/home/{{user}}/.zshrc file"
   copy:
     src: /home/{{user}}/.oh-my-zsh/templates/zshrc.zsh-template
     dest: /home/{{user}}/.zshrc
     group: "{{user}}"
     owner: "{{user}}"
-  when: cloning|success
+  when: cloning|success and existing_zshrc.stat.exists == False
 
 - name: Set zsh as default shell
   user:
