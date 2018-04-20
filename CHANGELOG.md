@@ -165,6 +165,7 @@ Changelog Format:
   - Switched to `linuxserver/ombi` image (as it now installs v3).
 - Misc
   - Set `sudo` group to NOPASSWD (no more password prompts when running sudo commands).
+  - Preinstall Role no longer changes user's shell on Cloudbox run (eg full).
 - [Plex Autoscan](https://github.com/l3uddz/plex_autoscan)
   - The following variables were added to config.json:
     - `PLEX_ANALYZE_DIRECTORY`
