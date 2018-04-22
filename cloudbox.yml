@@ -14,10 +14,10 @@
     - { role: docker, tags: ['full', 'feeder', 'plex'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex', 'update-rclone'] }
+    - { role: scripts, tags: ['full', 'feeder', 'plex', 'update-scripts'] }
     - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx'] }
     - { role: portainer, tags: ['full', 'feeder', 'update-portainer'] }
     - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
-    - { role: scripts, tags: ['full', 'feeder', 'plex', 'update-scripts'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder', 'update-unionfs_cleaner']}
     - { role: nzbget, tags: ['full', 'feeder', 'update-nzbget'] }
     - { role: rutorrent, tags: ['full', 'feeder', 'update-rutorrent'] }
