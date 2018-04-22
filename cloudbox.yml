@@ -12,9 +12,9 @@
     - { role: common, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
     - { role: docker, tags: ['full', 'feeder', 'plex'] }
-    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex', 'update-rclone'] }
+    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx'] }
     - { role: portainer, tags: ['full', 'feeder', 'update-portainer'] }
     - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
     - { role: scripts, tags: ['full', 'feeder', 'plex', 'update-scripts'] }
