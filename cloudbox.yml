@@ -47,4 +47,5 @@
     - { role: netdata, tags: ['install-netdata', 'update-netdata'] }
     - { role: znc, tags: ['install-znc', 'update-znc'] }
     - { role: quassel, tags: ['install-quassel', 'update-quassel'] }
+    - { role: plex_patrol, tags: ['install-plex_patrol', 'update-plex_patrol'] }
     
