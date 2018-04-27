@@ -44,11 +44,11 @@
     path: /opt/motd/cloudbox-motd.py
     mode: a+x
 
+- name: Import dynamic motd files
+  copy: "src=/opt/motd/motd/ dest=/etc/update-motd.d/ force=yes mode=0775"
+
 - name: Set directory permissions
   file: "path=/opt/motd state=directory owner={{user}} group={{user}} recurse=yes"
-
-- name: Import dynamic motd files
-  copy: "src=/opt/motd/motd/* dest=/etc/update-motd.d/ force=yes mode=0775"
 
 - name: Create symlink to dynamic motd
   file:
