@@ -20,12 +20,35 @@
     state: directory
     mode: 0775
 
+- name: Clone cloudbox_motd
+  git:
+    repo: https://github.com/Cloudbox/cloudbox_motd
+    dest: /opt/motd
+    version: master
+    force: yes
+
+- name: Check config exists
+  stat:
+    path: "/opt/motd/config.json"
+  register: motd_config
+
+- name: Import default config
+  template:
+    src: config.json.js2
+    dest: /opt/motd/config.json
+    force: yes
+  when: motd_config.stat.exists == False
+
+- name: Set cloudbox-motd.py as executable
+  file:
+    path: /opt/motd/cloudbox-motd.py
+    mode: a+x
+
+- name: Set directory permissions
+  file: "path=/opt/motd state=directory owner={{user}} group={{user}} recurse=yes"
+
 - name: Import dynamic motd files
-  copy: "src={{item}} dest=/etc/update-motd.d/{{item}} force=yes mode=0775"
-  with_items:
-    - 00-header
-    - 10-sysinfo
-    - 90-footer
+  copy: "src=/opt/motd/motd/* dest=/etc/update-motd.d/ force=yes mode=0775"
 
 - name: Create symlink to dynamic motd
   file:
@@ -33,3 +56,10 @@
     dest: /etc/motd
     state: link
     force: yes
+
+- name: Set PrintLastLog to no
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    regexp: '^PrintLastLog\s?'
+    line: 'PrintLastLog no'
+    state: present
