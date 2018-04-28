@@ -7,6 +7,8 @@
     - update-motd
     - update-notifier-common
     - jq
+    - toilet
+    - boxes
 
 - name: Remove existing motd
   file: "path={{item}} state=absent"
