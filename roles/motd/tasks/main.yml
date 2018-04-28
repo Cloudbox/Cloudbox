@@ -6,6 +6,7 @@
     - figlet
     - update-motd
     - update-notifier-common
+    - jq
 
 - name: Remove existing motd
   file: "path={{item}} state=absent"
@@ -26,6 +27,11 @@
     dest: /opt/motd
     version: master
     force: yes
+
+- name: Install pip requirements
+  pip:
+    requirements: /opt/motd/requirements.txt
+    executable: pip3
 
 - name: Check config exists
   stat:

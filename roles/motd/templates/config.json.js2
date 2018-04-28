@@ -1,12 +1,19 @@
 {
-  "rtorrent": {
-    "url": "https://{{user}}:{{passwd}}@rutorrent.{{domain}}"
+  "motd": {
+    "show": {
+      "nzbget": false,
+      "plexpy": false,
+      "rtorrent": false
+    }
   },
   "nzbget": {
     "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
   },
   "plexpy": {
-    "url": "https://plexpy.{{domain}}",
-    "api_key": "SET_YOUR_API_KEY"
+      "url": "https://plexpy.{{domain}}",
+      "api_key": "SET_YOUR_API_KEY"
+  },
+  "rtorrent": {
+    "url": "https://{{user}}:{{passwd}}@rutorrent.{{domain}}"
   }
 }
