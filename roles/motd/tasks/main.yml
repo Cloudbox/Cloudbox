@@ -45,6 +45,14 @@
     force: yes
   when: motd_config.stat.exists == False
 
+- name: Touch log file
+  file:
+    path: /opt/motd/activity.log
+    state: touch
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+
 - name: Set cloudbox-motd.py as executable
   file:
     path: /opt/motd/cloudbox-motd.py
