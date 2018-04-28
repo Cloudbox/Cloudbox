@@ -4,7 +4,9 @@
       "nzbget": false,
       "plexpy": false,
       "rtorrent": false
-    }
+    },
+    "TEXT_COLOR: "LGRN",    
+    "TITLE_COLOR": "LBLU"
   },
   "nzbget": {
     "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
