@@ -1,7 +1,12 @@
 {
+  "autoscan": {
+    "api_key": "YOUR_SERVER_PASS",
+    "url": "http://plex.{{domain}}:3468"
+  },
   "motd": {
     "banner_type": "dog",
     "show": {
+      "autoscan": false,
       "nzbget": false,
       "plexpy": false,
       "rtorrent": false
