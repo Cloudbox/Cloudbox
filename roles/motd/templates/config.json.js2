@@ -1,12 +1,13 @@
 {
   "motd": {
-    "text_color": "LGRN",
-    "title_color": "LBLU",
+    "banner_type": "dog",
     "show": {
       "nzbget": false,
       "plexpy": false,
       "rtorrent": false
-    }
+    },
+    "text_color": "LGRN",
+    "title_color": "LBLU"
   },
   "nzbget": {
     "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
