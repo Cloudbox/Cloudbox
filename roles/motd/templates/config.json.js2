@@ -1,7 +1,7 @@
 {
   "motd": {
-    "TEXT_COLOR": "LGRN",
-    "TITLE_COLOR": "LBLU",
+    "text_color": "LGRN",
+    "title_color": "LBLU",
     "show": {
       "nzbget": false,
       "plexpy": false,
