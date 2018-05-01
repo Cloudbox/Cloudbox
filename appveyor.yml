@@ -7,7 +7,7 @@ environment:
   - ansible_ver: 2.5.0
 
 init:
-  - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo sh -s
+  - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo sh -s $ansible_ver
 
 install:
   - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --syntax-check
