@@ -1,0 +1,46 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: plex_patrol
+    state: absent
+
+- name: Create plex_patrol directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/plex_patrol
+
+- name: Check config exists
+  stat:
+    path: "/opt/plex_patrol/settings.ini"
+  register: plex_patrol_config
+
+- name: Import default config
+  template:
+    src: settings.ini.js2
+    dest: /opt/plex_patrol/settings.ini
+    force: yes
+  when: plex_patrol_config.stat.exists == False
+
+- name: Create and start container
+  docker_container:
+    name: plex_patrol
+    image: "cloudb0x/plex_patrol:latest"
+    pull: yes
+    user: "{{uid.stdout}}:{{gid.stdout}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/plex_patrol:/config"
+    networks:
+      - name: cloudbox
+        aliases:
+          - plex_patrol
+    restart_policy: always
+    state: started

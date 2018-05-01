@@ -1,0 +1,27 @@
+{
+  "autoscan": {
+    "api_key": "YOUR_SERVER_PASS",
+    "url": "http://plex.{{domain}}:3468"
+  },
+  "motd": {
+    "banner_type": "dog",
+    "show": {
+      "autoscan": false,
+      "nzbget": false,
+      "plexpy": false,
+      "rtorrent": false
+    },
+    "text_color": "LGRN",
+    "title_color": "LBLU"
+  },
+  "nzbget": {
+    "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
+  },
+  "plexpy": {
+      "url": "https://plexpy.{{domain}}",
+      "api_key": "SET_YOUR_API_KEY"
+  },
+  "rtorrent": {
+    "url": "https://{{user}}:{{passwd}}@rutorrent.{{domain}}"
+  }
+}

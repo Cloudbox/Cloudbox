@@ -12,13 +12,12 @@
     - { role: common, tags: ['full', 'feeder', 'plex'] }
     - { role: unionfs, tags: ['full', 'feeder', 'plex'] }
     - { role: docker, tags: ['full', 'feeder', 'plex'] }
-    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx'] }
-    - { role: watchtower, tags: ['full', 'feeder', 'plex', 'update-watchtower'] }
-    - { role: portainer, tags: ['full', 'feeder', 'update-portainer'] }
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex', 'update-rclone'] }
-    - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
     - { role: scripts, tags: ['full', 'feeder', 'plex', 'update-scripts'] }
+    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx'] }
+    - { role: portainer, tags: ['full', 'feeder', 'update-portainer'] }
+    - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder', 'update-unionfs_cleaner']}
     - { role: nzbget, tags: ['full', 'feeder', 'update-nzbget'] }
     - { role: rutorrent, tags: ['full', 'feeder', 'update-rutorrent'] }
@@ -32,6 +31,7 @@
     - { role: plex_autoscan, tags: ['full', 'plex', 'update-plex_autoscan'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
+    - { role: watchtower, tags: ['install-watchtower', 'update-watchtower'] }
     - { role: ombi, tags: ['install-ombi', 'update-ombi'] }
     - { role: resilio, tags: ['install-resilio', 'update-resilio'] }
     - { role: nextcloud, tags: ['install-nextcloud', 'update-nextcloud'] }
@@ -47,4 +47,6 @@
     - { role: netdata, tags: ['install-netdata', 'update-netdata'] }
     - { role: znc, tags: ['install-znc', 'update-znc'] }
     - { role: quassel, tags: ['install-quassel', 'update-quassel'] }
-    
+    - { role: plex_patrol, tags: ['install-plex_patrol', 'update-plex_patrol'] }
+    - { role: calibre, tags: ['install-calibre', 'update-calibre'] }
+    - { role: gazee, tags: ['install-gazee', 'update-gazee'] }

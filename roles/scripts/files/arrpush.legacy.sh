@@ -1,8 +1,28 @@
 #!/bin/sh
-# autodl script: /scripts/arrpush.legacy.sh
-# autodl args: sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
-# or
-# autodl args: radarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
+
+########################################################################################
+#                                                                                      #
+#                                      _       _                                       #
+#        __ _ _ __ _ __ _ __  _   _ ___| |__   | | ___  __ _  __ _  ___ _   _          #
+#       / _` | '__| '__| '_ \| | | / __| '_ \  | |/ _ \/ _` |/ _` |/ __| | | |         #
+#      | (_| | |  | |  | |_) | |_| \__ \ | | | | |  __/ (_| | (_| | (__| |_| |         #
+#       \__,_|_|  |_|  | .__/ \__,_|___/_| |_| |_|\___|\__, |\__,_|\___|\__, |         #
+#                      |_|                             |___/            |___/          #
+#                                                                                      #
+########################################################################################
+# Author:   l3uddz                                                                     #
+# URL:      https://github.com/Cloudbox/Cloudbox                                       #
+# --                                                                                   #
+# Part of the Cloudbox project: https://cloudbox.rocks                                 #
+########################################################################################
+# GNU General Public License v3.0                                                      #
+########################################################################################
+# Usage:                                                                               #
+# autodl script: /scripts/arrpush.legacy.sh                                            #
+# autodl args: sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"   #                                                                    #
+# or                                                                                   #
+# autodl args: radarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"   #
+########################################################################################
 
 
 # settings
