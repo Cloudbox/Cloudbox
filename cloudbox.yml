@@ -49,3 +49,4 @@
     - { role: quassel, tags: ['install-quassel', 'update-quassel'] }
     - { role: plex_patrol, tags: ['install-plex_patrol', 'update-plex_patrol'] }
     - { role: calibre, tags: ['install-calibre', 'update-calibre'] }
+    - { role: gazee, tags: ['install-gazee', 'update-gazee'] }
