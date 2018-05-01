@@ -1,0 +1,60 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: "{{ role_name }}"
+    state: absent
+
+- name: Create {{ role_name }} directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - "/opt/{{ role_name }}"
+
+- name: Create and start container
+  docker_container:
+    name: "{{ role_name }}"
+    image: "linuxserver/{{ role_name }}"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:4242:4242"
+      # - "0.0.0.0:4242:4242"
+    env:
+      APP: "{{ role_name }}"
+      BACKUP: "no"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "{{ role_name }}.{{domain}}"
+      VIRTUAL_PORT: 4242
+      LETSENCRYPT_HOST: "{{ role_name }}.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/{{ role_name }}:/config"
+      - "/opt/mylar/mylar:/mylar"
+      - "{{ datadir }}/seed/downloads/rutorrent/comics:/comics"
+      - "/opt/nginx-proxy/{{ role_name }}.{{domain}}:/certs"
+      - "/mnt:/mnt"
+    networks:
+      - name: cloudbox
+        aliases:
+          - "{{ role_name }}"
+    restart_policy: always
+    state: started
+
+- replace:
+    path: "/opt/{{ role_name }}/app.ini"
+    regexp: "{{ item.regex }}"
+    replace: "{{ item.replace }}"
+    backup: yes
+  with_items:
+    - regex: '^mylar_db.*'
+      replace: 'mylar_db = /mylar/mylar.db'
+    - regex: '^comic_path.*'
+      replace: "comic_path = /comics"
