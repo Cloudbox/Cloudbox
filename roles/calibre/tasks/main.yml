@@ -1,0 +1,49 @@
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: "{{ role_name }}"
+    state: absent
+
+- name: "Create {{ role_name }} directories"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - "/opt/{{ role_name }}"
+    - "/opt/{{ role_name }}/logs"
+    - "{{mediadir}}/{{ role_name }}"
+
+- name: Create and start container
+  docker_container:
+    name: "{{ role_name }}"
+    image: "aptalca/docker-calibre"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8080:8080"
+    env:
+      APP: "{{ role_name }}"
+      BACKUP: "no"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "{{ role_name }}.{{domain}}"
+      VIRTUAL_PORT: 8080
+      LETSENCRYPT_HOST: "{{ role_name }}.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/{{ role_name }}:/config"
+      - "{{mediadir}}:/downloads"
+      - "/mnt:/mnt"
+    networks:
+      - name: cloudbox
+        aliases:
+          - "{{ role_name }}"
+    restart_policy: always
+    state: started
+    command: "/opt/calibre/calibre-server --with-library=/downloads/calibre --password={{ passwd }} --username={{ user }}"
