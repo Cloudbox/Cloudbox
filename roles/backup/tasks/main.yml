@@ -148,7 +148,7 @@
     when: plexdrive_status|success
 
   - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
-    shell: "tar --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+    shell: "tar --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
 
   - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
     stat:
