@@ -5,6 +5,7 @@
     account_email: "{{email}}"
     zone: "{{domain}}"
     state: present
+    solo: true
     proxied: no
     type: A
     value: "{{ansible_default_ipv4.address}}"
