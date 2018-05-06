@@ -33,12 +33,14 @@
     - mc
     - speedtest-cli
     - nethogs
+    - dnsutils
     - nodejs-legacy
     - npm
     - glances
     - screen
     - tmux
     - apache2-utils
+    - jq
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
@@ -50,6 +52,7 @@
     - ndg-httpsclient
     - dnspython
     - netaddr
+    - yq
   ignore_errors: yes
 
 - name: Install common pip modules
