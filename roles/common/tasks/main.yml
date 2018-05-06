@@ -65,7 +65,6 @@
     - ansible-toolbox
     - ndg-httpsclient
     - dnspython
-    - netaddr
     - yq
   ignore_errors: yes
 
