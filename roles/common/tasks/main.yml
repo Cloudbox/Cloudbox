@@ -10,6 +10,7 @@
 - name: Install common packages
   apt: "name={{item}} state=present"
   with_items:
+    - nano
     - unrar
     - unzip
     - p7zip
@@ -41,6 +42,19 @@
     - tmux
     - apache2-utils
     - jq
+  ignore_errors: yes
+
+- name: Check to see if unrar installed
+  stat:
+    path: "/usr/bin/unrar"
+  register: unrar_binary
+
+- name: Install common packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - unrar-free
+  ignore_errors: yes
+  when: not unrar_binary.stat.exists
 
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
