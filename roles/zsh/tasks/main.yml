@@ -3,10 +3,9 @@
   apt: "name={{item}} state=present"
   with_items:
     - zsh
-
 - name: Clone oh-my-zsh repo
-  git: 
-    repo: https://github.com/robbyrussell/oh-my-zsh.git 
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh.git
     dest: "/home/{{user}}/.oh-my-zsh"
     force: yes
   become: no
@@ -18,13 +17,25 @@
     path: "/home/{{user}}/.zshrc"
   register: existing_zshrc
 
-- name: Create "/home/{{user}}/.zshrc file"
+- name: "Create /home/{{user}}/.zshrc file"
   copy:
     src: /home/{{user}}/.oh-my-zsh/templates/zshrc.zsh-template
     dest: /home/{{user}}/.zshrc
     group: "{{user}}"
     owner: "{{user}}"
   when: cloning|success and existing_zshrc.stat.exists == False
+
+- name: "Check if /bin/zsh exists"
+  stat:
+    path: /bin/zsh
+  register: bin_zsh
+
+- name: "Create alternatives link to /bin/zsh"
+  alternatives:
+    name: zsh
+    link: /bin/zsh
+    path: /bin/zsh5
+  when: not bin_zsh.stat.exists
 
 - name: Set zsh as default shell
   user:
@@ -33,4 +44,4 @@
 
 - name: Message
   debug:
-    msg: "You will need to relogin for changes to take effect."
+    msg: "You will need to re-login for changes to take effect."
