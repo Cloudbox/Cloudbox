@@ -4,8 +4,8 @@
     - ['settings.yml', 'settings.yml.default']
   roles:
     - { role: sanity_check }
-    - { role: settings, tags: ['always', 'update-settings'] }
     - { role: kernel, tags: ['kernel'] }
+    - { role: settings, tags: ['always', 'update-settings'] }
     - { role: pre_install, tags: ['full', 'feeder', 'plex'] }
     - { role: system, tags: ['full', 'feeder', 'plex'] }
     - { role: motd, tags: ['full', 'feeder', 'plex', 'update-motd'] }
@@ -48,4 +48,3 @@
     - { role: znc, tags: ['install-znc', 'update-znc'] }
     - { role: quassel, tags: ['install-quassel', 'update-quassel'] }
     - { role: plex_patrol, tags: ['install-plex_patrol', 'update-plex_patrol'] }
-    
