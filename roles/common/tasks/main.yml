@@ -121,7 +121,7 @@
   when: plexdrive_mnt.stat.exists == False
 
 - name: Set /opt permissions
-  shell: "chmod -R 775 /opt"
+  shell: "chmod -R ugo+X /opt"
   args:
     warn: no
 
