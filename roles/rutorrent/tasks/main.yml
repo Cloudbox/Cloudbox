@@ -64,6 +64,7 @@
         aliases:
           - rutorrent
     restart_policy: always
+    stop_timeout: 300
     state: started
 
 - name: Wait for rtorrent.rc to be created
