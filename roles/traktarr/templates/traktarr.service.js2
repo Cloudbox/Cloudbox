@@ -2,13 +2,15 @@
 
 [Unit]
 Description=traktarr
-After=network-online.target
+After=network-online.target unionfs.service docker.service
 
 [Service]
 User={{user}}
 Group={{user}}
 Type=simple
 WorkingDirectory=/opt/traktarr/
+TimeoutStartSec=900
+ExecStartPre=/bin/sleep 120
 ExecStart=/usr/bin/python3 /opt/traktarr/traktarr.py run
 Restart=always
 RestartSec=10
