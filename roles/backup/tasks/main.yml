@@ -1,5 +1,10 @@
 ---
 - block:
+  - name: Create log directory
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+    with_items:
+      - /home/{{user}}/logs
+
   - name: "Check if backup.lock is present"
     stat:
       path: "{{playbook_dir}}/backup.lock"
@@ -267,7 +272,7 @@
      - "cloudbox.tar"
 
   - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -359,11 +364,11 @@
     shell: "which ansible-playbook"
     register: playbook_binary
 
-  - name: "Schedule cron backup for state: {{backup.cron_state}}, when: {{backup.cron_time}}"
+  - name: "Schedule cron backup"
     cron:
       name: "Backup Cloudbox"
       special_time: "{{backup.cron_time}}"
-      job: "{{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup"
+      job: "PATH='/usr/bin:/bin:/usr/local/bin' {{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup >> /home/{{user}}/logs/cloudbox_backup-{{ '`' }}date +\\%Y-\\%m-\\%d_\\%H-\\%M-\\%S{{ '`' }}.log 2>&1"
       state: "{{backup.cron_state}}"
 
   always:
