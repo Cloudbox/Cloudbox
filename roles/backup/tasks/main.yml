@@ -96,9 +96,11 @@
       dest: "/opt/systemd-backup"
       mode: push
       recursive: yes
+    ignore_errors: yes
 
   - name: "Make systemd-backup folder readable/writeable by {{user}}"
     file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+    ignore_errors: yes
 
   - name: "Gathering list of running containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
