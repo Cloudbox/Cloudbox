@@ -28,7 +28,7 @@
   file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
 
 - name: "Set {{nzbget.downloads}} permissions"
-  shell: "chmod -R 664 {{nzbget.downloads}}"
+  shell: "chmod -R 775 {{nzbget.downloads}}"
 
 - name: "Set {{nzbget.downloads}} owner"
   shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
