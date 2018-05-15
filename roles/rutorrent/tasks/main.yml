@@ -27,7 +27,7 @@
   file: "path={{rutorrent.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
 
 - name: "Set {{rutorrent.downloads}} permissions"
-  shell: "chmod -R 775 {{rutorrent.downloads}}"
+  shell: "chmod -R 664 {{rutorrent.downloads}}"
 
 - name: "Set {{rutorrent.downloads}} owner"
   shell: "chown -R {{user}}:{{user}} {{rutorrent.downloads}}"
