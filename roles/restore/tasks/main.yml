@@ -123,10 +123,14 @@
   when: backup.keep_local_copy == False
 
 - name: Set /opt permissions
-  shell: "chmod -R 775 /opt"
+  shell: "chmod -R ugo+X /opt"
+  args:
+    warn: no
 
 - name: Set /opt owner
   shell: "chown -R {{user}}:{{user}} /opt"
+  args:
+    warn: no
 
 - debug:
     msg: Finished unarchiving the contents of cloudbox.tar to /opt/, you should now be ready to perform an installation (i.e. Full, Plex, or Feeder)!

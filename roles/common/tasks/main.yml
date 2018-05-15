@@ -102,8 +102,9 @@
     - /home/{{user}}/logs
     - /mnt/local
     - /mnt/local/.unionfs-fuse
-    - /mnt/local/Media/TV
+    - /mnt/local/Media
     - /mnt/local/Media/Movies
+    - /mnt/local/Media/TV
     - /opt
 
 - name: Check plexdrive mount folder exist
