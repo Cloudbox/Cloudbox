@@ -15,7 +15,7 @@
     - { role: plexdrive, tags: ['full', 'feeder', 'plex'] }
     - { role: rclone, tags: ['full', 'feeder', 'plex', 'update-rclone'] }
     - { role: scripts, tags: ['full', 'feeder', 'plex', 'update-scripts'] }
-    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx'] }
+    - { role: nginx-proxy, tags: ['full', 'feeder', 'plex', 'update-nginx-proxy'] }
     - { role: portainer, tags: ['full', 'feeder', 'update-portainer'] }
     - { role: organizr, tags: ['full', 'feeder', 'update-organizr'] }
     - { role: unionfs_cleaner, tags: ['full', 'feeder', 'update-unionfs_cleaner']}
