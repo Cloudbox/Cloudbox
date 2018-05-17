@@ -1,4 +1,7 @@
 ---
+- name: Get IP Address
+  ipinfoio_facts:
+
 - name: "Set DNS Record for {{subdomain}}.{{domain}} to {{ansible_default_ipv4.address}}"
   cloudflare_dns:
     account_api_token: "{{cloudflare_api_token}}"
@@ -8,7 +11,7 @@
     solo: true
     proxied: no
     type: A
-    value: "{{ansible_default_ipv4.address}}"
+    value: "{{ ip }}"
     record: "{{subdomain}}"
   when: not(
       (cloudflare_api_token is undefined)
