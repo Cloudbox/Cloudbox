@@ -45,14 +45,14 @@
   when: not (
       (plex_prefs.stat.exists)
       and
-      ((continuous_integration|bool)|default(false,true))
+      ((continuous_integration|default(false,true))|bool)
     )
 
 - debug: msg="Using plex claim token {{plex_claim.user_input}}"
   when: not (
       (plex_prefs.stat.exists)
       and
-      ((continuous_integration|bool)|default(false,true))
+      ((continuous_integration|default(false,true))|bool)
     )
 
 - name: Set default hosts
