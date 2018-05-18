@@ -3,15 +3,15 @@ image: ubuntu
 
 environment:
   matrix:
-  - ansible_ver: 2.3.1
   - ansible_ver: 2.5.0
+  - ansible_ver: 2.3.1
 
 init:
-  - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo sh -s $ansible_ver
+  - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh -s $ansible_ver
 
 install:
   - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --syntax-check
-  - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --skip-tags "kernel,update-settings" --extra-vars "continuous_integration=true"
+  - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --skip-tags "update-settings,kernel,backup,restore" --extra-vars "continuous_integration=true"
 
 matrix:
   fast_finish: true
