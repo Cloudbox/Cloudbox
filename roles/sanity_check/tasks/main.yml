@@ -14,7 +14,7 @@
     that:
       - tags is defined
     msg: "You must supply a tag via '--tags OPTION' (e.g. --tags full/feeder/plex/backup/restore/update-XXXX/install-XXXX)"
-  when: not ((continuous_integration|bool)|default(false,true))
+  when: not ((continuous_integration|default(false,true))|bool)
 
 - name: "Set Cloudbox Type to \"plexbox\""
   set_fact:
