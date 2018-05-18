@@ -33,8 +33,6 @@
     - mc
     - speedtest-cli
     - nethogs
-    - nodejs-legacy
-    - npm
     - glances
     - screen
     - tmux
@@ -49,20 +47,10 @@
     - ansible-toolbox
     - ndg-httpsclient
     - dnspython
-    - netaddr
   ignore_errors: yes
 
-- name: Install common pip modules
-  pip: "name={{item}} state=latest executable=pip3"
-  with_items:
-    - netaddr
-  ignore_errors: yes
-
-- name: Install common packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - python-netaddr
-  ignore_errors: yes
+- name: Install nodejs and npm
+  shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs npm"
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
