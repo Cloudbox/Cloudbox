@@ -42,10 +42,18 @@
   pause:
     prompt: "To continue the plex installation, you must visit https://plex.tv/claim and retrieve a claim token, paste it below and press enter"
   register: plex_claim
-  when: (plex_prefs.stat.exists == False) and (continuous_integration|bool != True)
+  when: not (
+      (plex_prefs.stat.exists)
+      and
+      ((continuous_integration|bool)|default(false,true))
+    )
 
 - debug: msg="Using plex claim token {{plex_claim.user_input}}"
-  when: (plex_prefs.stat.exists == False) and (continuous_integration|bool != True)
+  when: not (
+      (plex_prefs.stat.exists)
+      and
+      ((continuous_integration|bool)|default(false,true))
+    )
 
 - name: Set default hosts
   set_fact:
