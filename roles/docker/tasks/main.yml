@@ -22,7 +22,7 @@
 
 - name: Install docker-ce
   apt:
-    name: docker-ce=17.09.0~ce-0~ubuntu
+    name: docker-ce=18.03.1~ce-0~ubuntu
     state: present
     update_cache: yes
     force: yes

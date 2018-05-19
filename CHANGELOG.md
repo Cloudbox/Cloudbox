@@ -88,7 +88,7 @@ Changelog Format:
     - To remove the HTTP authentication, simply remove the file from `/opt/nginx-proxy/htpasswd/` and restart the relevant Docker container.
 - [Cloudflare DNS](https://www.cloudflare.com/) support
   - Added `cloudflare_api_token` to `settings.yml`.
-  - When API token is filled in, Cloudbox will automatically create DNS entries (non proxied/CDN) and/or update them with the hosts IP address, when relevant tasks are run.
+  - When API token is filled in, Cloudbox will automatically create DNS entries (non proxied/CDN), and/or update them with the host's IP address, when relevant tasks are run.
   - Will also add one of 3 relevant subdomains: `plexbox`, `feederbox`, or `cloudbox`.
     - This is useful for ssh, ftp, etc, especially with a Feederbox/Plexbox setup.
   - This requires the email address in `settings.yml` to match the one used for the Cloudflare account.

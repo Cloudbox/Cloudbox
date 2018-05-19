@@ -1,5 +1,9 @@
 #!/bin/sh -e
-# credits: https://raw.githubusercontent.com/wernight/docker-plex-media-server/master/root/usr/local/bin/retrieve-plex-token
+#
+# Credits:
+# -------
+# Author: Werner Beroux (https://github.com/wernight)
+# Source: https://raw.githubusercontent.com/wernight/docker-plex-media-server/master/root/usr/local/bin/retrieve-plex-token
 
 if [ -z "$PLEX_LOGIN" ] || [ -z "$PLEX_PASSWORD" ]; then
     PLEX_LOGIN=$1
