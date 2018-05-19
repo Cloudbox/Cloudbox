@@ -28,6 +28,45 @@ Changelog Format:
 -->
 
 # Changelog
+## [Unreleased]
+
+## [1.1.1] - 2018-05-19
+### Added
+- [Plex Patrol](https://github.com/l3uddz/plex_patrol).
+- [Cloudbox MOTD](https://github.com/Cloudbox/cloudbox_motd): Cloudbox-enhanced MOTD.
+- AppVeyor CI
+
+### Changed
+- Backup: Exclude Plex cache folder in backup.
+- Backup: Logs are created in ~/logs/ path.
+- Backup: Misc edits for cron task.
+- Common: Installs unrar-free if unrar could not be installed.
+- Common: Netaddr is now installed via the Dependency Installer script.
+- Common: Set /opt to ugo+X instead of 775.
+- Docker: Better log size management.
+- Docker: Updated to 18.03.1.
+- Kernel: Now runs without settings-updater checks.
+- Nginx-Proxy: Renamed update tag to update-nginx-proxy vs update-nginx.
+- Node.js: Updated to v10.X.
+- Plex Autoscan: Fixed up Plex Autoscan URL Script.
+- Plex Dupefinder: misc changes to default config.
+- PlexPy (Tautulli): Now downloads nightly version.
+- Readme: Added feathub link.
+- Rutorrent: Added stop_timeout to Docker container.
+- Traktarr: misc changes to default config.
+- Watchower: now an optional module.
+
+### Removed
+- MOTD: previous version.
+
+### Fixed
+- Backup: systemd-backup now uses synchronize, should avoid issues with copy module failing on 0 byte files.
+- Cloudflare: Now only creates a single subdomain entry.
+- Cloudflare: Public IP Address will now be used.
+- Preinstall: No longer changes the user's shell on Cloudbox run (eg full).
+- ZSH: Existing .zshrc file will no longer be replaced with default one.
+- ZSH: Will now link to /bin/zsh if it doesn't already do so.
+
 
 ## [1.1.0] - 2018-04-18
 ### Added
@@ -253,6 +292,7 @@ Changelog Format:
 
 
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
+[1.1.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.0...v1.0.1
