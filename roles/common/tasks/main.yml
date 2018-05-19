@@ -35,8 +35,6 @@
     - speedtest-cli
     - nethogs
     - dnsutils
-    - nodejs-legacy
-    - npm
     - glances
     - screen
     - tmux
@@ -67,6 +65,9 @@
     - dnspython
     - yq
   ignore_errors: yes
+
+- name: Install NodeJS
+  shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
