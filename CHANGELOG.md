@@ -34,11 +34,10 @@ Changelog Format:
 ### Added
 
 ### Changed
-- AppVeyor: Set build to Ansible version 2.5.3.
+- AppVeyor: Set build to Ansible version 2.5.2.
 - Cloudbox: Added headers to all roles and scripts.
 
 ### Removed
-- docker-py: Ansible finds a conflict with both docker-py and docker installed.
 
 ### Fixed
 - Ansible: Fixed misc warning messages.
