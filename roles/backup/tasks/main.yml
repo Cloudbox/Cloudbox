@@ -1,5 +1,10 @@
 ---
 - block:
+  - name: Create log directory
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+    with_items:
+      - /home/{{user}}/logs
+
   - name: "Check if backup.lock is present"
     stat:
       path: "{{playbook_dir}}/backup.lock"
@@ -69,6 +74,7 @@
     with_items:
      - "{{playbook_dir}}/settings.yml"
      - "/home/{{user}}/.config/rclone/rclone.conf"
+    ignore_errors: yes
 
   - name: "Check {{backup.tar_dest}}/cloudbox.tar exists"
     stat:
@@ -84,14 +90,17 @@
     shell: "mv '{{backup.tar_dest}}/cloudbox.tar' '{{backup.tar_dest}}/cloudbox.tar.backup'"
     when: backup_previous.stat.exists
 
-  - name: "Copy '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
-    copy:
-      src: "/etc/systemd/system"
+  - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
+    synchronize:
+      src: "/etc/systemd/system/"
       dest: "/opt/systemd-backup"
-      owner: "{{user}}"
-      group: "{{user}}"
-      mode: 0775
-      force: yes
+      mode: push
+      recursive: yes
+    ignore_errors: yes
+
+  - name: "Make systemd-backup folder readable/writeable by {{user}}"
+    file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+    ignore_errors: yes
 
   - name: "Gathering list of running containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
@@ -146,7 +155,7 @@
     when: plexdrive_status|success
 
   - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
-    shell: "tar --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+    shell: "tar --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
 
   - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
     stat:
@@ -265,7 +274,7 @@
      - "cloudbox.tar"
 
   - name: "Upload backup with rclone to \"{{backup.rclone_dest}}\""
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='{{playbook_dir}}/backup_rclone.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -357,11 +366,11 @@
     shell: "which ansible-playbook"
     register: playbook_binary
 
-  - name: "Schedule cron backup for state: {{backup.cron_state}}, when: {{backup.cron_time}}"
+  - name: "Schedule cron backup"
     cron:
       name: "Backup Cloudbox"
       special_time: "{{backup.cron_time}}"
-      job: "{{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup"
+      job: "PATH='/usr/bin:/bin:/usr/local/bin' {{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup >> /home/{{user}}/logs/cloudbox_backup-{{ '`' }}date +\\%Y-\\%m-\\%d_\\%H-\\%M-\\%S{{ '`' }}.log 2>&1"
       state: "{{backup.cron_state}}"
 
   always:

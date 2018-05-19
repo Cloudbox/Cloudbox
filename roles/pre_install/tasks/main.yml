@@ -17,7 +17,6 @@
     password: "{{ passwd |password_hash('sha512') }}"
     update_password: on_create
     append: yes
-    shell: /bin/bash
 
 - name: Check sudoers exists
   stat:
@@ -50,7 +49,7 @@
     name: plexdrive
     state: stopped
   when: plexdrive_service_check.stat.exists
-  
+
 - name: Setting CloudFlare DNS Record for Cloudbox Type
   include_role:
     name: cloudflare
