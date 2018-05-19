@@ -19,7 +19,7 @@
     dest: /opt/plex_autoscan
     version: master
     force: yes
-    
+
 - name: Install pip requirements
   pip:
     requirements: /opt/plex_autoscan/requirements.txt
@@ -53,7 +53,7 @@
 - name: Import plex_autoscan service
   template:
     src: plex_autoscan.service.js2
-    dest: /etc/systemd/system/plex_autoscan.service 
+    dest: /etc/systemd/system/plex_autoscan.service
     force: yes
   when: plex_autoscan_service.stat.exists == False
 
