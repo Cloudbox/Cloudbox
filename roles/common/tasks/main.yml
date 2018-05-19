@@ -69,7 +69,6 @@
   pip: "name={{item}} state=latest"
   with_items:
     - passlib
-    - docker-py
     - certbot
     - ansible-toolbox
     - ndg-httpsclient
