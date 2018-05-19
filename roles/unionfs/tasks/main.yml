@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: UnionFS Role                                 #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
   - name: Check service exists
     stat:
