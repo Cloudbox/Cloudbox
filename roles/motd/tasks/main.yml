@@ -81,6 +81,7 @@
     dest: /etc/motd
     state: link
     force: yes
+    follow: no
 
 - name: Set PrintLastLog to no
   lineinfile:
