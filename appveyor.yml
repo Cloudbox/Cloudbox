@@ -15,3 +15,6 @@ install:
 
 matrix:
   fast_finish: true
+
+# to disable automatic builds
+build: off
