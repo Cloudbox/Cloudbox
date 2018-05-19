@@ -68,7 +68,7 @@
     - yq
   ignore_errors: yes
 
-- name: Install nodejs and npm
+- name: Install NodeJS
   shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
 
 - name: Install common npm modules
