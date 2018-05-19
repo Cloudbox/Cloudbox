@@ -16,12 +16,6 @@
   shell: "id -g {{user}}"
   register: gid
 
-- name: Remove docker-py pip module
-  pip: "name={{item}} state=absent"
-  with_items:
-    - docker-py
-  ignore_errors: yes
-
 - name: Install common packages
   apt: "name={{item}} state=present"
   with_items:
@@ -75,6 +69,7 @@
   pip: "name={{item}} state=latest"
   with_items:
     - passlib
+    - docker-py
     - certbot
     - ansible-toolbox
     - ndg-httpsclient
