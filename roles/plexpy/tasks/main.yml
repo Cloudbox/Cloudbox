@@ -42,6 +42,7 @@
       VIRTUAL_PORT: 8181
       LETSENCRYPT_HOST: "plexpy.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
+      ADVANCED_GIT_BRANCH: nightly
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexpy:/config"

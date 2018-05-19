@@ -1,0 +1,34 @@
+[settings]
+# show debug messages
+DEBUG = false
+# plex server url (e.g. http://ip:32400 or https://plex.reverse-proxy.com)
+SERVER_URL = https://plex.{{domain}}
+# plex token for server
+SERVER_TOKEN = 
+# name of server (does not matter, its used in the logs)
+SERVER_NAME = CloudBox
+# how often to check the active streams in seconds
+CHECK_INTERVAL = 90
+# instantly kick video transcodes?
+KICK_VIDEO_TRANSCODES = false
+# instantly kick audio transcodes?
+KICK_AUDIO_TRANSCODES = false
+# instantly kick any players from this , seperated list?
+KICK_CLIENT_PLAYERS =
+# instantly kick streams from users with multiple ips
+KICK_MULTIPLE_IP = true
+# how many streams from unique ips before kicking extra user streams if above is true
+KICK_MULTIPLE_IP_MAX = 1
+# delay kick paused transcodes? (direct streams count too)
+KICK_PAUSED_TRANSCODES = true
+# delay kick paused direct plays?
+KICK_PAUSED_DIRECTPLAY = true
+# when the options above are true, the user has this many minutes to resume, otherwise kick
+KICK_PAUSED_GRACE_MINS = 15
+# messages to be displayed for different kick types
+KICK_PAUSED_MESSAGE = You are not allowed to pause a stream for that long... cya!
+KICK_TRANSCODE_MESSAGE = You are not allowed to transcode streams, use a better client!
+KICK_PLAYER_MESSAGE = You are not allowed to use this trash player. Use the official software from www.plex.tv/downloads -> Get An App!!!
+KICK_MULTI_IP_MESSAGE = You are not allowed to stream from more than 1 IP address!
+# user list seperated by a , who are immune from all checks
+WHITELISTED_USERS = 

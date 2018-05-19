@@ -1,6 +1,28 @@
 #!/usr/bin/env python3
 """
-  ruTorrent autodl-irssi Filter Action:
+                                                     _
+                      __ _ _ __ _ __ _ __  _   _ ___| |__
+                     / _` | '__| '__| '_ \| | | / __| '_ \
+                    | (_| | |  | |  | |_) | |_| \__ \ | | |
+                     \__,_|_|  |_|  | .__/ \__,_|___/_| |_|
+                                    |_|
+
+    #########################################################################
+    # Author:   l3uddz                                                      #
+    # URL:      https://github.com/Cloudbox/Cloudbox                        #
+    # --                                                                    #
+    # Part of the Cloudbox project: https://cloudbox.rocks                  #
+    #########################################################################
+    # GNU General Public License v3.0                                       #
+    #########################################################################
+
+    Docker Install:
+    --
+    docker exec -it rutorrent apk update
+    docker exec -it rutorrent apk add python3
+    docker exec -it rutorrent python3 -m pip install requests urllib3
+
+    ruTorrent Autodl-irssi Filter Action:
     --
     COMMAND: /scripts/arrpush.py
     ARGUMENTS: "SONARR URL" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
