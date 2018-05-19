@@ -1,3 +1,13 @@
+#########################################################################
+# Title:         Cloudbox: Resilio Sync Role                            #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Docker Image:  resilio/sync                                           #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: "Setting CloudFlare DNS Record"
   include_role:

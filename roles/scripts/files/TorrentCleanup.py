@@ -1,4 +1,64 @@
 #!/usr/bin/env python
+"""
+
+    #########################################################################
+    # Title:         Torrent Cleanup Script                                 #
+    # Author(s):     l3uddz                                                 #
+    # URL:           https://github.com/Cloudbox/Cloudbox                   #
+    # Description:   Cleanup auto extracted files in ruTorrent downloads.   #
+    # --                                                                    #
+    #         Part of the Cloudbox project: https://cloudbox.rocks          #
+    #########################################################################
+    #                   GNU General Public License v3.0                     #
+    #########################################################################
+
+    Sonarr Setup:
+    --
+    1. Click "Settings" -> "Connect".
+
+    2. Add a new "Custom Script".
+
+    3. Add the following:
+
+        i. Name: Torrent Cleanup
+
+        ii. On Grab: No
+
+        iii. On Download: Yes
+
+        iv. On Upgrade: Yes
+
+        v. On Rename:No
+
+        vi. Path: /scripts/torrent/TorrentCleanup.py
+
+        vii. Arguments: sonarr
+
+    ========================================================================
+
+    Radarr Setup:
+    --
+    1. Click "Settings" -> "Connect".
+
+    2. Add a new "Custom Script".
+
+    3. Add the following:
+
+        i. Name: Torrent Cleanup
+
+        ii. On Grab: No
+
+        iii. On Download: Yes
+
+        iv. On Upgrade: Yes
+
+        v. On Rename:No
+
+        vi. Path: /scripts/torrent/TorrentCleanup.py
+
+        vii. Arguments: radarr
+
+"""
 import logging
 import os
 import sys

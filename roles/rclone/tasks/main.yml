@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: Rclone Role                                  #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: Verify that Rclone version was specified
   fail: msg="You must specify the Rclone version in settings.yml"
