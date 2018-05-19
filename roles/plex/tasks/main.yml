@@ -44,14 +44,14 @@
   register: plex_claim
   when: not (
       (plex_prefs.stat.exists)
-      and
+      or
       ((continuous_integration|default(false,true))|bool)
     )
 
 - debug: msg="Using plex claim token {{plex_claim.user_input}}"
   when: not (
       (plex_prefs.stat.exists)
-      and
+      or
       ((continuous_integration|default(false,true))|bool)
     )
 
