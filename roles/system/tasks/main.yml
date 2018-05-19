@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: System Role                                  #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: Update packages
   apt:
@@ -43,7 +52,7 @@
     name: net.ipv4.tcp_rmem
     value: "4096 87380 33554432"
     state: present
-    
+
 - name: Increase tcp_wmem autotune buffer limit to 32 MB
   sysctl:
     name: net.ipv4.tcp_wmem
@@ -171,9 +180,9 @@
     value: 0
     state: present
 
-- name: Disable secure_redirects 
+- name: Disable secure_redirects
   sysctl:
-    name: net.ipv4.conf.all.secure_redirects 
+    name: net.ipv4.conf.all.secure_redirects
     value: 0
     state: present
 
@@ -183,7 +192,7 @@
     value: fq
     state: present
 
-- debug: 
+- debug:
     msg: "System mounts: are {{ ansible_mounts }}"
 
 - name: Set noatime,nobarrier opts for / mount

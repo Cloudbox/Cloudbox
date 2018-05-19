@@ -1,13 +1,13 @@
 #!/bin/bash
 #########################################################################
-# Title:         Let's Encrypt SSL Certs Revoker                        #
-# Author:        desimaniac                                             #
+# Title:         Let's Encrypt SSL Certificates Revoker                 #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # Description:   Revoke SSL certificates for current domain.            #
 # --                                                                    #
-# Part of the Cloudbox project: https://cloudbox.rocks                  #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
-# GNU General Public License v3.0                                       #
+#                   GNU General Public License v3.0                     #
 #########################################################################
 
 domain={{domain}}
@@ -19,7 +19,7 @@ sudo docker stop $(docker ps -aq)
 for i in *.${domain}.chain.pem;
   do
     base=${i%%??????????}
-    sudo certbot revoke --cert-path ${base}/fullchain.pem --key-path ${base}/key.pem
+    sudo certbot revoke -n --cert-path ${base}/fullchain.pem --key-path ${base}/key.pem
 done
 
 sudo chown -R {{user}}:{{user}} /opt/nginx-proxy

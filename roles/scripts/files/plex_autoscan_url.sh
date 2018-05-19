@@ -1,13 +1,13 @@
 #!/bin/bash
 #########################################################################
-# Title:         Plex Autoscan URL                                      #
-# Author:        desimaniac                                             #
+# Title:         Plex Autoscan URL Printer                              #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
-# Description:   Script displays the Plex Autoscan URL                  #
+# Description:   Prints out the Plex Autoscan URL.                      #
 # --                                                                    #
-# Part of the Cloudbox project: https://cloudbox.rocks                  #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
-# GNU General Public License v3.0                                       #
+#                   GNU General Public License v3.0                     #
 #########################################################################
 
 cat <<BANNER
@@ -21,7 +21,7 @@ cat <<BANNER
 
 ###################################################################################
 # Title:         Plex Autoscan URL                                                #
-# Author:        desimaniac                                                       #
+# Author(s):     desimaniac                                                       #
 # URL:           https://github.com/Cloudbox/Cloudbox                             #
 # Description:   Prints out the the Plex Autoscan URL.                            #
 # --                                                                              #

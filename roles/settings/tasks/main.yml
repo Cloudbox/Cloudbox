@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: Settings Updater Role                        #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: Install ruamel.yaml
   pip:
