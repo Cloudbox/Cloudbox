@@ -38,7 +38,7 @@ Changelog Format:
 - Cloudbox: Added headers to all roles and scripts.
 
 ### Removed
-- docker-py: Ansible finds a conflict with having both docker-py and docker.
+- docker-py: Ansible finds a conflict with both docker-py and docker installed.
 
 ### Fixed
 - Ansible: Fixed misc warning messages.
