@@ -1,3 +1,13 @@
+#########################################################################
+# Title:         Cloudbox: NZBGet Role                                  #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: "Setting CloudFlare DNS Record"
   include_role:

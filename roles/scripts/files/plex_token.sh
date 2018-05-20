@@ -1,9 +1,12 @@
 #!/bin/sh -e
-#
-# Credits:
-# -------
-# Author: Werner Beroux (https://github.com/wernight)
-# Source: https://raw.githubusercontent.com/wernight/docker-plex-media-server/master/root/usr/local/bin/retrieve-plex-token
+#########################################################################
+# Title:         Retrieve Plex Token                                    #
+# Author(s):     Werner Beroux (https://github.com/wernight)            #
+# URL:           https://github.com/wernight/docker-plex-media-server   #
+# Description:   Prompts for Plex login and prints Plex access token.   #
+#########################################################################
+#                           MIT License                                 #
+#########################################################################
 
 if [ -z "$PLEX_LOGIN" ] || [ -z "$PLEX_PASSWORD" ]; then
     PLEX_LOGIN=$1
