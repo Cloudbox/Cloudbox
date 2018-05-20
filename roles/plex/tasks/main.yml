@@ -133,27 +133,10 @@
     mode: 0775
     recurse: yes
 
-- name: Check WebTools exists
-  stat:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
-  register: webtools_bundle
-
 - name: Wait for Plug-ins folder to be created by Plex
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
     state: present
-  when: webtools_bundle.stat.exists == False
-
-- name: Install WebTools
-  unarchive:
-    src: https://github.com/ukdtom/WebTools.bundle/releases/download/3.0.0/WebTools.bundle.zip
-    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
-    copy: no
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    validate_certs: no
-  when: webtools_bundle.stat.exists == False
 
 - name: Create plex_autoscan Logs folder
   file:
@@ -162,3 +145,61 @@
     mode: 0775
     owner: "{{user}}"
     group: "{{user}}"
+
+- name: Check WebTools exists
+  stat:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
+  register: webtools_bundle
+
+- name: Check install WebTools version if it exists
+  shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
+  register: webtools_installed_version
+  ignore_errors: yes
+  when: webtools_bundle.stat.exists
+
+- name: Check latest WebTools version
+  shell: curl -s https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest | jq -r .tag_name
+  register: webtools_latest_version
+  ignore_errors: yes
+  when: webtools_bundle.stat.exists
+
+- name: Compare installed WebTools version with latest one
+  set_fact:
+    webtools_outdated: "{{ webtools_installed_version.stdout is version(webtools_latest_version.stdout, '<', strict=True) }}"
+  ignore_errors: yes
+  when: webtools_bundle.stat.exists
+
+- name: Stop container to install WebTools
+  docker_container:
+    name: plex
+    state: stopped
+  when: (not webtools_bundle.stat.exists) or (webtools_outdated)
+
+- name: Remove outdated WebTools
+  file:
+    path: /opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
+    state: absent
+  when: webtools_bundle.stat.exists and webtools_outdated
+
+- name: Get latest WebTools URL
+  shell: curl -s https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest | jq -r ".assets[] | select(.name | test(\"WebTools.bundle.zip\")) | .browser_download_url"
+  register: webtools_download_url
+  ignore_errors: yes
+  when: (not webtools_bundle.stat.exists) or (webtools_outdated)
+
+- name: Install WebTools
+  unarchive:
+    src: "{{ webtools_download_url.stdout }}"
+    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    copy: no
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0775
+    validate_certs: no
+  when: (not webtools_bundle.stat.exists) or (webtools_outdated)
+
+- name: Start container to apply changes
+  docker_container:
+    name: plex
+    state: started
+  when: (not webtools_bundle.stat.exists) or (webtools_outdated)
