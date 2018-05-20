@@ -30,6 +30,19 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.1.2] - 2018-05-19
+### Added
+
+### Changed
+- AppVeyor: Set build to Ansible version 2.5.3.
+- Cloudbox: Added headers to all roles and scripts.
+
+### Removed
+- docker-py: Ansible finds a conflict with having both docker-py and docker.
+
+### Fixed
+- Ansible: Fixed misc warning messages.
+
 ## [1.1.1] - 2018-05-19
 ### Added
 - [Plex Patrol](https://github.com/l3uddz/plex_patrol).
@@ -292,6 +305,7 @@ Changelog Format:
 
 
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
+[1.1.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.1...v1.0.2
