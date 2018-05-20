@@ -1,0 +1,25 @@
+#########################################################################
+# Title:         Cloudbox: Hostess Role                                 #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Get latest hostess URL
+  shell: curl -s https://api.github.com/repos/cbednarski/hostess/releases/latest | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url"
+  register: hostess_download_url
+  ignore_errors: yes
+
+- name: Install hostess
+  get_url:
+    url:  "{{ hostess_download_url.stdout }}"
+    dest: /usr/local/bin/hostess
+    mode: 0755
+    owner: root
+    group: root
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
