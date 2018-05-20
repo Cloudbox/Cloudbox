@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: Plex Dupefinder Role                         #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: Create plex_dupefinder directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"

@@ -1,7 +1,7 @@
 ---
 - name: Ensure using kernel 4.10 or newer
   fail: msg="You must be using kernel 4.10.0-32-generic or newer! Use --tags kernel to upgrade first!"
-  when: ansible_kernel | version_compare('4.10', '<')
+  when: ansible_kernel is version_compare('4.10', '<')
 
 - name: Create common groups
   group: "name={{item}} state=present"

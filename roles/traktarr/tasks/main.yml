@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: Traktarr Role                                #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: Check service exists
   stat:
@@ -12,14 +21,14 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/traktarr
-    
+
 - name: Clone traktarr
   git:
     repo: https://github.com/l3uddz/traktarr/
     dest: /opt/traktarr
     version: master
     force: yes
-    
+
 - name: Install pip requirements
   pip:
     requirements: /opt/traktarr/requirements.txt
@@ -54,7 +63,7 @@
 - name: Import traktarr service
   template:
     src: traktarr.service.js2
-    dest: /etc/systemd/system/traktarr.service 
+    dest: /etc/systemd/system/traktarr.service
     force: yes
   when: traktarr_service.stat.exists == False
 
