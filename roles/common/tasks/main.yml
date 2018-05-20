@@ -90,15 +90,9 @@
   with_items:
     - frontail
 
-- name: Install hostess
-  get_url:
-    url:  https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64
-    dest: /usr/local/bin/hostess
-    mode: 0755
-    owner: root
-    group: root
-    force: yes
-    validate_certs: no
+- name: "Install hostess"
+  import_role:
+    name: hostess
   tags: update-hostess
 
 - name: Install ngrok
