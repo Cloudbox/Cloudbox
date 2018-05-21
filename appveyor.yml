@@ -1,12 +1,8 @@
 ---
 image: ubuntu
 
-environment:
-  matrix:
-  - ansible_ver: 2.5.2
-
 init:
-  - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh -s $ansible_ver
+  - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh
 
 install:
   - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --syntax-check
