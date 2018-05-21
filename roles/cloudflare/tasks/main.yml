@@ -11,7 +11,7 @@
 - name: Get IP Address
   ipinfoio_facts:
 
-- name: "Set DNS Record for {{subdomain}}.{{domain}} to {{ansible_default_ipv4.address}}"
+- name: "Set DNS Record for {{subdomain}}.{{domain}} to {{ ip }}"
   cloudflare_dns:
     account_api_token: "{{cloudflare_api_token}}"
     account_email: "{{email}}"
