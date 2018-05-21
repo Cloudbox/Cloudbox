@@ -32,16 +32,16 @@ Changelog Format:
 
 ## [1.1.3] - 2018-05-21
 
-**IMPORTANT**: This version requires **Ansible 2.5.2** (2.3.1.0 will give syntax errors; 2.5.0 has a bug with a certain math function that backup uses; 2.5.3 will complain about having both docker-py and docker installed). The [Dependencies Installer Script](https://github.com/Cloudbox/Cloudbox/wiki/First-Time-Install:-Downloading-Cloudbox#1-install-dependencies) will force install Ansible 2.5.2, but if you wanted to do it manually, use the following command:
+**IMPORTANT**: This version requires **Ansible 2.5.1** (2.3.1.0 will give syntax errors; 2.5.0 has a bug with a certain math function that backup uses; 2.5.2-2.5.3 will complain when both docker-py and docker are installed). The [Dependencies Installer Script](https://github.com/Cloudbox/Cloudbox/wiki/First-Time-Install:-Downloading-Cloudbox#1-install-dependencies) will force install Ansible 2.5.1, but if you wanted to do it manually, use the following command:
 
 ```
-sudo -H pip install --force-reinstall ansible==2.5.2
+sudo -H pip install --force-reinstall ansible==2.5.1
 ```
 
 ### Added
 
 ### Changed
-- AppVeyor: Set build to Ansible version 2.5.2.
+- AppVeyor: Will now install the default Ansible version in the Dependencies Installer Script.
 - Common: Install/Update to latest ctop version.
 - Common: Install/Update to latest hostess version.
 - Plex: Will auto-update to the latest WebTools version.
