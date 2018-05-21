@@ -31,6 +31,13 @@ Changelog Format:
 ## [Unreleased]
 
 ## [1.1.3] - 2018-05-21
+
+**IMPORTANT**: This version requires **Ansible 2.5.2** (2.3.1.0 will give syntax errors; 2.5.0 has a bug with a certain math function that backup uses; 2.5.3 will complain about having both docker-py and docker installed). The [Dependencies Installer Script](https://github.com/Cloudbox/Cloudbox/wiki/First-Time-Install:-Downloading-Cloudbox#1-install-dependencies) will force install Ansible 2.5.2, but if you wanted to do it manually, use the following command:
+
+```
+sudo -H pip install --force-reinstall ansible==2.5.2
+```
+
 ### Added
 
 ### Changed
@@ -43,8 +50,8 @@ Changelog Format:
 ### Removed
 
 ### Fixed
-- Clouflare: Task name shows correct IP address, now.
-- Docker: added docker-py back, set installed Ansible ver to 2.5.2 until they fix their issues.
+- Cloudflare: Task name shows correct IP address, now.
+- Docker: Added docker-py back; set installed Ansible ver to 2.5.2 until issues with 2.5.3 are fixed.
 
 ## [1.1.2] - 2018-05-19
 ### Added
