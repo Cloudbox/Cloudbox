@@ -30,14 +30,31 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
-## [1.1.2] - 2018-05-19
+## [1.1.3] - 2018-05-21
 ### Added
 
 ### Changed
 - AppVeyor: Set build to Ansible version 2.5.2.
+- Common: Install/Update to latest ctop version.
+- Common: Install/Update to latest hostess version.
+- Plex: Will auto-update to the latest WebTools version.
+- Webtools: Moved into a separate role.
+
+### Removed
+
+### Fixed
+- Clouflare: Task name shows correct IP address, now.
+- Docker: added docker-py back, set installed Ansible ver to 2.5.2 until they fix their issues.
+
+## [1.1.2] - 2018-05-19
+### Added
+
+### Changed
+- AppVeyor: Set build to Ansible version 2.5.3.
 - Cloudbox: Added headers to all roles and scripts.
 
 ### Removed
+- Docker: Removed docker-py. Ansible finds a conflict with both docker-py and docker installed.
 
 ### Fixed
 - Ansible: Fixed misc warning messages.
@@ -304,6 +321,7 @@ Changelog Format:
 
 
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
+[1.1.3]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.2...v1.1.0
