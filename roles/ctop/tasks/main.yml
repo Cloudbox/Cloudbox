@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Cloudflare Role                              #
+# Title:         Cloudbox: ctop Role                                    #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # --                                                                    #
@@ -8,24 +8,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get IP Address
-  ipinfoio_facts:
+- name: Get latest ctop URL
+  shell: curl -s https://api.github.com/repos/bcicen/ctop/releases/latest | jq -r ".assets[] | select(.name | test(\"linux-amd64\")) | .browser_download_url"
+  register: ctop_download_url
+  ignore_errors: yes
 
-- name: "Set DNS Record for {{subdomain}}.{{domain}} to {{ ip }}"
-  cloudflare_dns:
-    account_api_token: "{{cloudflare_api_token}}"
-    account_email: "{{email}}"
-    zone: "{{domain}}"
-    state: present
-    solo: true
-    proxied: no
-    type: A
-    value: "{{ ip }}"
-    record: "{{subdomain}}"
-  when: not(
-      (cloudflare_api_token is undefined)
-      or
-      (cloudflare_api_token is none)
-      or
-      (cloudflare_api_token | trim == '')
-    )
+- name: Install ctop
+  get_url:
+    url:  "{{ ctop_download_url.stdout }}"
+    dest: /usr/local/bin/ctop
+    mode: 0755
+    owner: root
+    group: root
+    force: yes
+    validate_certs: no
+  ignore_errors: yes

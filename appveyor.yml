@@ -3,7 +3,7 @@ image: ubuntu
 
 environment:
   matrix:
-  - ansible_ver: 2.5.3
+  - ansible_ver: 2.5.2
 
 init:
   - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh -s $ansible_ver
