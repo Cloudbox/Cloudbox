@@ -20,14 +20,14 @@ cat <<BANNER
 
 
 ###################################################################################
-# Title:         Plex Autoscan URL                                                #
-# Author(s):     desimaniac                                                       #
-# URL:           https://github.com/Cloudbox/Cloudbox                             #
-# Description:   Prints out the the Plex Autoscan URL.                            #
+# Title:             Plex Autoscan URL                                            #
+# Author(s):         desimaniac                                                   #
+# URL:               https://github.com/Cloudbox/Cloudbox                         #
+# Description:       Prints out the Plex Autoscan URL.                            #
 # --                                                                              #
-# Part of the Cloudbox project: https://cloudbox.rocks                            #
+#              Part of the Cloudbox project: https://cloudbox.rocks               #
 ###################################################################################
-# GNU General Public License v3.0                                                 #
+#                      GNU General Public License v3.0                            #
 ###################################################################################
 
 BANNER
