@@ -67,12 +67,18 @@
   pip: "name={{item}} state=latest"
   with_items:
     - passlib
-    - docker-py
     - certbot
     - ansible-toolbox
     - ndg-httpsclient
     - dnspython
     - yq
+  ignore_errors: yes
+
+- name: Install common pip modules
+  pip: "name={{item}} state=latest"
+  with_items:
+    - docker-py
+  tags: always
   ignore_errors: yes
 
 - name: Install NodeJS
