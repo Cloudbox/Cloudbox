@@ -8,6 +8,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Install common packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - jq
+  ignore_errors: yes
+
+- name: Install common pip modules
+  pip: "name={{item}} state=latest"
+  with_items:
+    - yq
+  ignore_errors: yes
+
 - name: Create script directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
