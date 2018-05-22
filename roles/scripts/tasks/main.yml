@@ -12,6 +12,9 @@
   apt: "name={{item}} state=present"
   with_items:
     - jq
+    - figlet
+    - toilet
+    - boxes
   ignore_errors: yes
 
 - name: Install common pip modules
