@@ -1,4 +1,10 @@
 ---
+skip_commits:
+  files:
+    - '*.md'
+    - 'settings.yml.default'
+    - 'roles/scripts/files/*'
+
 image: ubuntu
 
 init:
