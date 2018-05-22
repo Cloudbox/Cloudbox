@@ -58,6 +58,7 @@
     group: "{{ user }}"
     mode: 0775
     validate_certs: no
+  ignore_errors: yes
   when: (not webtools_bundle.stat.exists) or (webtools_outdated)
 
 - name: Start container to apply changes
