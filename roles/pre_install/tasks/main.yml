@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: Pre-Install Role                             #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: Ensure using kernel 4.10 or newer
   fail: msg="You must be using kernel 4.10.0-32-generic or newer! Use --tags kernel to upgrade first!"
