@@ -50,6 +50,8 @@ cd ~/cloudbox
 git reset --hard COMMITID
 ```
 
+You can also download the source zip file and extract it into the cloudbox folder.
+
 ### Added
 
 ### Changed
@@ -66,6 +68,10 @@ git reset --hard COMMITID
 - Docker: Added docker-py back; set installed Ansible ver to 2.5.2 until issues with 2.5.3 are fixed.
 
 ## [1.1.2] - 2018-05-19
+
+### **Notes**:
+Use v1.1.3 or v1.1.1, instead.
+
 ### Added
 
 ### Changed
