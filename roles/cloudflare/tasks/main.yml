@@ -11,7 +11,11 @@
 - name: Get IP Address
   ipinfoio_facts:
 
-- name: "Set DNS Record for {{subdomain}}.{{domain}} to {{ ip }}"
+- name: Determine Record
+  set_fact:
+    record: "{{ (subdomain == domain) | ternary(domain,subdomain + '.' + domain) }}"
+
+- name: "Set DNS Record for {{record}} to {{ip}}"
   cloudflare_dns:
     account_api_token: "{{cloudflare_api_token}}"
     account_email: "{{email}}"
@@ -20,7 +24,7 @@
     solo: true
     proxied: no
     type: A
-    value: "{{ ip }}"
+    value: "{{ip}}"
     record: "{{subdomain}}"
   when: not(
       (cloudflare_api_token is undefined)
