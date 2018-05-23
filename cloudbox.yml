@@ -2,6 +2,7 @@
 - hosts: localhost
   vars_files:
     - ['settings.yml', 'settings.yml.default']
+    - ['adv_settings.yml', 'adv_settings.yml.default']
   roles:
     - { role: sanity_check }
     - { role: kernel, tags: ['kernel'], when: [ 'ansible_distribution_version == 16.04' ] }
