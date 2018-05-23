@@ -23,7 +23,7 @@
   cron:
     name: "Remove old kernels on reboot"
     special_time: reboot
-    job: "purge-old-kernels -qy"
+    job: "PATH='/usr/sbin:/usr/bin:/sbin:/bin' purge-old-kernels -qy"
 
 - name: Upgrade packages
   apt:
