@@ -15,6 +15,13 @@
   vars:
     subdomain: organizr
 
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: "{{domain}}"
+  when: organizr.direct_domain|default(false,true)
+
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
   register: uid
@@ -43,9 +50,9 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "organizr.{{domain}}"
+      VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('organizr.' + domain + ',' + domain,'organizr.' + domain) }}"
       VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "organizr.{{domain}}"
+      LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('organizr.' + domain + ',' + domain,'organizr.' + domain) }}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
