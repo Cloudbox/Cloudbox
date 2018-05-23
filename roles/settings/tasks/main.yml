@@ -14,50 +14,84 @@
     version: 0.15.35
     executable: pip3
 
-- name: Check if 'settings.yml' exists
-  stat:
-    path: "{{playbook_dir}}/settings.yml"
-  register: settings_yml
-
 - name: Get cloudbox.yml info
   stat:
     path: "{{playbook_dir}}/cloudbox.yml"
   register: cloudbox_info
 
-- name: Copy 'settings.yml.default' to 'settings.yml'
-  copy:
-    src: "{{ playbook_dir }}/settings.yml.default"
-    dest: "{{ playbook_dir }}/settings.yml"
-    owner: "{{ cloudbox_info.stat.uid }}"
-    group: "{{ cloudbox_info.stat.gid }}"
-    mode: 0664
-    force: yes
-  when: settings_yml.stat.exists == False
+- name: settings.yml
+  block:
+    - name: Check if 'settings.yml' exists
+      stat:
+        path: "{{playbook_dir}}/settings.yml"
+      register: settings_yml
 
-# Used for hash check
-- name: Get stats on 'settings.yml.default'
-  stat:
-    path: "{{playbook_dir}}/settings.yml.default"
-  register: settings_yml_default
+    - name: Copy 'settings.yml.default' to 'settings.yml'
+      copy:
+        src: "{{ playbook_dir }}/settings.yml.default"
+        dest: "{{ playbook_dir }}/settings.yml"
+        owner: "{{ cloudbox_info.stat.uid }}"
+        group: "{{ cloudbox_info.stat.gid }}"
+        mode: 0664
+        force: yes
+      when: settings_yml.stat.exists == False
 
-- name: Verify 'settings.yml' does not match 'settings.yml.default'
-  assert:
-    that:
-      - settings_yml.stat.exists
-      - settings_yml.stat.checksum != settings_yml_default.stat.checksum
-    msg: "Please edit your 'settings.yml' file. For more info, see the Wiki page: 'Configuring Settings'."
+    # Used for hash check
+    - name: Get stats on 'settings.yml.default'
+      stat:
+        path: "{{playbook_dir}}/settings.yml.default"
+      register: settings_yml_default
 
-- name: Run 'settings-updater.py'
-  script: roles/settings/files/settings-updater.py "{{playbook_dir}}" "settings.yml.default" "settings.yml"
-  become: yes
-  become_user: "{{cloudbox_info.stat.pw_name}}"
-  register: settings_updater
-  failed_when: settings_updater.rc == 1
+    - name: Verify 'settings.yml' does not match 'settings.yml.default'
+      assert:
+        that:
+          - settings_yml.stat.exists
+          - settings_yml.stat.checksum != settings_yml_default.stat.checksum
+        msg: "Please edit your 'settings.yml' file. For more info, see the Wiki page: 'Configuring Settings'."
 
-- name: Check 'settings-updater.py' run status for errors
-  fail: msg="The script 'settings_updater.py' exited with an error. Check `settings-updater.log` for details why."
-  when: settings_updater.rc == 1
+    - name: Run 'settings-updater.py' for 'settings.yml'
+      script: roles/settings/files/settings-updater.py "{{playbook_dir}}" "settings.yml.default" "settings.yml"
+      become: yes
+      become_user: "{{cloudbox_info.stat.pw_name}}"
+      register: settings_updater
+      failed_when: settings_updater.rc == 1
 
-- name: Check 'settings-updater.py' run status for new settings
-  fail: msg="The script 'settings_updater.py' added new settings. Check `settings-updater.log` for details of new setting names added."
-  when: settings_updater.rc == 2
+    - name: Check 'settings-updater.py' run status for errors with updating 'settings.yml'
+      fail: msg="The script 'settings_updater.py' exited with an error when updating 'settings.yml'. Check 'settings-updater.log' for details why."
+      when: settings_updater.rc == 1
+
+    - name: Check 'settings-updater.py' run status for new settings in 'settings.yml'
+      fail: msg="The script 'settings_updater.py' added new settings to 'settings.yml'. Check 'settings-updater.log' for details."
+      when: settings_updater.rc == 2
+
+- name: adv_settings.yml
+  block:
+    - name: Check if 'adv_settings.yml' exists
+      stat:
+        path: "{{playbook_dir}}/adv_settings.yml"
+      register: adv_settings_yml
+
+    - name: Copy 'adv_settings.yml.default' to 'adv_settings.yml'
+      copy:
+        src: "{{ playbook_dir }}/adv_settings.yml.default"
+        dest: "{{ playbook_dir }}/adv_settings.yml"
+        owner: "{{ cloudbox_info.stat.uid }}"
+        group: "{{ cloudbox_info.stat.gid }}"
+        mode: 0664
+        force: yes
+      when: adv_settings_yml.stat.exists == False
+
+    - name: Run 'settings-updater.py' for 'adv_settings.yml'
+      script: roles/settings/files/settings-updater.py "{{playbook_dir}}" "adv_settings.yml.default" "adv_settings.yml"
+      become: yes
+      become_user: "{{cloudbox_info.stat.pw_name}}"
+      register: adv_settings_updater
+      failed_when: adv_settings_updater.rc == 1
+
+    - name: Check 'settings-updater.py' run status for errors with updating 'adv_settings.yml'
+      debug: msg="The script 'settings_updater.py' exited with an error when updating 'adv_settings.yml. Check 'settings-updater.log' for details why."
+      when: adv_settings_updater.rc == 1
+
+    - name: Check 'settings-updater.py' run status for new settings in 'adv_settings.yml'
+      debug: msg="The script 'settings_updater.py' added new settings to 'adv_settings.yml'. Check 'settings-updater.log' for details."
+      when: adv_settings_updater.rc == 2
