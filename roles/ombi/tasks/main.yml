@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: ombi
+    subdomain: "{{ ombi.subdomain|default('ombi',true) }}"
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -43,9 +43,9 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "ombi.{{domain}}"
+      VIRTUAL_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{domain}}"
       VIRTUAL_PORT: 3579
-      LETSENCRYPT_HOST: "ombi.{{domain}}"
+      LETSENCRYPT_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
