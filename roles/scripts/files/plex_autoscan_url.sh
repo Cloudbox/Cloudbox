@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Plex Autoscan URL Printer                              #
-# Author(s):     desimaniac                                             #
+# Author(s):     Desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # Description:   Prints out the Plex Autoscan URL.                      #
 # --                                                                    #
@@ -18,7 +18,7 @@ cat <<BANNER
 
 #####################################################################################
 # Title:             Plex Autoscan URL                                              #
-# Author(s):         desimaniac                                                     #
+# Author(s):         Desimaniac                                                     #
 # URL:               https://github.com/Cloudbox/Cloudbox                           #
 # Description:       Prints out the Plex Autoscan URL.                              #
 # --                                                                                #

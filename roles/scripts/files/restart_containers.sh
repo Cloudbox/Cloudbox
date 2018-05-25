@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Restart Running Containers Script                      #
-# Author(s):     desimaniac                                             #
+# Author(s):     Desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # Description:   Stop running containers and start them back up.        #
 # --                                                                    #

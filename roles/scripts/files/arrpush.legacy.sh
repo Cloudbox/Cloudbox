@@ -11,7 +11,7 @@
 #                                                                                      #
 ########################################################################################
 # Title:      ARR-Push Legacy                                                          #
-# Author(s):  l3uddz                                                                   #
+# Author(s):  L3uddz                                                                   #
 # URL:        https://github.com/Cloudbox/Cloudbox                                     #
 # --                                                                                   #
 #                Part of the Cloudbox project: https://cloudbox.rocks                  #
