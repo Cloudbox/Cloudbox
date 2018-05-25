@@ -41,7 +41,7 @@
   when: sudoers.stat.exists == True
 
 - name: "Make cloudbox folder readable/writeable by {{user}}"
-  file: "path={{playbook_dir}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{playbook_dir}} state=directory owner={{user}} group={{user}} recurse=yes"
 
 - name: Check plexdrive.service exists
   stat:
