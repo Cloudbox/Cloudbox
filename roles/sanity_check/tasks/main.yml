@@ -13,9 +13,9 @@
     msg: "System is running {{ ansible_distribution }} {{ ansible_distribution_version }}"
   tags: always
 
-- name: "Ensure system is Ubuntu 16.04"
-  fail: msg="This playbook is specifically designed for Ubuntu 16.04."
-  when: ansible_distribution_version is version_compare('16.04', '!=')
+- name: "Ensure system is Ubuntu 16.04 or 18.04"
+  fail: msg="This playbook is specifically designed for Ubuntu 16.04 or 18.04"
+  when: ansible_distribution_version == 16.04 or ansible_distribution_version == 18.04
   tags: always
 
 - name: "Ensure a tag was provided"
