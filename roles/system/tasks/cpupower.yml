@@ -1,0 +1,73 @@
+#########################################################################
+# Title:         Cloudbox: CPU Power Role                               #
+# Author(s):     l3uddz, EnorMOZ                                        #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+
+- name: Install required packages
+  apt: "name={{item}} state=latest"
+  with_items:
+    - cpufrequtils
+    - linux-tools-common
+    - linux-tools-generic
+    - linux-tools-{{ ansible_kernel }}
+
+- name: Check /etc/default/cpufrequtils exists
+  stat:
+    path: /etc/default/cpufrequtils
+  register: cpufrequtils_file
+
+- name: Create /etc/default/cpufrequtils
+  file:
+    path: /etc/default/cpufrequtils
+    state: touch
+  when: cpufrequtils_file.stat.exists == False
+
+- name: Set CPU frequency scaling governor to performance
+  lineinfile:
+    path: "/etc/default/cpufrequtils"
+    regexp: '^GOVENOR\s?='
+    line: 'GOVENOR="performance"'
+    state: present
+
+- name: Set CPU frequency scaling governor to performance
+  lineinfile:
+    path: "/etc/default/cpufrequtils"
+    regexp: '^GOVERNOR\s?='
+    line: 'GOVERNOR="performance"'
+    state: present
+
+- name: Ensure governor is enabled
+  lineinfile:
+    path: "/etc/default/cpufrequtils"
+    regexp: '^ENABLE\s?='
+    line: 'ENABLE="true"'
+    state: present
+
+- name: Disable ondemand CPU frequency scaling daemon
+  shell: "update-rc.d ondemand disable"
+  when: ansible_distribution_version == 16.04
+
+- name: Check service exists
+  stat:
+    path: "/etc/systemd/system/cpupower.service"
+  register: cpupower_service
+
+- name: Import cpupower.service
+  template:
+    src: cpupower.service
+    dest: /etc/systemd/system/cpupower.service
+    force: yes
+  when: cpupower_service.stat.exists == False
+
+- name: Start cpupower service
+  systemd:
+    state: started
+    name: cpupower
+    daemon_reload: yes
+    enabled: yes
