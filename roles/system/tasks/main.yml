@@ -17,7 +17,6 @@
   with_items:
     - apt-utils
     - byobu
-    - cpufrequtils
 
 - name: Purge old kernels on reboot
   cron:
@@ -206,37 +205,6 @@
     - "{{ ansible_mounts }}"
   when: "item.mount == '/'"
 
-- name: Check /etc/default/cpufrequtils exists
-  stat:
-    path: /etc/default/cpufrequtils
-  register: cpufrequtils_file
-
-- name: Create /etc/default/cpufrequtils
-  file:
-    path: /etc/default/cpufrequtils
-    state: touch
-  when: cpufrequtils_file.stat.exists == False
-
-- name: Set CPU frequency scaling governor to performance
-  lineinfile:
-    path: "/etc/default/cpufrequtils"
-    regexp: '^GOVENOR\s?='
-    line: 'GOVENOR="performance"'
-    state: present
-
-- name: Set CPU frequency scaling governor to performance
-  lineinfile:
-    path: "/etc/default/cpufrequtils"
-    regexp: '^GOVERNOR\s?='
-    line: 'GOVERNOR="performance"'
-    state: present
-
-- name: Ensure governor is enabled
-  lineinfile:
-    path: "/etc/default/cpufrequtils"
-    regexp: '^ENABLE\s?='
-    line: 'ENABLE="true"'
-    state: present
-
-- name: Disable ondemand CPU frequency scaling daemon
-  shell: "update-rc.d ondemand disable"
+- name: Include cpupower task when not virutalized
+  include_tasks: "cpupower.yml"
+  when: ansible_virtualization_role is not defined or ansible_virtualization_role == "host"
