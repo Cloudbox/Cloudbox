@@ -18,15 +18,23 @@
     - apt-utils
     - byobu
 
+- name: Upgrade packages
+  apt:
+    upgrade: dist
+
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: yes
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes
+
 - name: Purge old kernels on reboot
   cron:
     name: "Remove old kernels on reboot"
     special_time: reboot
     job: "PATH='/usr/sbin:/usr/bin:/sbin:/bin' purge-old-kernels -qy"
-
-- name: Upgrade packages
-  apt:
-    upgrade: dist
 
 - name: Enable tcp_window_scaling
   sysctl:
@@ -205,6 +213,6 @@
     - "{{ ansible_mounts }}"
   when: "item.mount == '/'"
 
-- name: Include cpupower task when not virutalized
+- name: Include CPU Power task when not virtualized
   include_tasks: "cpupower.yml"
   when: ansible_virtualization_role is not defined or ansible_virtualization_role == "host"
