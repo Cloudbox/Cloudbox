@@ -3,3 +3,5 @@ organizr:
   direct_domain: no
 ombi:
   subdomain: ombi
+plexrequests:
+  subdomain: plexrequests
