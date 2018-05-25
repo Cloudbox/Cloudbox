@@ -3,7 +3,7 @@
 
     #########################################################################
     # Title:         Settings Updater Script                                #
-    # Author(s):     l3uddz                                                 #
+    # Author(s):     L3uddz                                                 #
     # URL:           https://github.com/Cloudbox/Cloudbox                   #
     # Description:   Adds variables to settings.yml.                        #
     # --                                                                    #
