@@ -1,3 +1,5 @@
 ---
 organizr:
   direct_domain: no
+ombi:
+  subdomain: ombi
