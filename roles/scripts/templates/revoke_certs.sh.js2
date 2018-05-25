@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Let's Encrypt SSL Certificates Revoker                 #
-# Author(s):     desimaniac                                             #
+# Author(s):     Desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # Description:   Revoke SSL certificates for current domain.            #
 # --                                                                    #
