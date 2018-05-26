@@ -35,4 +35,4 @@ Featured Applications:
 
 ***
 
-_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 15sKj1qi5PWvviTbCDJJKYoeQBQRv535Gb or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp. Other forms of support are also appreciated (e.g. bugfixes/pull requests to develop branch, etc)._
+_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp. Other forms of support are also appreciated (e.g. bugfixes/pull requests to develop branch, etc)._
