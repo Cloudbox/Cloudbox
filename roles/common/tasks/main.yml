@@ -104,6 +104,7 @@
   import_role:
     name: hostess
   tags: update-hostess
+  ignore_errors: yes
 
 - name: Install ngrok
   unarchive:
@@ -113,6 +114,13 @@
     mode: 0775
     validate_certs: no
   tags: update-ngrok
+  ignore_errors: yes
+
+- name: Install iperf3
+  import_role:
+    name: iperf3
+  tags: update-iperf3
+  ignore_errors: yes
 
 - name: Create common directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"

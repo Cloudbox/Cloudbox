@@ -1,0 +1,52 @@
+#########################################################################
+# Title:         Cloudbox: iperf3 Role                                  #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Cleanup tmp iperf3 path
+  shell: rm -rf /tmp/iperf-*.*
+  args:
+    warn: no
+
+- name: "Download iperf3"
+  unarchive:
+    src: "http://downloads.es.net/pub/iperf/iperf-3-current.tar.gz"
+    dest: /tmp
+    copy: no
+    validate_certs: no
+
+- name: "Find iperf3 tmp dir"
+  shell: "ls -d /tmp/iperf-*.*"
+  register: iperf3_tmp_dir
+
+- name: "Build and install iperf3"
+  shell: "cd {{iperf3_tmp_dir.stdout}} && \
+          ./configure && \
+          make && \
+          make install"
+
+- name: "Get iperf3 binary path"
+  shell: "which iperf3"
+  register: iperf3_binary
+
+- name: "Get iperf3 version"
+  shell: "{{iperf3_binary.stdout}} --version | head -n 1 | awk '{ print $2 }'"
+  register: iperf3_version
+  ignore_errors: yes
+
+- name: "Display iperf3 version"
+  debug:
+    msg: "iperf3 {{iperf3_version.stdout}} installed."
