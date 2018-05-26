@@ -51,7 +51,7 @@
 
 - name: Disable ondemand CPU frequency scaling daemon
   shell: "update-rc.d ondemand disable"
-  when: ansible_distribution_version == 16.04
+  when: ansible_distribution_version == "16.04"
 
 - name: Check service exists
   stat:

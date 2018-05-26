@@ -5,7 +5,7 @@
     - ['adv_settings.yml', 'adv_settings.yml.default']
   roles:
     - { role: sanity_check }
-    - { role: kernel, tags: ['kernel'], when: [ 'ansible_distribution_version == 16.04' ] }
+    - { role: kernel, tags: ['kernel'], when: [ 'ansible_distribution_version == "16.04"' ] }
     - { role: settings, tags: ['always', 'update-settings'] }
     - { role: pre_install, tags: ['full', 'feeder', 'plex'] }
     - { role: system, tags: ['full', 'feeder', 'plex'] }
