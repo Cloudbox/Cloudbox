@@ -85,6 +85,15 @@
 
 - name: Install NodeJS
   shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
+  tags: update-nodejs
+
+- name: Update npm
+  shell: "npm install -g npm"
+  tags: update-nodejs
+
+- name: Update packages
+  shell: "npm update -g"
+  tags: update-nodejs
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
