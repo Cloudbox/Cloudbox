@@ -51,6 +51,7 @@
     - tmux
     - apache2-utils
     - jq
+    - lib32z1
   ignore_errors: yes
 
 - name: Check to see if unrar installed
