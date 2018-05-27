@@ -27,7 +27,6 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/nzbget
-    - /opt/nzbget/scripts
 
 - name: Stop and remove any existing container
   docker_container:
