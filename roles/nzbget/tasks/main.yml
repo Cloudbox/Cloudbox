@@ -65,6 +65,7 @@
       VIRTUAL_PORT: 6789
       LETSENCRYPT_HOST: "nzbget.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
+      LC_ALL: "C"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbget:/config"
