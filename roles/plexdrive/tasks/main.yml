@@ -8,45 +8,45 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-  - name: Check service exists
-    stat:
-      path: "/etc/systemd/system/plexdrive.service"
-    register: plexdrive_service
+- name: Check if plexdrive.service exists
+  stat:
+    path: "/etc/systemd/system/plexdrive.service"
+  register: plexdrive_service
 
-  - name: Stop existing plexdrive service
-    systemd: state=stopped name=plexdrive
-    when: plexdrive_service.stat.exists
+- name: Stop existing plexdrive service
+  systemd: state=stopped name=plexdrive
+  when: plexdrive_service.stat.exists
 
-  - name: Create plexdrive directories
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-    with_items:
-      - /opt/plexdrive
+- name: Create plexdrive directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/plexdrive
 
-  - name: Install plexdrive
-    get_url:
-      url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
-      dest: /opt/plexdrive/plexdrive
-      mode: 0755
-      owner: "{{user}}"
-      group: "{{user}}"
-      force: yes
-      validate_certs: no
+- name: Install plexdrive
+  get_url:
+    url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
+    dest: /opt/plexdrive/plexdrive
+    mode: 0755
+    owner: "{{user}}"
+    group: "{{user}}"
+    force: yes
+    validate_certs: no
 
-  - name: Import plexdrive.service
-    template:
-      src: plexdrive.service.js2
-      dest: /etc/systemd/system/plexdrive.service
-      force: yes
-    when: plexdrive_service.stat.exists == False
+- name: Import plexdrive.service
+  template:
+    src: plexdrive.service.js2
+    dest: /etc/systemd/system/plexdrive.service
+    force: yes
+  when: plexdrive_service.stat.exists == False
 
-  - name: Systemd daemon-reload
-    systemd: state=stopped name=plexdrive daemon_reload=yes enabled=no
+- name: Systemd daemon-reload
+  systemd: state=stopped name=plexdrive daemon_reload=yes enabled=no
 
-  - name: Check config exists
-    stat:
-      path: "/opt/plexdrive/config.json"
-    register: plexdrive_config
+- name: Check config exists
+  stat:
+    path: "/opt/plexdrive/config.json"
+  register: plexdrive_config
 
-  - name: Start plexdrive service
-    systemd: state=started name=plexdrive enabled=yes
-    when: plexdrive_config.stat.exists
+- name: Start plexdrive service
+  systemd: state=started name=plexdrive enabled=yes
+  when: plexdrive_config.stat.exists
