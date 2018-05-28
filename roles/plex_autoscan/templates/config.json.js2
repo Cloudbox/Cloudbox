@@ -47,6 +47,10 @@
         "/data/TV/": [
             "/tv/",
             "/mnt/unionfs/Media/TV/"
+        ],
+        "/data/Music/": [
+            "/music/",
+            "/mnt/unionfs/Media/Music/"
         ]
     },
     "SERVER_IGNORE_LIST": [
