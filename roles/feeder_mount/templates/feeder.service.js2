@@ -1,0 +1,26 @@
+#########################################################################
+# Title:         Cloudbox: Feeder Mount Service                         #
+# Path:          /etc/systemd/system/feeder.service                     #
+# Author(s):     Desimaniac, L3uddz                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
+[Unit]
+Description=Feeder Mount
+After=network-online.target
+
+[Service]
+User={{user}}
+Group={{user}}
+Type=simple
+ExecStart=/usr/bin/rclone mount feeder:/mnt/local /mnt/feeder --copy-links --fast-list --allow-other --dir-cache-time=1m --log-file=/home/{{user}}/logs/feeder_mount.log --max-read-ahead=200M -v --allow-non-empty
+ExecStop=/bin/fusermount -uz /mnt/plexdrive
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
