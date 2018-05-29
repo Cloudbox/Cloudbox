@@ -80,10 +80,23 @@
 - name: Systemd daemon-reload
   systemd: state=stopped name=feeder daemon_reload=yes enabled=no
 
+- name: Check if /mnt/feeder path exists
+  stat:
+    path: /mnt/feeder
+  register: mnt_feeder_path
+
+- name: Clean /mnt/feeder path
+  shell: "/bin/rm -rf /mnt/feeder/*"
+  when: mnt_feeder_path.stat.exists
+  ignore_errors: yes
+  args:
+    warn: no
+
 - name: Create /mnt/feeder path
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /mnt/feeder
+  when: not mnt_feeder_path.stat.exists
 
 - name: Start feeder service
   systemd: state=started name=feeder enabled=yes
