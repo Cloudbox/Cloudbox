@@ -20,7 +20,7 @@ User={{user}}
 Group={{user}}
 ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/unionfs-fuse -o cow,allow_other,nonempty /mnt/feeder=RW:/mnt/plexdrive=RO /mnt/unionfs
-ExecStop=/bin/fusermount -u /mnt/unionfs
+ExecStop=/bin/fusermount -uz /mnt/unionfs
 
 [Install]
 WantedBy=default.target
