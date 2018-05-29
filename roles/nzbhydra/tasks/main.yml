@@ -41,8 +41,6 @@
     published_ports:
       - "127.0.0.1:5075:5075"
     env:
-      APP: "nzbhydra"
-      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
       VIRTUAL_HOST: "nzbhydra.{{domain}}"

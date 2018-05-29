@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Feeder Mount Service                         #
+# Title:         Cloudbox: UnionFS Mount Service                        #
 # Path:          /etc/systemd/system/unionfs.service                    #
 # Author(s):     Desimaniac, L3uddz                                     #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
