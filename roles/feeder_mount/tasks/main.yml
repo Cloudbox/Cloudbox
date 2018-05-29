@@ -1,0 +1,104 @@
+#########################################################################
+# Title:         Cloudbox: Feeder Mount Role                            #
+# Author(s):     Desimaniac, L3uddz                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Gathering list of running docker containers"
+  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+  register: docker_running_containers
+  ignore_errors: yes
+
+- name: "Stop running docker containers"
+  shell: 'docker stop {{docker_running_containers.stdout}}'
+  ignore_errors: yes
+
+- name: Stop unionfs service
+  systemd: state=stopped name=unionfs
+  ignore_errors: yes
+
+- name: "Force unmount /mnt/unionfs"
+  shell: "/bin/umount -f /mnt/unionfs"
+  ignore_errors: yes
+
+- name: Stop feeder service
+  systemd: state=stopped name=feeder
+  ignore_errors: yes
+
+- name: "Force unmount /mnt/feeder"
+  shell: "/bin/umount -f /mnt/feeder"
+  ignore_errors: yes
+
+- name: Check if feeder.service exists in /opt/systemd-backup/
+  stat:
+    path: "/opt/systemd-backup/feeder.service"
+  register: feeder_backedup_service
+
+- name: Copy /opt/systemd-backup/feeder.service to /etc/systemd/system/feeder.service
+  copy:
+    src: /opt/systemd-backup/feeder.service
+    dest: /etc/systemd/system/feeder.service
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: feeder_backedup_service.stat.exists
+
+- name: Change ownership in restored feeder.service
+  lineinfile:
+    path: "/etc/systemd/system/feeder.service"
+    regexp: "{{item.regexp}}"
+    line: "{{item.line}}"
+    state: present
+  with_items:
+    - { regexp: '^User\s?=', line: 'User={{user}}' }
+    - { regexp: '^Group\s?=', line: 'Group={{user}}' }
+  when: feeder_backedup_service.stat.exists
+
+- name: Check if feeder.service exists in /etc/systemd/system/
+  stat:
+    path: "/etc/systemd/system/feeder.service"
+  register: feeder_systemd_service
+
+- name: Import feeder.service to /etc/systemd/system/
+  template:
+    src: feeder.service.js2
+    dest: /etc/systemd/system/feeder.service
+    force: yes
+  when: not feeder_systemd_service.stat.exists
+
+- name: Import updated unionfs.service
+  template:
+    src: unionfs.service.js2
+    dest: /etc/systemd/system/unionfs.service
+    force: yes
+
+- name: Systemd daemon-reload
+  systemd: state=stopped name=feeder daemon_reload=yes enabled=no
+
+- name: Create /mnt/feeder path
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /mnt/feeder
+
+- name: Start feeder service
+  systemd: state=started name=feeder enabled=yes
+
+- name: "Wait for 5 seconds before starting unionfs service"
+  wait_for:
+    timeout: 5
+
+- name: Start unionfs service
+  systemd: state=started name=unionfs enabled=yes
+
+- name: "Wait for 5 seconds before starting docker containers"
+  wait_for:
+    timeout: 5
+
+- name: "Start docker containers"
+  shell: 'docker start {{docker_running_containers.stdout}}'
+  ignore_errors: yes

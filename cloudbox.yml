@@ -50,3 +50,4 @@
     - { role: quassel, tags: ['install-quassel', 'update-quassel'] }
     - { role: plex_patrol, tags: ['install-plex_patrol', 'update-plex_patrol'] }
     - { role: telly, tags: ['install-telly', 'update-telly'] }
+    - { role: feeder_mount, tags: ['mount-feeder'] }
