@@ -157,13 +157,13 @@
     systemd:
       name: unionfs_cleaner
       state: stopped
-    when: unionfs_cleaner_status|success
+    when: unionfs_cleaner_status is success
 
   - name: Stop plexdrive service
     systemd:
       name: plexdrive
       state: stopped
-    when: plexdrive_status|success
+    when: plexdrive_status is success
 
   - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
     shell: "tar --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
@@ -209,13 +209,13 @@
     systemd:
       name: plexdrive
       state: started
-    when: plexdrive_status|success
+    when: plexdrive_status is success
 
   - name: Start unionfs_cleaner service
     systemd:
       name: unionfs_cleaner
       state: started
-    when: unionfs_cleaner_status|success
+    when: unionfs_cleaner_status is success
 
   - name: "Wait for 5 seconds before starting containers"
     wait_for:
