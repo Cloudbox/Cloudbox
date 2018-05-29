@@ -40,7 +40,7 @@
     state: present
   when: sudoers.stat.exists == True
 
-- name: "Make cloudbox folder readable/writeable by {{user}}"
+- name: "Make Cloudbox folder readable/writeable by {{user}}"
   file: "path={{playbook_dir}} state=directory owner={{user}} group={{user}} recurse=yes"
 
 - name: Check plexdrive.service exists
@@ -58,16 +58,3 @@
     name: plexdrive
     state: stopped
   when: plexdrive_service_check.stat.exists
-
-- name: Setting CloudFlare DNS Record for Cloudbox Type
-  include_role:
-    name: cloudflare
-  vars:
-    subdomain: "{{cloudbox_type}}"
-  when: not(
-      (cloudbox_type is undefined)
-      or
-      (cloudbox_type is none)
-      or
-      (cloudbox_type | trim == '')
-    )
