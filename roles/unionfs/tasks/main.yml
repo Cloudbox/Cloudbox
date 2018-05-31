@@ -43,6 +43,7 @@
       - /mnt/unionfs
       - /mnt/unionfs/Media
       - /mnt/unionfs/Media/Movies
+      - /mnt/unionfs/Media/Music
       - /mnt/unionfs/Media/TV
 
   - name: Start unionfs service
