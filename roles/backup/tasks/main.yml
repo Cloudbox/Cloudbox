@@ -166,7 +166,7 @@
     when: plexdrive_status is success
 
   - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
-    shell: "tar --warning=no-file-changed --ignore-failed-read --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+    shell: "tar --ignore-failed-read --warning=no-file-changed --warning=no-file-removed --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
     become: yes
     become_user: "{{user}}"
     args:
