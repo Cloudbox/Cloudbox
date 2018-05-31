@@ -11,7 +11,7 @@
 ---
 - block:
   - name: Create log directory
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
     with_items:
       - /home/{{user}}/logs
 
@@ -166,7 +166,11 @@
     when: plexdrive_status is success
 
   - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
-    shell: "tar --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+    shell: "tar --warning=no-file-changed --ignore-failed-read --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+    become: yes
+    become_user: "{{user}}"
+    args:
+      warn: no
 
   - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
     stat:
@@ -319,7 +323,7 @@
       src: "{{backup.tar_dest}}/"
       dest: "{{backup.rsync_dest}}/"
       rsync_opts:
-        - "--log-file='{{playbook_dir}}/backup_rsync.log'"
+        - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rsync
@@ -386,12 +390,21 @@
       job: "PATH='/usr/bin:/bin:/usr/local/bin' {{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup >> /home/{{user}}/logs/cloudbox_backup-{{ '`' }}date +\\%Y-\\%m-\\%d_\\%H-\\%M-\\%S{{ '`' }}.log 2>&1"
       state: "{{backup.cron_state}}"
 
-  always:
-  - debug: msg="Finished backup"
-    when: backup_lock.stat.exists == False
+  - debug:
+      msg: "Backup Completed Successfully."
 
+  rescue:
+    - debug:
+        msg: 'Backup Terminated due to an error.'
+
+  always:
   - name: "Remove backup.lock"
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: absent
     when: backup_lock.stat.exists == False
+
+  - name: Set logs folder ownership
+    shell: "chown -R {{user}}:{{user}} /home/{{user}}/logs/"
+    args:
+      warn: no
