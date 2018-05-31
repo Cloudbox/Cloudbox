@@ -23,6 +23,7 @@
     - /mnt/local/.unionfs-fuse
     - /mnt/local/Media
     - /mnt/local/Media/Movies
+    - /mnt/local/Media/Music
     - /mnt/local/Media/TV
     - /opt
     - /home/{{user}}/logs
@@ -97,7 +98,7 @@
     path: "/usr/bin/unrar"
   register: unrar_binary
 
-- name: Install common packages
+- name: Install unrar-free
   apt: "name={{item}} state=present"
   with_items:
     - unrar-free
