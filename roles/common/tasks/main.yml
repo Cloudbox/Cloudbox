@@ -81,7 +81,6 @@
     - ncdu
     - mc
     - speedtest-cli
-    - nethogs
     - dnsutils
     - nodejs-legacy
     - npm
@@ -165,4 +164,10 @@
   import_role:
     name: iperf3
   tags: update-iperf3
+  ignore_errors: yes
+
+- name: Install nethogs
+  import_role:
+    name: nethogs
+  tags: update-nethogs
   ignore_errors: yes
