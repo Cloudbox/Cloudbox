@@ -16,6 +16,44 @@
   shell: "id -g {{user}}"
   register: gid
 
+- name: Create common directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /mnt/local
+    - /mnt/local/.unionfs-fuse
+    - /mnt/local/Media
+    - /mnt/local/Media/Movies
+    - /mnt/local/Media/TV
+    - /opt
+    - /home/{{user}}/logs
+    - /home/{{user}}/.config
+    - /home/{{user}}/.config/pip
+
+- name: Check plexdrive mount folder exist
+  stat:
+    path: /mnt/plexdrive
+  register: plexdrive_mnt
+
+- name: Create /mnt/plexdrive
+  file:
+    path: /mnt/plexdrive
+    state: directory
+    mode: 0755
+    owner: "{{user}}"
+    group: "{{user}}"
+    recurse: yes
+  when: plexdrive_mnt.stat.exists == False
+
+- name: Set /opt permissions
+  shell: "chmod -R ugo+X /opt"
+  args:
+    warn: no
+
+- name: Set /opt owner
+  shell: "chown -R {{user}}:{{user}} /opt"
+  args:
+    warn: no
+
 - name: Install common packages
   apt: "name={{item}} state=present"
   with_items:
@@ -66,6 +104,15 @@
   ignore_errors: yes
   when: not unrar_binary.stat.exists
 
+- name: "Import pip.conf into /home/{{user}}/.config/pip/"
+  copy:
+    src: "pip.conf"
+    dest: "/home/{{user}}/.config/pip/pip.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 775
+    force: yes
+
 - name: Install common pip modules
   pip: "name={{item}} state=latest"
   with_items:
@@ -101,19 +148,15 @@
   with_items:
     - frontail
 
-- name: "Install hostess"
+- name: Install hostess
   import_role:
     name: hostess
   tags: update-hostess
   ignore_errors: yes
 
 - name: Install ngrok
-  unarchive:
-    src: https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-    dest: /usr/local/bin
-    copy: no
-    mode: 0775
-    validate_certs: no
+  import_role:
+    name: ngrok
   tags: update-ngrok
   ignore_errors: yes
 
@@ -122,40 +165,3 @@
     name: iperf3
   tags: update-iperf3
   ignore_errors: yes
-
-- name: Create common directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /home/{{user}}/logs
-    - /home/{{user}}/.config
-    - /mnt/local
-    - /mnt/local/.unionfs-fuse
-    - /mnt/local/Media
-    - /mnt/local/Media/Movies
-    - /mnt/local/Media/TV
-    - /opt
-
-- name: Check plexdrive mount folder exist
-  stat:
-    path: /mnt/plexdrive
-  register: plexdrive_mnt
-
-- name: Create /mnt/plexdrive
-  file:
-    path: /mnt/plexdrive
-    state: directory
-    mode: 0755
-    owner: "{{user}}"
-    group: "{{user}}"
-    recurse: yes
-  when: plexdrive_mnt.stat.exists == False
-
-- name: Set /opt permissions
-  shell: "chmod -R ugo+X /opt"
-  args:
-    warn: no
-
-- name: Set /opt owner
-  shell: "chown -R {{user}}:{{user}} /opt"
-  args:
-    warn: no

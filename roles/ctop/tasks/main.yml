@@ -26,9 +26,9 @@
 
 - name: "Get ctop version"
   shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/.$//'"
-  register: ctop_ver
+  register: ctop_version
   ignore_errors: yes
 
 - name: "Display ctop version"
   debug:
-    msg: "ctop {{ctop_ver.stdout}} installed."
+    msg: "ctop version {{ctop_version.stdout}} installed."
