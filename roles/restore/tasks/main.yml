@@ -122,6 +122,11 @@
   wait_for:
     timeout: 10
 
+- name: Create /opt directory
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt
+
 - name: "Unarchive cloudbox.tar to /opt"
   shell: "tar -xf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
 

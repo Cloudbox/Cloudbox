@@ -133,15 +133,15 @@
 
 - name: Install NodeJS
   shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
-  tags: update-nodejs
+  tags: nodejs
 
 - name: Update npm
   shell: "npm install -g npm"
-  tags: update-nodejs
+  tags: nodejs
 
 - name: Update packages
   shell: "npm update -g"
-  tags: update-nodejs
+  tags: nodejs
 
 - name: Install common npm modules
   npm: "name={{item}} global=yes"
@@ -151,23 +151,23 @@
 - name: Install hostess
   import_role:
     name: hostess
-  tags: update-hostess
+  tags: hostess
   ignore_errors: yes
 
 - name: Install ngrok
   import_role:
     name: ngrok
-  tags: update-ngrok
+  tags: ngrok
   ignore_errors: yes
 
 - name: Install iperf3
   import_role:
     name: iperf3
-  tags: update-iperf3
+  tags: iperf3
   ignore_errors: yes
 
 - name: Install nethogs
   import_role:
     name: nethogs
-  tags: update-nethogs
+  tags: nethogs
   ignore_errors: yes

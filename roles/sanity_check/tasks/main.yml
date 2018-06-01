@@ -22,7 +22,7 @@
   assert:
     that:
       - tags is defined
-    msg: "You must supply a tag via '--tags OPTION' (e.g. --tags full/feeder/plex/backup/restore/update-XXXX/install-XXXX)"
+    msg: "You must supply a tag via '--tags OPTION' (e.g. --tags fullbox/feederbox/plexbox/backup/restore/XXXX)"
   when: not ((continuous_integration|default(false,true))|bool)
 
 - name: "Check if backup.lock is present"
