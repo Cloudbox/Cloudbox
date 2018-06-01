@@ -149,4 +149,4 @@
 - name: "Install WebTools"
   import_role:
     name: webtools
-  tags: update-webtools
+  tags: webtools
