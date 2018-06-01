@@ -92,7 +92,7 @@
 - name: "Install ctop"
   import_role:
     name: ctop
-  tags: update-ctop
+  tags: ctop
 
 - name: Create cloudbox network
   docker_network:

@@ -12,7 +12,7 @@ init:
 
 install:
   - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --syntax-check
-  - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --tags "full" --skip-tags "update-settings" --extra-vars "continuous_integration=true"
+  - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --tags "fullbox" --skip-tags "settings" --extra-vars "continuous_integration=true"
 
 matrix:
   fast_finish: true
