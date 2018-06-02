@@ -47,7 +47,7 @@
         "google": {
             "check_interval": 30,
             "exclude_open_files": true,
-            "max_size_gb": 400,
+            "max_size_gb": 200,
             "opened_excludes": [
                 "/downloads/"
             ],
