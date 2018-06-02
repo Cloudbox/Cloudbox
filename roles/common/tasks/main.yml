@@ -51,7 +51,6 @@
   apt: "name={{item}} state=present"
   with_items:
     - nano
-    - unrar
     - unzip
     - p7zip
     - curl
@@ -82,6 +81,12 @@
     - apache2-utils
     - jq
     - lib32z1
+  ignore_errors: yes
+
+- name: Install unrar
+  apt: "name={{item}} state=present"
+  with_items:
+    - unrar
   ignore_errors: yes
 
 - name: Check to see if unrar installed
