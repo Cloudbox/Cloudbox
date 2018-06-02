@@ -120,15 +120,9 @@
     - certbot
     - ansible-toolbox
     - ndg-httpsclient
+    - docker-py
     - dnspython
     - yq
-  ignore_errors: yes
-
-- name: Install common pip modules
-  pip: "name={{item}} state=latest"
-  with_items:
-    - docker-py
-  tags: always
   ignore_errors: yes
 
 - name: Install NodeJS
