@@ -48,7 +48,7 @@ fi
 # Declare Subdomains Array
 declare -a subdomains=(
   "plex.$domain"
-  "plexbox.$domain"
+  "mediabox.$domain"
   "cloudbox.$domain"
   "$real_ip"
 )
