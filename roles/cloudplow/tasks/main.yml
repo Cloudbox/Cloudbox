@@ -22,6 +22,10 @@
   systemd: state=stopped enabled=no name=unionfs_cleaner
   when: unionfs_cleaner_service.stat.exists
 
+- name: Remove unionfs_cleaner.service
+  file: "path=/etc/systemd/system/unionfs_cleaner.service state=absent force=yes"
+  when: unionfs_cleaner_service.stat.exists
+
 - name: Stop existing cloudplow service
   systemd: state=stopped name=cloudplow
   when: cloudplow_service.stat.exists
