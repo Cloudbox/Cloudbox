@@ -148,16 +148,16 @@
     ignore_errors: yes
     register: plexdrive_status
 
-  - name: Check if unionfs_cleaner is running
-    command: systemctl status unionfs_cleaner
+  - name: Check if cloudplow is running
+    command: systemctl status cloudplow
     ignore_errors: yes
-    register: unionfs_cleaner_status
+    register: cloudplow_status
 
-  - name: Stop unionfs_cleaner service
+  - name: Stop cloudplow service
     systemd:
-      name: unionfs_cleaner
+      name: cloudplow
       state: stopped
-    when: unionfs_cleaner_status is success
+    when: cloudplow_status is success
 
   - name: Stop plexdrive service
     systemd:
@@ -215,11 +215,11 @@
       state: started
     when: plexdrive_status is success
 
-  - name: Start unionfs_cleaner service
+  - name: Start cloudplow service
     systemd:
-      name: unionfs_cleaner
+      name: cloudplow
       state: started
-    when: unionfs_cleaner_status is success
+    when: cloudplow_status is success
 
   - name: "Wait for 5 seconds before starting containers"
     wait_for:
