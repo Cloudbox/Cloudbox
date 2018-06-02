@@ -8,20 +8,21 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set Cloudbox Type to \"plexbox\""
+
+- name: "Set Cloudbox Type to \"cloudbox\""
   set_fact:
-    cloudbox_type: "plexbox"
-  tags: plexbox
+    cloudbox_type: "cloudbox"
+  tags: cloudbox
+
+- name: "Set Cloudbox Type to \"mediabox\""
+  set_fact:
+    cloudbox_type: "mediabox"
+  tags: mediabox
 
 - name: "Set Cloudbox Type to \"feederbox\""
   set_fact:
     cloudbox_type: "feederbox"
   tags: feederbox
-
-- name: "Set Cloudbox Type to \"cloudbox\" (i.e. fullbox)"
-  set_fact:
-    cloudbox_type: "cloudbox"
-  tags: fullbox
 
 - name: Setting CloudFlare DNS Record for Cloudbox Type
   include_role:
@@ -36,9 +37,9 @@
       (cloudbox_type | trim == '')
     )
   tags:
-    - plexbox
+    - cloudbox
+    - mediabox
     - feederbox
-    - fullbox
 
 - name: Remove cloudbox subdomain for plex/feeder boxes
   cloudflare_dns:
@@ -56,5 +57,5 @@
       (cloudflare_api_token | trim == '')
     )
   tags:
-    - plexbox
+    - mediabox
     - feederbox
