@@ -95,6 +95,12 @@
     state: present
   when: rtorrent_rc.stat.exists == False
 
+- name: Wait for plugins.ini to be created
+  wait_for:
+    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
 - name: "Wait for 10 seconds before stopping rutorrent container"
   wait_for:
     timeout: 10
@@ -253,6 +259,16 @@
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
+  when: rtorrent_rc.stat.exists == False
+
+- name: Copy across custom plugins.ini
+  copy:
+    src: plugins.ini
+    dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
   when: rtorrent_rc.stat.exists == False
 
 - name: Start container to apply changes
