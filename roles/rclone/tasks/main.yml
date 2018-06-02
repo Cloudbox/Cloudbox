@@ -70,3 +70,12 @@
 - name: Install manpage
   shell: mandb
   changed_when: false
+
+- name: Get rclone version
+  shell: rclone --version | head -n 1 | awk '{ print substr($2, 2, 4) }'
+  register: rclone_version
+  ignore_errors: yes
+
+- name: "Display rclone version"
+  debug:
+    msg: "rclone version {{rclone_version.stdout}} installed."
