@@ -1,9 +1,19 @@
+#########################################################################
+# Title:         Cloudbox: Plex Requests - Meteor Role                  #
+# Author(s):     L3uddz                                                 #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Docker Image:  linuxserver/plexrequests                               #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: "Setting CloudFlare DNS Record"
   include_role:
     name: cloudflare
   vars:
-    subdomain: plexrequests
+    subdomain: "{{ plexrequests.subdomain|default('plexrequests',true) }}"
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -33,9 +43,9 @@
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "plexrequests.{{domain}}"
+      VIRTUAL_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{domain}}"
       VIRTUAL_PORT: 3000
-      LETSENCRYPT_HOST: "plexrequests.{{domain}}"
+      LETSENCRYPT_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

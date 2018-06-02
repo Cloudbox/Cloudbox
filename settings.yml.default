@@ -12,8 +12,6 @@ rutorrent:
 plex:
   tag: public
   transcodes: /home/{{user}}/transcodes
-plex_autoscan:
-  ip: 0.0.0.0
 rclone:
   version: latest
 unionfs_cleaner:

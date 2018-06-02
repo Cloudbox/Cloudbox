@@ -1,0 +1,34 @@
+#########################################################################
+# Title:         Cloudbox: ctop Role                                    #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Get latest ctop URL
+  shell: curl -s https://api.github.com/repos/bcicen/ctop/releases/latest | jq -r ".assets[] | select(.name | test(\"linux-amd64\")) | .browser_download_url"
+  register: ctop_download_url
+  ignore_errors: yes
+
+- name: Install ctop
+  get_url:
+    url:  "{{ ctop_download_url.stdout }}"
+    dest: /usr/local/bin/ctop
+    mode: 0755
+    owner: root
+    group: root
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
+
+- name: "Get ctop version"
+  shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/.$//'"
+  register: ctop_version
+  ignore_errors: yes
+
+- name: "Display ctop version"
+  debug:
+    msg: "ctop version {{ctop_version.stdout}} installed."

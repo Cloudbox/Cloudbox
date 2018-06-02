@@ -28,6 +28,118 @@ Changelog Format:
 -->
 
 # Changelog
+## [Unreleased]
+
+## [1.1.3] - 2018-05-21
+
+### **Notes**:
+This version requires **Ansible 2.5.1** (2.3.1.0 will give  syntax errors; 2.5.0 has a bug with a certain math function that backup uses; 2.5.2-2.5.3 will complain when both docker-py and docker are installed).
+
+To install Ansible 2.5.1:
+```bash
+curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh -s 2.5.1
+```
+  or
+```bash
+wget -qO- https://cloudbox.rocks/install_dependencies.sh | sudo -H sh -s 2.5.1
+```
+
+To checkout this version of Cloudbox:
+```
+cd ~/cloudbox
+git reset --hard COMMITID
+```
+
+You can also download the source zip file and extract it into the cloudbox folder.
+
+### Added
+
+### Changed
+- AppVeyor: Will now install the default Ansible version in the Dependencies Installer Script.
+- Common: Install/Update to latest ctop version.
+- Common: Install/Update to latest hostess version.
+- Plex: Will auto-update to the latest WebTools version.
+- Webtools: Moved into a separate role.
+
+### Removed
+
+### Fixed
+- Cloudflare: Task name shows correct IP address, now.
+- Docker: Added docker-py back; set installed Ansible ver to 2.5.2 until issues with 2.5.3 are fixed.
+
+## [1.1.2] - 2018-05-19
+
+### **Notes**:
+Use v1.1.3 or v1.1.1, instead.
+
+### Added
+
+### Changed
+- AppVeyor: Set build to Ansible version 2.5.3.
+- Cloudbox: Added headers to all roles and scripts.
+
+### Removed
+- Docker: Removed docker-py. Ansible finds a conflict with both docker-py and docker installed.
+
+### Fixed
+- Ansible: Fixed misc warning messages.
+
+## [1.1.1] - 2018-05-19
+
+### **Notes**:
+This version, and the versions below, are compatible with **Ansible 2.3.1.0**,  and possibly up to 2.4.0.
+
+To install Ansible 2.3.1.0:
+```bash
+curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh -s 2.3.1
+```
+  or
+```bash
+wget -qO- https://cloudbox.rocks/install_dependencies.sh | sudo -H sh -s 2.3.1
+```
+
+To checkout this version of Cloudbox:
+```
+cd ~/cloudbox
+git reset --hard 58964a8
+```
+
+### Added
+- [Plex Patrol](https://github.com/l3uddz/plex_patrol).
+- [Cloudbox MOTD](https://github.com/Cloudbox/cloudbox_motd): Cloudbox-enhanced MOTD.
+- AppVeyor CI
+
+### Changed
+- Backup: Exclude Plex cache folder in backup.
+- Backup: Logs are created in ~/logs/ path.
+- Backup: Misc edits for cron task.
+- Common: Installs unrar-free if unrar could not be installed.
+- Common: Netaddr is now installed via the Dependency Installer script.
+- Common: Set /opt to ugo+X instead of 775.
+- Docker: Better log size management.
+- Docker: Updated to 18.03.1.
+- Kernel: Now runs without settings-updater checks.
+- Nginx-Proxy: Renamed update tag to update-nginx-proxy vs update-nginx.
+- Node.js: Updated to v10.X.
+- Plex Autoscan: Fixed up Plex Autoscan URL Script.
+- Plex Dupefinder: misc changes to default config.
+- PlexPy (Tautulli): Now downloads nightly version.
+- Readme: Added feathub link.
+- Rutorrent: Added stop_timeout to Docker container.
+- Traktarr: misc changes to default config.
+- Watchower: now an optional module.
+
+### Removed
+- MOTD: previous version.
+
+### Fixed
+- Backup: systemd-backup now uses synchronize, should avoid issues with copy module failing on 0 byte files.
+- Cloudflare: Now only creates a single subdomain entry.
+- Cloudflare: Public IP Address will now be used.
+- Preinstall: No longer changes the user's shell on Cloudbox run (eg full).
+- ZSH: Existing .zshrc file will no longer be replaced with default one.
+- ZSH: Will now link to /bin/zsh if it doesn't already do so.
+
 
 ## [1.1.0] - 2018-04-18
 ### Added
@@ -253,6 +365,9 @@ Changelog Format:
 
 
 [Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
+[1.1.3]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.0...v1.0.1

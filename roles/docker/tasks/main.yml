@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: Docker Role                                  #
+# Author(s):     L3uddz, Desimaniac, EnorMOZ                            #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: Install required packages
   apt: "name={{item}} state=present"
@@ -11,21 +20,36 @@
     id: 0EBFCD88
     url: https://download.docker.com/linux/ubuntu/gpg
 
-- name: Add official repository
+- name: Add official repository for 16.04
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+  when: ansible_distribution_version == "16.04"
+
+- name: Add official repository for 18.04
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} edge"
+  when: ansible_distribution_version == "18.04"
 
 - name: Release docker-ce from hold
   dpkg_selections:
     name: docker-ce
     selection: install
 
-- name: Install docker-ce
+- name: Install docker-ce for 16.04
   apt:
     name: docker-ce=18.03.1~ce-0~ubuntu
     state: present
     update_cache: yes
     force: yes
+  when: ansible_distribution_version == "16.04"
+
+- name: Install docker-ce for 18.04
+  apt:
+    name: docker-ce=18.05.0~ce~3-0~ubuntu
+    state: present
+    update_cache: yes
+    force: yes
+  when: ansible_distribution_version == "18.04"
 
 - name: Put docker-ce into hold
   dpkg_selections:
@@ -65,16 +89,10 @@
 - name: Import override file
   copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
 
-- name: Install ctop
-  get_url:
-    url:  https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64
-    dest: /usr/local/bin/ctop
-    mode: 0755
-    owner: root
-    group: root
-    force: yes
-    validate_certs: no
-  tags: update-ctop
+- name: "Install ctop"
+  import_role:
+    name: ctop
+  tags: ctop
 
 - name: Create cloudbox network
   docker_network:

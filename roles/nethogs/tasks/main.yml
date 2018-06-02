@@ -1,0 +1,48 @@
+#########################################################################
+# Title:         Cloudbox: Nethogs Role                                 #
+# Author(s):     EnorMOZ                                                #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Make sure nethogs package is not installed
+  apt: "name=nethogs state=absent"
+
+- name: Install nethog dependancies
+  apt: name="{{item}}" state=present update_cache=yes
+  become: true
+  with_items:
+      - build-essential
+      - libncurses5-dev
+      - libpcap-dev
+
+- name: Pull nethogs repo from github
+  git: clone=yes repo=https://github.com/raboof/nethogs dest=/tmp/nethogs/
+  register: diff
+
+- name: Build and install nethogs
+  shell: "cd /tmp/nethogs && \
+          make && \
+          make install && \
+          hash -r && \
+          setcap 'cap_net_admin,cap_net_raw+pe' /usr/local/sbin/nethogs"
+  when: diff.changed
+
+- name: Symlink binary to /usr/local/bin
+  file:
+    src: "/usr/local/sbin/nethogs"
+    dest: /usr/local/bin/nethogs
+    state: link
+    force: yes
+
+- name: "Get nethogs version"
+  shell: "/usr/local/sbin/nethogs -V | head -n 1 | awk '{print $2}' | cut -f1,2 -d'-'"
+  register: nethogs_version
+  ignore_errors: yes
+
+- name: "Display nethogs version"
+  debug:
+    msg: "nethogs version {{nethogs_version.stdout}} installed."

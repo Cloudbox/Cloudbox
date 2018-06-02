@@ -1,0 +1,61 @@
+#########################################################################
+# Title:         Cloudbox: Pre-Tasks Role                               #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+
+- name: "Set Cloudbox Type to \"cloudbox\""
+  set_fact:
+    cloudbox_type: "cloudbox"
+  tags: cloudbox
+
+- name: "Set Cloudbox Type to \"mediabox\""
+  set_fact:
+    cloudbox_type: "mediabox"
+  tags: mediabox
+
+- name: "Set Cloudbox Type to \"feederbox\""
+  set_fact:
+    cloudbox_type: "feederbox"
+  tags: feederbox
+
+- name: Setting CloudFlare DNS Record for Cloudbox Type
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: "{{cloudbox_type}}"
+  when: not(
+      (cloudbox_type is undefined)
+      or
+      (cloudbox_type is none)
+      or
+      (cloudbox_type | trim == '')
+    )
+  tags:
+    - cloudbox
+    - mediabox
+    - feederbox
+
+- name: Remove cloudbox subdomain for plex/feeder boxes
+  cloudflare_dns:
+    account_api_token: "{{cloudflare_api_token}}"
+    account_email: "{{email}}"
+    zone: "{{domain}}"
+    state: absent
+    type: A
+    record: "cloudbox"
+  when: not(
+      (cloudflare_api_token is undefined)
+      or
+      (cloudflare_api_token is none)
+      or
+      (cloudflare_api_token | trim == '')
+    )
+  tags:
+    - mediabox
+    - feederbox

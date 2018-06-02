@@ -1,34 +1,31 @@
 #!/bin/bash
 #########################################################################
-# Title:         Plex Autoscan URL                                      #
-# Author:        desimaniac                                             #
+# Title:         Plex Autoscan URL Printer                              #
+# Author(s):     Desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
-# Description:   Script displays the Plex Autoscan URL                  #
+# Description:   Prints out the Plex Autoscan URL.                      #
 # --                                                                    #
-# Part of the Cloudbox project: https://cloudbox.rocks                  #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
-# GNU General Public License v3.0                                       #
+#                   GNU General Public License v3.0                     #
 #########################################################################
+
+
+toilet 'Plex Autoscan URL' -f standard --filter metal --filter border:metal --width 85
 
 cat <<BANNER
 
- ____  _                _         _                              _   _ ____  _
-|  _ \| | _____  __    / \  _   _| |_ ___  ___  ___ __ _ _ __   | | | |  _ \| |
-| |_) | |/ _ \ \/ /   / _ \| | | | __/ _ \/ __|/ __/ _\` | '_ \  | | | | |_) | |
-|  __/| |  __/>  <   / ___ \ |_| | || (_) \__ \ (_| (_| | | | | | |_| |  _ <| |___
-|_|   |_|\___/_/\_\ /_/   \_\__,_|\__\___/|___/\___\__,_|_| |_|  \___/|_| \_\_____|
 
-
-###################################################################################
-# Title:         Plex Autoscan URL                                                #
-# Author:        desimaniac                                                       #
-# URL:           https://github.com/Cloudbox/Cloudbox                             #
-# Description:   Prints out the the Plex Autoscan URL.                            #
-# --                                                                              #
-# Part of the Cloudbox project: https://cloudbox.rocks                            #
-###################################################################################
-# GNU General Public License v3.0                                                 #
-###################################################################################
+#####################################################################################
+# Title:             Plex Autoscan URL                                              #
+# Author(s):         Desimaniac                                                     #
+# URL:               https://github.com/Cloudbox/Cloudbox                           #
+# Description:       Prints out the Plex Autoscan URL.                              #
+# --                                                                                #
+#                Part of the Cloudbox project: https://cloudbox.rocks               #
+#####################################################################################
+#                        GNU General Public License v3.0                            #
+#####################################################################################
 
 BANNER
 
@@ -51,7 +48,7 @@ fi
 # Declare Subdomains Array
 declare -a subdomains=(
   "plex.$domain"
-  "plexbox.$domain"
+  "mediabox.$domain"
   "cloudbox.$domain"
   "$real_ip"
 )

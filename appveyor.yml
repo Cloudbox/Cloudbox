@@ -1,17 +1,18 @@
 ---
+skip_commits:
+  files:
+    - '*.md'
+    - '*.yml.default'
+    - 'roles/scripts/files/*'
+
 image: ubuntu
 
-environment:
-  matrix:
-  - ansible_ver: 2.5.0
-  - ansible_ver: 2.3.1
-
 init:
-  - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh -s $ansible_ver
+  - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh
 
 install:
   - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --syntax-check
-  - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --tags "full" --skip-tags "update-settings" --extra-vars "continuous_integration=true"
+  - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars "continuous_integration=true"
 
 matrix:
   fast_finish: true

@@ -1,3 +1,13 @@
+#########################################################################
+# Title:         Cloudbox: ruTorrent Role                               #
+# Author(s):     L3uddz, Horjulf                                        #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Docker Image:  horjulf/rutorrent-autodl                               #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: "Setting CloudFlare DNS Record"
   include_role:
@@ -82,6 +92,12 @@
 - name: Wait for nginx.conf to be created
   wait_for:
     path: "/opt/rutorrent/nginx/nginx.conf"
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Wait for plugins.ini to be created
+  wait_for:
+    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
     state: present
   when: rtorrent_rc.stat.exists == False
 
@@ -243,6 +259,16 @@
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
+  when: rtorrent_rc.stat.exists == False
+
+- name: Copy across custom plugins.ini
+  copy:
+    src: plugins.ini
+    dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
   when: rtorrent_rc.stat.exists == False
 
 - name: Start container to apply changes

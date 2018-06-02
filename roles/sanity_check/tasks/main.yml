@@ -1,32 +1,38 @@
+#########################################################################
+# Title:         Cloudbox: Sanity Check Role                            #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
-- name: "System Info"
-  debug:
-    msg: "System is running {{ ansible_distribution }} {{ ansible_distribution_version }}"
+- name: "Ensure system is Ubuntu 16.04 or 18.04"
+  fail: msg="Cloudbox is specifically designed for Ubuntu 16.04 or 18.04"
+  when: ansible_distribution_version is version_compare('16.04', '!=') and ansible_distribution_version is version_compare('18.04', '!=')
   tags: always
 
-- name: "Ensure system is Ubuntu 16.04"
-  fail: msg="This playbook is specifically designed for Ubuntu 16.04."
-  when: ansible_distribution_version | version_compare('16.04', '!=')
+- name: "Display System Info"
+  debug:
+    msg: "System is running {{ ansible_distribution }} {{ ansible_distribution_version }}."
   tags: always
 
 - name: "Ensure a tag was provided"
   assert:
     that:
       - tags is defined
-    msg: "You must supply a tag via '--tags OPTION' (e.g. --tags full/feeder/plex/backup/restore/update-XXXX/install-XXXX)"
+    msg: "You must supply a tag via '--tags OPTION' (e.g. --tags cloudbox/mediabox/feederbox/backup/restore/appname)"
   when: not ((continuous_integration|default(false,true))|bool)
 
-- name: "Set Cloudbox Type to \"plexbox\""
-  set_fact:
-    cloudbox_type: "plexbox"
-  tags: plex
+- name: "Check if backup.lock is present"
+  stat:
+    path: "{{playbook_dir}}/backup.lock"
+  register: backup_lock
+  tags: always
 
-- name: "Set Cloudbox Type to \"feederbox\""
-  set_fact:
-    cloudbox_type: "feederbox"
-  tags: feeder
-
-- name: "Set Cloudbox Type to \"cloudbox\" (i.e. full)"
-  set_fact:
-    cloudbox_type: "cloudbox"
-  tags: full
+- name: "Fail when backup.lock exists"
+  fail:
+    msg: "A Backup task is currently in progress. Please wait for it to complete."
+  when: backup_lock.stat.exists
+  tags: always

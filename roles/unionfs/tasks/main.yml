@@ -1,3 +1,12 @@
+#########################################################################
+# Title:         Cloudbox: UnionFS Role                                 #
+# Author(s):     L3uddz                                                 #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
   - name: Check service exists
     stat:
@@ -34,6 +43,7 @@
       - /mnt/unionfs
       - /mnt/unionfs/Media
       - /mnt/unionfs/Media/Movies
+      - /mnt/unionfs/Media/Music
       - /mnt/unionfs/Media/TV
 
   - name: Start unionfs service

@@ -1,7 +1,17 @@
+#########################################################################
+# Title:         Cloudbox: Backup Role                                  #
+# Author(s):     L3uddz, Desimaniac, RXWatcher1                         #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
 ---
 - block:
   - name: Create log directory
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
     with_items:
       - /home/{{user}}/logs
 
@@ -73,6 +83,7 @@
       force: yes
     with_items:
      - "{{playbook_dir}}/settings.yml"
+     - "{{playbook_dir}}/adv_settings.yml"
      - "/home/{{user}}/.config/rclone/rclone.conf"
     ignore_errors: yes
 
@@ -146,16 +157,20 @@
     systemd:
       name: unionfs_cleaner
       state: stopped
-    when: unionfs_cleaner_status|success
+    when: unionfs_cleaner_status is success
 
   - name: Stop plexdrive service
     systemd:
       name: plexdrive
       state: stopped
-    when: plexdrive_status|success
+    when: plexdrive_status is success
 
   - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
-    shell: "tar --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' --ignore-failed-read -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+    shell: "tar --ignore-failed-read --warning=no-file-changed --warning=no-file-removed --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder' -cf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+    become: yes
+    become_user: "{{user}}"
+    args:
+      warn: no
 
   - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
     stat:
@@ -198,13 +213,13 @@
     systemd:
       name: plexdrive
       state: started
-    when: plexdrive_status|success
+    when: plexdrive_status is success
 
   - name: Start unionfs_cleaner service
     systemd:
       name: unionfs_cleaner
       state: started
-    when: unionfs_cleaner_status|success
+    when: unionfs_cleaner_status is success
 
   - name: "Wait for 5 seconds before starting containers"
     wait_for:
@@ -249,6 +264,7 @@
       force: yes
     with_items:
      - "settings.yml"
+     - "adv_settings.yml"
      - "rclone.conf"
      - "cloudbox.tar"
 
@@ -270,6 +286,7 @@
     when: backup.use_rclone
     with_items:
      - "settings.yml"
+     - "adv_settings.yml"
      - "rclone.conf"
      - "cloudbox.tar"
 
@@ -306,7 +323,7 @@
       src: "{{backup.tar_dest}}/"
       dest: "{{backup.rsync_dest}}/"
       rsync_opts:
-        - "--log-file='{{playbook_dir}}/backup_rsync.log'"
+        - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rsync
@@ -373,12 +390,21 @@
       job: "PATH='/usr/bin:/bin:/usr/local/bin' {{playbook_binary.stdout}} {{playbook_dir}}/cloudbox.yml --tags backup >> /home/{{user}}/logs/cloudbox_backup-{{ '`' }}date +\\%Y-\\%m-\\%d_\\%H-\\%M-\\%S{{ '`' }}.log 2>&1"
       state: "{{backup.cron_state}}"
 
-  always:
-  - debug: msg="Finished backup"
-    when: backup_lock.stat.exists == False
+  - debug:
+      msg: "Backup Completed Successfully."
 
+  rescue:
+    - debug:
+        msg: 'Backup Terminated due to an error.'
+
+  always:
   - name: "Remove backup.lock"
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: absent
     when: backup_lock.stat.exists == False
+
+  - name: Set logs folder ownership
+    shell: "chown -R {{user}}:{{user}} /home/{{user}}/logs/"
+    args:
+      warn: no
