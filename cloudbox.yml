@@ -10,29 +10,29 @@
     - { role: settings, tags: ['always', 'settings'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
-    - { role: pre_install, tags: ['core', 'fullbox', 'plexbox', 'feederbox'] }
-    - { role: system, tags: ['core', 'fullbox', 'plexbox', 'feederbox'] }
-    - { role: motd, tags: ['core', 'fullbox', 'plexbox', 'feederbox', 'motd'] }
-    - { role: common, tags: ['core', 'fullbox', 'plexbox', 'feederbox'] }
-    - { role: unionfs, tags: ['core', 'fullbox', 'plexbox', 'feederbox', 'unionfs'] }
-    - { role: docker, tags: ['core', 'fullbox', 'plexbox', 'feederbox', 'docker'] }
-    - { role: plexdrive, tags: ['core', 'fullbox', 'plexbox', 'feederbox'] }
-    - { role: rclone, tags: ['core', 'fullbox', 'plexbox', 'feederbox', 'rclone'] }
-    - { role: scripts, tags: ['core', 'fullbox', 'plexbox', 'feederbox', 'scripts'] }
-    - { role: nginx-proxy, tags: ['core', 'fullbox', 'plexbox', 'feederbox', 'nginx-proxy'] }
-    - { role: plex, tags: ['fullbox', 'plexbox', 'plex'] }
-    - { role: plexpy, tags: ['fullbox', 'plexbox', 'plexpy'] }
-    - { role: plexrequests, tags: ['fullbox', 'plexbox', 'plexrequests'] }
-    - { role: plex_autoscan, tags: ['fullbox', 'plexbox', 'plex_autoscan'] }
-    - { role: portainer, tags: ['fullbox', 'feederbox', 'portainer'] }
-    - { role: organizr, tags: ['fullbox', 'feederbox', 'organizr'] }
-    - { role: unionfs_cleaner, tags: ['fullbox', 'feederbox', 'unionfs_cleaner']}
-    - { role: nzbget, tags: ['fullbox', 'feederbox', 'nzbget'] }
-    - { role: rutorrent, tags: ['fullbox', 'feederbox', 'rutorrent'] }
-    - { role: jackett, tags: ['fullbox', 'feederbox', 'jackett'] }
-    - { role: nzbhydra, tags: ['fullbox', 'feederbox', 'nzbhydra'] }
-    - { role: sonarr, tags: ['fullbox', 'feederbox', 'sonarr'] }
-    - { role: radarr, tags: ['fullbox', 'feederbox', 'radarr'] }
+    - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
+    - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: plexdrive, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'rclone'] }
+    - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
+    - { role: nginx-proxy, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nginx-proxy'] }
+    - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
+    - { role: plexpy, tags: ['cloudbox', 'mediabox', 'plexpy'] }
+    - { role: plexrequests, tags: ['cloudbox', 'mediabox', 'plexrequests'] }
+    - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
+    - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
+    - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
+    - { role: unionfs_cleaner, tags: ['cloudbox', 'feederbox', 'unionfs_cleaner']}
+    - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'] }
+    - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'] }
+    - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'] }
+    - { role: nzbhydra, tags: ['cloudbox', 'feederbox', 'nzbhydra'] }
+    - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
+    - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: ombi, tags: ['ombi'] }
     - { role: resilio, tags: ['resilio'] }
