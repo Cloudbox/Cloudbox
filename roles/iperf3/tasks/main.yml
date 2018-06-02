@@ -25,10 +25,12 @@
   register: iperf3_tmp_dir
 
 - name: "Build and install iperf3"
-  shell: "cd {{iperf3_tmp_dir.stdout}} && \
+  shell: "export LD_RUN_PATH=/usr/local/lib && \
+          cd {{iperf3_tmp_dir.stdout}} && \
           ./configure && \
           make && \
-          make install"
+          make install && \
+          ldconfig"
 
 - name: "Get iperf3 binary path"
   shell: "which iperf3"
