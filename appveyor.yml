@@ -2,7 +2,7 @@
 skip_commits:
   files:
     - '*.md'
-    - 'settings.yml.default'
+    - '*.yml.default'
     - 'roles/scripts/files/*'
 
 image: ubuntu
