@@ -42,10 +42,25 @@
 - name: "Set {{rutorrent.downloads}} owner"
   shell: "chown -R {{user}}:{{user}} {{rutorrent.downloads}}"
 
-- name: Check rtorrent.rc exists
+- name: Check if rtorrent.rc exists
   stat:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
   register: rtorrent_rc
+
+- name: Check if plugins.ini exists
+  stat:
+    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+  register: plugins_ini
+
+- name: Replace plugins.ini with customized one
+  copy:
+    src: plugins.ini
+    dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: plugins_ini.stat.exists
 
 - name: Create and start container
   docker_container:
