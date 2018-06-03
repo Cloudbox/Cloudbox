@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Cloudplow Role                               #
-# Author(s):     l3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -66,6 +66,12 @@
 
 - name: Set directory permissions
   file: "path=/opt/cloudplow state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: "Create /usr/local/bin symlink"
+  file:
+    src: "/opt/cloudplow/cloudplow.py"
+    dest: "/usr/local/bin/cloudplow"
+    state: link
 
 - name: Import cloudplow service
   template:
