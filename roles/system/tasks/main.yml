@@ -216,4 +216,4 @@
 
 - name: Include CPU Power task when not virtualized
   include_tasks: "cpupower.yml"
-  when: ansible_virtualization_role is not defined or ansible_virtualization_role == "host"
+  when: (ansible_virtualization_role is not defined or ansible_virtualization_role == "host") and ansible_system_vendor != "Scaleway"
