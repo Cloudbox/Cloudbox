@@ -10,6 +10,7 @@ Group={{user}}
 Type=simple
 WorkingDirectory=/opt/cloudplow/
 ExecStart=/usr/bin/python3 /opt/cloudplow/cloudplow.py run
+ExecStopPost=/bin/rm -rf /opt/cloudplow/locks
 Restart=always
 RestartSec=10
 

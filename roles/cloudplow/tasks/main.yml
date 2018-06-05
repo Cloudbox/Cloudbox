@@ -78,7 +78,6 @@
     src: cloudplow.service.js2
     dest: /etc/systemd/system/cloudplow.service
     force: yes
-  when: cloudplow_service.stat.exists == False
 
 - name: Start cloudplow service
   systemd: state=started name=cloudplow daemon_reload=yes enabled=yes
