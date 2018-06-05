@@ -24,6 +24,14 @@
     - "/home/{{user}}/.config"
     - "/home/{{user}}/.config/rclone"
 
+- name: Touch or create blank rclone.conf file
+  file:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+    state: touch
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
   args:
