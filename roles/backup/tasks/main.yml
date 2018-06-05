@@ -57,7 +57,6 @@
       )
     ignore_errors: yes
 
-
   - name: "Check {{backup.tar_dest}} exists"
     stat:
       path: "{{backup.tar_dest}}"
@@ -142,7 +141,6 @@
       )
     ignore_errors: yes
 
-
   - name: Check if plexdrive is running
     command: systemctl status plexdrive
     ignore_errors: yes
@@ -214,6 +212,15 @@
       name: plexdrive
       state: started
     when: plexdrive_status is success
+
+  - name: Get list of cloudplow lock files
+    find: path=/opt/cloudplow/locks/ file_type=file
+    register: files
+
+  - name: Clear out cloudplow lock files
+    file: state=absent path="{{ item.path }}"
+    with_items:
+      - "{{ files.files }}"
 
   - name: Start cloudplow service
     systemd:
@@ -394,8 +401,57 @@
       msg: "Backup Completed Successfully."
 
   rescue:
+    - name: Start plexdrive service
+      systemd:
+        name: plexdrive
+        state: started
+      when: plexdrive_status is success
+
+    - name: Get list of cloudplow lock files
+      find: path=/opt/cloudplow/locks/ file_type=file
+      register: files
+
+    - name: Clear out cloudplow lock files
+      file: state=absent path="{{ item.path }}"
+      with_items:
+        - "{{ files.files }}"
+
+    - name: Start cloudplow service
+      systemd:
+        name: cloudplow
+        state: started
+      when: cloudplow_status is success
+
+    - name: "Wait for 5 seconds before starting containers"
+      wait_for:
+        timeout: 5
+
+    - name: "Start containers"
+      shell: 'docker start {{docker_running_containers.stdout}}'
+      ignore_errors: yes
+
     - debug:
-        msg: 'Backup Terminated due to an error.'
+        msg: 'Backup terminated due to an error.'
+
+    - name: "Pushover Message: Backup terminated due to an error"
+      pushover:
+        msg: "Backup terminated due to an error."
+        app_token: "{{backup.pushover_app_token}}"
+        user_key: "{{backup.pushover_user_key}}"
+      when: not(
+          (backup.pushover_app_token is undefined)
+          or
+          (backup.pushover_app_token is none)
+          or
+          (backup.pushover_app_token | trim == '')
+          or
+          (backup.pushover_user_key is undefined)
+          or
+          (backup.pushover_user_key is none)
+          or
+          (backup.pushover_user_key | trim == '')
+        )
+      ignore_errors: yes
 
   always:
   - name: "Remove backup.lock"
