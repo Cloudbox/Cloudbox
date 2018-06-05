@@ -213,21 +213,6 @@
       state: started
     when: plexdrive_status is success
 
-  - name: Get list of cloudplow lock files
-    find: path=/opt/cloudplow/locks/ file_type=file
-    register: files
-
-  - name: Clear out cloudplow lock files
-    file: state=absent path="{{ item.path }}"
-    with_items:
-      - "{{ files.files }}"
-
-  - name: Start cloudplow service
-    systemd:
-      name: cloudplow
-      state: started
-    when: cloudplow_status is success
-
   - name: "Wait for 5 seconds before starting containers"
     wait_for:
       timeout: 5
@@ -380,6 +365,12 @@
       )
     ignore_errors: yes
 
+  - name: Start cloudplow service
+    systemd:
+      name: cloudplow
+      state: started
+    when: cloudplow_status is success
+      
   - name: "Remove cloudbox.tar from \"{{backup.tar_dest}}\""
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar"
@@ -407,21 +398,6 @@
         state: started
       when: plexdrive_status is success
 
-    - name: Get list of cloudplow lock files
-      find: path=/opt/cloudplow/locks/ file_type=file
-      register: files
-
-    - name: Clear out cloudplow lock files
-      file: state=absent path="{{ item.path }}"
-      with_items:
-        - "{{ files.files }}"
-
-    - name: Start cloudplow service
-      systemd:
-        name: cloudplow
-        state: started
-      when: cloudplow_status is success
-
     - name: "Wait for 5 seconds before starting containers"
       wait_for:
         timeout: 5
@@ -429,6 +405,12 @@
     - name: "Start containers"
       shell: 'docker start {{docker_running_containers.stdout}}'
       ignore_errors: yes
+
+    - name: Start cloudplow service
+      systemd:
+        name: cloudplow
+        state: started
+      when: cloudplow_status is success
 
     - debug:
         msg: 'Backup terminated due to an error.'
