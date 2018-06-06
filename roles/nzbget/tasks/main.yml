@@ -128,6 +128,14 @@
     state: present
   when: nzbget_conf.stat.exists == False
 
+- name: Rename Music category
+  lineinfile:
+    path: "/opt/nzbget/nzbget.conf"
+    regexp: '^Category3.Name\s?='
+    line: 'Category3.Name=lidarr'
+    state: present
+  when: nzbget_conf.stat.exists == False
+
 - name: Remove default Username
   lineinfile:
     path: "/opt/nzbget/nzbget.conf"
