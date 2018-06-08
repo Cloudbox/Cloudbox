@@ -214,6 +214,11 @@
     - "{{ ansible_mounts }}"
   when: "item.mount == '/'"
 
-- name: Include CPU Power task when not virtualized
+- name: Check if intel_pstate directory exists.
+  stat:
+    path: /sys/devices/system/cpu/intel_pstate
+  register: p
+
+- name: Include CPU Power task when dir exist
   include_tasks: "cpupower.yml"
-  when: (ansible_virtualization_role is not defined or ansible_virtualization_role == "host") and ansible_system_vendor != "Scaleway"
+  when: p.stat.isdir is defined and p.stat.isdir
