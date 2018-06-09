@@ -2,7 +2,7 @@
 #########################################################################
 # Title:         Let's Encrypt SSL Certificates Revoker                 #
 # Author(s):     Desimaniac                                             #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # Description:   Revoke SSL certificates for current domain.            #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #

@@ -2,7 +2,7 @@
 #########################################################################
 # Title:         Restart Running Containers Script                      #
 # Author(s):     Desimaniac                                             #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # Description:   Stop running containers and start them back up.        #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
