@@ -40,79 +40,81 @@ $NORMAL
 
 
 # Config files
-settings="$HOME/cloudbox/settings.yml"
-pas_config="/opt/plex_autoscan/config/config.json"
+SETTINGS="$HOME/cloudbox/settings.yml"
+PAS_CONFIG="/opt/plex_autoscan/config/config.json"
 
 
 # Sanity checks
 if ! [ -x "$(command -v jq)" ]; then
-    echo -e $BRED' Error: '$BWHITE"'jq'"$NORMAL' is not installed.'$NORMAL' Run '$BWHITE'sudo apt-get install jq'$NORMAL' to install.' >&2
+    echo -e $BRED" Error: "$NORMAL"'"$BWHITE"jq"$NORMAL"' is not installed."\
+    $NORMAL"Run '"$BWHITE"sudo apt-get install jq"$NORMAL"' to install." >&2
     echo ""
     exit 1
 elif ! [ -x "$(command -v yq)" ]; then
-    echo -e $BRED' Error: '$BWHITE"'yq'"$NORMAL' is not installed.'$NORMAL' Run '$BWHITE'sudo pip install yq'$NORMAL' to install.' >&2
+    echo -e $BRED" Error: "$NORMAL"'"$BWHITE"yq"$NORMAL"' is not installed."\
+    $NORMAL"Run '"$BWHITE"sudo pip install yq"$NORMAL"' to install." >&2
     echo ""
     exit 1
-elif [[ ! -f $settings ]]; then
-    echo -e $BRED' Error: '$NORMAL'File '"'"$BWHITE$settings$NORMAL"'"' not found.' >&2
+elif [[ ! -f $SETTINGS ]]; then
+    echo -e $BRED" Error: "$NORMAL"File '"$BWHITE$SETTINGS$NORMAL"' is not found." >&2
     echo ""
     exit 1
-elif [[ ! -f $pas_config ]]; then
-  echo -e $BRED' Error: '$NORMAL'File '"'"$BWHITE$pas_config$NORMAL"'"' not found.' >&2
+elif [[ ! -f $PAS_CONFIG ]]; then
+    echo -e $BRED" Error: "$NORMAL"File '"$BWHITE$PAS_CONFIG$NORMAL"' is not found." >&2
     echo ""
     exit 1
 fi
 
 # Validate JSON file
-cat $pas_config | jq -e . >/dev/null 2>&1
+cat $PAS_CONFIG | jq -e . >/dev/null 2>&1
 rc=$?
 if [[ $rc != 0 ]]; then
-    echo -e $BRED' Error: '$NORMAL'Invalid JSON format in '$BWHITE"'$pas_config'." \
-    $NORMAL'See "JSON Format Errors" on the FAQ page.'  >&2
+    echo -e $BRED" Error: "$NORMAL"Invalid JSON format in '"$BWHITE$PAS_CONFIG$NORMAL"'."  >&2
+    echo ""
+    echo -e " See 'JSON Format Errors' on the FAQ page."  >&2
     echo ""
     exit 1
 fi
 
 # Get variable(s) from Plex Autoscan config
-server_ip=$(cat $pas_config | jq -r .SERVER_IP)
-server_port=$(cat $pas_config | jq -r .SERVER_PORT)
-server_pass=$(cat $pas_config | jq -r .SERVER_PASS)
+SERVER_IP=$(cat $PAS_CONFIG | jq -r .SERVER_IP)
+SERVER_PORT=$(cat $PAS_CONFIG | jq -r .SERVER_PORT)
+SERVER_PASS=$(cat $PAS_CONFIG | jq -r .SERVER_PASS)
 
 # Get variable(s) from Ansible settings
-domain=$(cat $settings | yq -r .domain)
+DOMAIN=$(cat $SETTINGS | yq -r .domain)
 
 # If 0.0.0.0, assign real IP address.
-if [ $server_ip = 0.0.0.0 ]; then
-    real_ip="$(curl -s http://checkip.amazonaws.com)"
+if [ $SERVER_IP = 0.0.0.0 ]; then
+    REAL_IP="$(curl -s http://checkip.amazonaws.com)"
 else
-    real_ip=$server_ip
+    REAL_IP=$SERVER_IP
 fi
 
 
 # Declare Subdomains Array
-declare -a subdomains=(
-    "plex.$domain"
-    "mediabox.$domain"
-    "cloudbox.$domain"
-    "$real_ip"
+declare -a SUBDOMAINS=(
+    "plex.$DOMAIN"
+    "mediabox.$DOMAIN"
+    "cloudbox.$DOMAIN"
+    "$REAL_IP"
 )
 
 # Get length of the subdomains array
-subdomain_len=${#subdomains[@]}
+SUBDOMAIN_LEN=${#SUBDOMAINS[@]}
 
 # Declare variables for while loop
-declare -i count=0
-subdomain_ip=""
+declare -i COUNT=0
+SUBDOMAIN_IP=""
 
-# Get subdomain who's IP address matches real_ip
-while [[ (($real_ip != $subdomain_ip) && ($count < ${subdomain_len})) ]]; do
-    subdomain=${subdomains[$count]}
-    subdomain_ip=$(dig +short ${subdomain})
-    count+=1
+# Get subdomain who's IP address matches REAL_IP
+while [[ (($REAL_IP != $SUBDOMAIN_IP) && ($COUNT < ${SUBDOMAIN_LEN})) ]]; do
+    SUBDOMAIN=${SUBDOMAINS[$COUNT]}
+    SUBDOMAIN_IP=$(dig +short ${SUBDOMAIN})
+    COUNT+=1
 done
 
 # Print Plex Autoscan URL
-echo -e $BWHITE" Your Plex Autoscan URL is:"
-echo ""
-echo -e $BBLUE" http://${subdomain}:${server_port}/${server_pass}"$NORMAL
+echo -e $BWHITE" Your Plex Autoscan URL: "\
+$BBLUE"http://${SUBDOMAIN}:${SERVER_PORT}/${SERVER_PASS}"$NORMAL
 echo ""
