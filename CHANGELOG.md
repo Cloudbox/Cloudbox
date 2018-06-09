@@ -24,7 +24,7 @@ Changelog Format:
 - entry.
 
 
-[X.X.X]: https://github.com/Cloudbox/Cloudbox/compare/vX.X.X-1...vX.X.X
+[X.X.X]: https://github.com/cloudbox/cloudbox/compare/vX.X.X-1...vX.X.X
 -->
 
 # Changelog
@@ -106,7 +106,7 @@ git reset --hard 58964a8
 
 ### Added
 - [Plex Patrol](https://github.com/l3uddz/plex_patrol).
-- [Cloudbox MOTD](https://github.com/Cloudbox/cloudbox_motd): Cloudbox-enhanced MOTD.
+- [Cloudbox MOTD](https://github.com/cloudbox/cloudbox_motd): Cloudbox-enhanced MOTD.
 - AppVeyor CI
 
 ### Changed
@@ -176,7 +176,7 @@ git reset --hard 58964a8
 - [Plex Dupefinder](https://github.com/l3uddz/plex_dupefinder/)
   - install: `--tags install-plex_dupefinder`
   - folder: `/opt/plex_dupefinder`
-- [Dependency Installer Script](https://github.com/Cloudbox/Cloudbox/wiki/First-Time-Install%3A-Downloading-Cloudbox#1-install-dependencies)
+- [Dependency Installer Script](https://github.com/cloudbox/cloudbox/wiki/First-Time-Install%3A-Downloading-Cloudbox#1-install-dependencies)
   - Simple, clean install script.
   - Fixes potential pip issues.
 - [Radarr4K](https://radarr.video)
@@ -221,7 +221,7 @@ git reset --hard 58964a8
 ### Changed
 - `README.md`
   - Cleaned up a bit.
-  - Moved chart of installed items to the Wiki (i.e. [Cloudbox Install Types](https://github.com/Cloudbox/Cloudbox/wiki/Basics%3A-Cloudbox-Install-Types)).
+  - Moved chart of installed items to the Wiki (i.e. [Cloudbox Install Types](https://github.com/cloudbox/cloudbox/wiki/Basics%3A-Cloudbox-Install-Types)).
 - Rclone
   - In `settings.yml`, use `latest` for rclone version to always install the latest version.
     - Version numbers can still be used (i.e `1.40`).
@@ -323,7 +323,7 @@ git reset --hard 58964a8
   - install: `--tags update-rutorrent`
   - folder: `/opt/rutorrent`
 - [WebTools](https://github.com/ukdtom/WebTools.bundle)
-  - Updated to v3.0.0 (to update, see this [FAQ](https://github.com/Cloudbox/Cloudbox/wiki/FAQ#update-webtools) page).
+  - Updated to v3.0.0 (to update, see this [FAQ](https://github.com/cloudbox/cloudbox/wiki/FAQ#update-webtools) page).
 - [PlexPy](http://tautulli.com/)
   - Now installs PlexPy v2 (aka Tautulli)
   - subdomain: `plexpy`
@@ -364,11 +364,11 @@ git reset --hard 58964a8
 
 
 
-[Unreleased]: https://github.com/Cloudbox/Cloudbox/compare/HEAD...develop
-[1.1.3]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.2...v1.1.3
-[1.1.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.1...v1.1.2
-[1.1.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.1.0...v1.1.1
-[1.1.0]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.2...v1.1.0
-[1.0.2]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/Cloudbox/Cloudbox/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/Cloudbox/Cloudbox/compare/9af69ab...v1.0.0
+[Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.1.3]: https://github.com/cloudbox/cloudbox/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/cloudbox/cloudbox/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/cloudbox/cloudbox/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/cloudbox/cloudbox/compare/v1.0.2...v1.1.0
+[1.0.2]: https://github.com/cloudbox/cloudbox/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/cloudbox/cloudbox/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/cloudbox/cloudbox/compare/9af69ab...v1.0.0

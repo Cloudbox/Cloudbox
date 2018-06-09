@@ -10,7 +10,7 @@
     #########################################################################
     # Title:      ARR-Push                                                  #
     # Author(s):  L3uddz                                                    #
-    # URL:        https://github.com/Cloudbox/Cloudbox                      #
+    # URL:        https://github.com/cloudbox/cloudbox                      #
     # --                                                                    #
     #         Part of the Cloudbox project: https://cloudbox.rocks          #
     #########################################################################

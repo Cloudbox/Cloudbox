@@ -3,7 +3,7 @@
 [Website](https://cloudbox.rocks) |
 [Discord](https://discord.gg/xmNYmSJ) |
 [Reddit](https://reddit.com/r/Cloudbox) |
-[Wiki](https://github.com/Cloudbox/Cloudbox/wiki) |
+[Wiki](https://github.com/cloudbox/cloudbox/wiki) |
 [Changelog](CHANGELOG.md) |
 [Contributing](CONTRIBUTING.md) |
 [Feature Requests](http://feathub.com/Cloudbox/Cloudbox) |
