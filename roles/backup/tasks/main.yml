@@ -271,7 +271,7 @@
 
   # If rclone_timestamp is blank (would happen if cloudbox.tar did not exist), default the naming of other files to 'filename.old.ext'.
   - name: "Archive previous files in \"{{backup.rclone_dest}}/\""
-    shell: "rclone moveto '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/{{ item }}_{{ rclone_timestamp.stdout | default('old', true) }}' 2>/dev/null"
+    shell: "rclone moveto '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/archived/{{ item }}_{{ rclone_timestamp.stdout | default('old', true) }}' 2>/dev/null"
     become: yes
     become_user: "{{user}}"
     ignore_errors: yes
@@ -370,7 +370,7 @@
       name: cloudplow
       state: started
     when: cloudplow_status is success
-      
+
   - name: "Remove cloudbox.tar from \"{{backup.tar_dest}}\""
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar"
