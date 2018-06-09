@@ -2,7 +2,7 @@
 #########################################################################
 # Title:         Plex Autoscan URL Script                               #
 # Author(s):     Desimaniac                                             #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # Description:   Prints out the Plex Autoscan URL.                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -28,7 +28,7 @@ $GREEN
  ┌───────────────────────────────────────────────────────────────────────────────────┐
  │ Title:             Plex Autoscan URL Script                                       │
  │ Author(s):         Desimaniac                                                     │
- │ URL:               https://github.com/Cloudbox/Cloudbox                           │
+ │ URL:               https://github.com/cloudbox/cloudbox                           │
  │ Description:       Prints out the Plex Autoscan URL.                              │
  ├───────────────────────────────────────────────────────────────────────────────────┤
  │                Part of the Cloudbox project: https://cloudbox.rocks               │

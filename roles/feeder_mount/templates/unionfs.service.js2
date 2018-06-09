@@ -2,7 +2,7 @@
 # Title:         Cloudbox: UnionFS Mount Service                        #
 # Path:          /etc/systemd/system/unionfs.service                    #
 # Author(s):     Desimaniac, L3uddz                                     #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################

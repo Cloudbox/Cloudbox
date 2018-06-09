@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: MOTD Role                                    #
 # Author(s):     L3uddz                                                 #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -34,7 +34,7 @@
 
 - name: Clone cloudbox_motd
   git:
-    repo: https://github.com/Cloudbox/cloudbox_motd
+    repo: https://github.com/cloudbox/cloudbox_motd
     dest: /opt/motd
     version: master
     force: yes
