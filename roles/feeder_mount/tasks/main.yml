@@ -25,18 +25,31 @@
   shell: "/bin/umount -f /mnt/unionfs"
   ignore_errors: yes
 
-- name: Stop feeder service
+- name: Check if previous feeder.service exists in /etc/systemd/system/
+  stat:
+    path: "/etc/systemd/system/feeder.service"
+  register: previous_systemd_feeder_service
+
+- name: Check if previous feeder is running
+  command: systemctl status feeder
+  ignore_errors: yes
+  register: previous_feeder_status
+  when: previous_systemd_feeder_service.stat.exists
+
+- name: Stop previous feeder service
   systemd: state=stopped name=feeder
   ignore_errors: yes
+  when: (previous_systemd_feeder_service.stat.exists) and (previous_feeder_status is success)
 
-- name: "Force unmount /mnt/feeder"
+- name: "Force unmount of previous /mnt/feeder"
   shell: "/bin/umount -f /mnt/feeder"
   ignore_errors: yes
+  when: (previous_systemd_feeder_service.stat.exists) and (previous_feeder_status is success)
 
 - name: Check if feeder.service exists in /opt/systemd-backup/
   stat:
     path: "/opt/systemd-backup/feeder.service"
-  register: feeder_backedup_service
+  register: backup_feeder_service
 
 - name: Copy /opt/systemd-backup/feeder.service to /etc/systemd/system/feeder.service
   copy:
@@ -46,7 +59,7 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: feeder_backedup_service.stat.exists
+  when: backup_feeder_service.stat.exists
 
 - name: Change ownership in restored feeder.service
   lineinfile:
@@ -57,19 +70,19 @@
   with_items:
     - { regexp: '^User\s?=', line: 'User={{user}}' }
     - { regexp: '^Group\s?=', line: 'Group={{user}}' }
-  when: feeder_backedup_service.stat.exists
+  when: backup_feeder_service.stat.exists
 
 - name: Check if feeder.service exists in /etc/systemd/system/
   stat:
     path: "/etc/systemd/system/feeder.service"
-  register: feeder_systemd_service
+  register: systemd_feeder_service
 
 - name: Import feeder.service to /etc/systemd/system/
   template:
     src: feeder.service.js2
     dest: /etc/systemd/system/feeder.service
     force: yes
-  when: not feeder_systemd_service.stat.exists
+  when: not systemd_feeder_service.stat.exists
 
 - name: Import updated unionfs.service
   template:

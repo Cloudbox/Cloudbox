@@ -33,6 +33,7 @@
     - { role: nzbhydra, tags: ['cloudbox', 'feederbox', 'nzbhydra'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
+    - { role: feeder_mount, tags: ['feeder-mount'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: ombi, tags: ['ombi'] }
     - { role: resilio, tags: ['resilio'] }
@@ -51,4 +52,3 @@
     - { role: quassel, tags: ['quassel'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
     - { role: telly, tags: ['telly'] }
-    - { role: feeder_mount, tags: ['mount-feederbox'] }
