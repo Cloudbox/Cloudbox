@@ -84,7 +84,7 @@
     force: yes
   when: not systemd_feeder_service.stat.exists
 
-- name: Import updated unionfs.service
+- name: Import updated unionfs.service to /etc/systemd/system/
   template:
     src: unionfs.service.js2
     dest: /etc/systemd/system/unionfs.service
