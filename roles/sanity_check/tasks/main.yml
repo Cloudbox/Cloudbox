@@ -18,12 +18,20 @@
     msg: "System is running {{ ansible_distribution }} {{ ansible_distribution_version }}."
   tags: always
 
-- name: "Ensure a tag was provided"
+- name: Get all available tags
+  shell: ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
+  register: t
+  when: not ((continuous_integration|default(false,true))|bool)
+  tags: always
+
+- name: "Ensure valid tag(s) were provided"
   assert:
     that:
-      - tags is defined
-    msg: "You must supply a tag via '--tags OPTION' (e.g. --tags cloudbox/mediabox/feederbox/backup/restore/appname)"
+      - '"{{item}}" in t.stdout_lines'
+    msg: "You must supply valid tag(s) via '--tags OPTION (Get valid tags by running ansible-playbook cloudbox.yml --list-tags)"
+  with_items: "{{ansible_run_tags}}"
   when: not ((continuous_integration|default(false,true))|bool)
+  tags: always
 
 - name: "Check if backup.lock is present"
   stat:
