@@ -7,7 +7,6 @@ cloudflare_api_token:
 nzbget:
   downloads: /mnt/local/downloads/nzbget
 rutorrent:
-  passwd: password321
   downloads: /mnt/local/downloads/rutorrent
 plex:
   tag: public

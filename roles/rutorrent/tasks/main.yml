@@ -270,7 +270,7 @@
   htpasswd:
     path: /opt/rutorrent/nginx/.htpasswd
     name: "{{user}}"
-    password: "{{rutorrent.passwd}}"
+    password: "{{passwd}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
