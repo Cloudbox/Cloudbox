@@ -4,7 +4,7 @@
     "url": "http://plex.{{domain}}:3468"
   },
   "motd": {
-    "banner_title": "{{ ( cloudbox_type | default('Cloudbox',true) ) | capitalize  }}",
+    "banner_title": "{{ ( cloudbox_type | default('Cloudbox',true) ) | capitalize }}",
     "banner_type": "dog",
     "show": {
       "autoscan": false,
