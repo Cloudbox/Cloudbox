@@ -101,22 +101,22 @@
     - {regexp: '(users:)\s?.*', line: '  \1'}
   when: not nzbhydra2_yml.stat.exists
 
-- name: Add login to settings
+- name: Add login settings
   lineinfile:
     path: "/opt/nzbhydra2/nzbhydra.yml"
-    insertbefore: 'categoriesConfig:'
+    insertafter: 'users:'
     line: "{{ item.line }}"
     state: present
   with_items:
-    - {line: '  - maySeeAdmin: true'}
-    - {line: '    maySeeDetailsDl: true'}
-    - {line: '    maySeeStats: true'}
-    - {line: '    showIndexerSelection: true'}
-    - {line: '    username: "{{user}}"'}
     - {line: '    password: "{{passwd}}"'}
+    - {line: '    username: "{{user}}"'}
+    - {line: '    showIndexerSelection: true'}
+    - {line: '    maySeeStats: true'}
+    - {line: '    maySeeDetailsDl: true'}
+    - {line: '  - maySeeAdmin: true'}
   when: not nzbhydra2_yml.stat.exists
 
-- name: Increase JVM memory in settings
+- name: Increase JVM memory
   lineinfile:
     path: "/opt/nzbhydra2/nzbhydra.yml"
     regexp: "{{ item.regexp }}"
@@ -126,6 +126,37 @@
   with_items:
     - {regexp: '(xmx:)\s?.*', line: '  \1 512'}
   when: (not nzbhydra2_yml.stat.exists) and ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int >= 16)
+
+- name: Add downloaders section
+  lineinfile:
+    path: "/opt/nzbhydra2/nzbhydra.yml"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backrefs: yes
+  with_items:
+    - {regexp: '(downloaders:)\s?.*', line: '  \1'}
+  when: not nzbhydra2_yml.stat.exists
+
+- name: Add NZBGet downloader
+  lineinfile:
+    path: "/opt/nzbhydra2/nzbhydra.yml"
+    insertafter: 'downloaders:'
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - {line: '    password: "{{passwd}}"'}
+    - {line: '    username: "{{user}}"'}
+    - {line: '    url: "http://nzbget:6789"'}
+    - {line: '    downloaderType: "NZBGET"'}
+    - {line: '    nzbAddingType: "UPLOAD"'}
+    - {line: '    name: "NZBGet"'}
+    - {line: '    iconCssClass: ""'}
+    - {line: '    enabled: true'}
+    - {line: '    downloadType: "NZB"'}
+    - {line: '    defaultCategory: null'}
+    - {line: '  - apiKey: null'}
+  when: not nzbhydra2_yml.stat.exists
 
 - name: Start container to apply changes
   docker_container:
