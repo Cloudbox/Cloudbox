@@ -1,8 +1,8 @@
 #########################################################################
 # Title:         Cloudbox: NZBHydra Role                                #
-# Author(s):     L3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac, EnorMOZ                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Docker Image:  linuxserver/hydra                                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -32,6 +32,30 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/nzbhydra
+    - /opt/nzbhydra/hydra/
+
+- name: Copy config files from Suitarr to LSIO
+  copy:
+    src: "/opt/nzbhydra/{{item.src}}"
+    dest: "/opt/nzbhydra/hydra/{{item.dest}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+  with_items:
+    - {src: "nzbhydra.cfg", dest: "settings.cfg"}
+    - {src: "nzbhydra.db", dest: "nzbhydra.db"}
+    - {src: "nzbhydra.db-shm", dest: "nzbhydra.db-shm"}
+    - {src: "nzbhydra.db-wal", dest: "nzbhydra.db-wal"}
+  register: transfer
+  ignore_errors: yes
+
+- name: Remove Suitarr config files after transfer
+  file:
+    path: "/opt/nzbhydra/{{item.item.src}}"
+    state: absent
+  with_items: "{{transfer.results}}"
+  when: transfer is changed
 
 - name: Create and start container
   docker_container:
