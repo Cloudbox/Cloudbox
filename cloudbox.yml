@@ -30,7 +30,7 @@
     - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'] }
     - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'] }
     - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'] }
-    - { role: nzbhydra, tags: ['cloudbox', 'feederbox', 'nzbhydra'] }
+    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
     - { role: feeder_mount, tags: ['feeder-mount'] }
@@ -41,7 +41,7 @@
     - { role: nextcloud, tags: ['nextcloud'] }
     - { role: lidarr, tags: ['lidarr'] }
     - { role: emby, tags: ['emby'] }
-    - { role: nzbhydra2, tags: ['nzbhydra2'] }
+    - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: zsh, tags: ['zsh'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }

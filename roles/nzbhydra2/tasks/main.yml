@@ -33,6 +33,11 @@
   with_items:
     - /opt/nzbhydra2
 
+- name: Check if nzbhydra.yml exists
+  stat:
+    path: "/opt/nzbhydra2/nzbhydra.yml"
+  register: nzbhydra2_yml
+
 - name: Create and start container
   docker_container:
     name: nzbhydra2
@@ -53,9 +58,77 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra2:/config"
+      - "/opt/nzbhydra/hydra:/nzbhydra1"
     restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - nzbhydra2
     state: started
+
+- name: Wait for nzbhydra.yml to be created
+  wait_for:
+    path: "/opt/nzbhydra2/nzbhydra.yml"
+    state: present
+  when: not nzbhydra2_yml.stat.exists
+
+- name: "Wait for 10 seconds before stopping nzbhydra2 container"
+  wait_for:
+    timeout: 10
+  when: not nzbhydra2_yml.stat.exists
+
+- name: Stop container to customize nzbhydra.yml
+  docker_container:
+    name: nzbhydra2
+    image: hotio/suitarr
+    state: stopped
+  when: not nzbhydra2_yml.stat.exists
+
+- name: Update auth settings
+  lineinfile:
+    path: "/opt/nzbhydra2/nzbhydra.yml"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backrefs: yes
+  with_items:
+    - {regexp: '(authType:)\s".*?"', line: '  \1 "FORM"'}
+    - {regexp: '(restrictAdmin:)\s.*', line: '  \1 true'}
+    - {regexp: '(restrictDetailsDl:)\s.*', line: '  \1 true'}
+    - {regexp: '(restrictIndexerSelection:)\s.*', line: '  \1 true'}
+    - {regexp: '(restrictSearch:)\s.*', line: '  \1 true'}
+    - {regexp: '(restrictStats:)\s.*', line: '  \1 true'}
+    - {regexp: '(users:)\s?.*', line: '  \1'}
+  when: not nzbhydra2_yml.stat.exists
+
+- name: Add login to settings
+  lineinfile:
+    path: "/opt/nzbhydra2/nzbhydra.yml"
+    insertbefore: 'categoriesConfig:'
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - {line: '  - maySeeAdmin: true'}
+    - {line: '    maySeeDetailsDl: true'}
+    - {line: '    maySeeStats: true'}
+    - {line: '    showIndexerSelection: true'}
+    - {line: '    username: "{{user}}"'}
+    - {line: '    password: "{{passwd}}"'}
+  when: not nzbhydra2_yml.stat.exists
+
+- name: Increase JVM memory in settings
+  lineinfile:
+    path: "/opt/nzbhydra2/nzbhydra.yml"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backrefs: yes
+  with_items:
+    - {regexp: '(xmx:)\s?.*', line: '  \1 512'}
+  when: (not nzbhydra2_yml.stat.exists) and ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int >= 16)
+
+- name: Start container to apply changes
+  docker_container:
+    name: nzbhydra2
+    state: started
+  when: not nzbhydra2_yml.stat.exists
