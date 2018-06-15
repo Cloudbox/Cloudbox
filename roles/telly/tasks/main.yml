@@ -36,6 +36,7 @@
       PLAYLIST: "{{telly.playlist}}"
       STREAMS: "{{telly.streams}}"
       LISTEN: "0.0.0.0:6077"
+      BASE: "telly:6077"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
     networks:
