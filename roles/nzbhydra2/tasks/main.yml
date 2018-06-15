@@ -70,6 +70,7 @@
   wait_for:
     path: "/opt/nzbhydra2/nzbhydra.yml"
     state: present
+    delay: 30
   when: not nzbhydra2_yml.stat.exists
 
 - name: "Wait for 10 seconds before stopping nzbhydra2 container"
