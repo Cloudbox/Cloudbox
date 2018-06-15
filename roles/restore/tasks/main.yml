@@ -39,11 +39,6 @@
       (rclone_conf_user_dir.stat.exists)
     )
 
-- name: Ensure unzip is installed
-  apt:
-    name: unzip
-    state: present
-
 - name: "Check {{backup.tar_dest}} exists"
   stat:
     path: "{{backup.tar_dest}}"
