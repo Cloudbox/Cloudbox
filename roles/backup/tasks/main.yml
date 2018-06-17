@@ -22,7 +22,7 @@
 
   - name: "Fail when backup.lock exists"
     fail:
-      msg: "Backup is already in progress..."
+      msg: "Backup is already in progress. Please wait for it to complete."
     when: backup_lock.stat.exists
 
   - name: "Create backup.lock"
