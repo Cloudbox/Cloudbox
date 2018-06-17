@@ -1,112 +1,26 @@
 #########################################################################
 # Title:         Cloudbox: Common Role                                  #
-# Author(s):     l3uddz, desimaniac                                     #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
-- name: Install common packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - nano
-    - unrar
-    - unzip
-    - p7zip
-    - curl
-    - sqlite3
-    - vnstat
-    - tree
-    - lsof
-    - man-db
-    - ksmtuned
-    - git
-    - pwgen
-    - rsync
-    - logrotate
-    - htop
-    - iotop
-    - nload
-    - fail2ban
-    - ufw
-    - ncdu
-    - mc
-    - speedtest-cli
-    - nethogs
-    - dnsutils
-    - glances
-    - screen
-    - tmux
-    - apache2-utils
-    - jq
-  ignore_errors: yes
-
-- name: Check to see if unrar installed
-  stat:
-    path: "/usr/bin/unrar"
-  register: unrar_binary
-
-- name: Install common packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - unrar-free
-  ignore_errors: yes
-  when: not unrar_binary.stat.exists
-
-- name: Install common pip modules
-  pip: "name={{item}} state=latest"
-  with_items:
-    - passlib
-    - docker-py
-    - certbot
-    - ansible-toolbox
-    - ndg-httpsclient
-    - dnspython
-    - yq
-  ignore_errors: yes
-
-- name: Install NodeJS
-  shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
-
-- name: Install common npm modules
-  npm: "name={{item}} global=yes"
-  with_items:
-    - frontail
-
-- name: "Install hostess"
-  import_role:
-    name: hostess
-  tags: update-hostess
-
-- name: Install ngrok
-  unarchive:
-    src: https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-    dest: /usr/local/bin
-    copy: no
-    mode: 0775
-    validate_certs: no
-  tags: update-ngrok
-
 - name: Create common directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /home/{{user}}/logs
     - /mnt/local
     - /mnt/local/.unionfs-fuse
     - /mnt/local/Media
     - /mnt/local/Media/Movies
+    - /mnt/local/Media/Music
     - /mnt/local/Media/TV
     - /opt
+    - /home/{{user}}/logs
+    - /home/{{user}}/.config
+    - /home/{{user}}/.config/pip
 
 - name: Check plexdrive mount folder exist
   stat:
@@ -132,3 +46,117 @@
   shell: "chown -R {{user}}:{{user}} /opt"
   args:
     warn: no
+
+- name: Install common packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - nano
+    - unzip
+    - p7zip
+    - curl
+    - sqlite3
+    - vnstat
+    - tree
+    - lsof
+    - man-db
+    - ksmtuned
+    - git
+    - pwgen
+    - rsync
+    - logrotate
+    - htop
+    - iotop
+    - nload
+    - fail2ban
+    - ufw
+    - ncdu
+    - mc
+    - speedtest-cli
+    - dnsutils
+    - glances
+    - screen
+    - tmux
+    - apache2-utils
+    - jq
+    - lib32z1
+  ignore_errors: yes
+
+- name: Install unrar
+  apt: "name={{item}} state=present"
+  with_items:
+    - unrar
+  ignore_errors: yes
+
+- name: Check to see if unrar installed
+  stat:
+    path: "/usr/bin/unrar"
+  register: unrar_binary
+
+- name: Install unrar-free
+  apt: "name={{item}} state=present"
+  with_items:
+    - unrar-free
+  ignore_errors: yes
+  when: not unrar_binary.stat.exists
+
+- name: "Import pip.conf into /home/{{user}}/.config/pip/"
+  copy:
+    src: "pip.conf"
+    dest: "/home/{{user}}/.config/pip/pip.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 775
+    force: yes
+
+- name: Install common pip modules
+  pip: "name={{item}} state=latest"
+  with_items:
+    - passlib
+    - certbot
+    - ansible-toolbox
+    - ndg-httpsclient
+    - docker-py
+    - dnspython
+    - yq
+  ignore_errors: yes
+
+- name: Install NodeJS
+  shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
+  tags: nodejs
+
+- name: Update npm
+  shell: "npm install -g npm"
+  tags: nodejs
+
+- name: Update packages
+  shell: "npm update -g"
+  tags: nodejs
+
+- name: Install common npm modules
+  npm: "name={{item}} global=yes"
+  with_items:
+    - frontail
+
+- name: Install hostess
+  import_role:
+    name: hostess
+  tags: hostess
+  ignore_errors: yes
+
+- name: Install ngrok
+  import_role:
+    name: ngrok
+  tags: ngrok
+  ignore_errors: yes
+
+- name: Install iperf3
+  import_role:
+    name: iperf3
+  tags: iperf3
+  ignore_errors: yes
+
+- name: Install nethogs
+  import_role:
+    name: nethogs
+  tags: nethogs
+  ignore_errors: yes

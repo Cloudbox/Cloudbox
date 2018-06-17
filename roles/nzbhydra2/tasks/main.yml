@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: NZBHydra2 Role                               #
-# Author(s):     desimaniac                                             #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -33,6 +33,11 @@
   with_items:
     - /opt/nzbhydra2
 
+- name: Check if nzbhydra.yml exists
+  stat:
+    path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
+  register: nzbhydra2_yml
+
 - name: Create and start container
   docker_container:
     name: nzbhydra2
@@ -53,9 +58,18 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra2:/config"
+      - "/opt/nzbhydra/hydra:/nzbhydra1"
     restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - nzbhydra2
     state: started
+
+- name: Settings Tweaks
+  include_tasks: "nzbhydra2_settings.yml"
+  when: not (
+        (nzbhydra2_yml.stat.exists)
+        or
+        ((continuous_integration|default(false,true))|bool)
+    )

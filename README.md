@@ -1,17 +1,23 @@
-# Cloudbox
+<br /><img src="https://raw.githubusercontent.com/Cloudbox/assets/master/images/readme/Cloudbox-logo_dark.png" width="600">
 
-[Website](https://cloudbox.rocks) |
-[Discord](https://discord.gg/xmNYmSJ) |
-[Reddit](https://reddit.com/r/Cloudbox) |
-[Wiki](https://github.com/Cloudbox/Cloudbox/wiki) |
-[Changelog](CHANGELOG.md) |
-[Contributing](CONTRIBUTING.md) |
-[Feature Requests](http://feathub.com/Cloudbox/Cloudbox) |
-[Credits](CREDITS.md)
+<br /><br />
+[![Website](https://img.shields.io/badge/Website-https%3A%2F%2Fcloudbox.rocks-blue.svg)](https://cloudbox.rocks)
+[![Wiki](https://img.shields.io/badge/Wiki-https%3A%2F%2Fgithub.com%2Fcloudbox%2Fcloudbox%2Fwiki-blue.svg)](https://github.com/cloudbox/cloudbox/wiki)
+[![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2FCloudbox-blue.svg)](https://reddit.com/r/Cloudbox)
+[![Discord](https://img.shields.io/discord/381077432285003776.svg?colorB=177DC1&label=Discord)](https://discord.io/cloudbox)
+[![Feature Requests](https://img.shields.io/badge/Requests-Feathub-blue.svg)](https://feathub.com/Cloudbox/Cloudbox)
+<br />
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
+[![Version](https://img.shields.io/github/release/cloudbox/cloudbox.svg?colorB=177DC1&label=Version)](https://github.com/cloudbox/cloudbox/releases)
+[![AppVeyor](https://img.shields.io/appveyor/ci/desimaniac/cloudbox/master.svg?colorB=177DC1&label=AppVeyor)](https://ci.appveyor.com/project/desimaniac/cloudbox)
+[![Changelog](https://img.shields.io/badge/Changelog-CHANGELOG.md-blue.svg)](CHANGELOG.md)
+[![Contributing](https://img.shields.io/badge/Contributing-CONTRIBUTING.md-blue.svg)](CONTRIBUTING.md)
+[![Credits](https://img.shields.io/badge/Credits-CREDITS.md-blue.svg)](CREDITS.md)
+
 
 Cloudbox is an Ansible playbook for deploying a cloud media server stack on an Ubuntu server with the use of Docker containers.
 
-This project is designed for fresh systems and limited to AMD64 machines running Ubuntu Server 16.04 LTS.
+This project is designed for fresh systems and limited to x64 machines running Ubuntu Server 16.04 / 18.04 LTS.
 
 
 Featured Applications:
@@ -35,4 +41,4 @@ Featured Applications:
 
 ***
 
-_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp. Other forms of support are also appreciated (e.g. bugfixes/pull requests to develop branch, etc)._
+_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp._

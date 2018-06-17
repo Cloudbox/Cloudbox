@@ -2,15 +2,15 @@
 
 ### Author
 
-* [l3uddz](https://github.com/l3uddz)
+* [L3uddz](https://github.com/l3uddz)
 
 ### Contributors
 
-* [desimaniac](https://github.com/desimaniac)
-* [Vuur](https://github.com/vuur)
-* [RXWatcher](https://github.com/RXWatcher1)
+* [Desimaniac](https://github.com/Desimaniac)
 * [EnorMOZ](https://github.com/EnorMOZ)
-* [horjulf](https://github.com/horjulf)
+* [Horjulf](https://github.com/horjulf)
+* [RXWatcher](https://github.com/RXWatcher1)
+* [Vuur](https://github.com/vuur)
 
 ### Dependencies
 
@@ -31,7 +31,7 @@
 * [Plexdrive][0367302f]
 * [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])
 * [Nginx Proxy][08902ab1]
-* [Let's Encrypt Companion for Nginx Proxy][bb8ae44f]  
+* [Let's Encrypt Companion for Nginx Proxy][bb8ae44f]
 * [Rclone][b4cef019]
 * [Organizr][d328b256] ([docker][1e468891])
 * [Portainer][726e0b6f]
