@@ -28,7 +28,7 @@
 
         iv. On Upgrade: Yes
 
-        v. On Rename:No
+        v. On Rename: No
 
         vi. Path: /scripts/torrent/TorrentCleanup.py
 
@@ -52,7 +52,7 @@
 
         iv. On Upgrade: Yes
 
-        v. On Rename:No
+        v. On Rename: No
 
         vi. Path: /scripts/torrent/TorrentCleanup.py
 
