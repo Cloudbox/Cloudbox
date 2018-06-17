@@ -44,7 +44,7 @@
 
 - name: Check nzbget.conf exists
   stat:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
   register: nzbget_conf
 
 - name: Create and start container
@@ -80,7 +80,7 @@
 
 - name: Wait for nzbget.conf to be created
   wait_for:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
     state: present
   when: nzbget_conf.stat.exists == False
 
@@ -98,7 +98,7 @@
 
 - name: Change downloads directory
   lineinfile:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
     regexp: '^MainDir\s?='
     line: 'MainDir=/downloads/nzbget'
     state: present
@@ -106,7 +106,7 @@
 
 - name: Change scripts directory
   lineinfile:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
     regexp: '^ScriptDir\s?='
     line: 'ScriptDir=/scripts'
     state: present
@@ -114,7 +114,7 @@
 
 - name: Rename Movies category
   lineinfile:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
     regexp: '^Category1.Name\s?='
     line: 'Category1.Name=radarr'
     state: present
@@ -122,7 +122,7 @@
 
 - name: Rename TV category
   lineinfile:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
     regexp: '^Category2.Name\s?='
     line: 'Category2.Name=sonarr'
     state: present
@@ -130,7 +130,7 @@
 
 - name: Rename Music category
   lineinfile:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
     regexp: '^Category3.Name\s?='
     line: 'Category3.Name=lidarr'
     state: present
@@ -138,7 +138,7 @@
 
 - name: Remove default Username
   lineinfile:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
     regexp: '^ControlUsername\s?='
     line: 'ControlUsername='
     state: present
@@ -146,7 +146,7 @@
 
 - name: Remove default Password
   lineinfile:
-    path: "/opt/nzbget/nzbget.conf"
+    path: "/opt/nzbget/NZBGet/nzbget.conf"
     regexp: '^ControlPassword=\s?='
     line: 'ControlPassword='
     state: present
