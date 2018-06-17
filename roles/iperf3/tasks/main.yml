@@ -9,24 +9,20 @@
 #########################################################################
 ---
 - name: Cleanup tmp iperf3 path
-  shell: rm -rf /tmp/iperf-*.*
+  shell: rm -rf /tmp/iperf3
   args:
     warn: no
 
-- name: "Download iperf3"
-  unarchive:
-    src: "http://downloads.es.net/pub/iperf/iperf-3-current.tar.gz"
-    dest: /tmp
-    copy: no
-    validate_certs: no
-
-- name: "Find iperf3 tmp dir"
-  shell: "ls -d /tmp/iperf-*.*"
-  register: iperf3_tmp_dir
+- name: "Clone iperf3 repo"
+  git:
+    repo: "https://github.com/esnet/iperf.git"
+    dest: "/tmp/iperf3"
+    force: yes
+  ignore_errors: yes
 
 - name: "Build and install iperf3"
   shell: "export LD_RUN_PATH=/usr/local/lib && \
-          cd {{iperf3_tmp_dir.stdout}} && \
+          cd /tmp/iperf3 && \
           ./configure && \
           make && \
           make install && \
