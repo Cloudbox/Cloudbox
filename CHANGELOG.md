@@ -9,7 +9,7 @@ Changelog Format:
 
 ## [Unreleased]
 
-## [X.X.X] - YEAR-MM-DD
+## [X.X.X] - YYYY-MM-DD
 
 ### Added
 - entry.
@@ -29,6 +29,67 @@ Changelog Format:
 
 # Changelog
 ## [Unreleased]
+
+
+
+## [1.2.0] - 2018-06-17
+
+### **Notes**:
+- Requires **Ansible 2.5.1**.
+
+### Added
+- Advanced Settings: For misc/advanced settings that that don't seem to fit in main settings.yml.
+- Feeder Dismount Role - Reverts all changes from Feeder Mount role.
+- Feeder Mount Role - Mounts rclone feeder remote onto the /mnt/feeder path of a Plexbox.
+- Ombi: Custom subdomain option in adv_settings.yml.
+- Organizr: Direct domain option in adv_settings.yml.
+- Plex Requests: Custom subdomain option in adv_settings.yml.
+- System: Removes useless packages and dependencies.
+- Ubuntu: Support for 18.04. (_EnorMOZ_)
+- [Cloudplow](https://github.com/l3uddz/cloudplow/) - Replaces UnionFS Cleaner.
+- [Nethogs](https://github.com/raboof/nethogs) (_EnorMOZ_)
+- [Telly]](https://github.com/tombowditch/telly) (_EnorMOZ_) - Options are set in adv_settings.yml.
+- [iperf3](https://software.es.net/iperf/)
+
+### Changed
+- Backup: Excludes /opt/sonarr/MediaCover and /opt/radarr/MediaCover.
+- Backup: Misc tweaks to prevent issues.
+- Backup: Move previous backup files to archived folder.
+- Backup: Send pushover message when backup terminates due to an error.
+- NZBGet: Removed /opt/nzbget/scripts path. Use /opt/scripts/nzb/ instead.
+- NZBHydra1: Switched to LSIO image as Hotio/Suitarr dropped support.
+- NZBHydra1: Config files for Suitarr path now automatically migrated over to LSIO path.
+- NZBHydra2: Automates entering in login and auth info, and sets JVM memory to 512MB if the system has >= 16GB of RAM.
+- NZBHydra2: Mounts NZBHydra1, so that previous config/db can be migrated on first install or from settings later. See https://i.imgur.com/CneRSWw.png for the paths needed.
+- NZBHydra2: NZBHydra2 now replaces NZBHydra1 for "default" installs (e.g. full, feeder). NZBHydra1 is still there as optional addon.
+- PIP: Suppress outdated pip warnings.
+- Plex Autoscan: Added music folder into default config.
+- Plex Autoscan: URL Script will catch errors and display message (e.g. missing dependencies, invalid JSON formatting). Added some visual enhancements.
+- Pre-Tasks: Removes cloudbox subdomain for plex/feeder box installs.
+- Readme: Cleaner look.
+- Rutorrent: Disables extsearch plugin for new installs. Will help fix some slow loading issues.
+- Rutorrent: Uses same password as passwd in settings.yml
+- Sanity Check: Exit any CB install when backup is in progress.
+- Sanity Check: Make sure users are using a valid tag. (_EnorMOZ_)
+- Settings: Took out entry for Plex Autoscan IP, as it's usually 0.0.0.0 for CB purposes.
+- Suitarr: Updated tasks to reflect new config paths.
+- Tags: Added new tag core
+- Tags: full -> cloudbox
+- Tags: plex -> mediabox
+- Tags: feeder -> feederbox
+- Tags: update- and install- prefixes removed from all tags (i.e. the tags are still there but without update- or install- in front of it)
+- Tags: To see a full list of tags: sudo ansible-playbook cloudbox.yml --list-tags
+
+### Removed
+- UnionFS Cleaner
+
+### Fixed
+- Ansible: Added localhost to inventory to suppress warning messages.
+- Cron: Added PATH to fix issues with backup and purge-old-kernels.
+- NZBGet: Fixed unrar issue with latest version of NZBGet. (thanks _RXWatcher1_)
+- Rclone: Fixed permission issues with ~/.config paths.
+
+
 
 ## [1.1.3] - 2018-05-21
 
@@ -365,6 +426,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.0]: https://github.com/cloudbox/cloudbox/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/cloudbox/cloudbox/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/cloudbox/cloudbox/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/cloudbox/cloudbox/compare/v1.1.0...v1.1.1
