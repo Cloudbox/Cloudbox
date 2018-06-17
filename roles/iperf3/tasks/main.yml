@@ -15,7 +15,7 @@
 
 - name: "Clone iperf3 repo"
   git:
-    repo: "https://github.com/esnet/iperf.git"
+    repo: "https://github.com/esnet/iperf/"
     dest: "/tmp/iperf3"
     force: yes
   ignore_errors: yes
