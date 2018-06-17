@@ -1,13 +1,18 @@
-# Cloudbox
+<br /><br /><img src="https://raw.githubusercontent.com/Cloudbox/assets/master/images/readme/Cloudbox-logo_dark.png" width="600">
 
-[Website](https://cloudbox.rocks) |
-[Discord](https://discord.gg/xmNYmSJ) |
-[Reddit](https://reddit.com/r/Cloudbox) |
-[Wiki](https://github.com/cloudbox/cloudbox/wiki) |
-[Changelog](CHANGELOG.md) |
-[Contributing](CONTRIBUTING.md) |
-[Feature Requests](http://feathub.com/Cloudbox/Cloudbox) |
-[Credits](CREDITS.md)
+<br /><br />
+[![Website](https://img.shields.io/badge/Website-https%3A%2F%2Fcloudbox.rocks-blue.svg)](https://cloudbox.rocks)
+[![Wiki](https://img.shields.io/badge/Wiki-https%3A%2F%2Fgithub.com%2Fcloudbox%2Fcloudbox%2Fwiki-blue.svg)](https://github.com/cloudbox/cloudbox/wiki)
+[![Reddit](https://img.shields.io/badge/Reddit-https%3A%2F%2Freddit.com%2Fr%2FCloudbox-blue.svg)](https://reddit.com/r/Cloudbox)
+[![Discord](https://img.shields.io/discord/381077432285003776.svg?colorB=177DC1&label=Discord)](https://discord.io/cloudbox)
+<br /><br />
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
+[![Changelog](https://img.shields.io/badge/Changelog-CHANGELOG.md-blue.svg)](CHANGELOG.md)
+[![Contributing](https://img.shields.io/badge/Contributing-CONTRIBUTING.md-blue.svg)](CONTRIBUTING.md)
+[![Credits](https://img.shields.io/badge/Credits-CREDITS.md-blue.svg)](CREDITS.md)
+[![Feature Requests](https://img.shields.io/badge/Requests-Feathub-blue.svg)](https://feathub.com/Cloudbox/Cloudbox)
+![AppVeyor](https://img.shields.io/appveyor/ci/desimaniac/cloudbox/master.svg?colorB=177DC1&label=AppVeyor)
+
 
 Cloudbox is an Ansible playbook for deploying a cloud media server stack on an Ubuntu server with the use of Docker containers.
 
@@ -35,4 +40,4 @@ Featured Applications:
 
 ***
 
-_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp. Other forms of support are also appreciated (e.g. bugfixes/pull requests to develop branch, etc)._
+_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp._
