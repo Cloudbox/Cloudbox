@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: ctop Role                                    #
-# Author(s):     l3uddz, desimaniac                                     #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -23,3 +23,12 @@
     force: yes
     validate_certs: no
   ignore_errors: yes
+
+- name: "Get ctop version"
+  shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/.$//'"
+  register: ctop_version
+  ignore_errors: yes
+
+- name: "Display ctop version"
+  debug:
+    msg: "ctop version {{ctop_version.stdout}} installed."

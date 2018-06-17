@@ -15,12 +15,7 @@
     }
   },
   "notifications": {
-    "verbose": true,
-    "pushover": {
-      "service": "pushover",
-      "app_token": "",
-      "user_token": ""
-    }
+    "verbose": false
   },
   "filters": {
     "shows": {

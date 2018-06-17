@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: Restore Role                                 #
-# Author(s):     l3uddz, desimaniac                                     #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -38,11 +38,6 @@
       or
       (rclone_conf_user_dir.stat.exists)
     )
-
-- name: Ensure unzip is installed
-  apt:
-    name: unzip
-    state: present
 
 - name: "Check {{backup.tar_dest}} exists"
   stat:
@@ -119,6 +114,11 @@
 - name: "Wait for 10 seconds before unarchiving"
   wait_for:
     timeout: 10
+
+- name: Create /opt directory
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt
 
 - name: "Unarchive cloudbox.tar to /opt"
   shell: "tar -xf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."

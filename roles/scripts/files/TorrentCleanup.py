@@ -3,8 +3,8 @@
 
     #########################################################################
     # Title:         Torrent Cleanup Script                                 #
-    # Author(s):     l3uddz                                                 #
-    # URL:           https://github.com/Cloudbox/Cloudbox                   #
+    # Author(s):     L3uddz                                                 #
+    # URL:           https://github.com/cloudbox/cloudbox                   #
     # Description:   Cleanup auto extracted files in ruTorrent downloads.   #
     # --                                                                    #
     #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -28,7 +28,7 @@
 
         iv. On Upgrade: Yes
 
-        v. On Rename:No
+        v. On Rename: No
 
         vi. Path: /scripts/torrent/TorrentCleanup.py
 
@@ -52,7 +52,7 @@
 
         iv. On Upgrade: Yes
 
-        v. On Rename:No
+        v. On Rename: No
 
         vi. Path: /scripts/torrent/TorrentCleanup.py
 

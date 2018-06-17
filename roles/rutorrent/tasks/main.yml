@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: ruTorrent Role                               #
-# Author(s):     l3uddz, horjulf                                        #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Author(s):     L3uddz, Horjulf                                        #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/rutorrent-autodl                               #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -42,10 +42,25 @@
 - name: "Set {{rutorrent.downloads}} owner"
   shell: "chown -R {{user}}:{{user}} {{rutorrent.downloads}}"
 
-- name: Check rtorrent.rc exists
+- name: Check if rtorrent.rc exists
   stat:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
   register: rtorrent_rc
+
+- name: Check if plugins.ini exists
+  stat:
+    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+  register: plugins_ini
+
+- name: Replace plugins.ini with customized one
+  copy:
+    src: plugins.ini
+    dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: plugins_ini.stat.exists
 
 - name: Create and start container
   docker_container:
@@ -92,6 +107,12 @@
 - name: Wait for nginx.conf to be created
   wait_for:
     path: "/opt/rutorrent/nginx/nginx.conf"
+    state: present
+  when: rtorrent_rc.stat.exists == False
+
+- name: Wait for plugins.ini to be created
+  wait_for:
+    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
     state: present
   when: rtorrent_rc.stat.exists == False
 
@@ -249,10 +270,20 @@
   htpasswd:
     path: /opt/rutorrent/nginx/.htpasswd
     name: "{{user}}"
-    password: "{{rutorrent.passwd}}"
+    password: "{{passwd}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
+  when: rtorrent_rc.stat.exists == False
+
+- name: Copy across custom plugins.ini
+  copy:
+    src: plugins.ini
+    dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
   when: rtorrent_rc.stat.exists == False
 
 - name: Start container to apply changes

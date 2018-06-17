@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: UnionFS Role                                 #
-# Author(s):     l3uddz                                                 #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Author(s):     L3uddz                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -43,6 +43,7 @@
       - /mnt/unionfs
       - /mnt/unionfs/Media
       - /mnt/unionfs/Media/Movies
+      - /mnt/unionfs/Media/Music
       - /mnt/unionfs/Media/TV
 
   - name: Start unionfs service

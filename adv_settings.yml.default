@@ -1,0 +1,10 @@
+---
+organizr:
+  direct_domain: no
+ombi:
+  subdomain: ombi
+plexrequests:
+  subdomain: plexrequests
+telly:
+  playlist: "/opt/telly/file.m3u or URL2M3U"
+  streams: "1"

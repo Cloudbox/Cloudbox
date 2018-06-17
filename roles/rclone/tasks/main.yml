@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: Rclone Role                                  #
-# Author(s):     l3uddz, desimaniac                                     #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -18,13 +18,24 @@
       (rclone.version | trim == '')
       )
 
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
+- name: Ensure unzip is installed
+  apt:
+    name: unzip
+    state: present
 
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
+- name: Create rclone directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "/home/{{user}}/.config"
+    - "/home/{{user}}/.config/rclone"
+
+- name: Touch or create blank rclone.conf file
+  file:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+    state: touch
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
 
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
@@ -72,3 +83,12 @@
 - name: Install manpage
   shell: mandb
   changed_when: false
+
+- name: Get rclone version
+  shell: rclone --version | head -n 1 | awk '{ print substr($2, 2, 4) }'
+  register: rclone_version
+  ignore_errors: yes
+
+- name: "Display rclone version"
+  debug:
+    msg: "rclone version {{rclone_version.stdout}} installed."
