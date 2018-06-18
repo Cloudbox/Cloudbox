@@ -110,7 +110,7 @@
   register: cloudbox_tar2
 
 - name: "Fail cloudbox.tar doesnt exist"
-  fail: msg="There must have been an issue retrieving the cloudbox.tar file... as it does not exist at {{backup.tar_dest}}/cloudbox.tar"
+  fail: msg="There must have been an issue retrieving the cloudbox.tar file as it does not exist at {{backup.tar_dest}}/cloudbox.tar"
   when: cloudbox_tar2.stat.exists == False
 
 - name: "Wait for 10 seconds before unarchiving"
@@ -142,4 +142,4 @@
     warn: no
 
 - debug:
-    msg: Finished unarchiving the contents of cloudbox.tar to /opt/, you should now be ready to perform an installation (i.e. Full, Plex, or Feeder)!
+    msg: Finished unarchiving the contents of cloudbox.tar to /opt/. You are now ready to install Cloudbox.
