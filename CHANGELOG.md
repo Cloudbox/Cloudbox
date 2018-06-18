@@ -48,7 +48,7 @@ Changelog Format:
 - Ubuntu: Support for 18.04. (_EnorMOZ_)
 - [Cloudplow](https://github.com/l3uddz/cloudplow/) - Replaces UnionFS Cleaner.
 - [Nethogs](https://github.com/raboof/nethogs) (_EnorMOZ_)
-- [Telly]](https://github.com/tombowditch/telly) (_EnorMOZ_) - Options are set in adv_settings.yml.
+- [Telly](https://github.com/tombowditch/telly) (_EnorMOZ_) - Options are set in adv_settings.yml.
 - [iperf3](https://software.es.net/iperf/)
 
 ### Changed
@@ -56,12 +56,13 @@ Changelog Format:
 - Backup: Misc tweaks to prevent issues.
 - Backup: Move previous backup files to archived folder.
 - Backup: Send pushover message when backup terminates due to an error.
+- Cloudflare: CB related subdomains are now: cloudbox, mediabox, feederbox. Don't put these behind proxy/CDN, as these are meant to reach your server directly.
 - NZBGet: Removed /opt/nzbget/scripts path. Use /opt/scripts/nzb/ instead.
 - NZBHydra1: Switched to LSIO image as Hotio/Suitarr dropped support.
 - NZBHydra1: Config files for Suitarr path now automatically migrated over to LSIO path.
 - NZBHydra2: Automates entering in login and auth info, and sets JVM memory to 512MB if the system has >= 16GB of RAM.
 - NZBHydra2: Mounts NZBHydra1, so that previous config/db can be migrated on first install or from settings later. See https://i.imgur.com/CneRSWw.png for the paths needed.
-- NZBHydra2: NZBHydra2 now replaces NZBHydra1 for "default" installs (e.g. full, feeder). NZBHydra1 is still there as optional addon.
+- NZBHydra2: NZBHydra2 now replaces NZBHydra1 for "default" installs (e.g. full cloudbox, feederbox). NZBHydra1 is still there as optional addon.
 - PIP: Suppress outdated pip warnings.
 - Plex Autoscan: Added music folder into default config.
 - Plex Autoscan: URL Script will catch errors and display message (e.g. missing dependencies, invalid JSON formatting). Added some visual enhancements.
