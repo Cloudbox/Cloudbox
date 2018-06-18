@@ -65,6 +65,7 @@
     backrefs: yes
   with_items:
     - {regexp: '(xmx:)\s?.*', line: '  \1 512'}
+  when: ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int >= 8)
 
 - name: Add downloaders section
   lineinfile:
