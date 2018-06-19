@@ -19,7 +19,8 @@
                 "**partial~",
                 "**_HIDDEN~",
                 ".unionfs/**",
-                ".unionfs-fuse/**"
+                ".unionfs-fuse/**",
+                "**.fuse_hidden**"
             ],
             "rclone_extras": {
                 "--checkers": 16,
