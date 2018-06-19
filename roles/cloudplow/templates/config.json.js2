@@ -12,6 +12,17 @@
     },
     "notifications": {
     },
+    "plex": {
+        "enabled": false,
+        "url": "https://plex.{{domain}}",
+        "token": "",
+        "poll_interval": 60,
+        "max_streams_before_throttle": 1,
+        "rclone": {
+            "url": "http://localhost:7949",
+            "throttle_speed": "25M"
+        }
+    },
     "remotes": {
         "google": {
             "hidden_remote": "google:",
