@@ -74,9 +74,9 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra:/config"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - nzbhydra
+    restart_policy: always
     state: started
