@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Organizr Role                                #
-# Author(s):     L3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  lsiocommunity/organizr                                 #
 # --                                                                    #
@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: "organizr"
+    subdomain: organizr
 
 - name: "Setting CloudFlare DNS Record"
   include_role:
@@ -38,7 +38,7 @@
     name: organizr
     state: absent
 
-- name: Create organizr directories
+- name: Create Organizr directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/organizr
