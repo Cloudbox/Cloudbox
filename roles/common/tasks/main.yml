@@ -162,3 +162,8 @@
     name: nethogs
   tags: nethogs
   ignore_errors: yes
+
+- name: Install Zsh / Oh-My-Zsh
+  import_role:
+    name: zsh
+  tags: zsh
