@@ -42,7 +42,6 @@
     - { role: lidarr, tags: ['lidarr'] }
     - { role: emby, tags: ['emby'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }
-    - { role: zsh, tags: ['zsh'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
     - { role: radarr4k, tags: ['radarr4k'] }
