@@ -163,7 +163,22 @@
   tags: nethogs
   ignore_errors: yes
 
-- name: Install Zsh / Oh-My-Zsh
+- name: Set bash as default shell
+  user:
+    name: "{{user}}"
+    shell: /bin/bash
+  when: shell|default('zsh',true) == "bash"
+  register: default_shell
+  tags: shell
+
+- name: Default shell set to bash
+  debug:
+    msg: "You will need to re-login for changes to take effect."
+  when: default_shell is changed
+  tags: shell
+
+- name: Set zsh as default shell
   import_role:
     name: zsh
-  tags: zsh
+  tags: shell
+  when: shell|default('zsh',true) == "zsh"
