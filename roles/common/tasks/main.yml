@@ -165,8 +165,8 @@
   user:
     name: "{{user}}"
     shell: /bin/bash
-  when: shell|default('zsh',true) == "bash"
   register: default_shell
+  when: shell|default('zsh',true) == "bash"
   tags: shell
 
 - name: Default shell set to bash
@@ -178,5 +178,5 @@
 - name: Set zsh as default shell
   import_role:
     name: zsh
-  tags: shell
   when: shell|default('zsh',true) == "zsh"
+  tags: shell
