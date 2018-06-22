@@ -182,3 +182,9 @@
     name: zsh
   when: shell|default('zsh',true) == "zsh"
   tags: shell
+
+- name: Install z
+  import_role:
+    name: z
+  tags: z
+  ignore_errors: yes
