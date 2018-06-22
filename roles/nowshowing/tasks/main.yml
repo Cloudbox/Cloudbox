@@ -1,0 +1,58 @@
+#########################################################################
+# Title:         Cloudbox: NowShowing Role                              #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  ninthwalker/nowshowing:v2                              #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: nowshowing
+
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: nowshowing
+    state: absent
+
+- name: Create NowShowing directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nowshowing
+
+- name: Create and start container
+  docker_container:
+    name: nowshowing
+    image: ninthwalker/nowshowing:v2
+    pull: yes
+    published_ports:
+      - "127.0.0.1:6878:6878"
+    env:
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      VIRTUAL_HOST: "nowshowing.{{domain}}"
+      VIRTUAL_PORT: 6878
+      LETSENCRYPT_HOST: "nowshowing.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nowshowing:/config"
+    networks:
+      - name: cloudbox
+        aliases:
+          - nowshowing
+    restart_policy: always
+    state: started
