@@ -8,17 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check if .z file exists
-  stat:
-    path: "/home/{{user}}/.z"
-  register: z
-
-- name: Remove .z file
-  file:
-    path: "/home/{{user}}/.z"
-    state: absent
-  when: z.stat.exists
-
 - name: Create z directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
@@ -58,9 +47,11 @@
 - name: Get default shell of user
   shell: "getent passwd {{user}} | cut -d: -f7"
   register: shell
+  ignore_errors: yes
 
 - name: Source dot files
   shell: "source {{ (shell.stdout == '/bin/bash') | ternary('/home/' + user + '/.bashrc','/home/' + user + '/.zshrc') }}"
   args:
     executable: "{{shell.stdout}}"
   become: no
+  ignore_errors: yes
