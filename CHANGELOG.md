@@ -51,6 +51,7 @@ Changelog Format:
 - NZBHydra2: Increase JVM memory to 512MB when system has 8GB of RAM or more.
 - Plex Autoscan: Updated config to support latest changes.
 - Plexpy: /scripts/plexpy/ points to /opt/scripts/plexpy/.
+- PreInstall: Set ownership of entire /home/user folder to user.
 - ruTorrent: Tweaked /scripts mount path.
 - System: Only updates ext4 mount.
 - ZSH: Now installed by default, unless otherwise specified in adv_settings. Use shell tag to switch between zsh and bash.
