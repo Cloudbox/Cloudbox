@@ -13,7 +13,7 @@
     #########################################################################
 
     Sonarr Setup:
-    --
+    -------------
     1. Click "Settings" -> "Connect".
 
     2. Add a new "Custom Script".
@@ -37,7 +37,7 @@
     ========================================================================
 
     Radarr Setup:
-    --
+    -------------
     1. Click "Settings" -> "Connect".
 
     2. Add a new "Custom Script".
@@ -58,6 +58,34 @@
 
         vii. Arguments: radarr
 
+    ========================================================================
+
+    Lidarr Setup:
+    -------------
+    1. Click "Settings" -> "Connect".
+
+    2. Add a new "Custom Script".
+
+    3. Add the following:
+
+        i. Name: Torrent Cleanup
+
+        ii. On Grab: No
+
+        iii. On Album Import: Yes
+
+        iv. On Track Import: Yes
+
+        v. On Track Upgrade: Yes
+
+        vi. On Rename: No
+
+        vii. Path: /scripts/torrent/TorrentCleanup.py
+
+        viii. Arguments: lidarr
+
+    ========================================================================
+
 """
 import logging
 import os
@@ -74,7 +102,7 @@ log = logging.getLogger("TorrentCleanup")
 
 # Retrieve Required Variables
 if len(sys.argv) <= 1:
-    log.error("You must specify an argument of either sonarr/radarr")
+    log.error("You must specify an argument of either sonarr/radarr/lidarr.")
     sys.exit(0)
 elif sys.argv[1].lower() == "sonarr":
     sourceFile = os.environ.get('sonarr_episodefile_sourcepath')
@@ -82,8 +110,11 @@ elif sys.argv[1].lower() == "sonarr":
 elif sys.argv[1].lower() == "radarr":
     sourceFile = os.environ.get('radarr_moviefile_sourcepath')
     sourceFolder = os.environ.get('radarr_moviefile_sourcefolder')
+elif sys.argv[1].lower() == "lidarr":
+    sourceFile = os.environ.get('lidarr_trackfile_sourcepath')
+    sourceFolder = os.environ.get('lidarr_trackfile_sourcefolder')
 else:
-    log.error("Unable to determine cleanup requester. This must be either sonarr or radarr")
+    log.error("Unable to determine cleanup requester. This must be either sonarr, radarr, or lidarr.")
     sys.exit(0)
 
 if os.path.exists(sourceFile) and os.path.isfile(sourceFile):
