@@ -40,8 +40,8 @@
     state: present
   when: sudoers.stat.exists == True
 
-- name: "Make Cloudbox folder readable/writeable by {{user}}"
-  file: "path={{playbook_dir}} state=directory owner={{user}} group={{user}} recurse=yes"
+- name: "Set /home/{{user}} ownership"
+  file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
 
 - name: Check plexdrive.service exists
   stat:
