@@ -37,7 +37,7 @@ Changelog Format:
 
 ### Added
 - Adv Settings: shell option.
-- Cloudplow: Adds \*\*.fuse_hidden\*\* to rclone excludes.
+- Cloudplow: Adds \**.fuse_hidden\*\* to rclone excludes.
 - Cloudplow: Adds Plex integration into default config.
 - [NowShowing](https://github.com/ninthwalker/NowShowing)
 - Organizr: Adds www subdomain to Organizr when direct_domain is set in adv_settings.
@@ -59,7 +59,7 @@ Changelog Format:
 - Tags: zsh
 
 ### Fixed
-- Nginx: Allows large EPG and channels data to be added in to Plex. (_[EnorMOZ](https://github.com/EnorMOZ)_)
+- Nginx: Allows EPGs with large channel data to be added in to Plex. (_[EnorMOZ](https://github.com/EnorMOZ)_)
 - NZBGet: Fixes missing env's for new installs.
 
 
