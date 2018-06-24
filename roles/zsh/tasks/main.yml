@@ -51,7 +51,9 @@
   user:
     name: "{{user}}"
     shell: /bin/zsh
+  register: default_shell
 
-- name: Message
+- name: Default shell set to zsh
   debug:
     msg: "You will need to re-login for changes to take effect."
+  when: default_shell is changed

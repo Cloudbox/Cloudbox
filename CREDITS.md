@@ -11,6 +11,9 @@
 * [Horjulf](https://github.com/horjulf)
 * [RXWatcher](https://github.com/RXWatcher1)
 * [Vuur](https://github.com/vuur)
+* [Captain-NaCl](https://github.com/Captain-NaCl)
+* [Kasper56](https://github.com/After-Shock)
+
 
 ### Dependencies
 

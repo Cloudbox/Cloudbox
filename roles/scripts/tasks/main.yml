@@ -33,6 +33,7 @@
     - /opt/scripts/nginx
     - /opt/scripts/plex
     - /opt/scripts/plex_autoscan
+    - /opt/scripts/plexpy
     - /opt/scripts/torrent
 
 - name: Check arrpush.legacy.sh exists

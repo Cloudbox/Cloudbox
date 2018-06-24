@@ -160,3 +160,29 @@
     name: nethogs
   tags: nethogs
   ignore_errors: yes
+
+- name: Set bash as default shell
+  user:
+    name: "{{user}}"
+    shell: /bin/bash
+  register: default_shell
+  when: shell|default('zsh',true) == "bash"
+  tags: shell
+
+- name: Default shell set to bash
+  debug:
+    msg: "You will need to re-login for changes to take effect."
+  when: default_shell is changed
+  tags: shell
+
+- name: Set zsh as default shell
+  import_role:
+    name: zsh
+  when: shell|default('zsh',true) == "zsh"
+  tags: shell
+
+- name: Install z
+  import_role:
+    name: z
+  tags: z
+  ignore_errors: yes

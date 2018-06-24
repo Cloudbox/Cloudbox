@@ -1,8 +1,8 @@
 #########################################################################
-# Title:         Cloudbox: Organizr Role                                #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Title:         Cloudbox: NowShowing Role                              #
+# Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  lsiocommunity/organizr                                 #
+# Docker Image:  ninthwalker/nowshowing:v2                              #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -13,17 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: organizr
-
-- name: "Setting CloudFlare DNS Record"
-  include_role:
-    name: cloudflare
-  vars:
-    subdomain: "{{item}}"
-  with_items:
-    - "www"
-    - "{{domain}}"
-  when: organizr.direct_domain|default(false,true)
+    subdomain: nowshowing
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -35,34 +25,34 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: organizr
+    name: nowshowing
     state: absent
 
-- name: Create Organizr directories
+- name: Create NowShowing directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/organizr
+    - /opt/nowshowing
 
 - name: Create and start container
   docker_container:
-    name: organizr
-    image: "lsiocommunity/organizr"
+    name: nowshowing
+    image: ninthwalker/nowshowing:v2
     pull: yes
     published_ports:
-      - "127.0.0.1:7421:80"
+      - "127.0.0.1:6878:6878"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('organizr.' + domain + ',' + 'www.' + domain + ',' + domain,'organizr.' + domain) }}"
-      VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('organizr.' + domain + ',' + 'www.' + domain + ',' + domain,'organizr.' + domain) }}"
+      VIRTUAL_HOST: "nowshowing.{{domain}}"
+      VIRTUAL_PORT: 6878
+      LETSENCRYPT_HOST: "nowshowing.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/organizr:/config"
+      - "/opt/nowshowing:/config"
     networks:
       - name: cloudbox
         aliases:
-          - organizr
+          - nowshowing
     restart_policy: always
     state: started

@@ -70,7 +70,7 @@
       - "/opt/nzbget:/config"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "/mnt:/mnt"
-      - "/opt/scripts/nzb:/scripts"
+      - "/opt/scripts:/scripts"
     restart_policy: always
     networks:
       - name: cloudbox
@@ -92,7 +92,6 @@
 - name: Stop container to customize nzbget.conf
   docker_container:
     name: nzbget
-    image: hotio/suitarr
     state: stopped
   when: nzbget_conf.stat.exists == False
 
