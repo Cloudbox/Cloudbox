@@ -37,7 +37,7 @@ Changelog Format:
 
 ### Added
 - Adv Settings: shell option.
-- Cloudplow: Adds \**.fuse_hidden\** to rclone excludes.
+- Cloudplow: Adds \**.fuse_hidden\*\* to rclone excludes.
 - Cloudplow: Adds Plex integration into default config.
 - [NowShowing](https://github.com/ninthwalker/NowShowing)
 - Organizr: Adds www subdomain to Organizr when direct_domain is set in adv_settings.
@@ -51,6 +51,7 @@ Changelog Format:
 - NZBHydra2: Increase JVM memory to 512MB when system has 8GB of RAM or more.
 - Plex Autoscan: Updated config to support latest changes.
 - Plexpy: /scripts/plexpy/ points to /opt/scripts/plexpy/.
+- PreInstall: Set ownership of entire /home/user folder to user.
 - ruTorrent: Tweaked /scripts mount path.
 - System: Only updates ext4 mount.
 - ZSH: Now installed by default, unless otherwise specified in adv_settings. Use shell tag to switch between zsh and bash.
@@ -59,7 +60,7 @@ Changelog Format:
 - Tags: zsh
 
 ### Fixed
-- Nginx: Allows large EPG and channels data to be added in to Plex. (_[EnorMOZ](https://github.com/EnorMOZ)_)
+- Nginx: Allows EPGs with large channel data to be added in to Plex. (_[EnorMOZ](https://github.com/EnorMOZ)_)
 - NZBGet: Fixes missing env's for new installs.
 
 
