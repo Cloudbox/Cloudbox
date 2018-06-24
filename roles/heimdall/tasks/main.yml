@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Heimdall Role                                #
-# Author(s):     Captain-NaCl                                           #
+# Author(s):     Captain-NaCl, Desimaniac                               #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  linuxserver/heimdall                                   #
 # --                                                                    #
@@ -14,6 +14,17 @@
     name: cloudflare
   vars:
     subdomain: heimdall
+
+- name: Create htpasswd
+  htpasswd:
+    path: "/opt/nginx-proxy/htpasswd/{{item}}.{{domain}}"
+    name: "{{user}}"
+    password: "{{passwd}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+  with_items:
+    - heimdall
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"

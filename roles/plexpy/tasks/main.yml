@@ -37,6 +37,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/plexpy
+    - /opt/scripts/plexpy
 
 - name: Create and start container
   docker_container:
@@ -57,6 +58,7 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
+      - "/opt/scripts:/scripts"
     restart_policy: always
     networks:
       - name: cloudbox
