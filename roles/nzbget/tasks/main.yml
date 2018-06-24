@@ -70,7 +70,7 @@
       - "/opt/nzbget:/config"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "/mnt:/mnt"
-      - "/opt/scripts/nzb:/scripts"
+      - "/opt/scripts:/scripts"
     restart_policy: always
     networks:
       - name: cloudbox

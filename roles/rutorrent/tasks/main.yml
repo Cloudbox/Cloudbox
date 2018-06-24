@@ -83,7 +83,7 @@
       - "/opt/rutorrent:/config"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
       - "/mnt:/mnt"
-      - "/opt/scripts/torrent:/scripts"
+      - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox
         aliases:
