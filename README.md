@@ -3,11 +3,11 @@
 <br /><br />
 [![Website](https://img.shields.io/badge/Website-https%3A%2F%2Fcloudbox.rocks-blue.svg)](https://cloudbox.rocks)
 [![Wiki](https://img.shields.io/badge/Wiki-https%3A%2F%2Fgithub.com%2Fcloudbox%2Fcloudbox%2Fwiki-blue.svg)](https://github.com/cloudbox/cloudbox/wiki)
-[![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2FCloudbox-blue.svg)](https://reddit.com/r/Cloudbox)
+[![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2Fcloudbox-blue.svg)](https://reddit.com/r/Cloudbox)
 [![Discord](https://img.shields.io/discord/381077432285003776.svg?colorB=177DC1&label=Discord)](https://discord.io/cloudbox)
 [![Feature Requests](https://img.shields.io/badge/Requests-Feathub-blue.svg)](https://feathub.com/Cloudbox/Cloudbox)
 <br />
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
+[![License: GPL 3](https://img.shields.io/badge/License-GPL%203-blue.svg)](LICENSE.md)
 [![Version](https://img.shields.io/github/release/cloudbox/cloudbox.svg?colorB=177DC1&label=Version)](https://github.com/cloudbox/cloudbox/releases)
 [![AppVeyor](https://img.shields.io/appveyor/ci/desimaniac/cloudbox/master.svg?colorB=177DC1&label=AppVeyor)](https://ci.appveyor.com/project/desimaniac/cloudbox)
 [![Changelog](https://img.shields.io/badge/Changelog-CHANGELOG.md-blue.svg)](CHANGELOG.md)
