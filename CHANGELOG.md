@@ -37,7 +37,7 @@ Changelog Format:
 
 ### Added
 - Adv Settings: shell option.
-- Cloudplow: Adds \**.fuse_hidden\** to rclone excludes.
+- Cloudplow: Adds \*\*.fuse_hidden\*\* to rclone excludes.
 - Cloudplow: Adds Plex integration into default config.
 - [NowShowing](https://github.com/ninthwalker/NowShowing)
 - Organizr: Adds www subdomain to Organizr when direct_domain is set in adv_settings.
