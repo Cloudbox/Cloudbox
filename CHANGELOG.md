@@ -30,6 +30,37 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.2.1] - 2018-06-24
+
+### **Notes**:
+- Requires **Ansible 2.5.1**.
+
+### Added
+- Adv Settings: shell option.
+- Cloudplow: Adds \**.fuse_hidden\** to rclone excludes.
+- Cloudplow: Adds Plex integration into default config.
+- [NowShowing](https://github.com/ninthwalker/NowShowing)
+- Organizr: Adds www subdomain to Organizr when direct_domain is set in adv_settings.
+- Tags: shell
+- Torrent Cleaner: Experimental support for Lidarr.
+- [Z jump](https://github.com/rupa/z)
+
+### Changed
+- Heimdall: Creates htpasswd by default.
+- NZBGet: Tweaked /scripts mount path.
+- NZBHydra2: Increase JVM memory to 512MB when system has 8GB of RAM or more.
+- Plex Autoscan: Updated config to support latest changes.
+- Plexpy: /scripts/plexpy/ points to /opt/scripts/plexpy/.
+- ruTorrent: Tweaked /scripts mount path.
+- System: Only updates ext4 mount.
+- ZSH: Now installed by default, unless otherwise specified in adv_settings. Use shell tag to switch between zsh and bash.
+
+### Removed
+- Tags: zsh
+
+### Fixed
+- Nginx: Allows large EPG and channels data to be added in to Plex. (_[EnorMOZ](https://github.com/EnorMOZ)_)
+- NZBGet: Fixes missing env's for new installs.
 
 
 ## [1.2.0] - 2018-06-17
@@ -45,10 +76,10 @@ Changelog Format:
 - Organizr: Direct domain option in adv_settings.yml.
 - Plex Requests: Custom subdomain option in adv_settings.yml.
 - System: Removes useless packages and dependencies.
-- Ubuntu: Support for 18.04. (_EnorMOZ_)
+- Ubuntu: Support for 18.04. (_[EnorMOZ](https://github.com/EnorMOZ)_)
 - [Cloudplow](https://github.com/l3uddz/cloudplow/) - Replaces UnionFS Cleaner.
-- [Nethogs](https://github.com/raboof/nethogs) (_EnorMOZ_)
-- [Telly](https://github.com/tombowditch/telly) (_EnorMOZ_) - Options are set in adv_settings.yml.
+- [Nethogs](https://github.com/raboof/nethogs) (_[EnorMOZ](https://github.com/EnorMOZ)_)
+- [Telly](https://github.com/tombowditch/telly) - Options are set in adv_settings.yml. (_[EnorMOZ](https://github.com/EnorMOZ)_)
 - [iperf3](https://software.es.net/iperf/)
 
 ### Changed
@@ -60,9 +91,10 @@ Changelog Format:
 - NZBGet: Removed /opt/nzbget/scripts path. Use /opt/scripts/nzb/ instead.
 - NZBHydra1: Switched to LSIO image as Hotio/Suitarr dropped support.
 - NZBHydra1: Config files for Suitarr path now automatically migrated over to LSIO path.
+- NZBHydra1 is now an optional addon.
 - NZBHydra2: Automates entering in login and auth info, and sets JVM memory to 512MB if the system has >= 16GB of RAM.
 - NZBHydra2: Mounts NZBHydra1, so that previous config/db can be migrated on first install or from settings later. See https://i.imgur.com/CneRSWw.png for the paths needed.
-- NZBHydra2: NZBHydra2 now replaces NZBHydra1 for "default" installs (e.g. full cloudbox, feederbox). NZBHydra1 is still there as optional addon.
+- NZBHydra2: NZBHydra2 now replaces NZBHydra1 for "default" installs (i.e. cloudbox, feederbox).
 - PIP: Suppress outdated pip warnings.
 - Plex Autoscan: Added music folder into default config.
 - Plex Autoscan: URL Script will catch errors and display message (e.g. missing dependencies, invalid JSON formatting). Added some visual enhancements.
@@ -71,7 +103,7 @@ Changelog Format:
 - Rutorrent: Disables extsearch plugin for new installs. Will help fix some slow loading issues.
 - Rutorrent: Uses same password as passwd in settings.yml
 - Sanity Check: Exit any CB install when backup is in progress.
-- Sanity Check: Make sure users are using a valid tag. (_EnorMOZ_)
+- Sanity Check: Make sure users are using a valid tag. (_[EnorMOZ](https://github.com/EnorMOZ)_)
 - Settings: Took out entry for Plex Autoscan IP, as it's usually 0.0.0.0 for CB purposes.
 - Suitarr: Updated tasks to reflect new config paths.
 - Tags: Added new tag core
@@ -87,7 +119,7 @@ Changelog Format:
 ### Fixed
 - Ansible: Added localhost to inventory to suppress warning messages.
 - Cron: Added PATH to fix issues with backup and purge-old-kernels.
-- NZBGet: Fixed unrar issue with latest version of NZBGet. (thanks _RXWatcher1_)
+- NZBGet: Fixed unrar issue with latest version of NZBGet. (_[RXWatcher](https://github.com/RXWatcher1)_)
 - Rclone: Fixed permission issues with ~/.config paths.
 
 
@@ -217,7 +249,7 @@ git reset --hard 58964a8
 - Python modules
   - netaddr - for Ansible's `ipv4` filter.
   - dnspython - for Ansible's `dig` lookup.
-- [Heimdall](https://heimdall.site/) (submitted by _Captain-NaCl_)
+- [Heimdall](https://heimdall.site/) (_[Captain-NaCl](https://github.com/Captain-NaCl)_)
   - subdomain: `heimdall`
   - install: `--tags install-heimdall`
   - folder: `/opt/heimdall`
@@ -291,8 +323,8 @@ git reset --hard 58964a8
   - `rclone.conf` location: `~/.config/rclone/rclone.conf`.
   - Removed the use of `/opt/rclone/` folder (and the symlinks within it).
 - Backup
-  - Rclone uses less bandwidth, due to server-side move commands (initially submitted by _RXWatcher1_).
-  - Will archive older versions of `cloudbox.tar` on Rclone remotes (initially submitted by _RXWatcher1_).
+  - Rclone uses less bandwidth, due to server-side move commands (initially submitted by _[RXWatcher](https://github.com/RXWatcher1)_).
+  - Will archive older versions of `cloudbox.tar` on Rclone remotes (initially submitted by _[RXWatcher](https://github.com/RXWatcher1)_).
   - Systemd files will be saved to `/opt/systemd-backup` (vs `/opt/systemd`). The name makes the purpose of the folder clearer.
   - Local `cloudbox.tar.backup` file is now deleted after a successful tar archiving task.
   - Will now `rclone.conf` and `settings.yml` files separate from `cloudbox.tar`. Older versions of these files will also be archived on rclone remotes.
@@ -314,7 +346,7 @@ git reset --hard 58964a8
 - Docker
   - Force the installation of `docker-ce` `v17.09.0` and prevent it from being updated.
     - This is to prevent issues mentioned here: https://github.com/moby/moby/issues/35933.
-  - Better log size management  (_EnorMOZ_)
+  - Better log size management  (_[EnorMOZ](https://github.com/EnorMOZ)_)
 - [ctop](https://ctop.sh/)
   - version updated to `0.7.1`.
 - Scripts
@@ -356,7 +388,7 @@ git reset --hard 58964a8
 - Ansible
   - Fixed misc SSL errors with Github links.
 - MOTD
-  - Now shows memory info (based off the word of _EnorMOZ_)
+  - Now shows memory info (based off the word of _[EnorMOZ](https://github.com/EnorMOZ)_)
 - rclone
   - fix for trailing zeroes in version numbers.
 
@@ -427,6 +459,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.1]: https://github.com/cloudbox/cloudbox/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/cloudbox/cloudbox/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/cloudbox/cloudbox/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/cloudbox/cloudbox/compare/v1.1.1...v1.1.2
