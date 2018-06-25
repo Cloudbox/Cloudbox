@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: NZBGet Role                                  #
-# Author(s):     L3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
@@ -50,12 +50,11 @@
 - name: Create and start container
   docker_container:
     name: nzbget
-    image: hotio/suitarr
+    image: hotio/suitarr:nzbget
     pull: yes
     published_ports:
       - "127.0.0.1:6789:6789"
     env:
-      APP: "nzbget"
       VERSION: "unstable"
       BACKUP: "no"
       PUID: "{{uid.stdout}}"
