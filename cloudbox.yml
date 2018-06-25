@@ -54,3 +54,4 @@
     - { role: plex_patrol, tags: ['plex_patrol'] }
     - { role: telly, tags: ['telly'] }
     - { role: nowshowing, tags: ['nowshowing'] }
+    - { role: bazarr, tags: ['bazarr'] }

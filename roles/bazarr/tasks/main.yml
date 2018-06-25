@@ -1,0 +1,65 @@
+#########################################################################
+# Title:         Cloudbox: bazarr Role                                  #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: bazarr
+
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: bazarr
+    state: absent
+
+- name: Create bazarr directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/bazarr
+
+- name: Create and start container
+  docker_container:
+    name: bazarr
+    image: "hotio/suitarr:bazarr"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:6767:6767"
+    env:
+      VERSION: "unstable"
+      BACKUP: "no"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "bazarr.{{domain}}"
+      VIRTUAL_PORT: 6767
+      LETSENCRYPT_HOST: "bazarr.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/bazarr:/config"
+      - "/mnt/unionfs/Media/TV:/tv"
+      - "/mnt/unionfs/Media/Movies:/movies"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+    networks:
+      - name: cloudbox
+        aliases:
+          - bazarr
+    restart_policy: always
+    state: started
