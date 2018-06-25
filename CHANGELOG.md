@@ -30,6 +30,18 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.2.2] - 2018-06-25
+
+### **Notes**:
+- Requires **Ansible 2.5.1**.
+
+### Added
+- [Bazarr](https://github.com/morpheus65535/bazarr). -> [Setup Instruction](https://github.com/Cloudbox/Cloudbox/commit/9353be4d581542f8ae744e793fe26fc7e318c6f8).
+- Sonarr4k
+
+### Changed
+- [Suitarr](https://gitlab.com/hotio/suitarr/): Updated Docker images to new format.
+
 ## [1.2.1] - 2018-06-24
 
 ### **Notes**:
@@ -37,7 +49,7 @@ Changelog Format:
 
 ### Added
 - Adv Settings: shell option.
-- Cloudplow: Adds \**.fuse_hidden\*\* to rclone excludes.
+- Cloudplow: Adds \*\*.fuse_hidden\*\* to rclone excludes.
 - Cloudplow: Adds Plex integration into default config.
 - [NowShowing](https://github.com/ninthwalker/NowShowing)
 - Organizr: Adds www subdomain to Organizr when direct_domain is set in adv_settings.
@@ -460,6 +472,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.2]: https://github.com/cloudbox/cloudbox/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/cloudbox/cloudbox/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/cloudbox/cloudbox/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/cloudbox/cloudbox/compare/v1.1.2...v1.1.3

@@ -41,12 +41,11 @@
 - name: Create and start container
   docker_container:
     name: nzbhydra2
-    image: hotio/suitarr
+    image: hotio/suitarr:nzbhydra2
     pull: yes
     published_ports:
       - "127.0.0.1:5076:5076"
     env:
-      APP: "nzbhydra2"
       VERSION: "unstable"
       BACKUP: "no"
       PUID: "{{uid.stdout}}"

@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Jackett Role                                 #
-# Author(s):     L3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
@@ -36,12 +36,11 @@
 - name: Create and start container
   docker_container:
     name: jackett
-    image: hotio/suitarr
+    image: hotio/suitarr:jackett
     pull: yes
     published_ports:
       - "127.0.0.1:9117:9117"
     env:
-      APP: "jackett"
       VERSION: "unstable"
       BACKUP: "no"
       PUID: "{{uid.stdout}}"
