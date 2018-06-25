@@ -44,6 +44,7 @@
     - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
+    - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: heimdall, tags: ['heimdall'] }
     - { role: thelounge, tags: ['thelounge'] }
@@ -53,3 +54,4 @@
     - { role: plex_patrol, tags: ['plex_patrol'] }
     - { role: telly, tags: ['telly'] }
     - { role: nowshowing, tags: ['nowshowing'] }
+    - { role: bazarr, tags: ['bazarr'] }

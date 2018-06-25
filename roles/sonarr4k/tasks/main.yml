@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Radarr Role                                  #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Title:         Cloudbox: Sonarr4K Role                                #
+# Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: radarr
+    subdomain: sonarr4k
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -25,35 +25,35 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: radarr
+    name: sonarr4k
     state: absent
 
-- name: Create radarr directories
+- name: Create sonarr4k directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/radarr
+    - /opt/sonarr4k
 
 - name: Create and start container
   docker_container:
-    name: radarr
-    image: hotio/suitarr:radarr
+    name: sonarr4k
+    image: "hotio/suitarr:sonarr"
     pull: yes
     published_ports:
-      - "127.0.0.1:7878:7878"
+      - "127.0.0.1:8990:8989"
     env:
       VERSION: "unstable"
+      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
-      VIRTUAL_HOST: "radarr.{{domain}}"
-      VIRTUAL_PORT: 7878
-      LETSENCRYPT_HOST: "radarr.{{domain}}"
+      VIRTUAL_HOST: "sonarr4k.{{domain}}"
+      VIRTUAL_PORT: 8989
+      LETSENCRYPT_HOST: "sonarr4k.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/radarr:/config"
-      - "/mnt/unionfs/Media/Movies:/movies"
+      - "/opt/sonarr4k:/config"
+      - "/mnt/unionfs/Media/TV:/tv"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
       - "/mnt:/mnt"
@@ -61,6 +61,6 @@
     networks:
       - name: cloudbox
         aliases:
-          - radarr
+          - sonarr4k
     restart_policy: always
     state: started

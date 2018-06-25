@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Radarr Role                                  #
+# Title:         Cloudbox: Bazarr Role                                  #
 # Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: radarr
+    subdomain: bazarr
 
 - name: "Get {{user}} uid"
   shell: "id -u {{user}}"
@@ -25,42 +25,41 @@
 
 - name: Stop and remove any existing container
   docker_container:
-    name: radarr
+    name: bazarr
     state: absent
 
-- name: Create radarr directories
+- name: Create bazarr directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/radarr
+    - /opt/bazarr
 
 - name: Create and start container
   docker_container:
-    name: radarr
-    image: hotio/suitarr:radarr
+    name: bazarr
+    image: "hotio/suitarr:bazarr"
     pull: yes
     published_ports:
-      - "127.0.0.1:7878:7878"
+      - "127.0.0.1:6767:6767"
     env:
       VERSION: "unstable"
+      BACKUP: "no"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
-      BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
-      VIRTUAL_HOST: "radarr.{{domain}}"
-      VIRTUAL_PORT: 7878
-      LETSENCRYPT_HOST: "radarr.{{domain}}"
+      VIRTUAL_HOST: "bazarr.{{domain}}"
+      VIRTUAL_PORT: 6767
+      LETSENCRYPT_HOST: "bazarr.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/radarr:/config"
+      - "/opt/bazarr:/config"
+      - "/mnt/unionfs/Media/TV:/tv"
       - "/mnt/unionfs/Media/Movies:/movies"
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:
       - name: cloudbox
         aliases:
-          - radarr
+          - bazarr
     restart_policy: always
     state: started
