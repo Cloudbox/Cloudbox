@@ -1,0 +1,66 @@
+#########################################################################
+# Title:         Cloudbox: Sonarr4K Role                                #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: sonarr4k
+
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: sonarr4k
+    state: absent
+
+- name: Create sonarr4k directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/sonarr4k
+
+- name: Create and start container
+  docker_container:
+    name: sonarr4k
+    image: "hotio/suitarr:sonarr"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8990:8989"
+    env:
+      VERSION: "unstable"
+      BACKUP: "no"
+      PUID: "{{uid.stdout}}"
+      PGID: "{{gid.stdout}}"
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "sonarr4k.{{domain}}"
+      VIRTUAL_PORT: 8989
+      LETSENCRYPT_HOST: "sonarr4k.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/sonarr4k:/config"
+      - "/mnt/unionfs/Media/TV:/tv"
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+    networks:
+      - name: cloudbox
+        aliases:
+          - sonarr4k
+    restart_policy: always
+    state: started
