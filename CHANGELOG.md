@@ -32,11 +32,11 @@ Changelog Format:
 
 ## [1.2.2] - 2018-06-25
 
-### **Notes**:
+### **Notes**
 - Requires **Ansible 2.5.1**.
 
 ### Added
-- [Bazarr](https://github.com/morpheus65535/bazarr). -> [Setup Instruction](https://github.com/Cloudbox/Cloudbox/commit/9353be4d581542f8ae744e793fe26fc7e318c6f8).
+- [Bazarr](https://github.com/morpheus65535/bazarr) ([setup instructions](https://github.com/Cloudbox/Cloudbox/commit/bac132438267c36a5ea86c09e6a20f0c63273e55))
 - Sonarr4k
 
 ### Changed
@@ -44,7 +44,7 @@ Changelog Format:
 
 ## [1.2.1] - 2018-06-24
 
-### **Notes**:
+### **Notes**
 - Requires **Ansible 2.5.1**.
 
 ### Added
@@ -78,7 +78,7 @@ Changelog Format:
 
 ## [1.2.0] - 2018-06-17
 
-### **Notes**:
+### **Notes**
 - Requires **Ansible 2.5.1**.
 
 ### Added
@@ -139,7 +139,7 @@ Changelog Format:
 
 ## [1.1.3] - 2018-05-21
 
-### **Notes**:
+### **Notes**
 This version requires **Ansible 2.5.1** (2.3.1.0 will give  syntax errors; 2.5.0 has a bug with a certain math function that backup uses; 2.5.2-2.5.3 will complain when both docker-py and docker are installed).
 
 To install Ansible 2.5.1:
@@ -176,7 +176,7 @@ You can also download the source zip file and extract it into the cloudbox folde
 
 ## [1.1.2] - 2018-05-19
 
-### **Notes**:
+### **Notes**
 Use v1.1.3 or v1.1.1, instead.
 
 ### Added
@@ -193,7 +193,7 @@ Use v1.1.3 or v1.1.1, instead.
 
 ## [1.1.1] - 2018-05-19
 
-### **Notes**:
+### **Notes**
 This version, and the versions below, are compatible with **Ansible 2.3.1.0**,  and possibly up to 2.4.0.
 
 To install Ansible 2.3.1.0:
