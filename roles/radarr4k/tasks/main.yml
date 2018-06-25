@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Radarr4K Role                                #
-# Author(s):     L3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
@@ -36,12 +36,11 @@
 - name: Create and start container
   docker_container:
     name: radarr4k
-    image: hotio/suitarr
+    image: hotio/suitarr:radarr
     pull: yes
     published_ports:
       - "127.0.0.1:7879:7878"
     env:
-      APP: "radarr"
       VERSION: "unstable"
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -54,6 +53,7 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarr4k:/config"
+      - "/mnt/unionfs/Media/Movies:/movies"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
       - "/mnt:/mnt"
