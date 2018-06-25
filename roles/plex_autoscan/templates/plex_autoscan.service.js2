@@ -9,7 +9,7 @@ User={{user}}
 Group={{user}}
 Type=simple
 WorkingDirectory=/opt/plex_autoscan/
-ExecStart=/opt/plex_autoscan/scan.py server
+ExecStart=/opt/plex_autoscan/scan.py server --loglevel=INFO
 Restart=always
 RestartSec=10
 
