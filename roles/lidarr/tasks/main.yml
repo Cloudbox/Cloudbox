@@ -38,7 +38,6 @@
   stat:
     path: /opt/lidarr/Lidarr
   register: subfolder
-  tags: test
 
 - name: Move lidarr folder to subfolder
   shell: |
