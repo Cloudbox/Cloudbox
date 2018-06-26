@@ -64,6 +64,6 @@
     [d328b256]: https://github.com/causefx/Organizr "Organizr"
     [1e468891]: https://github.com/linuxserver/docker-organizr "lsiocommunity/organizr"
     [726e0b6f]: https://portainer.io "Portainer"
-    [a9b9645e]: https://github.com/hotio/docker-suitarr "hotio/suitarr"
+    [a9b9645e]: https://gitlab.com/hotio/suitarr "hotio/suitarr"
     [08902ab1]: https://github.com/jwilder/nginx-proxy "Nginx Proxy"
     [bb8ae44f]: https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion "Let's Encrypt companion for Nginx Proxy"
