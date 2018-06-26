@@ -23,15 +23,29 @@
   shell: "id -g {{user}}"
   register: gid
 
+- name: Stop and remove any existing container
+  docker_container:
+    name: nzbget
+    state: absent
+
 - name: Create nzbget directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/nzbget
 
-- name: Stop and remove any existing container
-  docker_container:
-    name: nzbget
-    state: absent
+- name: Check subfolder exists
+  stat:
+    path: /opt/nzbget/NZBGet
+  register: subfolder
+  tags: test
+
+- name: Move nzbget folder to subfolder
+  shell: |
+    mv /opt/nzbget /opt/NZBGet
+    mkdir /opt/nzbget
+    mv /opt/NZBGet /opt/nzbget/
+    chown -R {{user}}:{{user}} /opt/nzbget
+  when: not subfolder.stat.exists
 
 - name: Create nzbget download directory
   file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
