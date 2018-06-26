@@ -33,6 +33,20 @@
   with_items:
     - /opt/radarr
 
+- name: Check subfolder exists
+  stat:
+    path: /opt/radarr/Radarr
+  register: subfolder
+  tags: test
+
+- name: Move radarr folder to subfolder
+  shell: |
+    mv /opt/radarr /opt/Radarr
+    mkdir /opt/radarr
+    mv /opt/Radarr /opt/radarr/
+    chown -R {{user}}:{{user}} /opt/radarr
+  when: not subfolder.stat.exists
+
 - name: Create and start container
   docker_container:
     name: radarr

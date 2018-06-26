@@ -33,6 +33,20 @@
   with_items:
     - /opt/sonarr
 
+- name: Check subfolder exists
+  stat:
+    path: /opt/sonarr/Sonarr
+  register: subfolder
+  tags: test
+
+- name: Move sonarr folder to subfolder
+  shell: |
+    mv /opt/sonarr /opt/Sonarr
+    mkdir /opt/sonarr
+    mv /opt/Sonarr /opt/sonarr/
+    chown -R {{user}}:{{user}} /opt/sonarr
+  when: not subfolder.stat.exists
+
 - name: Create and start container
   docker_container:
     name: sonarr

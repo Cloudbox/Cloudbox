@@ -33,6 +33,20 @@
   with_items:
     - /opt/nzbhydra2
 
+- name: Check subfolder exists
+  stat:
+    path: /opt/nzbhydra2/NZBHydra2
+  register: subfolder
+  tags: test
+
+- name: Move nzbhydra2 folder to subfolder
+  shell: |
+    mv /opt/nzbhydra2 /opt/NZBHydra2
+    mkdir /opt/nzbhydra2
+    mv /opt/NZBHydra2 /opt/nzbhydra2/
+    chown -R {{user}}:{{user}} /opt/nzbhydra2
+  when: not subfolder.stat.exists
+
 - name: Check if nzbhydra.yml exists
   stat:
     path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
