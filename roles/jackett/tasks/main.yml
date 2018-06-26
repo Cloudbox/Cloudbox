@@ -33,6 +33,20 @@
   with_items:
     - /opt/jackett
 
+- name: Check subfolder exists
+  stat:
+    path: /opt/jackett/Jackett
+  register: subfolder
+  tags: test
+
+- name: Move jackett folder to subfolder
+  shell: |
+    mv /opt/jackett /opt/Jackett
+    mkdir /opt/jackett
+    mv /opt/Jackett /opt/jackett/
+    chown -R {{user}}:{{user}} /opt/jackett
+  when: not subfolder.stat.exists
+
 - name: Create and start container
   docker_container:
     name: jackett
