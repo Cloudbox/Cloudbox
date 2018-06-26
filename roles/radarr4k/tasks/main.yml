@@ -37,7 +37,6 @@
   stat:
     path: /opt/radarr4k/Radarr
   register: subfolder
-  tags: test
 
 - name: Move radarr4k folder to subfolder
   shell: |

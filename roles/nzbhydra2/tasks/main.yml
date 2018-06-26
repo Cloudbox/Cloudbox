@@ -37,7 +37,6 @@
   stat:
     path: /opt/nzbhydra2/NZBHydra2
   register: subfolder
-  tags: test
 
 - name: Move nzbhydra2 folder to subfolder
   shell: |

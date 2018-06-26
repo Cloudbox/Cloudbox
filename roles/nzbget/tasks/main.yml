@@ -37,7 +37,6 @@
   stat:
     path: /opt/nzbget/NZBGet
   register: subfolder
-  tags: test
 
 - name: Move nzbget folder to subfolder
   shell: |
