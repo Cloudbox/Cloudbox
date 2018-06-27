@@ -15,6 +15,7 @@
 * [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki.
 * [Hotio](https://gitlab.com/hotio) - Suitarr Docker Image (creator).
 * [Mitchell Klijs](https://github.com/mitchellklijs) - Traktarr; Cloudplow.
+* [MZA](https://github.com/mza921) - Plex Autoscan.
 
 
 ### Dependencies
