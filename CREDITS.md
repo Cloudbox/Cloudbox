@@ -8,7 +8,7 @@
 ### Contributors
 
 * [EnorMOZ](https://github.com/EnorMOZ) - Cloudbox.
-* [Filipe Santos aka Horjulf](https://github.com/horjulf) - ruTorrent Docker container; Plex Autoscan; Plex Patrol.
+* [Filipe Santos aka Horjulf](https://github.com/horjulf) - ruTorrent+autodl Docker image (creator); Plex Autoscan; Plex Patrol.
 * [RXWatcher](https://github.com/RXWatcher1) - Cloudbox.
 * [Vuur](https://github.com/vuur) -  Web Design; Admin of GitHub, Discord, and Reddit.
 * [Captain-NaCl](https://github.com/Captain-NaCl) - Cloudbox; Cloudbox Wiki.
