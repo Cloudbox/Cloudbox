@@ -39,7 +39,6 @@
     image: horjulf/docker-znc
     pull: yes
     published_ports:
-      - "127.0.0.1:6501:6501"
       - "6502:6502"
     env:
       PUID: "{{uid.stdout}}"
@@ -56,4 +55,5 @@
       - name: cloudbox
         aliases:
           - znc
+    purge_networks: yes
     state: started
