@@ -55,3 +55,4 @@
     - { role: telly, tags: ['telly'] }
     - { role: nowshowing, tags: ['nowshowing'] }
     - { role: bazarr, tags: ['bazarr'] }
+    - { role: plexlibrary, tags: ['plexlibrary'] }
