@@ -88,6 +88,7 @@
       - name: cloudbox
         aliases:
           - nzbget
+    purge_networks: yes
     state: started
 
 - name: Wait for nzbget.conf to be created

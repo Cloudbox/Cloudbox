@@ -76,6 +76,7 @@
       - name: cloudbox
         aliases:
           - nzbhydra2
+    purge_networks: yes
     state: started
 
 - name: Settings Tweaks

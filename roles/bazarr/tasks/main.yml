@@ -61,7 +61,7 @@
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "bazarr.{{domain}}"
       VIRTUAL_PORT: 6767
-      LETSENCRYPT_HOST: "bazarr.{{domain}}"
+      LETSENCRYPT_HOST: "bazapurge_networksrr.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
@@ -74,5 +74,6 @@
       - name: cloudbox
         aliases:
           - bazarr
+    purge_networks: yes
     restart_policy: always
     state: started

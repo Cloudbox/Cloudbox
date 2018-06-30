@@ -56,4 +56,5 @@
       - name: cloudbox
         aliases:
           - znc
+    purge_networks: yes
     state: started

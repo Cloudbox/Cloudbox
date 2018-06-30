@@ -71,3 +71,4 @@
       - name: cloudbox
         aliases:
           - jackett
+    purge_networks: yes

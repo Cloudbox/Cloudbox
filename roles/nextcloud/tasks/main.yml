@@ -55,6 +55,7 @@
       - name: cloudbox
         aliases:
           - mariadb
+    purge_networks: yes
     restart_policy: always
     state: started
 
@@ -82,5 +83,6 @@
       - name: cloudbox
         aliases:
           - nextcloud
+    purge_networks: yes
     restart_policy: always
     state: started
