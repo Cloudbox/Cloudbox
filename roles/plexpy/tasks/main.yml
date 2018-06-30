@@ -44,8 +44,6 @@
     name: plexpy
     image: tautulli/tautulli
     pull: yes
-    published_ports:
-      - "127.0.0.1:8181:8181"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -64,4 +62,5 @@
       - name: cloudbox
         aliases:
           - plexpy
+    purge_networks: yes
     state: started

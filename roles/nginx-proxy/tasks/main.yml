@@ -59,6 +59,7 @@
       - name: cloudbox
         aliases:
           - nginx-proxy
+    purge_networks: yes
     restart_policy: always
     state: started
 
@@ -79,5 +80,6 @@
       - name: cloudbox
         aliases:
           - letsencrypt
+    purge_networks: yes
     restart_policy: always
     state: started
