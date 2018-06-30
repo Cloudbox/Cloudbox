@@ -1,0 +1,58 @@
+# Supported types: movie, tv
+library_type: 'movie'
+
+# Source list(s)
+# * Experiment with the limits and order of the URLs below
+#   to get a different balance.
+source_list_urls:
+  - 'https://api.trakt.tv/movies/trending?limit=2'
+  - 'https://api.trakt.tv/movies/watched/weekly?limit=100'
+  - 'https://api.trakt.tv/movies/trending?limit=50'
+  - 'https://api.trakt.tv/movies/watched/monthly?limit=150'
+  - 'https://api.trakt.tv/movies/watched/yearly?limit=500'
+
+# Source library details
+source_libraries:
+    # [Cloudbox] 'name' = Plex library name.
+  - name: 'Movies'
+    # [Cloudbox] 'folders' = Plex library path (i.e '/data/...').
+    folders:
+        # [Cloudbox] Example path below assumes main movies are located in "/mnt/unionfs/Media/Movies/Movies/" (i.e. Customizing Plex Library - Scenario 1 style).
+      - '/data/Movies/Movies'
+
+# New library details
+new_library:
+  name: 'Movies - Trending'
+  # [Cloudbox] 'folder' = Path on host where symlinks are stored (i.e. '/mnt/local/Media/...').
+  folder: '/mnt/local/Media/Movies/Movies-Trending/'
+  sort: yes
+  sort_title:
+    format: '{number}. {title}'
+    visible: no
+    absolute: no  # Skips numbers for missing items
+  # Limit the age (in years) of items to be considered
+  # * 0 for no limit
+  max_age: 3
+  # Maximum number of items to keep in the library
+  max_count: 250
+  # Remove items that no longer exist in the source lists
+  remove_from_library: yes
+
+# Weighted sorting (requires TMDb API)
+weighted_sorting:
+  enabled: yes
+  better_release_date: no
+  weights:
+    # Think of these as percentages,
+    # but they don't have to add up to 1.0
+    # * Additive
+    # * Higher value -> more important
+    index: 0.70
+    vote: 0.10
+    age: 0.15
+    random: 0.05
+    # Penalize (<0) or reward (>0) certain (TMDb) genres
+    # * Final weight is multipled by these values
+    genre_bias:
+      'TV Movie': 0.7
+      'Animation': 0.95
