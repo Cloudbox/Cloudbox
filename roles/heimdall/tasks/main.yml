@@ -49,8 +49,6 @@
     name: heimdall
     image: linuxserver/heimdall
     pull: yes
-    published_ports:
-      - "127.0.0.1:8078:80"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"

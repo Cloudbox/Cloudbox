@@ -51,8 +51,6 @@
     name: bazarr
     image: "hotio/suitarr:bazarr"
     pull: yes
-    published_ports:
-      - "127.0.0.1:6767:6767"
     env:
       VERSION: "unstable"
       BACKUP: "no"

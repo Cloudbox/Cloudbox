@@ -52,8 +52,6 @@
     name: lidarr
     image: hotio/suitarr:lidarr
     pull: yes
-    published_ports:
-      - "127.0.0.1:8686:8686"
     env:
       VERSION: "unstable"
       PUID: "{{uid.stdout}}"
