@@ -56,8 +56,6 @@
     name: nzbhydra2
     image: hotio/suitarr:nzbhydra2
     pull: yes
-    published_ports:
-      - "127.0.0.1:5076:5076"
     env:
       VERSION: "unstable"
       BACKUP: "no"
@@ -76,6 +74,7 @@
       - name: cloudbox
         aliases:
           - nzbhydra2
+    purge_networks: yes
     state: started
 
 - name: Settings Tweaks

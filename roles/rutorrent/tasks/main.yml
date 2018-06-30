@@ -68,7 +68,6 @@
     image: horjulf/rutorrent-autodl
     pull: yes
     published_ports:
-      - "127.0.0.1:3111:80"
       - "51413:51413"
       - "6881:6881/udp"
     env:
@@ -88,6 +87,7 @@
       - name: cloudbox
         aliases:
           - rutorrent
+    purge_networks: yes
     restart_policy: always
     stop_timeout: 300
     state: started

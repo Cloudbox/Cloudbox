@@ -38,8 +38,6 @@
     name: plexrequests
     image: "linuxserver/plexrequests"
     pull: yes
-    published_ports:
-      - "127.0.0.1:3000:3000"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -54,5 +52,6 @@
       - name: cloudbox
         aliases:
           - plexrequests
+    purge_networks: yes
     restart_policy: always
     state: started
