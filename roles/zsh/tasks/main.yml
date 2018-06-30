@@ -18,7 +18,8 @@
     repo: https://github.com/robbyrussell/oh-my-zsh.git
     dest: "/home/{{user}}/.oh-my-zsh"
     force: yes
-  become: no
+  become: yes
+  become_user: "{{user}}"
   register: cloning
   ignore_errors: yes
 
