@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Create z directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/z
 
@@ -18,7 +18,8 @@
     repo: "https://github.com/rupa/z"
     dest: "/opt/z"
     force: yes
-  become: no
+  become: yes
+  become_user: "{{user}}"
   register: cloning
   ignore_errors: yes
 
