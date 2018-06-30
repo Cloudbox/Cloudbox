@@ -1,0 +1,93 @@
+#########################################################################
+# Title:         Cloudbox: Plex Library Role                            #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create plexlibrary directories
+  file: "path={{item}} state=directory owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "/opt/plexlibrary"
+
+- name: Clone plexlibrary
+  git:
+    repo: "https://github.com/adamgot/python-plexlibrary/"
+    dest: "/opt/plexlibrary"
+    version: master
+    force: yes
+  become: yes
+  become_user: "{{user}}"
+
+- name: Install pip requirements
+  pip:
+    requirements: "/opt/plexlibrary/requirements.txt"
+    executable: pip
+
+- name: Check config exists
+  stat:
+    path: "/opt/plexlibrary/config.yml"
+  register: plexlibrary_config
+
+- name: Create config from template
+  copy:
+    src: "/opt/plexlibrary/config-template.yml"
+    dest: "/opt/plexlibrary/config.yml"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+  when: not plexlibrary_config.stat.exists
+
+- name: Copy examples to plexlibrary folder
+  copy:
+    src: "{{item}}"
+    dest: "/opt/plexlibrary/recipes/examples/cloudbox/"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0644
+    force: yes
+  with_fileglob:
+    - "*.yml"
+
+- name: Copy plexlibrary.sh to plexlibrary folder
+  copy:
+    src: "plexlibrary.sh"
+    dest: "/opt/plexlibrary/plexlibrary.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+
+- name: Set plexlibrary.sh as executable
+  file:
+    path: "/opt/plexlibrary/plexlibrary.sh"
+    mode: a+x
+
+- name: "Create /usr/local/bin symlink"
+  file:
+    src: "/opt/plexlibrary/plexlibrary.sh"
+    dest: "/usr/local/bin/plexlibrary"
+    state: link
+
+- name: "Add items to .gitignore"
+  lineinfile:
+    path: "/opt/plexlibrary/.gitignore"
+    state: present
+    insertafter: EOF
+    line: '{{item}}'
+  with_items:
+    - "recipes/examples/cloudbox/*.yml"
+    - "plexlibrary.sh"
+    - "*.log"
+
+- name: "Schedule cron task for daily update."
+  cron:
+    name: "Plex Library"
+    user: "{{user}}"
+    job: "/opt/plexlibrary/plexlibrary.sh"
+    special_time: daily
+    state: present
