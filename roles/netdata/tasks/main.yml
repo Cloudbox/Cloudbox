@@ -27,8 +27,6 @@
     pull: yes
     capabilities:
       - SYS_PTRACE
-    published_ports:
-      - "127.0.0.1:19999:19999"
     env:
       VIRTUAL_HOST: "netdata.{{domain}}"
       VIRTUAL_PORT: 19999
@@ -43,5 +41,6 @@
       - name: cloudbox
         aliases:
           - netdata
+    purge_networks: yes
     restart_policy: always
     state: started

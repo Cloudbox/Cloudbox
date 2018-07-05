@@ -71,4 +71,5 @@
       - name: cloudbox
         aliases:
           - quassel
+    purge_networks: yes
     state: started

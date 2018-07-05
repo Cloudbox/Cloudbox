@@ -51,8 +51,6 @@
     name: radarr4k
     image: hotio/suitarr:radarr
     pull: yes
-    published_ports:
-      - "127.0.0.1:7879:7878"
     env:
       VERSION: "unstable"
       PUID: "{{uid.stdout}}"
@@ -75,5 +73,6 @@
       - name: cloudbox
         aliases:
           - radarr4k
+    purge_networks: yes
     restart_policy: always
     state: started

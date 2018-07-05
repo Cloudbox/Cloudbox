@@ -38,8 +38,6 @@
     name: thelounge
     image: "linuxserver/thelounge"
     pull: yes
-    published_ports:
-      - "127.0.0.1:9500:9000"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -54,5 +52,6 @@
       - name: cloudbox
         aliases:
           - thelounge
+    purge_networks: yes
     restart_policy: always
     state: started
