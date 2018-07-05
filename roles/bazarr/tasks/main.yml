@@ -51,6 +51,8 @@
     name: bazarr
     image: "hotio/suitarr:bazarr"
     pull: yes
+    published_ports:
+      - "127.0.0.1:6767:6767"
     env:
       VERSION: "unstable"
       BACKUP: "no"
@@ -72,6 +74,5 @@
       - name: cloudbox
         aliases:
           - bazarr
-    purge_networks: yes
     restart_policy: always
     state: started

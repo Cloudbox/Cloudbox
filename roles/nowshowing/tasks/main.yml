@@ -38,6 +38,8 @@
     name: nowshowing
     image: ninthwalker/nowshowing:v2
     pull: yes
+    published_ports:
+      - "127.0.0.1:6878:6878"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -52,6 +54,5 @@
       - name: cloudbox
         aliases:
           - nowshowing
-    purge_networks: yes
     restart_policy: always
     state: started
