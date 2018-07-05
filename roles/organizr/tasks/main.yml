@@ -48,6 +48,8 @@
     name: organizr
     image: "lsiocommunity/organizr"
     pull: yes
+    published_ports:
+      - "127.0.0.1:7421:80"
     env:
       PUID: "{{uid.stdout}}"
       PGID: "{{gid.stdout}}"
@@ -62,6 +64,5 @@
       - name: cloudbox
         aliases:
           - organizr
-    purge_networks: yes
     restart_policy: always
     state: started

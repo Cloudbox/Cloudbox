@@ -48,6 +48,8 @@
     name: emby
     image: "emby/embyserver:latest"
     pull: yes
+    published_ports:
+      - "127.0.0.1:8096:8096"
     env:
       UID: "{{uid.stdout}}"
       GID: "{{gid.stdout}}"
@@ -68,7 +70,6 @@
       - name: cloudbox
         aliases:
           - emby
-    purge_networks: yes
     restart_policy: always
     state: started
 

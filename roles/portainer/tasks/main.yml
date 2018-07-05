@@ -38,6 +38,8 @@
     name: portainer
     image: "portainer/portainer"
     pull: yes
+    published_ports:
+      - "127.0.0.1:9000:9000"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/portainer:/data"
@@ -51,6 +53,5 @@
       - name: cloudbox
         aliases:
           - portainer
-    purge_networks: yes
     restart_policy: always
     state: started
