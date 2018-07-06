@@ -23,7 +23,6 @@
 - name: Stop container to customize nzbhydra.yml
   docker_container:
     name: nzbhydra2
-    image: hotio/suitarr
     state: stopped
 
 - name: Update auth settings
@@ -99,5 +98,4 @@
 - name: Start container to apply changes
   docker_container:
     name: nzbhydra2
-    image: hotio/suitarr:nzbhydra2
     state: started
