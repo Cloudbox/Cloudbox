@@ -42,7 +42,7 @@
   args:
     warn: no
 
-- name: Set /opt owner
+- name: Set /opt ownership
   shell: "chown -R {{user}}:{{user}} /opt"
   args:
     warn: no
