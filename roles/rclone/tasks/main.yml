@@ -85,6 +85,15 @@
   debug:
     msg: "rclone version {{rclone_version.stdout}} installed."
 
+- name: Check if rclone.conf exists in cloudbox folder
+  stat:
+    path: "{{playbook_dir}}/rclone.conf"
+  register: rclone_conf_playbook_dir
+
+- name: "Move rclone.conf in cloudbox folder to default location"
+  shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
+  when: rclone_conf_playbook_dir.stat.exists
+
 - name: Check if rclone.conf exists at default location
   stat:
     path: "/home/{{user}}/.config/rclone/rclone.conf"
@@ -93,7 +102,7 @@
 - name: Do the following block when rclone.conf is not at default location
   block:
 
-  - name: Find rclone.conf if not at default location
+  - name: Find location of rclone.conf when not at default location
     shell: rclone config file
     register: rclone_conf_current_location
 
