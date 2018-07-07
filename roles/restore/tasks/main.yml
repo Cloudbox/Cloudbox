@@ -21,12 +21,12 @@
   fail: msg="You must set atleast one backup.use_* option in order to perform a restore"
   when: (backup.use_rclone == False and backup.use_rsync == False) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
-- name: Check rclone.conf exists
+- name: Check if rclone.conf exists in cloudbox folder
   stat:
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf_playbook_dir
 
-- name: Check rclone.conf exists
+- name: Check if rclone.conf exists in default location
   stat:
     path: "/home/{{user}}/.config/rclone/rclone.conf"
   register: rclone_conf_user_dir
@@ -39,7 +39,7 @@
       (rclone_conf_user_dir.stat.exists)
     )
 
-- name: "Check {{backup.tar_dest}} exists"
+- name: "Check if {{backup.tar_dest}} exists"
   stat:
     path: "{{backup.tar_dest}}"
     get_attributes: false
@@ -67,12 +67,6 @@
   with_items:
     - "/home/{{user}}/.config/rclone"
 
-- name: "Move 'rclone.conf' to '/home/{{user}}/.config/rclone/rclone.conf'"
-  shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
-  when: rclone_conf_playbook_dir.stat.exists
-
-
-
 - name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: yes
@@ -89,7 +83,7 @@
   become_user: "{{user}}"
   when: (backup.use_rclone == False and backup.use_rsync) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
-- name: "Check cloudbox.tar exists"
+- name: "Check if cloudbox.tar exists"
   stat:
     path: "{{backup.tar_dest}}/cloudbox.tar"
     get_attributes: false
@@ -98,7 +92,7 @@
     get_mime: false
   register: cloudbox_tar2
 
-- name: "Fail cloudbox.tar doesnt exist"
+- name: "Fail if cloudbox.tar does not exist"
   fail: msg="There must have been an issue retrieving the cloudbox.tar file as it does not exist at {{backup.tar_dest}}/cloudbox.tar"
   when: cloudbox_tar2.stat.exists == False
 
