@@ -11,7 +11,7 @@
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
     - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
     - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
