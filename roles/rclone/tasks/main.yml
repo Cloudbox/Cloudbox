@@ -93,15 +93,15 @@
 - name: Do the following block when rclone.conf is not at default location
   block:
 
-  - name: Find the rclone.conf if not at default location
+  - name: Find rclone.conf if not at default location
     shell: rclone config file
     register: rclone_conf_current_location
 
-  - name: Move the rclone.conf to default location if found
+  - name: Move rclone.conf to default location if found elsewhere
     shell: "mv '{{rclone_conf_current_location.stdout_lines | last }}' '/home/{{user}}/.config/rclone/rclone.conf'"
     when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
 
-  - name: Create a blank rclone.conf file if not found
+  - name: Create blank rclone.conf if not found elsewhere
     file:
       path: "/home/{{user}}/.config/rclone/rclone.conf"
       state: touch
