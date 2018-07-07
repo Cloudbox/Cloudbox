@@ -67,19 +67,8 @@
   with_items:
     - "/home/{{user}}/.config/rclone"
 
-- name: "Copy '{{playbook_dir}}/rclone.conf' to '/home/{{user}}/.config/rclone/rclone.conf'"
-  copy:
-    src: "{{playbook_dir}}/rclone.conf"
-    dest: "/home/{{user}}/.config/rclone/rclone.conf"
-    mode: 0775
-    owner: "{{user}}"
-    group: "{{user}}"
-  when: rclone_conf_playbook_dir.stat.exists
-
-- name: "Remove '{{playbook_dir}}/rclone.conf'"
-  file:
-    path: "{{playbook_dir}}/rclone.conf"
-    state: absent
+- name: "Move 'rclone.conf' to '/home/{{user}}/.config/rclone/rclone.conf'"
+  shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
   when: rclone_conf_playbook_dir.stat.exists
 
 
