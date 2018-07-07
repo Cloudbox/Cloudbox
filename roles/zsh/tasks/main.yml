@@ -36,6 +36,13 @@
     owner: "{{user}}"
   when: (cloning is success) and (not existing_zshrc.stat.exists)
 
+- name: Set default editor to nano in .zshrc
+  lineinfile:
+    dest: "/home/{{user}}/.zshrc"
+    regexp: "^export EDITOR="
+    line: "export EDITOR=nano"
+    state: present
+
 - name: "Check if /bin/zsh exists"
   stat:
     path: /bin/zsh
