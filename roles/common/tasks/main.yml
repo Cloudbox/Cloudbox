@@ -171,8 +171,7 @@
   when: shell|default('zsh',true) == "bash"
   tags: shell
 
-- name: Default shell set to bash
-  debug:
+- debug:
     msg: "You will need to re-login for changes to take effect."
   when: default_shell is changed
   tags: shell
