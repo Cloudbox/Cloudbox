@@ -11,13 +11,13 @@
 
 PATH='/usr/bin:/bin:/usr/local/bin'
 export PYTHONIOENCODING=UTF-8
-echo "" >> /opt/plexlibrary/plexlibrary_cron.log
 echo $(date) >> /opt/plexlibrary/plexlibrary_cron.log
-
+echo "" >> /opt/plexlibrary/plexlibrary_cron.log
 
 for file in /opt/plexlibrary/recipes/*
 do
-  if [ ! -d "${file}" ]; then
-    /usr/bin/python /opt/plexlibrary/plexlibrary/plexlibrary.py $(basename "$file" .yml) >> /opt/plexlibrary/plexlibrary_cron.log
-  fi
+    if [ ! -d "${file}" ]; then
+        /usr/bin/python /opt/plexlibrary/plexlibrary/plexlibrary.py $(basename "$file" .yml) >> /opt/plexlibrary/plexlibrary_cron.log
+        echo "" >> /opt/plexlibrary/plexlibrary_cron.log
+    fi
 done
