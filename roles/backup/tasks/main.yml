@@ -170,8 +170,8 @@
         --warning=no-file-changed \
         --warning=no-file-removed \
         --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*' \
-        --exclude='./sonarr/Sonarr/MediaCover/*' \
-        --exclude='./radarr/Radarr/MediaCover/*' \
+        --exclude='./sonarr/app/MediaCover/*' \
+        --exclude='./radarr/app/MediaCover/*' \
         -cf '{{backup.tar_dest}}/cloudbox.tar' \
         -C /opt .
     become: yes
