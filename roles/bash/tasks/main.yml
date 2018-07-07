@@ -8,6 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Set default editor to nano in .bashrc
+  lineinfile:
+    dest: "/home/{{user}}/.bashrc"
+    regexp: "^export EDITOR="
+    line: "export EDITOR=nano"
+    state: present
+
 - name: Set bash as default shell
   user:
     name: "{{user}}"
