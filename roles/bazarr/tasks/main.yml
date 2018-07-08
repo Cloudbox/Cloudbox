@@ -33,18 +33,24 @@
   with_items:
     - /opt/bazarr
 
-- name: Check subfolder exists
+- name: Check subfolder1 exists
   stat:
     path: /opt/bazarr/Bazarr
-  register: subfolder
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/bazarr/app
+  register: subfolder2
 
 - name: Move bazarr folder to subfolder
   shell: |
-    mv /opt/bazarr /opt/Bazarr
+    mv /opt/bazarr /tmp/app
     mkdir /opt/bazarr
-    mv /opt/Bazarr /opt/bazarr/
+    mv /tmp/app /opt/bazarr/
+    find /opt/bazarr -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/bazarr
-  when: not subfolder.stat.exists
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Create and start container
   docker_container:
