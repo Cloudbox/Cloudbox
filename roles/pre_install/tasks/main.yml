@@ -43,18 +43,7 @@
 - name: "Set /home/{{user}} ownership"
   file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
 
-- name: Check plexdrive.service exists
-  stat:
-    path: "/etc/systemd/system/plexdrive.service"
-  register: plexdrive_service_check
-
 - name: Stop all docker containers
   shell: "docker stop $(docker ps -aq)"
   ignore_errors: yes
-  when: plexdrive_service_check.stat.exists
-
-- name: Stop plexdrive service
-  systemd:
-    name: plexdrive
-    state: stopped
   when: plexdrive_service_check.stat.exists
