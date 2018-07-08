@@ -48,7 +48,7 @@
     mv /opt/nzbhydra2 /tmp/app
     mkdir /opt/nzbhydra2
     mv /tmp/app /opt/nzbhydra2/
-    find /opt/nzbhydra2 -type d -empty -delete
+    find /opt/nzbhydra2/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/nzbhydra2
   when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 
