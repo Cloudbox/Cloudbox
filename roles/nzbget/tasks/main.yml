@@ -33,18 +33,24 @@
   with_items:
     - /opt/nzbget
 
-- name: Check subfolder exists
+- name: Check subfolder1 exists
   stat:
     path: /opt/nzbget/NZBGet
-  register: subfolder
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/nzbget/app
+  register: subfolder2
 
 - name: Move nzbget folder to subfolder
   shell: |
-    mv /opt/nzbget /opt/NZBGet
+    mv /opt/nzbget /tmp/app
     mkdir /opt/nzbget
-    mv /opt/NZBGet /opt/nzbget/
+    mv /tmp/app /opt/nzbget/
+    find /opt/nzbget -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/nzbget
-  when: not subfolder.stat.exists
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Create nzbget download directory
   file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
