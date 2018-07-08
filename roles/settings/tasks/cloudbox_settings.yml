@@ -44,6 +44,7 @@
   become: yes
   become_user: "{{cloudbox_yml.stat.pw_name}}"
   register: settings_updater
+  ignore_errors: yes
   failed_when: settings_updater.rc == 1
 
 - name: "Check 'settings-updater.py' run status for errors with updating 'adv_settings.yml'."
