@@ -43,7 +43,7 @@
     path: /opt/nzbhydra2/app
   register: subfolder2
 
-- name: Move nzbhydra2 folder to subfolder
+- name: Move 'nzbhydra2' folder contents to 'app' subfolder
   shell: |
     mv /opt/nzbhydra2 /tmp/app
     mkdir /opt/nzbhydra2
@@ -51,6 +51,12 @@
     find /opt/nzbhydra2/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/nzbhydra2
   when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'NZBHydra2' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/nzbhydra2/NZBHydra2 /opt/nzbhydra2/app
+    chown -R {{user}}:{{user}} /opt/nzbhydra2
+  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
 
 - name: Check if nzbhydra.yml exists
   stat:
