@@ -22,5 +22,5 @@
   register: default_shell
 
 - debug:
-    msg: "You will need to re-login for changes to take effect."
+    msg: "bash is now set as your default shell. You will need to re-login for changes to take effect."
   when: default_shell is changed
