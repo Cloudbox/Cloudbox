@@ -48,7 +48,7 @@
     mv /opt/radarr4k /tmp/app
     mkdir /opt/radarr4k
     mv /tmp/app /opt/radarr4k/
-    find /opt/radarr4k -type d -empty -delete
+    find /opt/radarr4k/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/radarr4k
   when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 

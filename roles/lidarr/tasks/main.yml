@@ -49,7 +49,7 @@
     mv /opt/lidarr /tmp/app
     mkdir /opt/lidarr
     mv /tmp/app /opt/lidarr/
-    find /opt/lidarr -type d -empty -delete
+    find /opt/lidarr/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/lidarr
   when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 
