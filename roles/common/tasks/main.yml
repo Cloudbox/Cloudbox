@@ -122,22 +122,11 @@
     - yq
   ignore_errors: yes
 
-- name: Install NodeJS
-  shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
+- name: Install nodejs
+  import_role:
+    name: nodejs
   tags: nodejs
-
-- name: Update npm
-  shell: "npm install -g npm"
-  tags: nodejs
-
-- name: Update packages
-  shell: "npm update -g"
-  tags: nodejs
-
-- name: Install common npm modules
-  npm: "name={{item}} global=yes"
-  with_items:
-    - frontail
+  ignore_errors: yes
 
 - name: Install hostess
   import_role:
