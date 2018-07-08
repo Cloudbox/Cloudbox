@@ -33,18 +33,24 @@
   with_items:
     - /opt/nzbhydra2
 
-- name: Check subfolder exists
+- name: Check subfolder1 exists
   stat:
     path: /opt/nzbhydra2/NZBHydra2
-  register: subfolder
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/nzbhydra2/app
+  register: subfolder2
 
 - name: Move nzbhydra2 folder to subfolder
   shell: |
-    mv /opt/nzbhydra2 /opt/NZBHydra2
+    mv /opt/nzbhydra2 /tmp/app
     mkdir /opt/nzbhydra2
-    mv /opt/NZBHydra2 /opt/nzbhydra2/
+    mv /tmp/app /opt/nzbhydra2/
+    find /opt/nzbhydra2 -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/nzbhydra2
-  when: not subfolder.stat.exists
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Check if nzbhydra.yml exists
   stat:

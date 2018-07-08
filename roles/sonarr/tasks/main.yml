@@ -33,18 +33,24 @@
   with_items:
     - /opt/sonarr
 
-- name: Check subfolder exists
+- name: Check subfolder1 exists
   stat:
     path: /opt/sonarr/Sonarr
-  register: subfolder
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/sonarr/app
+  register: subfolder2
 
 - name: Move sonarr folder to subfolder
   shell: |
-    mv /opt/sonarr /opt/Sonarr
+    mv /opt/sonarr /tmp/app
     mkdir /opt/sonarr
-    mv /opt/Sonarr /opt/sonarr/
+    mv /tmp/app /opt/sonarr/
+    find /opt/sonarr -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/sonarr
-  when: not subfolder.stat.exists
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Create and start container
   docker_container:
