@@ -48,7 +48,7 @@
     mv /opt/sonarr /tmp/app
     mkdir /opt/sonarr
     mv /tmp/app /opt/sonarr/
-    find /opt/sonarr -type d -empty -delete
+    find /opt/sonarr/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/sonarr
   when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 

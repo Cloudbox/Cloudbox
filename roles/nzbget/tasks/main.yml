@@ -48,7 +48,7 @@
     mv /opt/nzbget /tmp/app
     mkdir /opt/nzbget
     mv /tmp/app /opt/nzbget/
-    find /opt/nzbget -type d -empty -delete
+    find /opt/nzbget/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/nzbget
   when: not (subfolder1.stat.exists or subfolder2.stat.exists)
 
