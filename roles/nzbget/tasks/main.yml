@@ -63,7 +63,7 @@
 
 - name: Check nzbget.conf exists
   stat:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
+    path: "/opt/nzbget/app/nzbget.conf"
   register: nzbget_conf
 
 - name: Create and start container
@@ -96,81 +96,10 @@
           - nzbget
     state: started
 
-- name: Wait for nzbget.conf to be created
-  wait_for:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
-    state: present
-  when: nzbget_conf.stat.exists == False
-
-- name: "Wait for 10 seconds before stopping nzbget container"
-  wait_for:
-    timeout: 10
-  when: nzbget_conf.stat.exists == False
-
-- name: Stop container to customize nzbget.conf
-  docker_container:
-    name: nzbget
-    state: stopped
-  when: nzbget_conf.stat.exists == False
-
-- name: Change downloads directory
-  lineinfile:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
-    regexp: '^MainDir\s?='
-    line: 'MainDir=/downloads/nzbget'
-    state: present
-  when: nzbget_conf.stat.exists == False
-
-- name: Change scripts directory
-  lineinfile:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
-    regexp: '^ScriptDir\s?='
-    line: 'ScriptDir=/scripts'
-    state: present
-  when: nzbget_conf.stat.exists == False
-
-- name: Rename Movies category
-  lineinfile:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
-    regexp: '^Category1.Name\s?='
-    line: 'Category1.Name=radarr'
-    state: present
-  when: nzbget_conf.stat.exists == False
-
-- name: Rename TV category
-  lineinfile:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
-    regexp: '^Category2.Name\s?='
-    line: 'Category2.Name=sonarr'
-    state: present
-  when: nzbget_conf.stat.exists == False
-
-- name: Rename Music category
-  lineinfile:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
-    regexp: '^Category3.Name\s?='
-    line: 'Category3.Name=lidarr'
-    state: present
-  when: nzbget_conf.stat.exists == False
-
-- name: Remove default Username
-  lineinfile:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
-    regexp: '^ControlUsername\s?='
-    line: 'ControlUsername='
-    state: present
-  when: nzbget_conf.stat.exists == False
-
-- name: Remove default Password
-  lineinfile:
-    path: "/opt/nzbget/NZBGet/nzbget.conf"
-    regexp: '^ControlPassword=\s?='
-    line: 'ControlPassword='
-    state: present
-  when: nzbget_conf.stat.exists == False
-
-- name: Start container to apply changes
-  docker_container:
-    name: nzbget
-    state: started
-  when: nzbget_conf.stat.exists == False
+- name: Settings Tweaks
+  include_tasks: "nzbget_settings.yml"
+  when: not (
+        (nzbget_conf.stat.exists)
+        or
+        ((continuous_integration|default(false,true))|bool)
+    )
