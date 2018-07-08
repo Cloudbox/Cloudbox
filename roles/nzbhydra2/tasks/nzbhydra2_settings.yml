@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: NZBHydra2 Settings Role                      #
+# Title:         Cloudbox: NZBHydra2 Settings Sub Tasks                 #
 # Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
@@ -9,10 +9,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-
 - name: Wait for nzbhydra.yml to be created
   wait_for:
-    path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
     state: present
     delay: 30
 
@@ -27,7 +26,7 @@
 
 - name: Update auth settings
   lineinfile:
-    path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
@@ -43,7 +42,7 @@
 
 - name: Add login settings
   lineinfile:
-    path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
     insertafter: 'users:'
     line: "{{ item.line }}"
     state: present
@@ -57,7 +56,7 @@
 
 - name: Increase JVM memory
   lineinfile:
-    path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
@@ -68,7 +67,7 @@
 
 - name: Add downloaders section
   lineinfile:
-    path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
@@ -78,7 +77,7 @@
 
 - name: Add NZBGet downloader
   lineinfile:
-    path: "/opt/nzbhydra2/NZBHydra2/nzbhydra.yml"
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
     insertafter: 'downloaders:'
     line: "{{ item.line }}"
     state: present
