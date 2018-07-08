@@ -42,8 +42,3 @@
 
 - name: "Set /home/{{user}} ownership"
   file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
-
-- name: Stop all docker containers
-  shell: "docker stop $(docker ps -aq)"
-  ignore_errors: yes
-  when: plexdrive_service_check.stat.exists
