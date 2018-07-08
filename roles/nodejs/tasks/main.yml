@@ -1,0 +1,63 @@
+#########################################################################
+# Title:         Cloudbox: NodeJS Role                                  #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Install nodejs
+  shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
+  tags: nodejs
+
+- name: "Get nodejs binary path"
+  shell: "command -v nodejs"
+  register: nodejs_binary
+
+- name: "Get nodejs version"
+  shell: "{{nodejs_binary.stdout}} --version | head -n 1 | awk '{ print substr($1, 2) }'"
+  register: nodejs_version
+  ignore_errors: yes
+
+- name: "Display nodejs version"
+  debug:
+    msg: "nodejs version {{nodejs_version.stdout}} installed."
+
+- name: Update npm
+  shell: "npm install -g npm"
+
+- name: Update packages
+  shell: "npm update -g"
+
+- name: "Get npm binary path"
+  shell: "command -v npm"
+  register: npm_binary
+
+- name: "Get npm version"
+  shell: "{{npm_binary.stdout}} --version | head -n 1 | awk '{ print $1 }'"
+  register: npm_version
+  ignore_errors: yes
+
+- name: "Display npm version"
+  debug:
+    msg: "npm version {{npm_version.stdout}} installed."
+
+- name: Install frontail npm module
+  npm: "name={{item}} global=yes"
+  with_items:
+    - frontail
+
+- name: "Get frontail binary path"
+  shell: "command -v frontail"
+  register: frontail_binary
+
+- name: "Get frontail version"
+  shell: "{{frontail_binary.stdout}} --version | head -n 1 | awk '{ print $1 }'"
+  register: frontail_version
+  ignore_errors: yes
+
+- name: "Display frontail version"
+  debug:
+    msg: "frontail version {{frontail_version.stdout}} installed."
