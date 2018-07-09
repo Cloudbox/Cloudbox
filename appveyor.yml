@@ -11,6 +11,7 @@ init:
   - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh
 
 install:
+  - sh: cp "/home/appveyor/projects/cloudbox/ansible.cfg.default" "/home/appveyor/projects/cloudbox/ansible.cfg"
   - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --syntax-check
   - sh: sudo ansible-playbook /home/appveyor/projects/cloudbox/cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars "continuous_integration=true"
 

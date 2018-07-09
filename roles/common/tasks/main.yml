@@ -42,7 +42,7 @@
   args:
     warn: no
 
-- name: Set /opt owner
+- name: Set /opt ownership
   shell: "chown -R {{user}}:{{user}} /opt"
   args:
     warn: no
@@ -120,22 +120,11 @@
     - yq
   ignore_errors: yes
 
-- name: Install NodeJS
-  shell: "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs"
+- name: Install nodejs
+  import_role:
+    name: nodejs
   tags: nodejs
-
-- name: Update npm
-  shell: "npm install -g npm"
-  tags: nodejs
-
-- name: Update packages
-  shell: "npm update -g"
-  tags: nodejs
-
-- name: Install common npm modules
-  npm: "name={{item}} global=yes"
-  with_items:
-    - frontail
+  ignore_errors: yes
 
 - name: Install hostess
   import_role:
@@ -162,17 +151,9 @@
   ignore_errors: yes
 
 - name: Set bash as default shell
-  user:
-    name: "{{user}}"
-    shell: /bin/bash
-  register: default_shell
+  import_role:
+    name: bash
   when: shell|default('zsh',true) == "bash"
-  tags: shell
-
-- name: Default shell set to bash
-  debug:
-    msg: "You will need to re-login for changes to take effect."
-  when: default_shell is changed
   tags: shell
 
 - name: Set zsh as default shell
