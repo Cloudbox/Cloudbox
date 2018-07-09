@@ -178,7 +178,6 @@
     become_user: "{{user}}"
     args:
       warn: no
-    tags: test
 
   - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
     stat:
