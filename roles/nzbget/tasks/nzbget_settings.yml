@@ -91,25 +91,61 @@
     state: present
 
 # Categories
-- name: Add aliases to Movies category
+
+- name: Rename movies category
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^Category1.Name\s?=.*'
+    line: 'Category1.Name=movies'
+    state: present
+
+- name: Add aliases to movies category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category1.Aliases\s?='
     line: 'Category1.Aliases=movies*, Movies*'
     state: present
 
-- name: Add aliases to Series category
+- name: Rename series category
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^Category2.Name\s?=.*'
+    line: 'Category2.Name=series'
+    state: present
+
+- name: Add aliases to series category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category2.Aliases\s?='
     line: 'Category2.Aliases=TV - HD, TV - SD, TV*'
     state: present
 
-- name: Add aliases to Music category
+- name: Rename music category
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^Category3.Name\s?=.*'
+    line: 'Category3.Name=music'
+    state: present
+
+- name: Add aliases to music category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category3.Aliases\s?='
     line: 'Category3.Aliases=audio*'
+    state: present
+
+- name: Rename apps category
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^Category4.Name\s?=.*'
+    line: 'Category4.Name=apps'
+    state: present
+
+- name: Add aliases to apps category
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^Category4.Aliases\s?='
+    line: 'Category4.Aliases=apps*, pc*'
     state: present
 
 - name: Add Radarr category
