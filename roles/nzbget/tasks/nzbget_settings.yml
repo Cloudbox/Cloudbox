@@ -9,6 +9,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+# Stop Container
 - name: Wait for nzbget.conf to be created
   wait_for:
     path: "/opt/nzbget/app/nzbget.conf"
@@ -23,55 +24,131 @@
     name: nzbget
     state: stopped
 
-- name: Change downloads directory
+# Authentication
+- name: Set Username
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^ControlUsername\s?='
+    line: "ControlUsername={{user}}"
+    state: present
+
+- name: Set Password
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^ControlPassword\s?=.*'
+    line: "ControlPassword={{passwd}}"
+    state: present
+
+- name: Set FormAuth
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^FormAuth\s?=.*'
+    line: 'FormAuth=yes'
+    state: present
+
+
+# Paths
+- name: Change MainDir to downloads directory
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^MainDir\s?='
     line: 'MainDir=/downloads/nzbget'
     state: present
 
-- name: Change scripts directory
+- name: Change QueueDir path
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^QueueDir\s?='
+    line: 'QueueDir=${MainDir}/queue'
+    state: present
+
+- name: Change TempDir path
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^TempDir\s?='
+    line: 'TempDir=${MainDir}/tmp'
+    state: present
+
+- name: Change ScriptDir path
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^ScriptDir\s?='
     line: 'ScriptDir=/scripts'
     state: present
 
-- name: Rename Movies category
+- name: Change LockFile path
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category1.Name\s?='
-    line: 'Category1.Name=radarr'
+    regexp: '^LockFile\s?='
+    line: 'LockFile=/config/app/nzbget.lock'
     state: present
 
-- name: Rename TV category
+- name: Change LogFile path
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category2.Name\s?='
-    line: 'Category2.Name=sonarr'
+    regexp: '^LogFile\s?='
+    line: 'LogFile=${MainDir}/nzbget.log'
     state: present
 
-- name: Rename Music category
+# Categories
+- name: Add aliases to Movies category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category3.Name\s?='
-    line: 'Category3.Name=lidarr'
+    regexp: '^Category1.Aliases\s?='
+    line: 'Category1.Aliases=movies*, Movies*'
     state: present
 
-- name: Remove default Username
+- name: Add aliases to Series category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^ControlUsername\s?='
-    line: 'ControlUsername='
+    regexp: '^Category2.Aliases\s?='
+    line: 'Category2.Aliases=TV - HD, TV - SD, TV*'
     state: present
 
-- name: Remove default Password
+- name: Add aliases to Music category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^ControlPassword=\s?='
-    line: 'ControlPassword='
+    regexp: '^Category3.Aliases\s?='
+    line: 'Category3.Aliases=audio*'
     state: present
 
+- name: Add Radarr category
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^Category5.Name\s?='
+    line: 'Category5.Name=radarr'
+    state: present
+
+- name: Add Sonarr category
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^Category6.Name\s?='
+    line: 'Category6.Name=sonarr'
+    state: present
+
+- name: Add Lidarr category
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^Category7.Name\s?='
+    line: 'Category7.Name=lidarr'
+    state: present
+
+# Miscellaneous
+- name: Set DiskSpace
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^DiskSpace\s?=.*'
+    line: 'DiskSpace=100000'
+    state: present
+
+- name: Set HealthCheck
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^HealthCheck\s?=.*'
+    line: 'HealthCheck=Delete'
+    state: present
+
+# Start Container
 - name: Start container to apply changes
   docker_container:
     name: nzbget
