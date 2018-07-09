@@ -67,14 +67,17 @@
     - "arrpush.py"
     - "TorrentCleanup.py"
 
-- name: Import plex_token.sh
+- name: Import plex scripts
   copy:
-    src: "plex_token.sh"
-    dest: "/opt/scripts/plex/plex_token.sh"
+    src: "{{item}}"
+    dest: "/opt/scripts/plex/{{item}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
     force: yes
+  with_items:
+    - "plex_token.sh"
+    - "plex_trash_fixer.py"
 
 - name: Import revoke_certs.sh
   template:

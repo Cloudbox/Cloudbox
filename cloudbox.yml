@@ -11,11 +11,11 @@
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
     - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
     - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'docker'] }
     - { role: plexdrive, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'rclone'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
@@ -55,3 +55,4 @@
     - { role: telly, tags: ['telly'] }
     - { role: nowshowing, tags: ['nowshowing'] }
     - { role: bazarr, tags: ['bazarr'] }
+    - { role: plexlibrary, tags: ['plexlibrary'] }

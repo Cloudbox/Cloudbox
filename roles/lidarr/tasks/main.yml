@@ -34,6 +34,31 @@
     - /opt/lidarr
     - /mnt/local/Media/Music
 
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/lidarr/Lidarr
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/lidarr/app
+  register: subfolder2
+
+- name: Move 'lidarr' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/lidarr /tmp/app
+    mkdir /opt/lidarr
+    mv /tmp/app /opt/lidarr/
+    find /opt/lidarr/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/lidarr
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'Lidarr' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/lidarr/Lidarr /opt/lidarr/app
+    chown -R {{user}}:{{user}} /opt/lidarr
+  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+
 - name: Create and start container
   docker_container:
     name: lidarr

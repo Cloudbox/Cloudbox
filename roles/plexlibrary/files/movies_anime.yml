@@ -1,0 +1,56 @@
+# Supported types: movie, tv
+library_type: 'movie'
+
+# Source list(s)
+source_list_urls:
+  - 'https://api.trakt.tv/users/duuitnow/lists/anime/items/movies'
+  - 'https://api.trakt.tv/users/haaitje/lists/anime/items/movies'
+  - 'https://api.trakt.tv/users/mokins/lists/anime-movies/items/movies'
+  - 'https://api.trakt.tv/users/blackjackvip/lists/anime-movies/items/movies'
+  - 'https://api.trakt.tv/users/canadutchy/lists/anime-movies/items/movies'
+  - 'https://api.trakt.tv/users/shedman214/lists/anime-movies/items/movies'
+
+# Source library details
+source_libraries:
+    # [Cloudbox] 'name' = Plex library name.
+  - name: 'Movies'
+    # [Cloudbox] Plex library path (i.e /data/...).
+    folders:
+        # [Cloudbox] Example path below assumes main movies are located in "/mnt/unionfs/Media/Movies/Movies/" (i.e. Customizing Plex Library - Scenario 1 style).
+      - '/data/Movies/Movies'
+
+# New library details
+new_library:
+  name: 'Movies - Anime'
+  # [Cloudbox] 'folder' = Path on host where symlinks are stored (i.e. '/mnt/local/Media/...').
+  folder: '/mnt/local/Media/Movies/Movies-Anime/'
+  sort: no
+  sort_title:
+    format: '{number}. {title}'
+    visible: no
+    absolute: yes  # Skips numbers for missing items
+  # Limit the age (in years) of items to be considered
+  # * 0 for no limit
+  max_age: 0
+  # Maximum number of items to keep in the library
+  max_count: 0
+  # Remove items that no longer exist in the source lists
+  remove_from_library: yes
+
+# Weighted sorting (requires TMDb API)
+weighted_sorting:
+  enabled: no
+  better_release_date: no
+  weights:
+    # Think of these as percentages,
+    # but they don't have to add up to 1.0
+    # * Additive
+    # * Higher value -> more important
+    index: 0.0
+    vote: 0.0
+    age: 0.0
+    random: 0.0
+    # Penalize (<0) or reward (>0) certain (TMDb) genres
+    # * Final weight is multipled by these values
+    genre_bias:
+      'TV Movie': 0.7

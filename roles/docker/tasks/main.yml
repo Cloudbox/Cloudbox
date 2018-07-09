@@ -8,6 +8,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Check to see if docker is installed"
+  stat:
+    path: "/usr/bin/docker"
+  register: docker_binary
+
+- name: "Gather list of running Docker containers"
+  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+  register: docker_running_containers
+  ignore_errors: yes
+  when: docker_binary.stat.exists
+
+- name: "Stop all running Docker containers."
+  shell: "docker stop {{docker_running_containers.stdout}}"
+  ignore_errors: yes
+  when: docker_binary.stat.exists
+
 - name: Install required packages
   apt: "name={{item}} state=present"
   with_items:
@@ -101,3 +117,8 @@
       subnet: '172.18.0.0/16'
       gateway: '172.18.0.254'
       iprange: '172.18.0.0/24'
+
+- name: "Restart all previously running Docker containers."
+  shell: 'docker start {{docker_running_containers.stdout}}'
+  ignore_errors: yes
+  when: docker_binary.stat.exists
