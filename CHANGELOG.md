@@ -30,6 +30,51 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.2.3] - 2018-07-09
+
+### **Notes**
+- Requires **Ansible 2.5.1**.
+
+### Added
+- Bash Role.
+- [Plex Library](https://github.com/adamgot/python-plexlibrary) Role.
+- Scripts: Plex Trash Fixer.
+- Tags: Added system and docker tags.
+
+### Changed
+- Ansible: Renamed ansible.cfg to ansible.cfg.default and added ansible.cfg to git ignore. This will allow for customizations by users, without causing git conflicts.
+- Ansible: Turned off retry files.
+- Appveyor: Tweaks.
+- Backup: Excludes reflect new Sonarr/Radarr Mediacover paths.
+- Backup: Minor tweaks to Docker start / stop tasks.
+- Cloudplow: Added --loglevel=INFO to service file.
+- Cloudplow: Added Rclone throttle speeds settings into default config.
+- Credits: Reworked.
+- Docker: Will stop and start running containers on task run.
+- NodeJS: Separated into its own role.
+- NodeJS: Will now output NodeJS, npm, and frontail versions once installed.
+- NZBGet: Updated settings subtasks to match new Suitarr config location.
+- NZBHydra2: Updated settings subtasks to match new Suitarr config location.
+- Plex Autoscan: Added --loglevel=INFO to service file.
+- Preinstall: Removed redundant tasks.
+- Rclone: Will attempt to look for missing rclone.conf, and if found, move it to the default location.
+- Readme: Misc tweaks.
+- Restore: Tweaked existing task of moving rclone.conf file from cloudbox folder to default location (e.g. during restore). Added this to Rclone role instead.
+- Settings: Added ability to rename ansible.cfg.default to ansible.cfg, if required.
+- Settings: Refactoring/cleaning up of role.
+- Settings: Set script task to ignore errors on fail.
+- Shell: Add nano as default editor.
+- Suitarr: Updated migration helper tasks to reflect recent changes.
+- Traktarr: Updated default config.
+
+### Removed
+
+### Fixed
+- NZBHydra2: Fix for incorrect image being stopped/started.
+- Z: Sets correct permissions during repo clone.
+- ZSH: Sets correct permissions during repo clone.
+
+
 ## [1.2.2] - 2018-06-25
 
 ### **Notes**
@@ -472,6 +517,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.3]: https://github.com/cloudbox/cloudbox/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/cloudbox/cloudbox/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/cloudbox/cloudbox/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/cloudbox/cloudbox/compare/v1.1.3...v1.2.0
