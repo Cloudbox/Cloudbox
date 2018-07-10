@@ -27,5 +27,6 @@
 - name: "Cloudbox Settings Sub Tasks"
   include_tasks: "cloudbox_settings.yml"
   with_items:
-    - "adv_settings.yml"
+    - "accounts.yml"
     - "settings.yml"
+    - "adv_settings.yml"
