@@ -124,7 +124,7 @@
     ignore_errors: yes
     when: not (docker_running_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Stopped Cloudbox containers."
+  - name: "Pushover Message: Stopped Docker containers."
     pushover:
       msg: "Stopped Cloudbox containers."
       app_token: "{{backup.pushover_app_token}}"
@@ -143,6 +143,7 @@
         (backup.pushover_user_key | trim == '')
       )
     ignore_errors: yes
+    when: not (docker_running_containers.stdout | trim == '')
 
   - name: Check if plexdrive is running
     command: systemctl status plexdrive
@@ -234,7 +235,7 @@
     ignore_errors: yes
     when: not (docker_running_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Started Cloudbox containers."
+  - name: "Pushover Message: Started Docker containers."
     pushover:
       msg: "Started Cloudbox containers."
       app_token: "{{backup.pushover_app_token}}"
@@ -253,6 +254,7 @@
         (backup.pushover_user_key | trim == '')
       )
     ignore_errors: yes
+    when: not (docker_running_containers.stdout | trim == '')
 
   - name: "Wait for 10 seconds before uploads"
     wait_for:
