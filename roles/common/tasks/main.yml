@@ -107,6 +107,17 @@
     - yq
   ignore_errors: yes
 
+- name: Set default shell
+  import_role:
+    name: shell
+  tags: shell
+
+- name: Install z
+  import_role:
+    name: z
+  tags: z
+  ignore_errors: yes
+
 - name: Install nodejs
   import_role:
     name: nodejs
@@ -135,22 +146,4 @@
   import_role:
     name: nethogs
   tags: nethogs
-  ignore_errors: yes
-
-- name: Set bash as default shell
-  import_role:
-    name: bash
-  when: shell|default('zsh',true) == "bash"
-  tags: shell
-
-- name: Set zsh as default shell
-  import_role:
-    name: zsh
-  when: shell|default('zsh',true) == "zsh"
-  tags: shell
-
-- name: Install z
-  import_role:
-    name: z
-  tags: z
   ignore_errors: yes
