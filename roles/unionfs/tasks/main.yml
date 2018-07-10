@@ -8,14 +8,20 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-  - name: Check service exists
+  - name: Check if unionfs service exists
     stat:
       path: "/etc/systemd/system/unionfs.service"
     register: unionfs_service
 
+  - name: Check if unionfs service is running
+    command: systemctl status unionfs
+    ignore_errors: yes
+    register: unionfs_status
+    when: unionfs_service.stat.exists
+
   - name: Stop existing unionfs service
     systemd: state=stopped name=unionfs
-    when: unionfs_service.stat.exists
+    when: (unionfs_service.stat.exists) and (unionfs_status is success)
 
   - name: Install fuse
     apt:
