@@ -15,7 +15,7 @@
 
 - name: Check version of previously installed WebTools
   shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
-  register: webtools_installed_version
+  register: webtools_previously_installed_version
   ignore_errors: yes
   when: webtools_bundle.stat.exists
 
@@ -27,7 +27,7 @@
 
 - name: Compare installed WebTools version with latest one
   set_fact:
-    webtools_outdated: "{{ webtools_installed_version.stdout is version(webtools_latest_version.stdout, '<', strict=True) }}"
+    webtools_outdated: "{{ webtools_previously_installed_version.stdout is version(webtools_latest_version.stdout, '<', strict=True) }}"
   ignore_errors: yes
   when: webtools_bundle.stat.exists
 
@@ -58,6 +58,18 @@
     group: "{{ user }}"
     mode: 0775
     validate_certs: no
+  ignore_errors: yes
+  when: (not webtools_bundle.stat.exists) or (webtools_outdated|default(false,true))
+
+- name: Check version of newly installed WebTools
+  shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
+  register: webtools_newly_installed_version
+  ignore_errors: yes
+  when: (not webtools_bundle.stat.exists) or (webtools_outdated|default(false,true))
+
+- name: Display WebTools version
+  debug:
+    msg: "WebTools version {{webtools_newly_installed_version.stdout}} installed."
   ignore_errors: yes
   when: (not webtools_bundle.stat.exists) or (webtools_outdated|default(false,true))
 
