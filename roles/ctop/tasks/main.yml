@@ -15,7 +15,7 @@
 
 - name: Install ctop
   get_url:
-    url:  "{{ ctop_download_url.stdout }}"
+    url:  "{{ ctop_download_url.stdout | default('https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64',true) }}"
     dest: /usr/local/bin/ctop
     mode: 0755
     owner: root
