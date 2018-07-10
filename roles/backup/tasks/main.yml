@@ -141,9 +141,10 @@
         (backup.pushover_user_key is none)
         or
         (backup.pushover_user_key | trim == '')
+        or
+        (docker_running_containers.stdout | trim == '')
       )
     ignore_errors: yes
-    when: not (docker_running_containers.stdout | trim == '')
 
   - name: Check if plexdrive is running
     command: systemctl status plexdrive
@@ -252,9 +253,10 @@
         (backup.pushover_user_key is none)
         or
         (backup.pushover_user_key | trim == '')
+        or
+        (docker_running_containers.stdout | trim == '')
       )
     ignore_errors: yes
-    when: not (docker_running_containers.stdout | trim == '')
 
   - name: "Wait for 10 seconds before uploads"
     wait_for:
