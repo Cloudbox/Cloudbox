@@ -122,6 +122,7 @@
   - name: "Stop all running Docker containers."
     shell: "docker stop {{docker_running_containers.stdout}}"
     ignore_errors: yes
+    when: not (docker_running_containers.stdout | trim == '')
 
   - name: "Pushover Message: Stopped Cloudbox containers."
     pushover:
@@ -231,6 +232,7 @@
   - name: "Restart all previously running Docker containers."
     shell: 'docker start {{docker_running_containers.stdout}}'
     ignore_errors: yes
+    when: not (docker_running_containers.stdout | trim == '')
 
   - name: "Pushover Message: Started Cloudbox containers."
     pushover:
@@ -420,6 +422,7 @@
     - name: "Restart all previously running Docker containers."
       shell: 'docker start {{docker_running_containers.stdout}}'
       ignore_errors: yes
+      when: not (docker_running_containers.stdout | trim == '')
 
     - name: Start cloudplow service
       systemd:
