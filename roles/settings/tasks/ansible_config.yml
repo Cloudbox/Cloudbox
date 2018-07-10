@@ -22,7 +22,3 @@
     mode: 0664
     force: yes
   when: not file.stat.exists
-
-- name: "Exit when '{{item}}' file is created."
-  fail: msg="'{{item}}' file was just created. Please run Cloudbox installer again."
-  when: not file.stat.exists
