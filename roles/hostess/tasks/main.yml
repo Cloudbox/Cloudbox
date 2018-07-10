@@ -15,7 +15,7 @@
 
 - name: Install hostess
   get_url:
-    url:  "{{ hostess_download_url.stdout }}"
+    url:  "{{ hostess_download_url.stdout | default('https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64',true) }}"
     dest: /usr/local/bin/hostess
     mode: 0755
     owner: root
