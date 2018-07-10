@@ -13,7 +13,7 @@
     path: "{{playbook_dir}}/{{item}}"
   register: file
 
-- name: "Copy '{{item}}.default' to '{{item}}.'"
+- name: "Copy '{{item}}.default' to '{{item}}'."
   copy:
     src: "{{playbook_dir}}/{{item}}.default"
     dest: "{{playbook_dir}}/{{item}}"
@@ -23,6 +23,6 @@
     force: yes
   when: not file.stat.exists
 
-- name: "Exit when 'ansible.cfg' file is created."
-  fail: msg="'ansible.cfg' file was just created. Please run Cloudbox installer again."
+- name: "Exit when '{{item}}' file is created."
+  fail: msg="'{{item}}' file was just created. Please run Cloudbox installer again."
   when: not file.stat.exists
