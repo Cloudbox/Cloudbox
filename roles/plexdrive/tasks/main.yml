@@ -18,9 +18,10 @@
   when: plexdrive_service.stat.exists
 
 - name: Create plexdrive directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/plexdrive
+    - /mnt/plexdrive
 
 - name: Install plexdrive
   get_url:
