@@ -22,21 +22,6 @@
     - /home/{{user}}/.config
     - /home/{{user}}/.config/pip
 
-- name: Check plexdrive mount folder exist
-  stat:
-    path: /mnt/plexdrive
-  register: plexdrive_mnt
-
-- name: Create /mnt/plexdrive
-  file:
-    path: /mnt/plexdrive
-    state: directory
-    mode: 0755
-    owner: "{{user}}"
-    group: "{{user}}"
-    recurse: yes
-  when: plexdrive_mnt.stat.exists == False
-
 - name: Set /opt permissions
   shell: "chmod -R ugo+X /opt"
   args:
