@@ -1,0 +1,6 @@
+---
+user: seed
+passwd: password123
+domain: testcloudbox.ml
+email: your@email.com
+cloudflare_api_token:
