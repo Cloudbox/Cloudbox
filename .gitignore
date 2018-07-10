@@ -1,5 +1,6 @@
 #Cloudbox Related
 ansible.cfg
+accounts.yml
 settings.yml
 adv_settings.yml
 cloudbox.retry
