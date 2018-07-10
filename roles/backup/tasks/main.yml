@@ -82,6 +82,7 @@
       force: yes
     with_items:
      - "{{playbook_dir}}/ansible.cfg"
+     - "{{playbook_dir}}/accounts.yml"
      - "{{playbook_dir}}/settings.yml"
      - "{{playbook_dir}}/adv_settings.yml"
      - "/home/{{user}}/.config/rclone/rclone.conf"
@@ -266,6 +267,7 @@
       force: yes
     with_items:
      - "ansible.cfg"
+     - "accounts.yml"
      - "settings.yml"
      - "adv_settings.yml"
      - "rclone.conf"
@@ -289,6 +291,7 @@
     when: backup.use_rclone
     with_items:
      - "ansible.cfg"
+     - "accounts.yml"
      - "settings.yml"
      - "adv_settings.yml"
      - "rclone.conf"
