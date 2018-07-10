@@ -40,5 +40,5 @@
     state: present
   when: sudoers.stat.exists == True
 
-- name: "Set /home/{{user}} ownership"
+- name: "Set ownership of '/home/{{user}}/'"
   file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
