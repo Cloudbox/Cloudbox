@@ -1,9 +1,10 @@
 #Cloudbox Related
-ansible.cfg
-accounts.yml
-settings.yml
-adv_settings.yml
-rclone.conf
-cloudbox.retry
-backup.lock
-*.log
+/ansible.cfg
+/accounts.yml
+/settings.yml
+/adv_settings.yml
+/rclone.conf
+/backup_excludes.txt
+/backup.lock
+/cloudbox.retry
+/*.log

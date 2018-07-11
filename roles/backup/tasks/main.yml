@@ -15,17 +15,17 @@
     with_items:
       - /home/{{user}}/logs
 
-  - name: "Check if backup.lock is present"
+  - name: "Check if 'backup.lock' is present"
     stat:
       path: "{{playbook_dir}}/backup.lock"
     register: backup_lock
 
-  - name: "Fail when backup.lock exists"
+  - name: "Fail when 'backup.lock 'exists"
     fail:
       msg: "Backup is already in progress. Please wait for it to complete."
     when: backup_lock.stat.exists
 
-  - name: "Create backup.lock"
+  - name: "Create 'backup.lock'"
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: touch
@@ -43,12 +43,12 @@
     vars:
       message: "Started Cloudbox backup task."
 
-  - name: "Check {{backup.tar_dest}} exists"
+  - name: "Check '{{backup.tar_dest}}' exists"
     stat:
       path: "{{backup.tar_dest}}"
     register: backup_location
 
-  - name: "Create backup location {{backup.tar_dest}}"
+  - name: "Create backup location '{{backup.tar_dest}}'"
     file:
       path: "{{backup.tar_dest}}"
       state: directory
@@ -71,10 +71,11 @@
      - "{{playbook_dir}}/accounts.yml"
      - "{{playbook_dir}}/settings.yml"
      - "{{playbook_dir}}/adv_settings.yml"
+     - "{{playbook_dir}}/backup_excludes.txt"
      - "/home/{{user}}/.config/rclone/rclone.conf"
     ignore_errors: yes
 
-  - name: "Check {{backup.tar_dest}}/cloudbox.tar exists"
+  - name: "Check '{{backup.tar_dest}}/cloudbox.tar' exists"
     stat:
       path: "{{backup.tar_dest}}/cloudbox.tar"
       get_attributes: false
@@ -139,15 +140,18 @@
       state: stopped
     when: plexdrive_status is success
 
+  - name: "Look for 'backup_excludes.txt' file in cloudbox folder."
+    stat:
+      path: "{{playbook_dir}}/backup_excludes.txt"
+    register: backup_excludes_file
+
   - name: "Archiving /opt to {{backup.tar_dest}}/cloudbox.tar"
     shell: |
       tar \
         --ignore-failed-read \
         --warning=no-file-changed \
         --warning=no-file-removed \
-        --exclude='./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*' \
-        --exclude='./sonarr/app/MediaCover/*' \
-        --exclude='./radarr/app/MediaCover/*' \
+        --exclude-from '{{ backup_excludes_file.stat.exists | ternary(playbook_dir + '/backup_excludes.txt', playbook_dir + '/roles/backup/files/backup_excludes.txt') }}' \
         -cf '{{backup.tar_dest}}/cloudbox.tar' \
         -C /opt .
     become: yes
@@ -155,7 +159,7 @@
     args:
       warn: no
 
-  - name: "Get new {{backup.tar_dest}}/cloudbox.tar stats"
+  - name: "Get new '{{backup.tar_dest}}/cloudbox.tar' stats"
     stat:
       path: "{{backup.tar_dest}}/cloudbox.tar"
       get_attributes: false
@@ -172,7 +176,7 @@
     when: not (backup_new is undefined)
     ignore_errors: yes
 
-  - name: "Remove cloudbox.tar.backup from \"{{backup.tar_dest}}\""
+  - name: "Remove 'cloudbox.tar.backup' from \"{{backup.tar_dest}}\""
     file:
       path: "{{backup.tar_dest}}/cloudbox.tar.backup"
       state: absent
@@ -218,6 +222,7 @@
      - "accounts.yml"
      - "settings.yml"
      - "adv_settings.yml"
+     - "backup_excludes.txt"
      - "rclone.conf"
      - "cloudbox.tar"
 
@@ -242,6 +247,7 @@
      - "accounts.yml"
      - "settings.yml"
      - "adv_settings.yml"
+     - "backup_excludes.txt"
      - "rclone.conf"
      - "cloudbox.tar"
 
@@ -342,7 +348,7 @@
         message: "Backup terminated due to an error."
 
   always:
-  - name: "Remove backup.lock"
+  - name: "Remove 'backup.lock'"
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: absent
