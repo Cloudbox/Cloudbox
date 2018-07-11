@@ -21,6 +21,7 @@ This project is designed for fresh systems and limited to x64 machines running U
 
 
 Featured Applications:
+
 - Plex
 - Emby
 - Sonarr
@@ -29,13 +30,18 @@ Featured Applications:
 - NZBGet
 - ruTorrent
 - Tautulli (PlexPy)
-- NZBHydra
+- NZBHydra2
 - Jackett
+- Ombi
+- Plex Requests
 - Plex Autoscan
-- UnionFS Cleaner
+- Cloudplow
 - Organizr
 - Portainer
-
+- Traktarr
+- Plex Dupefinder
+- Plex Patrol
+- and more...
 
 
 
