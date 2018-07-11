@@ -16,4 +16,3 @@
     name: cloudflare
   vars:
     subdomain: "{{cloudbox_type}}"
-  when: cloudflare_enabled
