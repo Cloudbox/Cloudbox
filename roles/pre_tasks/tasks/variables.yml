@@ -19,14 +19,6 @@
       )
       else false }}"
 
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
 - name: Set pushover_api_token when using older settings
   set_fact:
     pushover_app_token: "{{backup.pushover_app_token}}"

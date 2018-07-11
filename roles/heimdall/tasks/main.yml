@@ -15,6 +15,10 @@
   vars:
     subdomain: heimdall
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Create htpasswd
   htpasswd:
     path: "/opt/nginx-proxy/htpasswd/{{item}}.{{domain}}"
@@ -44,8 +48,8 @@
     published_ports:
       - "127.0.0.1:8078:80"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "heimdall.{{domain}}"
       VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: "heimdall.{{domain}}"

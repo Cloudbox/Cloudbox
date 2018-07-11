@@ -15,6 +15,10 @@
   vars:
     subdomain: jackett
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: jackett
@@ -60,8 +64,8 @@
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "jackett.{{domain}}"
       VIRTUAL_PORT: 9117
       LETSENCRYPT_HOST: "jackett.{{domain}}"

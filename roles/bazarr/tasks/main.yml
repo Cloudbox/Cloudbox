@@ -15,6 +15,10 @@
   vars:
     subdomain: bazarr
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: bazarr
@@ -60,8 +64,8 @@
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "bazarr.{{domain}}"
       VIRTUAL_PORT: 6767

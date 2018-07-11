@@ -15,9 +15,9 @@
   vars:
     subdomain: emby
 
-- name: "Get video gid"
-  shell: "getent group video  | cut -d: -f3"
-  register: vgid
+- name: Import User Role
+  import_role:
+    name: user
 
 - name: Create emby directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
@@ -43,9 +43,9 @@
     published_ports:
       - "127.0.0.1:8096:8096"
     env:
-      UID: "{{uid.stdout}}"
-      GID: "{{gid.stdout}}"
-      GIDLIST: "{{vgid.stdout}}"
+      UID: "{{uid}}"
+      GID: "{{gid}}"
+      GIDLIST: "{{vgid}}"
       VIRTUAL_HOST: "emby.{{domain}}"
       VIRTUAL_PORT: 8096
       LETSENCRYPT_HOST: "emby.{{domain}}"
