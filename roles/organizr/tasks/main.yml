@@ -15,6 +15,10 @@
   vars:
     subdomain: organizr
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: "Setting CloudFlare DNS Record"
   include_role:
     name: cloudflare
@@ -43,8 +47,8 @@
     published_ports:
       - "127.0.0.1:7421:80"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('organizr.' + domain + ',' + 'www.' + domain + ',' + domain,'organizr.' + domain) }}"
       VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('organizr.' + domain + ',' + 'www.' + domain + ',' + domain,'organizr.' + domain) }}"

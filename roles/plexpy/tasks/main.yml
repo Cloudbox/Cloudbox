@@ -15,6 +15,10 @@
   vars:
     subdomain: plexpy
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: plexpy
@@ -39,8 +43,8 @@
     published_ports:
       - "127.0.0.1:8181:8181"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "plexpy.{{domain}}"
       VIRTUAL_PORT: 8181
       LETSENCRYPT_HOST: "plexpy.{{domain}}"

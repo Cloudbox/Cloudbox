@@ -15,6 +15,10 @@
   vars:
     subdomain: nextcloud
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing containers
   docker_container: "name={{item}} state=absent"
   with_items:
@@ -37,8 +41,8 @@
     published_ports:
       - "127.0.0.1:3306:3306"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       MYSQL_ROOT_PASSWORD: "password321"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
@@ -58,8 +62,8 @@
     published_ports:
       - "127.0.0.1:4645:443"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "nextcloud.{{domain}}"
       VIRTUAL_PORT: 443
       VIRTUAL_PROTO: https

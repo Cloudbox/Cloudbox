@@ -15,6 +15,10 @@
   vars:
     subdomain: "{{ plexrequests.subdomain|default('plexrequests',true) }}"
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: plexrequests
@@ -33,8 +37,8 @@
     published_ports:
       - "127.0.0.1:3000:3000"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{domain}}"
       VIRTUAL_PORT: 3000
       LETSENCRYPT_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{domain}}"
