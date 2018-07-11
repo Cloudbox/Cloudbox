@@ -19,4 +19,3 @@
     state: absent
     type: A
     record: "cloudbox"
-  when: cloudflare_enabled
