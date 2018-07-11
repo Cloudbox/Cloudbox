@@ -13,6 +13,10 @@
     name: plex_patrol
     state: absent
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Create plex_patrol directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
@@ -35,7 +39,7 @@
     name: plex_patrol
     image: "cloudb0x/plex_patrol:latest"
     pull: yes
-    user: "{{uid.stdout}}:{{gid.stdout}}"
+    user: "{{uid}}:{{gid}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex_patrol:/config"

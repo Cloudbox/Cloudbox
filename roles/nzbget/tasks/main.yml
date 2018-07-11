@@ -15,6 +15,10 @@
   vars:
     subdomain: nzbget
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
@@ -74,8 +78,8 @@
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "nzbget.{{domain}}"
       VIRTUAL_PORT: 6789
       LETSENCRYPT_HOST: "nzbget.{{domain}}"

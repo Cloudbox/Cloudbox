@@ -15,6 +15,10 @@
   vars:
     subdomain: radarr4k
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: radarr4k
@@ -59,8 +63,8 @@
       - "127.0.0.1:7879:7878"
     env:
       VERSION: "unstable"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "radarr4k.{{domain}}"

@@ -15,6 +15,10 @@
   vars:
     subdomain: sonarr4k
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: sonarr4k
@@ -60,8 +64,8 @@
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "sonarr4k.{{domain}}"
       VIRTUAL_PORT: 8989

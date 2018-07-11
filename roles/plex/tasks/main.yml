@@ -15,6 +15,10 @@
   vars:
     subdomain: plex
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Create plex directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
@@ -86,8 +90,8 @@
       - "33400:33400/tcp"
       - "33443:33443/tcp"
     env:
-      PLEX_UID: "{{uid.stdout}}"
-      PLEX_GID: "{{gid.stdout}}"
+      PLEX_UID: "{{uid}}"
+      PLEX_GID: "{{gid}}"
       PLEX_CLAIM: "{{plex_claim.user_input| default (omit)}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
       ADVERTISE_IP: "http://plex.{{domain}}:80/,https://plex.{{domain}}:443/"

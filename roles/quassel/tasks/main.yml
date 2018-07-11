@@ -15,6 +15,10 @@
   vars:
     subdomain: quassel
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: quassel
@@ -53,8 +57,8 @@
     published_ports:
       - "4242:4242"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/quassel:/config"

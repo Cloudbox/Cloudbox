@@ -15,6 +15,10 @@
   vars:
     subdomain: nzbhydra
 
+- name: Import User Role
+  import_role:
+    name: user
+
 - name: Stop and remove any existing container
   docker_container:
     name: nzbhydra
@@ -57,8 +61,8 @@
     published_ports:
       - "127.0.0.1:5075:5075"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "nzbhydra.{{domain}}"
       VIRTUAL_PORT: 5075
       LETSENCRYPT_HOST: "nzbhydra.{{domain}}"
