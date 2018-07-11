@@ -1,0 +1,20 @@
+#########################################################################
+# Title:         Cloudbox: Pre-Tasks Role - Variables Task              #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Set cloudflare_enabled
+  set_fact:
+    cloudflare_enabled: "{{ true if not(
+        (cloudflare_api_token is undefined)
+        or
+        (cloudflare_api_token is none)
+        or
+        (cloudflare_api_token | trim == '')
+      )
+      else false }}"
