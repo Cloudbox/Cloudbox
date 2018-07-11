@@ -41,6 +41,6 @@
 
 - name: "Fail when backup.lock exists"
   fail:
-    msg: "A Backup task is currently in progress. Please wait for it to complete."
+    msg: "A Backup task is currently in progress. Please wait for it to complete. If this is an error, simply remove the 'backup.lock' file in the cloudbox folder and retry."
   when: backup_lock.stat.exists
   tags: always
