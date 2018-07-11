@@ -10,10 +10,12 @@
 ---
 - name: Get IP Address
   ipinfoio_facts:
+  when: cloudflare_enabled
 
 - name: Determine Record
   set_fact:
     record: "{{ (subdomain == domain) | ternary(domain,subdomain + '.' + domain) }}"
+  when: cloudflare_enabled
 
 - name: "Set DNS Record for {{record}} to {{ip}}"
   cloudflare_dns:
@@ -26,10 +28,4 @@
     type: A
     value: "{{ip}}"
     record: "{{subdomain}}"
-  when: not(
-      (cloudflare_api_token is undefined)
-      or
-      (cloudflare_api_token is none)
-      or
-      (cloudflare_api_token | trim == '')
-    )
+  when: cloudflare_enabled
