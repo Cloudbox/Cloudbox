@@ -8,11 +8,20 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Ensure kernel is not already updated.
+  fail: msg="Kernel is already updated."
+  when: ansible_kernel is version_compare('4.10', '>=')
+
 - name: Upgrade kernel
   apt:
     name: linux-generic-hwe-16.04
     update_cache: yes
     state: latest
+  register: r
 
 - name: Reboot
   shell: reboot
+  when: r.changed
+
+- name: End Play
+  meta: end_play
