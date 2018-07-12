@@ -153,11 +153,6 @@
           - plex
     state: started
 
-# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
-- name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
-  wait_for:
-    timeout: 5
-
 - name: Wait for Plug-ins folder to be created by Plex
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
@@ -171,6 +166,11 @@
     owner: "{{user}}"
     group: "{{user}}"
 
+- name: "Wait 5 seconds"
+  wait_for:
+    timeout: 5
+
+# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
 - name: "Ensure plex folders have the correct permissions"
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
