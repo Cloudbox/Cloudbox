@@ -13,10 +13,6 @@
     name: plex_patrol
     state: absent
 
-- name: Import User Role
-  import_role:
-    name: user
-
 - name: Create plex_patrol directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:

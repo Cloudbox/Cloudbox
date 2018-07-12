@@ -25,10 +25,6 @@
   vars:
     subdomain: organizr
 
-- name: Import User Role
-  import_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: organizr
