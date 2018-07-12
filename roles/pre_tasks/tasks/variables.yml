@@ -82,3 +82,7 @@
         (pushover.user_key | trim == '')
       )
       else false }}"
+
+- name: Set localhost_ip
+  set_fact:
+    localhost_ip: "127.0.0.1"
