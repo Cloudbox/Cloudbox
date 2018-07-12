@@ -30,7 +30,7 @@
   docker_image:
     name: "plexinc/pms-docker:{{plex.tag}}"
 
-- name: Check if /dev/dri exists
+- name: Check /dev/dri exists
   stat:
     path: "/dev/dri"
   register: dev_dri
@@ -153,6 +153,19 @@
           - plex
     state: started
 
+# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
+- name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
+  wait_for:
+    timeout: 5
+
+- name: "Ensure transcodes folder has the correct permissions"
+  file:
+    path: "{{plex.transcodes}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    recurse: yes
+
 - name: Wait for Plug-ins folder to be created by Plex
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
@@ -165,17 +178,6 @@
     mode: 0775
     owner: "{{user}}"
     group: "{{user}}"
-
-- name: "Wait 5 seconds"
-  wait_for:
-    timeout: 5
-
-# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
-- name: "Ensure plex folders have the correct permissions"
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - /opt/plex
-    - "{{plex.transcodes}}"
 
 - name: "Install WebTools"
   import_role:
