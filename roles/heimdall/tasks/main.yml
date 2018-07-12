@@ -15,10 +15,6 @@
   vars:
     subdomain: heimdall
 
-- name: Import User Role
-  import_role:
-    name: user
-
 - name: Create htpasswd
   htpasswd:
     path: "/opt/nginx-proxy/htpasswd/{{item}}.{{domain}}"

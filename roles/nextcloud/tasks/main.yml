@@ -15,10 +15,6 @@
   vars:
     subdomain: nextcloud
 
-- name: Import User Role
-  import_role:
-    name: user
-
 - name: Stop and remove any existing containers
   docker_container: "name={{item}} state=absent"
   with_items:
