@@ -83,6 +83,23 @@
       )
       else false }}"
 
+- name: Set plex_account_enabled
+  set_fact:
+    plex_account_enabled: "{{ true if not(
+        (plex.user is undefined)
+        or
+        (plex.user is none)
+        or
+        (plex.user | trim == '')
+        or
+        (plex.pass is undefined)
+        or
+        (plex.pass is none)
+        or
+        (plex.pass | trim == '')
+      )
+      else false }}"
+
 - name: Set localhost_ip
   set_fact:
     localhost_ip: "127.0.0.1"
