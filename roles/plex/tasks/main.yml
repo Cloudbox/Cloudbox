@@ -16,7 +16,7 @@
     subdomain: plex
 
 - name: Create plex directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/plex
     - "{{plex.transcodes}}"
