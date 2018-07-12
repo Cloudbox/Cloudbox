@@ -39,12 +39,19 @@
 - name: Add official repository for 16.04
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+  register: apt_docker_repositories
   when: ansible_distribution_version == "16.04"
 
 - name: Add official repository for 18.04
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} edge"
+  register: apt_docker_repositories
   when: ansible_distribution_version == "18.04"
+
+- name: Update APT packages list
+  apt:
+    update_cache: yes
+  when: apt_docker_repositories.changed
 
 - name: Release docker-ce from hold
   dpkg_selections:
