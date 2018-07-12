@@ -57,16 +57,20 @@
       ((continuous_integration|default(false,true))|bool)
     )
 
-- name: Set default hosts
+- name: Grab lazyman IP
   set_fact:
-    plex_default_hosts: { "metric.plex.tv": "127.0.0.1", "metrics.plex.tv": "127.0.0.1", "analytics.plex.tv": "127.0.0.1" }
+    lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
 
-- name: Grab IP for Lazyman
-  set_fact: lazyman_ip="{{ lookup('dig', 'powersports.ml.', '@8.8.8.8', 'qtype=A') }}"
-
-- name: Set custom hosts
+- name: Set plex host variables
   set_fact:
-    plex_custom_hosts: { "playback.svcs.mlb.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip,'127.0.0.1') }}", "mf.svc.nhl.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip,'127.0.0.1') }}", "mlb-ws-mf.media.mlb.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip, '127.0.0.1') }}" }
+    plex_default_hosts:
+      "metric.plex.tv": "{{ localhost_ip }}"
+      "metrics.plex.tv": "{{ localhost_ip }}"
+      "analytics.plex.tv": "{{ localhost_ip }}"
+    plex_custom_hosts:
+      "mf.svc.nhl.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
+      "mlb-ws-mf.media.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
+      "playback.svcs.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
 
 - name: Create and start container
   docker_container:
