@@ -16,10 +16,6 @@
       - (telly.streams is defined) and (telly.streams is not none) and not (telly.streams | trim == '')
     msg: "You must specify the Telly settings in 'adv_settings.yml'"
 
-- name: Import User Role
-  import_role:
-    name: user
-
 - name: Stop and remove any existing container
   docker_container:
     name: telly
