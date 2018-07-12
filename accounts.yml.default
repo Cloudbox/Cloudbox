@@ -4,6 +4,9 @@ passwd: password123
 domain: testcloudbox.ml
 email: your@email.com
 cloudflare_api_token:
+plex:
+  user:
+  pass:
 pushover:
   app_token:
   user_key:
