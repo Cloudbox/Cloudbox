@@ -30,7 +30,7 @@
 
         v. On Rename: No
 
-        vi. Path: /scripts/torrent/TorrentCleanup.py
+        vi. Path: /scripts/torrents/TorrentCleanup.py
 
         vii. Arguments: sonarr
 
@@ -54,7 +54,7 @@
 
         v. On Rename: No
 
-        vi. Path: /scripts/torrent/TorrentCleanup.py
+        vi. Path: /scripts/torrents/TorrentCleanup.py
 
         vii. Arguments: radarr
 
@@ -80,7 +80,7 @@
 
         vi. On Rename: No
 
-        vii. Path: /scripts/torrent/TorrentCleanup.py
+        vii. Path: /scripts/torrents/TorrentCleanup.py
 
         viii. Arguments: lidarr
 
