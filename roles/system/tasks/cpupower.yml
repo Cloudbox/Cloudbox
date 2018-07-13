@@ -15,7 +15,7 @@
     - linux-tools-common
     - linux-tools-generic
 
-- name: Install linux-tools-kernel
+- name: "Install linux-tools-{{ ansible_kernel }}"
   shell: "apt-get install -qq $(apt-cache search -n linux-tools-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
   ignore_errors: yes
 
