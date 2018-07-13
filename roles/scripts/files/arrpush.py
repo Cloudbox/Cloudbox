@@ -25,7 +25,7 @@
 
     ruTorrent Autodl-irssi Filter Action:
     --
-    COMMAND: /scripts/arrpush.py
+    COMMAND: /scripts/torrents/arrpush.py
     ARGUMENTS: "SONARR URL" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
     or
     ARGUMENTS: "RADARR URL" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
