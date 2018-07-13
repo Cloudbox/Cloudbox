@@ -19,7 +19,7 @@
 #                          GNU General Public License v3.0                             #
 ########################################################################################
 # Usage:                                                                               #
-# autodl script: /scripts/arrpush.legacy.sh                                            #
+# autodl script: /scripts/torrents/arrpush.legacy.sh                                   #
 # autodl args: sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"   #
 # or                                                                                   #
 # autodl args: radarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"   #
