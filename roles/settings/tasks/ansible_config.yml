@@ -22,3 +22,11 @@
     mode: 0664
     force: yes
   when: not file.stat.exists
+
+- name: "Add hash_behaviour into '{{item}}'."
+  lineinfile:
+    path: "{{playbook_dir}}/{{item}}"
+    regexp: '^hash_behaviour\s?=.*'
+    state: present
+    line: 'hash_behaviour = merge'
+  when: file.stat.exists
