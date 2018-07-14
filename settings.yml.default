@@ -1,8 +1,11 @@
 ---
+downloads:
+  nzbs: /mnt/local/downloads/nzbs
+  torrents: /mnt/local/downloads/torrents
 nzbget:
-  downloads: /mnt/local/downloads/nzbget
+  downloads:
 rutorrent:
-  downloads: /mnt/local/downloads/rutorrent
+  downloads:
 plex:
   tag: public
   transcodes: /home/{{user}}/transcodes
