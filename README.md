@@ -47,4 +47,4 @@ Featured Applications:
 
 ***
 
-_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp._
+_If you find this project helpful, feel free to make a small donation via [Monzo](https://monzo.me/jamesbayliss9) (Credit Cards, Apple Pay, Google Pay, and others; no fees), [Paypal](https://www.paypal.me/l3uddz) (l3uddz@gmail.com), and Bitcoin (3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL)._
