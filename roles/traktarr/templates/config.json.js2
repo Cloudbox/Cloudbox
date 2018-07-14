@@ -56,7 +56,8 @@
         "fox sports",
         "yahoo!"
       ],
-      "disabled_for": [],
+      "blacklisted_tvdb_ids": [],
+      "disabled_for": []
     },
     "movies": {
       "allowed_countries": [
@@ -81,12 +82,13 @@
       "blacklisted_min_runtime": 60,
       "blacklisted_min_year": 2000,
       "blacklisted_max_year": 2019,
+      "blacklisted_tmdb_ids": [],
       "allowed_countries": [
         "us",
         "gb",
         "ca"
       ],
-      "disabled_for": [],
+      "disabled_for": []
     }
   },
   "core": {
