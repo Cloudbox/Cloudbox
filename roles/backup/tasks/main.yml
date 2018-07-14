@@ -115,7 +115,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Stopped Cloudbox containers."
+      message: "Stopped Docker containers."
       when: not (docker_running_containers.stdout | trim == '')
 
   - name: Check if plexdrive is running
@@ -201,7 +201,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Started Cloudbox containers."
+      message: "Started Docker containers."
     when: not (docker_running_containers.stdout | trim == '')
 
   - name: "Wait for 10 seconds before uploads"
