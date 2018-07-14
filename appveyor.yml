@@ -1,9 +1,14 @@
 ---
+skip_tags: true
+
 skip_commits:
   files:
     - '*.md'
     - '*.yml.default'
     - 'roles/scripts/files/*'
+  message:
+    - /\[minor\]/
+    - /\[skip ci\]/
 
 image: ubuntu
 
