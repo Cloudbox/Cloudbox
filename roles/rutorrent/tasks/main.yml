@@ -28,16 +28,35 @@
 - name: Create new downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
+    - "{{downloads.torrents}}"
     - "{{downloads.torrents}}/rutorrent"
     - "{{downloads.torrents}}/rutorrent/completed"
     - "{{downloads.torrents}}/rutorrent/incoming"
     - "{{downloads.torrents}}/rutorrent/watched"
   when: new_downloads_settings
 
+# This is still needed as sometimes it will remain in root.
+- name: "Set {{downloads.torrents}} permissions"
+  shell: "chmod -R 775 {{downloads.torrents}}"
+  when: new_downloads_settings
+
+- name: "Set {{downloads.torrents}} owner"
+  shell: "chown -R {{user}}:{{user}} {{downloads.torrents}}"
+  when: new_downloads_settings
+
 - name: Create old downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "{{rutorrent.downloads}}"
+  when: old_downloads_settings
+
+# This is still needed as sometimes it will remain in root.
+- name: "Set {{rutorrent.downloads}} permissions"
+  shell: "chmod -R 775 {{rutorrent.downloads}}"
+  when: old_downloads_settings
+
+- name: "Set {{rutorrent.downloads}} owner"
+  shell: "chown -R {{user}}:{{user}} {{rutorrent.downloads}}"
   when: old_downloads_settings
 
 - name: Check if rtorrent.rc exists
