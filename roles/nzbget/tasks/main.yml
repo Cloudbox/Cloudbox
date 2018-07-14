@@ -53,13 +53,32 @@
 - name: Create new downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
+    - "{{downloads.nzbs}}"
     - "{{downloads.nzbs}}/nzbget"
+  when: new_downloads_settings
+
+# This is still needed as sometimes it will remain in root.
+- name: "Set {{downloads.nzbs}} permissions"
+  shell: "chmod -R 775 {{downloads.nzbs}}"
+  when: new_downloads_settings
+
+- name: "Set {{downloads.nzbs}} owner"
+  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
   when: new_downloads_settings
 
 - name: Create old downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "{{nzbget.downloads}}"
+  when: old_downloads_settings
+
+# This is still needed as sometimes it will remain in root.
+- name: "Set {{nzbget.downloads}} permissions"
+  shell: "chmod -R 775 {{nzbget.downloads}}"
+  when: old_downloads_settings
+
+- name: "Set {{nzbget.downloads}} owner"
+  shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
   when: old_downloads_settings
 
 - name: Check nzbget.conf exists
