@@ -15,24 +15,30 @@
   vars:
     subdomain: rutorrent
 
-- name: Create rutorrent directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt/rutorrent
-
 - name: Stop and remove any existing container
   docker_container:
     name: rutorrent
     state: absent
 
-- name: Create rutorrent download directory
-  file: "path={{rutorrent.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+- name: Create rutorrent directory
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/rutorrent
 
-- name: "Set {{rutorrent.downloads}} permissions"
-  shell: "chmod -R 775 {{rutorrent.downloads}}"
+- name: Create new downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{downloads.torrents}}/rutorrent"
+    - "{{downloads.torrents}}/rutorrent/completed"
+    - "{{downloads.torrents}}/rutorrent/incoming"
+    - "{{downloads.torrents}}/rutorrent/watched"
+  when: new_downloads_settings
 
-- name: "Set {{rutorrent.downloads}} owner"
-  shell: "chown -R {{user}}:{{user}} {{rutorrent.downloads}}"
+- name: Create old downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{rutorrent.downloads}}"
+  when: old_downloads_settings
 
 - name: Check if rtorrent.rc exists
   stat:
@@ -54,6 +60,26 @@
     force: yes
   when: plugins_ini.stat.exists
 
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/rutorrent:/config"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+
+- name: Set new_downloads_paths variable
+  set_fact:
+    new_downloads_paths:
+      - "{{downloads.torrents}}/rutorrent:/downloads/torrents/rutorrent"
+  when: new_downloads_settings
+
+- name: Set old_downloads_paths variable
+  set_fact:
+    old_downloads_paths:
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+  when: old_downloads_settings
+
 - name: Create and start container
   docker_container:
     name: rutorrent
@@ -70,12 +96,7 @@
       VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: "rutorrent.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/rutorrent:/config"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
+    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
     networks:
       - name: cloudbox
         aliases:
