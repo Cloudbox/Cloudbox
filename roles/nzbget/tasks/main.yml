@@ -50,19 +50,42 @@
     chown -R {{user}}:{{user}} /opt/nzbget
   when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
 
-- name: Create nzbget download directory
-  file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+- name: Create new downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{downloads.nzbs}}/nzbget"
+  when: new_downloads_settings
 
-- name: "Set {{nzbget.downloads}} permissions"
-  shell: "chmod -R 775 {{nzbget.downloads}}"
-
-- name: "Set {{nzbget.downloads}} owner"
-  shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
+- name: Create old downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{nzbget.downloads}}"
+  when: old_downloads_settings
 
 - name: Check nzbget.conf exists
   stat:
     path: "/opt/nzbget/app/nzbget.conf"
   register: nzbget_conf
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbget:/config"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+
+- name: Set new_downloads_paths variable
+  set_fact:
+    new_downloads_paths:
+      - "{{downloads.nzbs}}/nzbget:/downloads/nzbs/nzbget"
+  when: new_downloads_settings
+
+- name: Set old_downloads_paths variable
+  set_fact:
+    old_downloads_paths:
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+  when: old_downloads_settings
 
 - name: Create and start container
   docker_container:
@@ -81,12 +104,7 @@
       LETSENCRYPT_HOST: "nzbget.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       LC_ALL: "C"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nzbget:/config"
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
+    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
     restart_policy: always
     networks:
       - name: cloudbox
