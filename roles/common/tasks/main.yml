@@ -95,7 +95,7 @@
     path: "/usr/bin/unrar"
   register: unrar_binary
 
-- name: Install unrar-free
+- name: Install unrar-free if unrar was not installed
   apt: "name={{item}} state=present"
   with_items:
     - unrar-free
