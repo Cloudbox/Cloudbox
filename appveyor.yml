@@ -6,9 +6,7 @@ skip_commits:
     - '*.md'
     - '*.yml.default'
     - 'roles/scripts/files/*'
-  message:
-    - /\[minor\]/
-    - /\[skip ci\]/
+  message: /\[minor\]/
 
 image: ubuntu
 
