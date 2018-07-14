@@ -46,13 +46,12 @@
     line: 'FormAuth=yes'
     state: present
 
-
 # Paths
 - name: Change MainDir to downloads directory
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^MainDir\s?='
-    line: 'MainDir=/downloads/nzbget'
+    line: 'MainDir=/downloads/nzbs/nzbget'
     state: present
 
 - name: Change QueueDir path
