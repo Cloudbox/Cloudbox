@@ -63,9 +63,6 @@
     group: "{{user}}"
     mode: a+x
 
-- name: Set directory permissions
-  file: "path=/opt/plex_autoscan state=directory owner={{user}} group={{user}} recurse=yes"
-
 - name: Import plex_autoscan service
   template:
     src: plex_autoscan.service.js2
@@ -75,3 +72,6 @@
 
 - name: Start plex_autoscan service
   systemd: state=started name=plex_autoscan daemon_reload=yes enabled=yes
+
+- name: Set directory permissions
+  file: "path=/opt/plex_autoscan state=directory owner={{user}} group={{user}} recurse=yes"
