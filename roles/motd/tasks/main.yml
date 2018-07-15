@@ -38,6 +38,8 @@
     dest: /opt/motd
     version: master
     force: yes
+  become: yes
+  become_user: "{{user}}"
 
 - name: Install pip requirements
   pip:
@@ -53,6 +55,9 @@
   template:
     src: config.json.js2
     dest: /opt/motd/config.json
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
     force: yes
   when: motd_config.stat.exists == False
 
@@ -67,6 +72,8 @@
 - name: Set cloudbox-motd.py as executable
   file:
     path: /opt/motd/cloudbox-motd.py
+    owner: "{{user}}"
+    group: "{{user}}"
     mode: a+x
 
 - name: Import dynamic motd files
