@@ -30,6 +30,11 @@
     path: "/opt/plex_dupefinder/config.json"
   register: plex_dupefinder_config
 
+- name: Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled and not plex_dupefinder_config.stat.exists
+
 - name: Import default config
   template:
     src: config.json.js2
@@ -38,7 +43,7 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: plex_dupefinder_config.stat.exists == False
+  when: not plex_dupefinder_config.stat.exists
 
 - name: Set plexdupes.py as executable
   file:
