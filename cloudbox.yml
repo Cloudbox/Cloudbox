@@ -58,3 +58,4 @@
     - { role: nowshowing, tags: ['nowshowing'] }
     - { role: bazarr, tags: ['bazarr'] }
     - { role: plexlibrary, tags: ['plexlibrary'] }
+    - { role: sabnzbd, tags: ['sabnzbd'] }

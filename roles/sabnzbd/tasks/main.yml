@@ -1,0 +1,89 @@
+#########################################################################
+# Title:         Cloudbox: SABnzbd Role                                 #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: sabnzbd
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: sabnzbd
+    state: absent
+
+- name: Create sabnzbd directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/sabnzbd
+
+- name: Create new downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{downloads.nzbs}}"
+    - "{{downloads.nzbs}}/sabnzbd"
+    - "{{downloads.nzbs}}/sabnzbd/complete"
+    - "{{downloads.nzbs}}/sabnzbd/incomplete"
+    - "{{downloads.nzbs}}/sabnzbd/watched"
+    - "{{downloads.nzbs}}/sabnzbd/logs"
+  when: new_downloads_settings
+
+# This is still needed as sometimes it will remain in root.
+- name: "Set {{downloads.nzbs}} permissions"
+  shell: "chmod -R 775 {{downloads.nzbs}}"
+  when: new_downloads_settings
+
+- name: "Set {{downloads.nzbs}} owner"
+  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
+  when: new_downloads_settings
+
+- name: Check sabnzbd.ini exists
+  stat:
+    path: "/opt/sabnzbd/app/sabnzbd.ini"
+  register: sabnzbd_ini
+
+- name: Create and start container
+  docker_container:
+    name: sabnzbd
+    image: hotio/suitarr:sabnzbd
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8081:8080"
+    env:
+      VERSION: "unstable"
+      BACKUP: "no"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+      VIRTUAL_HOST: "sabnzbd.{{domain}}"
+      VIRTUAL_PORT: 8080
+      LETSENCRYPT_HOST: "sabnzbd.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+      LC_ALL: "C"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/sabnzbd:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
+      - "{{downloads.nzbs}}/sabnzbd:/downloads/nzbs/sabnzbd"
+    restart_policy: always
+    networks:
+      - name: cloudbox
+        aliases:
+          - sabnzbd
+    state: started
+
+- name: Settings Tweaks
+  include_tasks: "sabnzbd_settings.yml"
+  when: not (
+        (sabnzbd_ini.stat.exists)
+        or
+        ((continuous_integration|default(false,true))|bool)
+    )
