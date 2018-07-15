@@ -41,10 +41,15 @@
     path: "/opt/plex_autoscan/config/config.json"
   register: plex_autoscan_config
 
+- name: Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled and not plex_autoscan_config.stat.exists
+
 - name: "Generate 32 character SERVER_PASS"
   shell: "pwgen 32 1"
   register: plex_autoscan_pass
-  when: plex_autoscan_config.stat.exists == False
+  when: not plex_autoscan_config.stat.exists
 
 - name: Import default config
   template:
@@ -54,7 +59,7 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: plex_autoscan_config.stat.exists == False
+  when: not plex_autoscan_config.stat.exists
 
 - name: Set scan.py as executable
   file:
@@ -68,7 +73,7 @@
     src: plex_autoscan.service.js2
     dest: /etc/systemd/system/plex_autoscan.service
     force: yes
-  when: plex_autoscan_service.stat.exists == False
+  when: not plex_autoscan_service.stat.exists
 
 - name: Start plex_autoscan service
   systemd: state=started name=plex_autoscan daemon_reload=yes enabled=yes
