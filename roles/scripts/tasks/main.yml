@@ -29,7 +29,7 @@
     - /opt/scripts
     - /opt/scripts/docker
     - /opt/scripts/frontail
-    - /opt/scripts/nzbs
+    - /opt/scripts/nzbget
     - /opt/scripts/nginx
     - /opt/scripts/plex
     - /opt/scripts/plex_autoscan
