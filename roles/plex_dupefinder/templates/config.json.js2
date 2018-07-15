@@ -36,7 +36,7 @@
   },
   "PLEX_SECTIONS": {
     "Movies": 1,
-    "TV": 2
+    "TV Shows": 2
   },
   "PLEX_SERVER": "https://plex.{{domain}}",
   "PLEX_TOKEN": "",
