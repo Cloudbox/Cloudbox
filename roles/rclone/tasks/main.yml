@@ -13,7 +13,6 @@
     name: unzip
     state: present
 
-
 - name: Create rclone directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
@@ -25,7 +24,7 @@
   args:
     warn: no
 
-- name: Verify that Rclone version was specified
+- name: Check if rclone version was specified
   set_fact:
     rclone_version_specified: "{{ true if not (
       (rclone.version is undefined)
@@ -35,17 +34,25 @@
       (rclone.version | trim == '')
       ) else false}}"
 
-- name: Build version tag
-  set_fact: rclone_version_tag="current"
-  when: not rclone_version_specified
+- name: Set rclone_download_url for current version
+  set_fact:
+    rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
+  when: rclone.version == 'latest' or rclone.version == 'current' or not rclone_version_specified
 
-- name: Build version tag
-  set_fact: rclone_version_tag="{{ ((rclone.version == 'latest') | ternary('current', 'v{{ "%.2f"|format(rclone.version) }}')) }}"
-  when: rclone_version_specified
+- name: Set rclone_download_url for beta version
+  set_fact:
+    rclone_download_url: "https://beta.rclone.org/rclone-beta-latest-linux-amd64.zip"
+  when: rclone.version == 'beta'
 
-- name: "Unarchive rclone version: {{rclone_version_tag}}"
+- name: Set rclone_download_url for specified version
+  set_fact:
+    rclone_download_url: 'https://downloads.rclone.org/v{{ "%.2f"|format(rclone.version) }}/rclone-v{{ "%.2f"|format(rclone.version) }}-linux-amd64.zip'
+  when: rclone_version_specified and not (rclone.version == 'beta' or rclone.version == 'latest' or rclone.version == 'current')
+  ignore_errors: yes
+
+- name: "Download and unarchive rclone"
   unarchive:
-    src: "https://downloads.rclone.org/{{ '' if (rclone.version == 'latest' or not rclone_version_specified) else rclone_version_tag + '/' }}rclone-{{ rclone_version_tag }}-linux-amd64.zip"
+    src: "{{ rclone_download_url | default('https://downloads.rclone.org/rclone-current-linux-amd64.zip',true) }}"
     dest: /tmp
     copy: no
     validate_certs: no
@@ -84,7 +91,7 @@
   changed_when: false
 
 - name: Get rclone version
-  shell: rclone --version | head -n 1 | awk '{ print substr($2, 2, 4) }'
+  shell: rclone --version | head -n 1 | awk '{ print substr($2, 2) }'
   register: rclone_version
   ignore_errors: yes
 
