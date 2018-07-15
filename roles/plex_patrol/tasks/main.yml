@@ -23,6 +23,11 @@
     path: "/opt/plex_patrol/settings.ini"
   register: plex_patrol_config
 
+- name: Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled and not plex_patrol_config.stat.exists
+
 - name: Import default config
   template:
     src: settings.ini.js2
@@ -31,7 +36,7 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: plex_patrol_config.stat.exists == False
+  when: not plex_patrol_config.stat.exists
 
 - name: Create and start container
   docker_container:
