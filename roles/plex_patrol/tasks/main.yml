@@ -27,6 +27,9 @@
   template:
     src: settings.ini.js2
     dest: /opt/plex_patrol/settings.ini
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
     force: yes
   when: plex_patrol_config.stat.exists == False
 
