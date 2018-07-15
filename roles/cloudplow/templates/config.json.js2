@@ -15,7 +15,7 @@
     "plex": {
         "enabled": false,
         "url": "https://plex.{{domain}}",
-        "token": "",
+        "token": "{{ plex_auth_token | default('') }}",
         "poll_interval": 60,
         "max_streams_before_throttle": 1,
         "rclone": {
