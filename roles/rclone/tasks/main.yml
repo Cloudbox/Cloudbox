@@ -8,20 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Verify that Rclone version was specified
-  fail: msg="You must specify the Rclone version in settings.yml"
-  when: (
-      (rclone.version is undefined)
-      or
-      (rclone.version is none)
-      or
-      (rclone.version | trim == '')
-      )
-
 - name: Ensure unzip is installed
   apt:
     name: unzip
     state: present
+
 
 - name: Create rclone directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -34,12 +25,27 @@
   args:
     warn: no
 
+- name: Verify that Rclone version was specified
+  set_fact:
+    rclone_version_specified: "{{ true if not (
+      (rclone.version is undefined)
+      or
+      (rclone.version is none)
+      or
+      (rclone.version | trim == '')
+      ) else false}}"
+
+- name: Build version tag
+  set_fact: rclone_version_tag="current"
+  when: not rclone_version_specified
+
 - name: Build version tag
   set_fact: rclone_version_tag="{{ ((rclone.version == 'latest') | ternary('current', 'v{{ "%.2f"|format(rclone.version) }}')) }}"
+  when: rclone_version_specified
 
 - name: "Unarchive rclone version: {{rclone_version_tag}}"
   unarchive:
-    src: "https://downloads.rclone.org/{{ '' if rclone.version == 'latest' else rclone_version_tag + '/' }}rclone-{{ rclone_version_tag }}-linux-amd64.zip"
+    src: "https://downloads.rclone.org/{{ '' if (rclone.version == 'latest' or not rclone_version_specified) else rclone_version_tag + '/' }}rclone-{{ rclone_version_tag }}-linux-amd64.zip"
     dest: /tmp
     copy: no
     validate_certs: no
