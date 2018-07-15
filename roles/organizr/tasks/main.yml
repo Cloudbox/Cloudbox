@@ -9,7 +9,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
@@ -19,7 +19,7 @@
     - "www"
   when: organizr.direct_domain|default(false,true)
 
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
