@@ -58,6 +58,11 @@
       recurse: yes
     when: backup_location.stat.exists == False
 
+  - name: "Look for 'backup_excludes.txt' file in cloudbox folder."
+    stat:
+      path: "{{playbook_dir}}/backup_excludes.txt"
+    register: backup_excludes_file
+
   - name: "Copy files to '{{backup.tar_dest}}'."
     copy:
       src: "{{item}}"
@@ -71,9 +76,18 @@
      - "{{playbook_dir}}/accounts.yml"
      - "{{playbook_dir}}/settings.yml"
      - "{{playbook_dir}}/adv_settings.yml"
-     - "{{playbook_dir}}/backup_excludes.txt"
      - "/home/{{user}}/.config/rclone/rclone.conf"
     ignore_errors: yes
+
+  - name: "Copy files to '{{backup.tar_dest}}'."
+    copy:
+      src: "{{playbook_dir}}/backup_excludes.txt"
+      dest: "{{backup.tar_dest}}"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+    when: backup_excludes_file.stat.exists
 
   - name: "Check '{{backup.tar_dest}}/cloudbox.tar' exists."
     stat:
@@ -139,11 +153,6 @@
       name: plexdrive
       state: stopped
     when: plexdrive_status is success
-
-  - name: "Look for 'backup_excludes.txt' file in cloudbox folder."
-    stat:
-      path: "{{playbook_dir}}/backup_excludes.txt"
-    register: backup_excludes_file
 
   - name: "Archiving '/opt' to '{{backup.tar_dest}}/cloudbox.tar'."
     shell: |
@@ -222,9 +231,18 @@
      - "accounts.yml"
      - "settings.yml"
      - "adv_settings.yml"
-     - "backup_excludes.txt"
      - "rclone.conf"
      - "cloudbox.tar"
+
+  - name: "Reset permissions and mod dates to files in '{{backup.tar_dest}}'."
+    file:
+      path: "{{backup.tar_dest}}/backup_excludes.txt"
+      state: touch
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0755
+      force: yes
+    when: backup_excludes_file.stat.exists
 
   # Due to a touch command in a previous backup, all files on backup.rclone_dest have same mod dates, therefore, only one file's mod date is needed.
   - name: "Get datestamp for previous '{{backup.rclone_dest}}/cloudbox.tar'."
