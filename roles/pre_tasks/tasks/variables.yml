@@ -11,13 +11,13 @@
 - name: Set cloudflare_enabled variable
   set_fact:
     cloudflare_enabled: "{{ true if not(
-        (cloudflare_api_token is undefined)
-        or
-        (cloudflare_api_token is none)
-        or
-        (cloudflare_api_token | trim == '')
-      )
-      else false }}"
+          (cloudflare_api_token is undefined)
+          or
+          (cloudflare_api_token is none)
+          or
+          (cloudflare_api_token | trim == '')
+        )
+        else false }}"
 
 - name: Set localhost_ip variable
   set_fact:
@@ -26,19 +26,25 @@
 - name: Set plex_account_enabled variable
   set_fact:
     plex_account_enabled: "{{ true if not(
-        (plex.user is undefined)
-        or
-        (plex.user is none)
-        or
-        (plex.user | trim == '')
-        or
-        (plex.pass is undefined)
-        or
-        (plex.pass is none)
-        or
-        (plex.pass | trim == '')
-      )
-      else false }}"
+          (plex is undefined)
+          or
+          (plex is none)
+          or
+          (plex | trim == '')
+          or
+          (plex.user is undefined)
+          or
+          (plex.user is none)
+          or
+          (plex.user | trim == '')
+          or
+          (plex.pass is undefined)
+          or
+          (plex.pass is none)
+          or
+          (plex.pass | trim == '')
+        )
+        else false }}"
 
 - name: Set pushover_api_token variable when using older settings
   set_fact:
@@ -90,6 +96,12 @@
         (pushover_user_key | trim == '')
         )
       or not(
+        (pushover is undefined)
+        or
+        (pushover is none)
+        or
+        (pushover | trim == '')
+        or
         (pushover.app_token is undefined)
         or
         (pushover.app_token is none)
@@ -107,51 +119,51 @@
 - name: Set new_downloads_settings variable
   set_fact:
     new_downloads_settings: "{{ true if not (
-          (downloads is undefined)
-          or
-          (downloads is none)
-          or
-          (downloads | trim == '')
-          or
-          (downloads.nzbs is undefined)
-          or
-          (downloads.nzbs is none)
-          or
-          (downloads.nzbs | trim == '')
-          or
-          (downloads.torrents is undefined)
-          or
-          (downloads.torrents is none)
-          or
-          (downloads.torrents | trim == '')
-        )
+        (downloads is undefined)
+        or
+        (downloads is none)
+        or
+        (downloads | trim == '')
+        or
+        (downloads.nzbs is undefined)
+        or
+        (downloads.nzbs is none)
+        or
+        (downloads.nzbs | trim == '')
+        or
+        (downloads.torrents is undefined)
+        or
+        (downloads.torrents is none)
+        or
+        (downloads.torrents | trim == '')
+      )
       else false }}"
 
 - name: Set old_downloads_settings variable
   set_fact:
     old_downloads_settings: "{{ true if not (
-          (nzbget is undefined)
-          or
-          (nzbget is none)
-          or
-          (nzbget | trim == '')
-          or
-          (nzbget.downloads is undefined)
-          or
-          (nzbget.downloads is none)
-          or
-          (nzbget.downloads | trim == '')
-          or
-          (rutorrent is undefined)
-          or
-          (rutorrent is none)
-          or
-          (rutorrent | trim == '')
-          or
-          (rutorrent.downloads is undefined)
-          or
-          (rutorrent.downloads is none)
-          or
-          (rutorrent.downloads | trim == '')
-        )
+        (nzbget is undefined)
+        or
+        (nzbget is none)
+        or
+        (nzbget | trim == '')
+        or
+        (nzbget.downloads is undefined)
+        or
+        (nzbget.downloads is none)
+        or
+        (nzbget.downloads | trim == '')
+        or
+        (rutorrent is undefined)
+        or
+        (rutorrent is none)
+        or
+        (rutorrent | trim == '')
+        or
+        (rutorrent.downloads is undefined)
+        or
+        (rutorrent.downloads is none)
+        or
+        (rutorrent.downloads | trim == '')
+      )
       else false }}"
