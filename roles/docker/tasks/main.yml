@@ -1,13 +1,29 @@
 #########################################################################
 # Title:         Cloudbox: Docker Role                                  #
 # Author(s):     L3uddz, Desimaniac, EnorMOZ                            #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Check to see if docker is installed
+  stat:
+    path: "/usr/bin/docker"
+  register: docker_binary
+
+- name: Gather list of running Docker containers
+  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+  register: docker_running_containers
+  ignore_errors: yes
+  when: docker_binary.stat.exists
+
+- name: Stop all running Docker containers
+  shell: "docker stop {{docker_running_containers.stdout}}"
+  ignore_errors: yes
+  when: (docker_binary.stat.exists) and not (docker_running_containers.stdout | trim == '')
+
 - name: Install required packages
   apt: "name={{item}} state=present"
   with_items:
@@ -20,36 +36,27 @@
     id: 0EBFCD88
     url: https://download.docker.com/linux/ubuntu/gpg
 
-- name: Add official repository for 16.04
-  apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-  when: ansible_distribution_version == "16.04"
-
-- name: Add official repository for 18.04
+- name: Add official repository
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} edge"
-  when: ansible_distribution_version == "18.04"
+  register: apt_docker_repositories
+
+- name: Update APT packages list
+  apt:
+    update_cache: yes
+  when: apt_docker_repositories.changed
 
 - name: Release docker-ce from hold
   dpkg_selections:
     name: docker-ce
     selection: install
 
-- name: Install docker-ce for 16.04
-  apt:
-    name: docker-ce=18.03.1~ce-0~ubuntu
-    state: present
-    update_cache: yes
-    force: yes
-  when: ansible_distribution_version == "16.04"
-
-- name: Install docker-ce for 18.04
+- name: Install docker-ce
   apt:
     name: docker-ce=18.05.0~ce~3-0~ubuntu
     state: present
     update_cache: yes
     force: yes
-  when: ansible_distribution_version == "18.04"
 
 - name: Put docker-ce into hold
   dpkg_selections:
@@ -73,7 +80,7 @@
   systemd: state=started name=docker enabled=yes
   when: docker_daemon.stat.exists == False
 
-- name: "Wait for 30 seconds before commencing"
+- name: Wait for 30 seconds before commencing
   wait_for:
     timeout: 30
 
@@ -101,3 +108,8 @@
       subnet: '172.18.0.0/16'
       gateway: '172.18.0.254'
       iprange: '172.18.0.0/24'
+
+- name: Restart all previously running Docker containers
+  shell: 'docker start {{docker_running_containers.stdout}}'
+  ignore_errors: yes
+  when: (docker_binary.stat.exists) and not (docker_running_containers.stdout | trim == '')

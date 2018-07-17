@@ -1,0 +1,58 @@
+#########################################################################
+# Title:         Cloudbox: Z Role                                       #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create z directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/z
+
+- name: Clone z repo
+  git:
+    repo: "https://github.com/rupa/z"
+    dest: "/opt/z"
+    force: yes
+  become: yes
+  become_user: "{{user}}"
+  register: cloning
+  ignore_errors: yes
+
+- name: Add entry to dot files
+  lineinfile:
+    dest: "{{item}}"
+    regexp: '^# Include Z'
+    line: '# Include Z'
+    state: present
+  with_items:
+    - "/home/{{user}}/.bashrc"
+    - "/home/{{user}}/.zshrc"
+  ignore_errors: yes
+
+- name: Add entry to dot files
+  lineinfile:
+    dest: "{{item}}"
+    insertafter: '^# Include Z'
+    line: '. /opt/z/z.sh'
+    state: present
+  with_items:
+    - "/home/{{user}}/.bashrc"
+    - "/home/{{user}}/.zshrc"
+  ignore_errors: yes
+
+- name: Get default shell of user
+  shell: "getent passwd {{user}} | cut -d: -f7"
+  register: shell
+  ignore_errors: yes
+
+- name: Source dot files
+  shell: "source {{ (shell.stdout == '/bin/bash') | ternary('/home/' + user + '/.bashrc','/home/' + user + '/.zshrc') }}"
+  args:
+    executable: "{{shell.stdout}}"
+  become: no
+  ignore_errors: yes

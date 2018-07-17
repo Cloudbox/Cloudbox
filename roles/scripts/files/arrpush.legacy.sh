@@ -12,14 +12,14 @@
 ########################################################################################
 # Title:      ARR-Push Legacy                                                          #
 # Author(s):  L3uddz                                                                   #
-# URL:        https://github.com/Cloudbox/Cloudbox                                     #
+# URL:        https://github.com/cloudbox/cloudbox                                     #
 # --                                                                                   #
 #                Part of the Cloudbox project: https://cloudbox.rocks                  #
 ########################################################################################
 #                          GNU General Public License v3.0                             #
 ########################################################################################
 # Usage:                                                                               #
-# autodl script: /scripts/arrpush.legacy.sh                                            #
+# autodl script: /scripts/torrents/arrpush.legacy.sh                                   #
 # autodl args: sonarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"   #
 # or                                                                                   #
 # autodl args: radarr "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"   #

@@ -1,0 +1,27 @@
+#########################################################################
+# Title:         Cloudbox: User Role                                    #
+# Author(s):     Desimaniac, L3uddz                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Get {{user}} uid"
+  shell: "id -u {{user}}"
+  register: uid
+
+- name: "Get {{user}} gid"
+  shell: "id -g {{user}}"
+  register: gid
+
+- name: "Get video gid"
+  shell: "getent group video  | cut -d: -f3"
+  register: vgid
+
+- name: "Set Variables"
+  set_fact:
+    uid: "{{uid.stdout}}"
+    gid: "{{gid.stdout}}"
+    vgid: "{{vgid.stdout}}"

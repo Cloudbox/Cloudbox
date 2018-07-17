@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: ZNC Role                                     #
 # Author(s):     L3uddz, Horjulf                                        #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/docker-znc                                     #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: znc
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -42,8 +34,8 @@
       - "127.0.0.1:6501:6501"
       - "6502:6502"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "znc.{{domain}}"
       VIRTUAL_PORT: 6501
       LETSENCRYPT_HOST: "znc.{{domain}}"

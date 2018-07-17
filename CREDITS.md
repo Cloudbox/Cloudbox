@@ -1,66 +1,89 @@
 ## Credits
 
-### Author
+### Developers
 
-* [L3uddz](https://github.com/l3uddz)
+* [l3uddz](https://github.com/l3uddz) - Creator of Cloudbox, Plex Autoscan, Cloudplow, Traktarr, Plex Dupefinder, Plex Patrol, Arrpush, and others.
+* [Desimaniac](https://github.com/Desimaniac) - Cloudbox; Cloudbox Wiki; Documentation for Plex Autoscan, Cloudplow, and Traktarr.
 
 ### Contributors
 
-* [Desimaniac](https://github.com/Desimaniac)
-* [EnorMOZ](https://github.com/EnorMOZ)
-* [Horjulf](https://github.com/horjulf)
-* [RXWatcher](https://github.com/RXWatcher1)
-* [Vuur](https://github.com/vuur)
+* [EnorMOZ](https://github.com/EnorMOZ) - Cloudbox.
+* [Horjulf](https://github.com/horjulf) - ruTorrent + autodl Docker Image (creator); Plex Autoscan; Traktarr, Plex Patrol, Arrpush, and others.
+* [RXWatcher](https://github.com/RXWatcher1) - Cloudbox.
+* [Vuur](https://github.com/vuur) -  Web Design; Admin of GitHub, Discord, and Reddit.
+* [Captain-NaCl](https://github.com/Captain-NaCl) - Cloudbox; Cloudbox Wiki.
+* [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki.
+* [Hotio](https://gitlab.com/hotio) - Suitarr Docker Image (creator).
+* [Mitchell Klijs](https://github.com/mitchellklijs) - Traktarr; Cloudplow.
+* [MZA](https://github.com/mza921) - Plex Autoscan.
+
 
 ### Dependencies
 
-* [Ubuntu Server](https://www.ubuntu.com/download/server)
-* [Ansible](https://www.ansible.com/)
-* [Python](https://www.python.org/)
-* [Docker](https://www.docker.com/community-edition)
-* [Plex][10952c53] ([docker][d369f92b])
-* [Emby](https://emby.media/)([docker](https://hub.docker.com/r/emby/embyserver/))
-* [Tautulli (PlexPy)][363c0adc] ([docker][cda70c13])
-* [Plex AutoScan][96e27fd1]
-* [Sonarr][8ae81bb6] ([docker][a9b9645e])
-* [Radarr][8211f62c] ([docker][a9b9645e])
-* [NZBGet][2e2bad08] ([docker][a9b9645e])
-* [rTorrent][512b104c]/[ruTorrent][8d6ce857] ([docker][344a7c4b])
-* [NZB Hydra][a0cc8c46] ([docker][a9b9645e])
-* [Jackett][1caa43a0] ([docker][a9b9645e])
-* [Plexdrive][0367302f]
-* [Plex Requests - Meteor][458fc748] ([docker][0044f8e1])
-* [Nginx Proxy][08902ab1]
-* [Let's Encrypt Companion for Nginx Proxy][bb8ae44f]
-* [Rclone][b4cef019]
-* [Organizr][d328b256] ([docker][1e468891])
-* [Portainer][726e0b6f]
-* [UnionFS][6e8f308f]
-* [UnionFS Cleaner][f20acc3e]
+#### Operating System
 
-    [10952c53]: https://www.plex.tv "Plex"
-    [d369f92b]: https://github.com/plexinc/pms-docker "Official Docker container for Plex Media Server"
-    [363c0adc]: http://tautulli.com/ "PlexPy"
-    [cda70c13]: https://github.com/linuxserver/docker-plexpy "linuxserver/plexpy"
-    [96e27fd1]: https://github.com/l3uddz/plex_autoscan "Plex_AutoScan"
-    [8ae81bb6]: https://sonarr.tv "Sonarr"
-    [8211f62c]: https://radarr.video "Radarr"
-    [2e2bad08]: https://nzbget.net "NZBGet"
-    [a0cc8c46]: https://github.com/theotherp/nzbhydra "NZBHydra"
-    [512b104c]: https://github.com/rakshasa/rtorrent/wiki "rTorrent"
-    [8d6ce857]: https://github.com/Novik/ruTorrent "ruTorrent"
-    [344a7c4b]: https://github.com/horjulf/docker-rutorrent-autodl "forked version of linuxserver/rutorrent"
-    [1caa43a0]: https://github.com/Jackett/Jackett "Jackett"
-    [b4cef019]: https://rclone.org "Rclone"
-    [0367302f]: https://github.com/dweidenfeld/plexdrive "Plexdrive"
-    [6e8f308f]: http://manpages.ubuntu.com/manpages/zesty/man8/unionfs.8.html "UnionFS-Fuse"
-    [f20acc3e]: https://github.com/l3uddz/unionfs_cleaner "UnionFS_Cleaner"
-    [a98faaaf]: https://github.com/v2tec/watchtower "Watchtower"
-    [458fc748]: https://github.com/lokenx/plexrequests-meteor "PlexRequests"
-    [0044f8e1]: https://github.com/linuxserver/docker-plexrequests "linuxserver/plexrequests"
-    [d328b256]: https://github.com/causefx/Organizr "Organizr"
-    [1e468891]: https://github.com/linuxserver/docker-organizr "lsiocommunity/organizr"
-    [726e0b6f]: https://portainer.io "Portainer"
-    [a9b9645e]: https://github.com/hotio/docker-suitarr "hotio/suitarr"
-    [08902ab1]: https://github.com/jwilder/nginx-proxy "Nginx Proxy"
-    [bb8ae44f]: https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion "Let's Encrypt companion for Nginx Proxy"
+* [Ubuntu Server 16.04 / 18.04](https://www.ubuntu.com/download/server)
+
+#### Packages
+
+* [Python](https://www.python.org/)
+* [Node.js](https://nodejs.org/en/)
+* [Ansible](https://www.ansible.com/)
+* [Docker](https://www.docker.com/community-edition)
+* [UnionFS](http://manpages.ubuntu.com/manpages/trusty/man8/unionfs-fuse.8.html)
+* [Rclone](https://rclone.org)
+* [Plexdrive](https://github.com/dweidenfeld/plexdrive)
+* [Plex Autoscan](https://github.com/l3uddz/plex_autoscan)
+* [Cloudplow](https://github.com/l3uddz/cloudplow)
+* [Cloudbox MOTD](https://github.com/Cloudbox/cloudbox_motd)
+* [Traktarr](https://github.com/l3uddz/traktarr)
+* [Plex Dupefinder](https://github.com/l3uddz/plex_dupefinder)
+* [WebTools (Plex)](https://github.com/ukdtom/WebTools.bundle)
+* [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh)
+* [Z (Rupa)](https://github.com/rupa/z)
+
+#### Docker Containers
+
+* [Nginx](https://github.com/jwilder/nginx-proxy) ([Docker](https://hub.docker.com/r/jwilder/nginx-proxy/))
+* [Plex](https://www.plex.tv) ([Docker](https://github.com/plexinc/pms-docker))
+* [Emby](https://emby.media/) ([Docker](https://hub.docker.com/r/emby/embyserver/))
+* [Plex Patrol](https://github.com/l3uddz/plex_patrol) ([Docker](https://hub.docker.com/r/emby/embyserver/))
+* [Tautulli (PlexPy)](http://tautulli.com/) ([Docker](https://github.com/Tautulli/Tautulli-Docker))
+* [Sonarr](https://sonarr.tv) ([Docker](https://gitlab.com/hotio/suitarr))
+* [Radarr](https://radarr.video) ([Docker](https://gitlab.com/hotio/suitarr))
+* [Lidarr](https://lidarr.audio) ([Docker](https://gitlab.com/hotio/suitarr))
+* [rTorrent](https://github.com/rakshasa/rtorrent/wiki) / [ruTorrent](https://github.com/Novik/ruTorrent)  ([Docker](https://github.com/horjulf/docker-rutorrent-autodl))
+* [NZBGet](https://nzbget.net) ([Docker](https://gitlab.com/hotio/suitarr))
+* [NZBHydra](https://github.com/theotherp/nzbhydra) ([Docker](https://github.com/linuxserver/docker-hydra))
+* [NZBHydra 2](https://github.com/theotherp/nzbhydra2) ([Docker](https://gitlab.com/hotio/suitarr))
+* [Jackett](https://github.com/Jackett/Jackett) ([Docker](https://gitlab.com/hotio/suitarr))
+* [Plex Requests](https://github.com/lokenx/plexrequests-meteor) ([Docker](https://github.com/linuxserver/docker-plexrequests))
+* [Ombi](https://ombi.io) ([Docker](https://github.com/linuxserver/docker-ombi))
+* [Organizr](https://github.com/causefx/Organizr) ([Docker](https://github.com/linuxserver/docker-organizr))
+* [Telly](https://github.com/tombowditch/telly) ([Docker](https://hub.docker.com/r/tombowditch/telly/))
+* [NowShowing](https://github.com/ninthwalker/NowShowing) ([Docker](https://hub.docker.com/r/ninthwalker/nowshowing/))
+* [Nextcloud](https://nextcloud.com) ([Docker](https://hub.docker.com/r/linuxserver/nextcloud/))
+* [Heimdall](https://github.com/linuxserver/Heimdall) ([Docker](https://hub.docker.com/r/linuxserver/heimdall/))
+* [Netdata](https://my-netdata.io) ([Docker](https://github.com/titpetric/netdata))
+* [Portainer](https://portainer.io) ([Docker](https://hub.docker.com/r/portainer/portainer/))
+* [Resilio Sync](https://www.resilio.com) ([Docker](https://hub.docker.com/r/resilio/sync/))
+* [The Lounge](https://thelounge.chat) ([Docker](https://hub.docker.com/r/linuxserver/thelounge/))
+* [Quassel](https://quassel-irc.org) ([Docker](https://github.com/linuxserver/docker-quassel-core))
+
+#### Web Services
+
+* [GitHub](https://github.com) - Project Hosting.
+* [AppVeyor](https://www.appveyor.com/) - Continous Integration Testing.
+* [Cloudflare](https://www.cloudflare.com) - DNS.
+* [The Movie Database (TMDb)](https://www.themoviedb.org) - API.
+* [TheTVDB](https://www.thetvdb.com) - API.
+* [Trakt](https://trakt.tv) - API.
+
+#### Software Development
+* [PyCharm by JetBrains](https://www.jetbrains.com/pycharm/) - Python IDE.
+* [Atom by GitHub](https://atom.io) - Source Code Editor.
+* [Visual Studio Code by Microsoft](https://code.visualstudio.com/) - Source Code Editor.
+
+#### Miscellaneous
+
+* Various other packages and scripts that were too numerous to list.

@@ -1,0 +1,100 @@
+#########################################################################
+# Title:         Cloudbox: NZBHydra2 Settings Sub Tasks                 #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Wait for nzbhydra.yml to be created
+  wait_for:
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    state: present
+    delay: 30
+
+- name: "Wait for 10 seconds before stopping nzbhydra2 container"
+  wait_for:
+    timeout: 10
+
+- name: Stop container to customize nzbhydra.yml
+  docker_container:
+    name: nzbhydra2
+    state: stopped
+
+- name: Update auth settings
+  lineinfile:
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backrefs: yes
+  with_items:
+    - {regexp: '(authType:)\s".*?"', line: '  \1 "FORM"'}
+    - {regexp: '(restrictAdmin:)\s.*', line: '  \1 true'}
+    - {regexp: '(restrictDetailsDl:)\s.*', line: '  \1 true'}
+    - {regexp: '(restrictIndexerSelection:)\s.*', line: '  \1 true'}
+    - {regexp: '(restrictSearch:)\s.*', line: '  \1 true'}
+    - {regexp: '(restrictStats:)\s.*', line: '  \1 true'}
+    - {regexp: '(users:)\s?.*', line: '  \1'}
+
+- name: Add login settings
+  lineinfile:
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    insertafter: 'users:'
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - {line: '    password: "{{passwd}}"'}
+    - {line: '    username: "{{user}}"'}
+    - {line: '    showIndexerSelection: true'}
+    - {line: '    maySeeStats: true'}
+    - {line: '    maySeeDetailsDl: true'}
+    - {line: '  - maySeeAdmin: true'}
+
+- name: Increase JVM memory
+  lineinfile:
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backrefs: yes
+  with_items:
+    - {regexp: '(xmx:)\s?.*', line: '  \1 512'}
+  when: ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int >= 8)
+
+- name: Add downloaders section
+  lineinfile:
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backrefs: yes
+  with_items:
+    - {regexp: '(downloaders:)\s?.*', line: '  \1'}
+
+- name: Add NZBGet downloader
+  lineinfile:
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    insertafter: 'downloaders:'
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - {line: '    password: "{{passwd}}"'}
+    - {line: '    username: "{{user}}"'}
+    - {line: '    url: "http://nzbget:6789"'}
+    - {line: '    downloaderType: "NZBGET"'}
+    - {line: '    nzbAddingType: "UPLOAD"'}
+    - {line: '    name: "NZBGet"'}
+    - {line: '    iconCssClass: ""'}
+    - {line: '    enabled: true'}
+    - {line: '    downloadType: "NZB"'}
+    - {line: '    defaultCategory: null'}
+    - {line: '  - apiKey: null'}
+
+- name: Start container to apply changes
+  docker_container:
+    name: nzbhydra2
+    state: started

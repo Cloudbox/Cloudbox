@@ -1,14 +1,14 @@
 #########################################################################
 # Title:         Cloudbox: System Role                                  #
 # Author(s):     L3uddz                                                 #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Update packages
+- name: Update APT packages list
   apt:
     update_cache: yes
 
@@ -18,7 +18,7 @@
     - apt-utils
     - byobu
 
-- name: Upgrade packages
+- name: Upgrade APT packages
   apt:
     upgrade: dist
   when: not ((continuous_integration|default(false,true))|bool)
@@ -212,8 +212,13 @@
     src: "{{ item.device }}"
   with_items:
     - "{{ ansible_mounts }}"
-  when: "item.mount == '/'"
+  when: (item.mount == '/') and (item.fstype == 'ext4')
 
-- name: Include CPU Power task when not virtualized
+- name: Check if intel_pstate directory exists.
+  stat:
+    path: /sys/devices/system/cpu/intel_pstate
+  register: p
+
+- name: Include CPU Power task when dir exist
   include_tasks: "cpupower.yml"
-  when: ansible_virtualization_role is not defined or ansible_virtualization_role == "host"
+  when: p.stat.isdir is defined and p.stat.isdir

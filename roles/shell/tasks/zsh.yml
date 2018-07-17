@@ -1,7 +1,7 @@
 #########################################################################
-# Title:         Cloudbox: ZSH Role                                     #
+# Title:         Cloudbox: Shell Role - Zsh Task                        #
 # Author(s):     Desimaniac, L3uddz                                     #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -12,12 +12,14 @@
   apt: "name={{item}} state=present"
   with_items:
     - zsh
+
 - name: Clone oh-my-zsh repo
   git:
     repo: https://github.com/robbyrussell/oh-my-zsh.git
     dest: "/home/{{user}}/.oh-my-zsh"
     force: yes
-  become: no
+  become: yes
+  become_user: "{{user}}"
   register: cloning
   ignore_errors: yes
 
@@ -33,6 +35,13 @@
     group: "{{user}}"
     owner: "{{user}}"
   when: (cloning is success) and (not existing_zshrc.stat.exists)
+
+- name: Set default editor to nano in .zshrc
+  lineinfile:
+    dest: "/home/{{user}}/.zshrc"
+    regexp: "^export EDITOR="
+    line: "export EDITOR=nano"
+    state: present
 
 - name: "Check if /bin/zsh exists"
   stat:
@@ -50,7 +59,8 @@
   user:
     name: "{{user}}"
     shell: /bin/zsh
+  register: default_shell
 
-- name: Message
-  debug:
-    msg: "You will need to re-login for changes to take effect."
+- debug:
+    msg: "zsh is now set as your default shell. You will need to re-login for changes to take effect."
+  when: default_shell is changed

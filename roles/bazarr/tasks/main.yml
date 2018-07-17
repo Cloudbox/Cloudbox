@@ -1,0 +1,82 @@
+#########################################################################
+# Title:         Cloudbox: Bazarr Role                                  #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  hotio/suitarr                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: bazarr
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: bazarr
+    state: absent
+
+- name: Create bazarr directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/bazarr
+
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/bazarr/Bazarr
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/bazarr/app
+  register: subfolder2
+
+- name: Move 'bazarr' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/bazarr /tmp/app
+    mkdir /opt/bazarr
+    mv /tmp/app /opt/bazarr/
+    find /opt/bazarr/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/bazarr
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'Bazarr' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/bazarr/Bazarr /opt/bazarr/app
+    chown -R {{user}}:{{user}} /opt/bazarr
+  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+
+- name: Create and start container
+  docker_container:
+    name: bazarr
+    image: "hotio/suitarr:bazarr"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:6767:6767"
+    env:
+      VERSION: "unstable"
+      BACKUP: "no"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "bazarr.{{domain}}"
+      VIRTUAL_PORT: 6767
+      LETSENCRYPT_HOST: "bazarr.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/bazarr:/config"
+      - "/mnt/unionfs/Media/TV:/tv"
+      - "/mnt/unionfs/Media/Movies:/movies"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+    networks:
+      - name: cloudbox
+        aliases:
+          - bazarr
+    restart_policy: always
+    state: started

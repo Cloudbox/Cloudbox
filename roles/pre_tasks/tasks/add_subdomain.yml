@@ -1,0 +1,18 @@
+#########################################################################
+# Title:         Cloudbox: Pre-Tasks Role - Add Subdomain Task          #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Get IP Address
+  ipinfoio_facts:
+
+- name: "Cloudflare: Add '{{cloudbox_type}}' subdomain to '{{domain}}'"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: "{{cloudbox_type}}"

@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: Resilio Sync Role                            #
 # Author(s):     L3uddz, Desimaniac                                     #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  resilio/sync                                           #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: resilio
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -41,7 +33,7 @@
     published_ports:
       - "127.0.0.1:8888:8888"
       - "55555:55555"
-    user: "{{uid.stdout}}:{{gid.stdout}}"
+    user: "{{uid}}:{{gid}}"
     env:
       VIRTUAL_HOST: "resilio.{{domain}}"
       VIRTUAL_PORT: 8888

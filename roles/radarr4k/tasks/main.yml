@@ -1,7 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: Radarr4K Role                                #
-# Author(s):     L3uddz                                                 #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: radarr4k
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -33,31 +25,72 @@
   with_items:
     - /opt/radarr4k
 
+- name: Check subfolder1 exists
+  stat:
+    path: /opt/radarr4k/Radarr
+  register: subfolder1
+
+- name: Check subfolder2 exists
+  stat:
+    path: /opt/radarr4k/app
+  register: subfolder2
+
+- name: Move 'radarr4k' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/radarr4k /tmp/app
+    mkdir /opt/radarr4k
+    mv /tmp/app /opt/radarr4k/
+    find /opt/radarr4k/* -type d -empty -delete
+    chown -R {{user}}:{{user}} /opt/radarr4k
+  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Move 'Radarr' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/radarr4k/Radarr /opt/radarr4k/app
+    chown -R {{user}}:{{user}} /opt/radarr4k
+  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/radarr4k:/config"
+      - "/mnt/unionfs/Media/Movies:/movies"
+      - "/mnt:/mnt"
+      - "/opt/scripts:/scripts"
+
+- name: Set new_downloads_paths variable
+  set_fact:
+    new_downloads_paths:
+      - "{{downloads.nzbs}}:/downloads/nzbs"
+      - "{{downloads.torrents}}:/downloads/torrents"
+  when: new_downloads_settings
+
+- name: Set old_downloads_paths variable
+  set_fact:
+    old_downloads_paths:
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+  when: old_downloads_settings
+
 - name: Create and start container
   docker_container:
     name: radarr4k
-    image: hotio/suitarr
+    image: hotio/suitarr:radarr
     pull: yes
     published_ports:
       - "127.0.0.1:7879:7878"
     env:
-      APP: "radarr"
       VERSION: "unstable"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "radarr4k.{{domain}}"
       VIRTUAL_PORT: 7878
       LETSENCRYPT_HOST: "radarr4k.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/radarr4k:/config"
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
+    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
     networks:
       - name: cloudbox
         aliases:

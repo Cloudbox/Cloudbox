@@ -1,12 +1,14 @@
+#########################################################################
+# Title:         Cloudbox: Telly Role                                   #
+# Author(s):     EnorMOZ, Desimaniac                                    #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  tombowditch/telly                                      #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
 - name: "Assert that all Telly related settings are filled in."
   assert:
     that:
@@ -36,8 +38,9 @@
       PLAYLIST: "{{telly.playlist}}"
       STREAMS: "{{telly.streams}}"
       LISTEN: "0.0.0.0:6077"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      BASE: "telly:6077"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     networks:
       - name: cloudbox
         aliases:

@@ -1,21 +1,23 @@
 #########################################################################
 # Title:         Cloudbox: CPU Power Task                               #
 # Author(s):     L3uddz, EnorMOZ                                        #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-
 - name: Install required packages
   apt: "name={{item}} state=latest"
   with_items:
     - cpufrequtils
     - linux-tools-common
     - linux-tools-generic
-    - linux-tools-{{ ansible_kernel }}
+
+- name: "Install linux-tools-{{ ansible_kernel }}"
+  shell: "apt-get install -qq $(apt-cache search -n linux-tools-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
+  ignore_errors: yes
 
 - name: Check /etc/default/cpufrequtils exists
   stat:

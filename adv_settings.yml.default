@@ -1,4 +1,5 @@
 ---
+shell: zsh
 organizr:
   direct_domain: no
 ombi:

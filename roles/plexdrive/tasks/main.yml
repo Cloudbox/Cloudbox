@@ -8,19 +8,26 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check if plexdrive.service exists
+- name: Check if plexdrive service exists
   stat:
     path: "/etc/systemd/system/plexdrive.service"
   register: plexdrive_service
 
-- name: Stop existing plexdrive service
-  systemd: state=stopped name=plexdrive
+- name: Check if plexdrive service is running
+  command: systemctl status plexdrive
+  ignore_errors: yes
+  register: plexdrive_status
   when: plexdrive_service.stat.exists
 
+- name: Stop existing plexdrive service
+  systemd: state=stopped name=plexdrive
+  when: (plexdrive_service.stat.exists) and (plexdrive_status is success)
+
 - name: Create plexdrive directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/plexdrive
+    - /mnt/plexdrive
 
 - name: Install plexdrive
   get_url:

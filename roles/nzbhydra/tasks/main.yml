@@ -1,27 +1,19 @@
 #########################################################################
 # Title:         Cloudbox: NZBHydra Role                                #
-# Author(s):     L3uddz                                                 #
-# URL:           https://github.com/Cloudbox/Cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Author(s):     L3uddz, Desimaniac, EnorMOZ                            #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  linuxserver/hydra                                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: nzbhydra
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -32,6 +24,30 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/nzbhydra
+    - /opt/nzbhydra/hydra/
+
+- name: Copy config files from Suitarr to LSIO
+  copy:
+    src: "/opt/nzbhydra/{{item.src}}"
+    dest: "/opt/nzbhydra/hydra/{{item.dest}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+  with_items:
+    - {src: "nzbhydra.cfg", dest: "settings.cfg"}
+    - {src: "nzbhydra.db", dest: "nzbhydra.db"}
+    - {src: "nzbhydra.db-shm", dest: "nzbhydra.db-shm"}
+    - {src: "nzbhydra.db-wal", dest: "nzbhydra.db-wal"}
+  register: transfer
+  ignore_errors: yes
+
+- name: Remove Suitarr config files after transfer
+  file:
+    path: "/opt/nzbhydra/{{item.item.src}}"
+    state: absent
+  with_items: "{{transfer.results}}"
+  when: transfer is changed
 
 - name: Create and start container
   docker_container:
@@ -41,8 +57,8 @@
     published_ports:
       - "127.0.0.1:5075:5075"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "nzbhydra.{{domain}}"
       VIRTUAL_PORT: 5075
       LETSENCRYPT_HOST: "nzbhydra.{{domain}}"
@@ -50,9 +66,9 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra:/config"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - nzbhydra
+    restart_policy: always
     state: started

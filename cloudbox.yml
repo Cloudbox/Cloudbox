@@ -1,22 +1,24 @@
 ---
 - hosts: localhost
   vars_files:
+    - ['accounts.yml', 'accounts.yml.default']
     - ['settings.yml', 'settings.yml.default']
     - ['adv_settings.yml', 'adv_settings.yml.default']
   roles:
     - { role: sanity_check }
     - { role: pre_tasks }
-    - { role: kernel, tags: ['kernel'], when: [ 'ansible_distribution_version == "16.04"' ] }
+    - { role: kernel, tags: ['kernel'] }
     - { role: settings, tags: ['always', 'settings'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
     - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: user, tags: ['always'] }
+    - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
-    - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'common'] }
+    - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'docker'] }
     - { role: plexdrive, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'rclone'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
     - { role: nginx-proxy, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nginx-proxy'] }
@@ -26,23 +28,25 @@
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
     - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
-    - { role: unionfs_cleaner, tags: ['cloudbox', 'feederbox', 'unionfs_cleaner']}
+    - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow']}
     - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'] }
     - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'] }
     - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'] }
-    - { role: nzbhydra, tags: ['cloudbox', 'feederbox', 'nzbhydra'] }
+    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
+    - { role: feeder_mount, tags: ['feeder-mount'] }
+    - { role: feeder_dismount, tags: ['feeder-dismount'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: ombi, tags: ['ombi'] }
     - { role: resilio, tags: ['resilio'] }
     - { role: nextcloud, tags: ['nextcloud'] }
     - { role: lidarr, tags: ['lidarr'] }
     - { role: emby, tags: ['emby'] }
-    - { role: nzbhydra2, tags: ['nzbhydra2'] }
-    - { role: zsh, tags: ['zsh'] }
+    - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
+    - { role: sonarr4k, tags: ['sonarr4k'] }
     - { role: radarr4k, tags: ['radarr4k'] }
     - { role: heimdall, tags: ['heimdall'] }
     - { role: thelounge, tags: ['thelounge'] }
@@ -51,6 +55,8 @@
     - { role: quassel, tags: ['quassel'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
     - { role: telly, tags: ['telly'] }
-    - { role: feeder_mount, tags: ['mount-feederbox'] }
+    - { role: nowshowing, tags: ['nowshowing'] }
+    - { role: bazarr, tags: ['bazarr'] }
+    - { role: plexlibrary, tags: ['plexlibrary'] }
+    - { role: sabnzbd, tags: ['sabnzbd'] }
     - { role: gazee, tags: ['gazee'] }
-

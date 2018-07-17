@@ -15,12 +15,7 @@
     }
   },
   "notifications": {
-    "verbose": true,
-    "pushover": {
-      "service": "pushover",
-      "app_token": "",
-      "user_token": ""
-    }
+    "verbose": false
   },
   "filters": {
     "shows": {
@@ -29,6 +24,7 @@
         "gb",
         "ca"
       ],
+      "allowed_languages": [],
       "blacklisted_min_runtime": 15,
       "blacklisted_min_year": 2010,
       "blacklisted_max_year": 2019,
@@ -59,9 +55,17 @@
         "espn",
         "fox sports",
         "yahoo!"
-      ]
+      ],
+      "blacklisted_tvdb_ids": [],
+      "disabled_for": []
     },
     "movies": {
+      "allowed_countries": [
+        "us",
+        "gb",
+        "ca"
+      ],
+      "allowed_languages": [],
       "blacklisted_genres": [
         "documentary",
         "music",
@@ -78,11 +82,13 @@
       "blacklisted_min_runtime": 60,
       "blacklisted_min_year": 2000,
       "blacklisted_max_year": 2019,
+      "blacklisted_tmdb_ids": [],
       "allowed_countries": [
         "us",
         "gb",
         "ca"
-      ]
+      ],
+      "disabled_for": []
     }
   },
   "core": {

@@ -10,7 +10,7 @@
     #########################################################################
     # Title:      ARR-Push                                                  #
     # Author(s):  L3uddz                                                    #
-    # URL:        https://github.com/Cloudbox/Cloudbox                      #
+    # URL:        https://github.com/cloudbox/cloudbox                      #
     # --                                                                    #
     #         Part of the Cloudbox project: https://cloudbox.rocks          #
     #########################################################################
@@ -25,7 +25,7 @@
 
     ruTorrent Autodl-irssi Filter Action:
     --
-    COMMAND: /scripts/arrpush.py
+    COMMAND: /scripts/torrents/arrpush.py
     ARGUMENTS: "SONARR URL" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"
     or
     ARGUMENTS: "RADARR URL" "API_KEY" "$(TorrentName)" "$(TorrentUrl)" "$(TorrentSize)" "$(Tracker)"

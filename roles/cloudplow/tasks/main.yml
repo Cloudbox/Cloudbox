@@ -1,0 +1,95 @@
+#########################################################################
+# Title:         Cloudbox: Cloudplow Role                               #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Check unionfs_service service exists
+  stat:
+    path: "/etc/systemd/system/unionfs_cleaner.service"
+  register: unionfs_cleaner_service
+
+- name: Check cloudplow service exists
+  stat:
+    path: "/etc/systemd/system/cloudplow.service"
+  register: cloudplow_service
+
+- name: Stop and disable existing unionfs_cleaner service
+  systemd: state=stopped enabled=no name=unionfs_cleaner
+  when: unionfs_cleaner_service.stat.exists
+
+- name: Remove unionfs_cleaner.service
+  file: "path=/etc/systemd/system/unionfs_cleaner.service state=absent force=yes"
+  when: unionfs_cleaner_service.stat.exists
+
+- name: Stop existing cloudplow service
+  systemd: state=stopped name=cloudplow
+  when: cloudplow_service.stat.exists
+
+- name: Create cloudplow directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/cloudplow
+
+- name: Clone cloudplow
+  git:
+    repo: https://github.com/l3uddz/cloudplow/
+    dest: /opt/cloudplow
+    version: master
+    force: yes
+  become: yes
+  become_user: "{{user}}"
+
+- name: Install pip requirements
+  pip:
+    requirements: /opt/cloudplow/requirements.txt
+    executable: pip3
+
+- name: Check config exists
+  stat:
+    path: "/opt/cloudplow/config.json"
+  register: cloudplow_config
+
+- name: Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled and not cloudplow_config.stat.exists
+
+- name: Import default config
+  template:
+    src: config.json.js2
+    dest: /opt/cloudplow/config.json
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: not cloudplow_config.stat.exists
+
+- name: Set cloudplow.py as executable
+  file:
+    path: /opt/cloudplow/cloudplow.py
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: a+x
+
+- name: Set directory permissions
+  file: "path=/opt/cloudplow state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: "Create /usr/local/bin symlink"
+  file:
+    src: "/opt/cloudplow/cloudplow.py"
+    dest: "/usr/local/bin/cloudplow"
+    state: link
+
+- name: Import cloudplow service
+  template:
+    src: cloudplow.service.js2
+    dest: /etc/systemd/system/cloudplow.service
+    force: yes
+
+- name: Start cloudplow service
+  systemd: state=started name=cloudplow daemon_reload=yes enabled=yes
