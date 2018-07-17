@@ -69,7 +69,7 @@
 
 - name: Display WebTools version
   debug:
-    msg: "WebTools version {{webtools_newly_installed_version.stdout}} installed."
+    msg: "WebTools {{webtools_newly_installed_version.stdout}} installed."
   ignore_errors: yes
   when: (not webtools_bundle.stat.exists) or (webtools_outdated|default(false,true))
 

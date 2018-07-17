@@ -23,7 +23,7 @@
 
 - name: "Display nodejs version"
   debug:
-    msg: "nodejs version {{nodejs_version.stdout}} installed."
+    msg: "NodeJS {{nodejs_version.stdout}} installed."
 
 - name: Update npm
   shell: "npm install -g npm"
@@ -42,7 +42,7 @@
 
 - name: "Display npm version"
   debug:
-    msg: "npm version {{npm_version.stdout}} installed."
+    msg: "npm {{npm_version.stdout}} installed."
 
 - name: Install frontail npm module
   npm: "name={{item}} global=yes"
@@ -60,4 +60,4 @@
 
 - name: "Display frontail version"
   debug:
-    msg: "frontail version {{frontail_version.stdout}} installed."
+    msg: "frontail {{frontail_version.stdout}} installed."

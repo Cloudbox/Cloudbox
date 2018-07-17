@@ -39,4 +39,4 @@
 
 - name: "Display iperf3 version"
   debug:
-    msg: "iperf3 version {{iperf3_version.stdout}} installed."
+    msg: "iperf3 {{iperf3_version.stdout}} installed."
