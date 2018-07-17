@@ -45,4 +45,4 @@
 
 - name: "Display nethogs version"
   debug:
-    msg: "nethogs version {{nethogs_version.stdout}} installed."
+    msg: "nethogs {{nethogs_version.stdout}} installed."

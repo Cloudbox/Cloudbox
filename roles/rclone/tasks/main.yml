@@ -104,7 +104,7 @@
 
 - name: "Display rclone version"
   debug:
-    msg: "rclone version {{rclone_version.stdout}} installed."
+    msg: "Rclone {{rclone_version.stdout}} installed."
 
 - name: Check if rclone.conf exists in cloudbox folder
   stat:
