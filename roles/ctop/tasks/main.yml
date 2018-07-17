@@ -31,4 +31,4 @@
 
 - name: "Display ctop version"
   debug:
-    msg: "ctop version {{ctop_version.stdout}} installed."
+    msg: "ctop {{ctop_version.stdout}} installed."
