@@ -39,6 +39,30 @@
     line: 'url_base = ""'
     state: present
 
+# Authentication
+- name: Set Username
+  lineinfile:
+    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    insertafter: '^warn_dupl_jobs\s?=.*'
+    regexp: '^username\s?=.*'
+    line: "username = {{user}}"
+    state: present
+
+- name: Set Password
+  lineinfile:
+    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    insertafter: '^rss_filenames\s?=.*'
+    regexp: '^password\s?=.*'
+    line: "password = {{passwd}}"
+    state: present
+
+- name: Set Form Auth
+  lineinfile:
+    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    regexp: '^html_login\s?=.*'
+    line: 'html_login = 1'
+    state: present
+
 # Paths
 - name: Change incomplete downloads directory
   lineinfile:
