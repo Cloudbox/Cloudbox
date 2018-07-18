@@ -120,6 +120,7 @@
     - ndg-httpsclient
     - dnspython
     - yq
+    - lxml
   ignore_errors: yes
 
 - name: Set default shell
