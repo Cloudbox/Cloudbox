@@ -118,7 +118,6 @@
     - certbot
     - ansible-toolbox
     - ndg-httpsclient
-    - docker-py
     - dnspython
     - yq
   ignore_errors: yes
