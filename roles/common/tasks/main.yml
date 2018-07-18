@@ -22,12 +22,12 @@
     - /home/{{user}}/.config
     - /home/{{user}}/.config/pip
 
-- name: Set /opt permissions
+- name: Set '/opt' permissions
   shell: "chmod -R ugo+X /opt"
   args:
     warn: no
 
-- name: Set /opt ownership
+- name: Set '/opt' ownership
   shell: "chown -R {{user}}:{{user}} /opt"
   args:
     warn: no
@@ -102,7 +102,7 @@
   ignore_errors: yes
   when: not unrar_binary.stat.exists
 
-- name: "Import pip.conf into /home/{{user}}/.config/pip/"
+- name: "Import pip.conf into /home/{{user}}/.config/pip/pip.conf"
   copy:
     src: "pip.conf"
     dest: "/home/{{user}}/.config/pip/pip.conf"
