@@ -78,7 +78,7 @@
     when: "(item == 'adv_settings.yml') and (settings_updater.rc == 1)"
 
   - name: "Check 'settings-updater.py' run status for new settings in 'adv_settings.yml'."
-    debug: msg="The script 'settings_updater.py' added new settings to 'adv_settings.yml'. Check '/home/{{user}}/logs/homsettings-updater.log' for details."
+    debug: msg="The script 'settings_updater.py' added new settings to 'adv_settings.yml'. Check '/home/{{user}}/logs/settings-updater.log' for details."
     when: "(item == 'adv_settings.yml') and (settings_updater.rc == 2)"
 
   - name: "Check 'settings-updater.py' run status for errors with updating '{{item}}'."
