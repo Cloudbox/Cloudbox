@@ -13,28 +13,31 @@
     path: "/usr/bin/docker"
   register: docker_binary
 
-- name: Check if docker is running
-  command: systemctl status docker
-  ignore_errors: yes
-  register: docker_status
+- name: Populate Service Facts
+  service_facts:
+  when: docker_binary.stat.exists
+
+- name: Get Docker service state
+  set_fact:
+    docker_service_running: "{{ (services['docker.service']['state'] == \"running\") | ternary(true,false) }}"
   when: docker_binary.stat.exists
 
 - name: Gather list of running Docker containers
   shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
   register: docker_running_containers
   ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_status is success)
+  when: (docker_binary.stat.exists) and (docker_service_running)
 
 - name: Stop all running Docker containers
   shell: "docker stop {{docker_running_containers.stdout}}"
   ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_status is success) and not (docker_running_containers.stdout | trim == '')
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
 
 - name: Stop docker service
   systemd:
     name: docker
     state: stopped
-  when: (docker_binary.stat.exists) and (docker_status is success)
+  when: (docker_binary.stat.exists) and (docker_service_running)
 
 - name: Install required packages
   apt: "name={{item}} state=present"
@@ -122,7 +125,7 @@
       gateway: '172.18.0.254'
       iprange: '172.18.0.0/24'
 
-- name: Restart all previously running Docker containers
+- name: Start all previously running Docker containers
   shell: 'docker start {{docker_running_containers.stdout}}'
   ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_status is success) and not (docker_running_containers.stdout | trim == '')
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
