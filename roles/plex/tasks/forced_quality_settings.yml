@@ -17,6 +17,11 @@
     - lxml
   ignore_errors: yes
 
+- name: Wait for 'Preferences.xml' to be created by Plex
+  wait_for:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    state: present
+
 # forceAutoAdjustQuality - Forces clients to use automatic quality for media unless the quality is set higher than the quality of the video.
 
 - name: "Set 'forceAutoAdjustQuality' to '{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('1','0') }}'."
