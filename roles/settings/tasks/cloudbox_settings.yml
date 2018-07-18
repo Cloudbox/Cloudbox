@@ -19,6 +19,7 @@
     shell: "head -1 {{item}} | grep -q \\$ANSIBLE_VAULT"
     register: encryption_check
     ignore_errors: yes
+    failed_when: encryption_check.rc > 1
     when: file0.stat.exists
 
   - name: "Check '{{item}}' for encryption."
