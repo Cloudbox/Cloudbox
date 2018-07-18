@@ -125,4 +125,4 @@
 - name: Restart all previously running Docker containers
   shell: 'docker start {{docker_running_containers.stdout}}'
   ignore_errors: yes
-  when: (docker_binary.stat.exists) and not (docker_running_containers.stdout | trim == '')
+  when: (docker_binary.stat.exists) and (docker_status is success) and not (docker_running_containers.stdout | trim == '')
