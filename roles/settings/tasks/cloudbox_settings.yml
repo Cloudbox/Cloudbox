@@ -22,7 +22,7 @@
     failed_when: encryption_check.rc > 1
     when: file0.stat.exists
 
-  - name: "Check '{{item}}' for encryption."
+  - name: "Set 'file_is_encrypted' variable."
     set_fact:
       file_is_encrypted: "{{ ((encryption_check.rc == 0) | default(false,true)) }}"
     when: file0.stat.exists
