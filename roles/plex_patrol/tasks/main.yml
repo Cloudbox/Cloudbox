@@ -51,5 +51,6 @@
       - name: cloudbox
         aliases:
           - plex_patrol
+    purge_networks: yes
     restart_policy: always
     state: started

@@ -58,6 +58,7 @@
       - name: cloudbox
         aliases:
           - emby
+    purge_networks: yes
     restart_policy: always
     state: started
 

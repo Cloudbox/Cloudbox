@@ -56,5 +56,6 @@
       - name: cloudbox
         aliases:
           - organizr
+    purge_networks: yes
     restart_policy: always
     state: started

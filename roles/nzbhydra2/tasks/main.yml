@@ -82,11 +82,12 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra2:/config"
       - "/opt/nzbhydra/hydra:/nzbhydra1"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - nzbhydra2
+    purge_networks: yes
+    restart_policy: always
     state: started
 
 - name: Settings Tweaks

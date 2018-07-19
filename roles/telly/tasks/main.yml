@@ -45,5 +45,6 @@
       - name: cloudbox
         aliases:
           - telly
+    purge_networks: yes
     restart_policy: always
     state: started

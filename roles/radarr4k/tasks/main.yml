@@ -102,5 +102,6 @@
       - name: cloudbox
         aliases:
           - radarr4k
+    purge_networks: yes
     restart_policy: always
     state: started
