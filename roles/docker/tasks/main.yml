@@ -102,6 +102,8 @@
 
 - name: "Stop all Docker containers"
   shell: "docker stop $(docker ps -aq)"
+  register: s
+  failed_when: s.rc > 1
   ignore_errors: yes
 
 - name: Check if docker override directory exists
