@@ -100,6 +100,10 @@
   wait_for:
     timeout: 30
 
+- name: "Stop all Docker containers"
+  shell: "docker stop $(docker ps -aq)"
+  ignore_errors: yes
+
 - name: Check if docker override directory exists
   stat:
     path: /etc/systemd/system/docker.service.d
@@ -117,15 +121,11 @@
     name: ctop
   tags: ctop
 
-- name: Create cloudbox network
-  docker_network:
-    name: cloudbox
-    ipam_options:
-      subnet: '172.18.0.0/16'
-      gateway: '172.18.0.254'
-      iprange: '172.18.0.0/24'
+- name: "Import Docker network tasks"
+  import_tasks: "docker_network.yml"
+  tags: docker_network
 
-- name: Start all previously running Docker containers
+- name: "Re-start all previously running Docker containers"
   shell: 'docker start {{docker_running_containers.stdout}}'
   ignore_errors: yes
   when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
