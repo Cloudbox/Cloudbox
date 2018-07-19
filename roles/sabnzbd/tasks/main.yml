@@ -75,11 +75,12 @@
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
       - "{{downloads.nzbs}}/sabnzbd:/downloads/nzbs/sabnzbd"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - sabnzbd
+    purge_networks: yes
+    restart_policy: always
     state: started
 
 - name: Settings Tweaks

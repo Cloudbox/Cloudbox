@@ -43,9 +43,10 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/znc:/config"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - znc
+    purge_networks: yes
+    restart_policy: always
     state: started

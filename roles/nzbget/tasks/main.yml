@@ -131,11 +131,12 @@
       LETSENCRYPT_EMAIL: "{{email}}"
       LC_ALL: "C"
     volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - nzbget
+    purge_networks: yes
+    restart_policy: always
     state: started
 
 - name: Settings Tweaks

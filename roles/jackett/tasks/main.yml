@@ -76,9 +76,10 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"
-    restart_policy: always
-    state: started
     networks:
       - name: cloudbox
         aliases:
           - jackett
+    purge_networks: yes
+    restart_policy: always
+    state: started

@@ -58,9 +58,10 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/quassel:/config"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - quassel
+    purge_networks: yes
+    restart_policy: always
     state: started

@@ -120,6 +120,7 @@
       - name: cloudbox
         aliases:
           - rutorrent
+    purge_networks: yes
     restart_policy: always
     stop_timeout: 300
     state: started

@@ -150,12 +150,13 @@
       - "/mnt:/mnt"
       - "/tmp:/tmp"
     devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
-    restart_policy: always
     etc_hosts: "{{plex_default_hosts | combine(plex_custom_hosts|default([])) }}"
     networks:
       - name: cloudbox
         aliases:
           - plex
+    purge_networks: yes
+    restart_policy: always
     state: started
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...

@@ -46,5 +46,6 @@
       - name: cloudbox
         aliases:
           - nowshowing
+    purge_networks: yes
     restart_policy: always
     state: started
