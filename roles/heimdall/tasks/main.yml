@@ -57,5 +57,6 @@
       - name: cloudbox
         aliases:
           - heimdall
+    purge_networks: yes
     restart_policy: always
     state: started

@@ -85,5 +85,6 @@
       - name: cloudbox
         aliases:
           - bazarr
+    purge_networks: yes
     restart_policy: always
     state: started

@@ -51,9 +51,10 @@
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
       - "/opt/scripts:/scripts"
-    restart_policy: always
     networks:
       - name: cloudbox
         aliases:
           - plexpy
+    purge_networks: yes
+    restart_policy: always
     state: started

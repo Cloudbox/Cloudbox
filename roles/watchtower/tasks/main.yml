@@ -27,4 +27,5 @@
       - name: cloudbox
         aliases:
           - watchtower
+    purge_networks: yes
     state: stopped

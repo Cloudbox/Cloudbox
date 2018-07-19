@@ -43,5 +43,6 @@
       - name: cloudbox
         aliases:
           - netdata
+    purge_networks: yes
     restart_policy: always
     state: started
