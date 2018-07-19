@@ -10,6 +10,8 @@
 ---
 - name: Get latest hostess URL
   shell: curl -s https://api.github.com/repos/cbednarski/hostess/releases/latest | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url"
+  args:
+    executable: /bin/bash
   register: hostess_download_url
   ignore_errors: yes
 
