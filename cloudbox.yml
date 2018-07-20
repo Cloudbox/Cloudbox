@@ -59,3 +59,4 @@
     - { role: bazarr, tags: ['bazarr'] }
     - { role: plexlibrary, tags: ['plexlibrary'] }
     - { role: sabnzbd, tags: ['sabnzbd'] }
+    - { role: nginx, tags: ['nginx'] }
