@@ -76,7 +76,9 @@
     group: "{{user}}"
     force: yes
   with_fileglob:
-    - "{{playbook_dir}}/*"
+    - "{{playbook_dir}}/*.yml"
+    - "{{playbook_dir}}/*.cfg"
+    - "{{playbook_dir}}/*.conf"
   ignore_errors: yes
   when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
 
