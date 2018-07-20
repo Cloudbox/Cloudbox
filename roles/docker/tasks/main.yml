@@ -112,9 +112,11 @@
   failed_when: s.rc > 1
   ignore_errors: yes
 
-- name: "Import Docker network tasks"
+- name: "Import Docker Housekeeping tasks"
+  import_tasks: "docker_housekeeping.yml"
+
+- name: "Import Docker Network tasks"
   import_tasks: "docker_network.yml"
-  tags: docker_network
 
 - name: "Re-start all previously running Docker containers"
   shell: 'docker start {{docker_running_containers.stdout}}'
