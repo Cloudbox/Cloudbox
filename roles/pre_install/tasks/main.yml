@@ -55,6 +55,7 @@
 - name: "Get current git branch"
   shell: git rev-parse --abbrev-ref HEAD
   register: git_branch
+  when: not ((continuous_integration|default(false,true))|bool)
 
 - name: "Clone Cloudbox project into '/home/{{user}}/cloudbox'"
   git:
@@ -64,8 +65,8 @@
     force: yes
   become: yes
   become_user: "{{user}}"
-  register: cloning
   ignore_errors: yes
+  when: not ((continuous_integration|default(false,true))|bool)
 
 - name: "Copy files to new home folder'"
   copy:
@@ -77,8 +78,8 @@
   with_fileglob:
     - "{{playbook_dir}}/*"
   ignore_errors: yes
-  when: playbook_dir != home_folder
+  when: (playbook_dir != home_folder) and not ((continuous_integration|default(false,true))|bool)
 
 - fail:
     msg: "Please re-login with the '{{user}}' account (or 'sudo su {{user}}') and run the Cloudbox playbook from the '{{home_folder}}/cloudbox/' path."
-  when: playbook_dir != home_folder
+  when: (playbook_dir != home_folder) and not ((continuous_integration|default(false,true))|bool)
