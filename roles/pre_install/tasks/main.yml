@@ -45,12 +45,12 @@
     state: present
   when: sudoers.stat.exists == True
 
-- name: Create home_folder variable
-  set_fact:
-    home_folder: "/home/{{user}}"
+- name: "Create and/or set ownership of '/home/{{user}}/' path"
+  file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
 
-- name: "Create and/or set ownership of '{{home_folder}}/' path"
-  file: "path={{home_folder}} state=directory owner={{user}} group={{user}} recurse=yes"
+- name: Create cloudbox_home_folder variable
+  set_fact:
+    cloudbox_home_folder: "/home/{{user}}/cloudbox"
 
 - name: "Get current git branch"
   shell: git rev-parse --abbrev-ref HEAD
@@ -60,7 +60,7 @@
 - name: "Clone Cloudbox project into '/home/{{user}}/cloudbox'"
   git:
     repo: "https://github.com/cloudbox/cloudbox"
-    dest: "{{home_folder}}/cloudbox"
+    dest: "{{cloudbox_home_folder}}/"
     version: "{{git_branch.stdout}}"
     force: yes
   become: yes
@@ -71,16 +71,16 @@
 - name: "Copy files to new home folder'"
   copy:
     src: "{{item}}"
-    dest: "{{home_folder}}/cloudbox/"
+    dest: "{{cloudbox_home_folder}}/"
     owner: "{{user}}"
     group: "{{user}}"
     force: yes
   with_fileglob:
     - "{{playbook_dir}}/*"
   ignore_errors: yes
-  when: (playbook_dir != home_folder) and not ((continuous_integration|default(false,true))|bool)
+  when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
 
 - name: Quit playbook after creation of new cloudbox folder location
   fail:
     msg: "Please re-login with the '{{user}}' account (or 'sudo su {{user}}') and run the Cloudbox playbook from the '{{home_folder}}/cloudbox/' path."
-  when: (playbook_dir != home_folder) and not ((continuous_integration|default(false,true))|bool)
+  when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
