@@ -23,9 +23,14 @@
     name: "{{user}}"
     group: "{{user}}"
     groups: "{{user}},docker,sudo"
-    password: "{{ passwd |password_hash('sha512') }}"
+    password: "{{ passwd | password_hash('sha512') }}"
     update_password: on_create
     append: yes
+
+- name: Set bash as temp default shell
+  user:
+    name: "{{user}}"
+    shell: /bin/bash
 
 - name: Check sudoers exists
   stat:
@@ -40,5 +45,40 @@
     state: present
   when: sudoers.stat.exists == True
 
-- name: "Set ownership of '/home/{{user}}/'"
-  file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
+- name: Create home_folder variable
+  set_fact:
+    home_folder: "/home/{{user}}"
+
+- name: "Create and/or set ownership of '{{home_folder}}/' path"
+  file: "path={{home_folder}} state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: "Get current git branch"
+  shell: git rev-parse --abbrev-ref HEAD
+  register: git_branch
+
+- name: "Clone Cloudbox project into '/home/{{user}}/cloudbox'"
+  git:
+    repo: "https://github.com/cloudbox/cloudbox"
+    dest: "{{home_folder}}/cloudbox"
+    version: "{{git_branch.stdout}}"
+    force: yes
+  become: yes
+  become_user: "{{user}}"
+  register: cloning
+  ignore_errors: yes
+
+- name: "Copy files to new home folder'"
+  copy:
+    src: "{{item}}"
+    dest: "{{home_folder}}/cloudbox/"
+    owner: "{{user}}"
+    group: "{{user}}"
+    force: yes
+  with_fileglob:
+    - "{{playbook_dir}}/*"
+  ignore_errors: yes
+  when: playbook_dir != home_folder
+
+- fail:
+    msg: "Please re-login with the '{{user}}' account (or 'sudo su {{user}}') and run the Cloudbox playbook from the '{{home_folder}}/cloudbox/' path."
+  when: playbook_dir != home_folder
