@@ -32,7 +32,7 @@ log = None
 def init_logging(playbook_path):
     # log settings
     log_format = '%(asctime)s - %(levelname)-10s - %(name)-35s - %(funcName)-35s - %(message)s'
-    log_file_path = os.path.join(playbook_path, "../logs/settings-updater.log")
+    log_file_path = os.path.join(playbook_path, "settings-updater.log")
     log_level = logging.DEBUG
 
     # init root_logger
