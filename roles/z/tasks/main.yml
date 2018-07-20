@@ -20,7 +20,6 @@
     force: yes
   become: yes
   become_user: "{{user}}"
-  register: cloning
   ignore_errors: yes
 
 - name: Add entry to dot files
