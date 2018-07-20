@@ -68,7 +68,7 @@
   ignore_errors: yes
   when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
 
-- name: "Copy files to new home folder'"
+- name: "Copy files to new home folder"
   copy:
     src: "{{item}}"
     dest: "{{cloudbox_home_folder}}/"
