@@ -80,7 +80,7 @@
   ignore_errors: yes
   when: (playbook_dir != home_folder) and not ((continuous_integration|default(false,true))|bool)
 
-- name: Quit playbook after creation of new location
+- name: Quit playbook after creation of new cloudbox folder location
   fail:
     msg: "Please re-login with the '{{user}}' account (or 'sudo su {{user}}') and run the Cloudbox playbook from the '{{home_folder}}/cloudbox/' path."
   when: (playbook_dir != home_folder) and not ((continuous_integration|default(false,true))|bool)
