@@ -116,9 +116,11 @@
       )
       else false }}"
 
-- name: Set new_downloads_settings variable
+- name: Set nzbs_downloads_path variable
   set_fact:
-    new_downloads_settings: "{{ true if not (
+    nzbs_downloads_path:
+      - "{{downloads.nzbs}}:/downloads/nzbs"
+  when: not (
         (downloads is undefined)
         or
         (downloads is none)
@@ -130,6 +132,18 @@
         (downloads.nzbs is none)
         or
         (downloads.nzbs | trim == '')
+      )
+
+- name: Set torrents_downloads_path variable
+  set_fact:
+    torrents_downloads_path:
+      - "{{downloads.torrents}}:/downloads/torrents"
+  when: not (
+        (downloads is undefined)
+        or
+        (downloads is none)
+        or
+        (downloads | trim == '')
         or
         (downloads.torrents is undefined)
         or
@@ -137,11 +151,12 @@
         or
         (downloads.torrents | trim == '')
       )
-      else false }}"
 
-- name: Set old_downloads_settings variable
+- name: Set old_nzbget_downloads_path variable
   set_fact:
-    old_downloads_settings: "{{ true if not (
+    old_nzbget_downloads_path:
+      - "{{nzbget.downloads}}:/downloads/nzbget"
+  when: not (
         (nzbget is undefined)
         or
         (nzbget is none)
@@ -153,7 +168,13 @@
         (nzbget.downloads is none)
         or
         (nzbget.downloads | trim == '')
-        or
+      )
+
+- name: Set old_rutorrent_downloads_path variable
+  set_fact:
+    old_rutorrent_downloads_path:
+      - "{{rutorrent.downloads}}:/downloads/rutorrent"
+  when: not (
         (rutorrent is undefined)
         or
         (rutorrent is none)
@@ -166,4 +187,3 @@
         or
         (rutorrent.downloads | trim == '')
       )
-      else false }}"
