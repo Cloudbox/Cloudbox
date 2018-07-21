@@ -11,8 +11,8 @@
 ---
 - name: Sanity Check
   fail:
-    msg: "The new download paths settings are needed for this."
-  when: not new_downloads_settings
+    msg: "The new 'nzbs downloads path' settings are needed for this."
+  when: (nzbs_downloads_path is undefined)|default(true,true)
 
 - name: "Set DNS Record on CloudFlare"
   include_role:
@@ -52,6 +52,14 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
   register: sabnzbd_ini
 
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/sabnzbd:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
+
 - name: Create and start container
   docker_container:
     name: sabnzbd
@@ -69,12 +77,7 @@
       LETSENCRYPT_HOST: "sabnzbd.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       LC_ALL: "C"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/sabnzbd:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt:/mnt"
-      - "{{downloads.nzbs}}/sabnzbd:/downloads/nzbs/sabnzbd"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
     networks:
       - name: cloudbox
         aliases:
