@@ -33,31 +33,13 @@
     - "{{downloads.torrents}}/rutorrent/completed"
     - "{{downloads.torrents}}/rutorrent/incoming"
     - "{{downloads.torrents}}/rutorrent/watched"
-  when: new_downloads_settings
-
-# This is still needed as sometimes it will remain in root.
-- name: "Set {{downloads.torrents}} permissions"
-  shell: "chmod -R 775 {{downloads.torrents}}"
-  when: new_downloads_settings
-
-- name: "Set {{downloads.torrents}} owner"
-  shell: "chown -R {{user}}:{{user}} {{downloads.torrents}}"
-  when: new_downloads_settings
+  when: (torrents_downloads_path is defined)|default(false,true)
 
 - name: Create old downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "{{rutorrent.downloads}}"
-  when: old_downloads_settings
-
-# This is still needed as sometimes it will remain in root.
-- name: "Set {{rutorrent.downloads}} permissions"
-  shell: "chmod -R 775 {{rutorrent.downloads}}"
-  when: old_downloads_settings
-
-- name: "Set {{rutorrent.downloads}} owner"
-  shell: "chown -R {{user}}:{{user}} {{rutorrent.downloads}}"
-  when: old_downloads_settings
+  when: (old_rutorrent_downloads_path is defined)|default(false,true)
 
 - name: Check if rtorrent.rc exists
   stat:
@@ -84,20 +66,8 @@
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
-      - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
-
-- name: Set new_downloads_paths variable
-  set_fact:
-    new_downloads_paths:
-      - "{{downloads.torrents}}/rutorrent:/downloads/torrents/rutorrent"
-  when: new_downloads_settings
-
-- name: Set old_downloads_paths variable
-  set_fact:
-    old_downloads_paths:
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-  when: old_downloads_settings
+      - "/mnt:/mnt"
 
 - name: Create and start container
   docker_container:
@@ -115,7 +85,7 @@
       VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: "rutorrent.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
-    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
+    volumes: "{{ default_volumes + torrents_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
     networks:
       - name: cloudbox
         aliases:
