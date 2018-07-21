@@ -62,23 +62,9 @@
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sonarr4k:/config"
-      - "/mnt/unionfs/Media/TV:/tv"
-      - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
-
-- name: Set new_downloads_paths variable
-  set_fact:
-    new_downloads_paths:
-      - "{{downloads.nzbs}}:/downloads/nzbs"
-      - "{{downloads.torrents}}:/downloads/torrents"
-  when: new_downloads_settings
-
-- name: Set old_downloads_paths variable
-  set_fact:
-    old_downloads_paths:
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-  when: old_downloads_settings
+      - "/mnt:/mnt"
+      - "/mnt/unionfs/Media/TV:/tv"
 
 - name: Create and start container
   docker_container:
@@ -97,7 +83,7 @@
       VIRTUAL_PORT: 8989
       LETSENCRYPT_HOST: "sonarr4k.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
-    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) + old_nzbget_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
     networks:
       - name: cloudbox
         aliases:
