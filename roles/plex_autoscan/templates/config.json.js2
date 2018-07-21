@@ -32,6 +32,9 @@
       ],
       "2":[
          "/TV/"
+      ],
+      "3":[
+         "/Music/"
       ]
    },
    "PLEX_SUPPORT_DIR":"/var/lib/plexmediaserver/Library/Application\\ Support",
@@ -64,15 +67,15 @@
          "/mnt/unionfs/Media/Movies/",
          "My Drive/Media/Movies/"
       ],
-      "/data/Music/":[
-         "/music/",
-         "/mnt/unionfs/Media/Music/",
-         "My Drive/Media/Music/"
-      ],
       "/data/TV/":[
          "/tv/",
          "/mnt/unionfs/Media/TV/",
          "My Drive/Media/TV/"
+      ],
+      "/data/Music/":[
+         "/music/",
+         "/mnt/unionfs/Media/Music/",
+         "My Drive/Media/Music/"
       ]
    },
    "SERVER_PORT":3468,
