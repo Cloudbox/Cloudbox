@@ -56,7 +56,6 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/lidarr
-    - /mnt/local/Media/Music
 
 - name: Set default_volumes variable
   set_fact:
