@@ -62,15 +62,15 @@
    "SERVER_MAX_FILE_CHECKS":10,
    "SERVER_PASS":"{{plex_autoscan_pass.stdout}}",
    "SERVER_PATH_MAPPINGS":{
-      "/data/TV/":[
-         "/tv/",
-         "/mnt/unionfs/Media/TV/",
-         "My Drive/Media/TV/"
-      ],
       "/data/Movies/":[
          "/movies/",
          "/mnt/unionfs/Media/Movies/",
          "My Drive/Media/Movies/"
+      ],
+      "/data/TV/":[
+         "/tv/",
+         "/mnt/unionfs/Media/TV/",
+         "My Drive/Media/TV/"
       ],
       "/data/Music/":[
          "/music/",
