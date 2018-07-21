@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check cloudbox.tar exists"
+- name: "Check if 'cloudbox.tar' exists"
   stat:
     path: "{{backup.tar_dest}}/cloudbox.tar"
     get_attributes: false
@@ -21,17 +21,17 @@
   fail: msg="You must set atleast one backup.use_* option in order to perform a restore"
   when: (backup.use_rclone == False and backup.use_rsync == False) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
-- name: Check if rclone.conf exists in cloudbox folder
+- name: "Check if 'rclone.conf' exists in cloudbox folder"
   stat:
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf_playbook_dir
 
-- name: Check if rclone.conf exists in default location
+- name: "Check if 'rclone.conf 'exists in default location"
   stat:
     path: "/home/{{user}}/.config/rclone/rclone.conf"
   register: rclone_conf_user_dir
 
-- name: Fail when no rclone.conf is found
+- name: "Fail when no 'rclone.conf' is found"
   fail: msg="You must place your rclone.conf file in {{playbook_dir}} or setup Rclone via rclone config"
   when: backup.use_rclone and not(
       (rclone_conf_playbook_dir.stat.exists)
@@ -52,7 +52,7 @@
   file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
   when: backup_location.stat.exists == False
 
-- name: Check rclone installed
+- name: Check if rclone is installed
   stat:
     path: "/usr/bin/rclone"
   register: rclone_bin
@@ -62,7 +62,7 @@
     name: rclone
   when: backup.use_rclone and rclone_bin.stat.exists == False
 
-- name: Ensure rclone folders exists
+- name: Ensure rclone config folder exists
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "/home/{{user}}/.config/rclone"
@@ -83,7 +83,7 @@
   become_user: "{{user}}"
   when: (backup.use_rclone == False and backup.use_rsync) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
-- name: "Check if cloudbox.tar exists"
+- name: "Check if 'cloudbox.tar' exists"
   stat:
     path: "{{backup.tar_dest}}/cloudbox.tar"
     get_attributes: false
@@ -100,7 +100,7 @@
   wait_for:
     timeout: 10
 
-- name: Create /opt directory
+- name: "Create '/opt' directory"
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt
@@ -108,7 +108,7 @@
 - name: "Unarchive cloudbox.tar to /opt"
   shell: "tar -xf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
 
-- name: Remove cloudbox.tar
+- name: "Remove 'cloudbox.tar'"
   file:
     path: "{{backup.tar_dest}}/cloudbox.tar"
     state: absent
