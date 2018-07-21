@@ -62,31 +62,13 @@
   with_items:
     - "{{downloads.nzbs}}"
     - "{{downloads.nzbs}}/nzbget"
-  when: new_downloads_settings
-
-# This is still needed as sometimes it will remain in root.
-- name: "Set {{downloads.nzbs}} permissions"
-  shell: "chmod -R 775 {{downloads.nzbs}}"
-  when: new_downloads_settings
-
-- name: "Set {{downloads.nzbs}} owner"
-  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
-  when: new_downloads_settings
+  when: (nzbs_downloads_path is defined)|default(false,true)
 
 - name: Create old downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "{{nzbget.downloads}}"
-  when: old_downloads_settings
-
-# This is still needed as sometimes it will remain in root.
-- name: "Set {{nzbget.downloads}} permissions"
-  shell: "chmod -R 775 {{nzbget.downloads}}"
-  when: old_downloads_settings
-
-- name: "Set {{nzbget.downloads}} owner"
-  shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
-  when: old_downloads_settings
+  when: (old_nzbget_downloads_path is defined)|default(false,true)
 
 - name: Check nzbget.conf exists
   stat:
@@ -98,20 +80,8 @@
     default_volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbget:/config"
-      - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
-
-- name: Set new_downloads_paths variable
-  set_fact:
-    new_downloads_paths:
-      - "{{downloads.nzbs}}/nzbget:/downloads/nzbs/nzbget"
-  when: new_downloads_settings
-
-- name: Set old_downloads_paths variable
-  set_fact:
-    old_downloads_paths:
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-  when: old_downloads_settings
+      - "/mnt:/mnt"
 
 - name: Create and start container
   docker_container:
@@ -130,7 +100,7 @@
       LETSENCRYPT_HOST: "nzbget.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       LC_ALL: "C"
-    volumes: "{{ default_volumes + new_downloads_paths|default([]) + old_downloads_paths|default([]) }}"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + old_nzbget_downloads_path|default([]) }}"
     networks:
       - name: cloudbox
         aliases:
