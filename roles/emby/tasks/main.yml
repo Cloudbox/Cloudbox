@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Emby Role                                    #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  emby/embyserver                                        #
 # --                                                                    #
@@ -21,14 +21,19 @@
     - /opt/emby
     - "{{plex.transcodes}}"
 
+- name: "Check if 'system.xml' exists"
+  stat:
+    path: "/opt/emby/config/system.xml"
+  register: emby_system_xml
+
 - name: Stop and remove any existing container
   docker_container:
     name: emby
     state: absent
 
-- name: Check /dev/dri/renderD128 exists
+- name: "Check if '/dev/dri' exists"
   stat:
-    path: "/dev/dri/renderD128"
+    path: "/dev/dri"
   register: dev_dri
 
 - name: Create and start container
@@ -53,7 +58,7 @@
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
-    devices: "{{ '/dev/dri/renderD128:/dev/dri/renderD128' if dev_dri.stat.exists == True | default(false) else omit }}"
+    devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
     networks:
       - name: cloudbox
         aliases:
@@ -63,7 +68,7 @@
     state: started
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
-- name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
+- name: "Wait 5 seconds"
   wait_for:
     timeout: 5
 
@@ -74,3 +79,11 @@
     group: "{{user}}"
     mode: 0775
     recurse: yes
+
+- name: Settings Tasks
+  include_tasks: "emby_settings.yml"
+  when: not (
+        (emby_system_xml.exists)
+        or
+        ((continuous_integration|default(false,true))|bool)
+    )

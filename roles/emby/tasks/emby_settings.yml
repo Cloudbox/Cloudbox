@@ -1,0 +1,77 @@
+#########################################################################
+# Title:         Cloudbox: Emby - Settings Tasks                        #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  emby/embyserver                                        #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Wait for 'system.xml' to be created"
+  wait_for:
+    path: "/opt/emby/config/system.xml"
+    state: present
+
+- name: "Wait 10 seconds before stopping container"
+  wait_for:
+    timeout: 10
+
+- name: "Stop container to customize 'system.xml'"
+  docker_container:
+    name: emby
+    state: stopped
+
+- name: "Set 'EnableUPnP' to 'false'"
+  xml:
+    path: "/opt/emby/config/system.xml"
+    xpath: /ServerConfiguration/EnableUPnP
+    value: "false"
+
+- name: "Set 'PublicPort' to '80'"
+  xml:
+    path: "/opt/emby/config/system.xml"
+    xpath: /ServerConfiguration/PublicPort
+    value: "80"
+
+- name: "Set 'PublicHttpsPort' to '443'"
+  xml:
+    path: "/opt/emby/config/system.xml"
+    xpath: /ServerConfiguration/PublicHttpsPort
+    value: "443"
+
+- name: "Set 'EnableHttps' to 'true'"
+  xml:
+    path: "/opt/emby/config/system.xml"
+    xpath: /ServerConfiguration/EnableHttps
+    value: "true"
+
+- name: "Set 'WanDdns' to emby.{{domain}}"
+  xml:
+    path: "/opt/emby/config/system.xml"
+    xpath: /ServerConfiguration/WanDdns
+    value: "emby.{{domain}}"
+
+- name: "Set 'EnableAnonymousUsageReporting' to 'false'"
+  xml:
+    path: "/opt/emby/config/system.xml"
+    xpath: /ServerConfiguration/EnableAnonymousUsageReporting
+    value: "false"
+
+- name: "Set 'RequireHttps' to 'false'"
+  xml:
+    path: "/opt/emby/config/system.xml"
+    xpath: /ServerConfiguration/RequireHttps
+    value: "false"
+
+- name: "Set 'IsBehindProxy' to 'true'"
+  xml:
+    path: "/opt/emby/config/system.xml"
+    xpath: /ServerConfiguration/IsBehindProxy
+    value: "true"
+
+- name: Start container to apply changes
+  docker_container:
+    name: emby
+    state: started
