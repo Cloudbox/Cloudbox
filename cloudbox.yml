@@ -35,13 +35,13 @@
     - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
+    - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
     - { role: feeder_mount, tags: ['feeder-mount'] }
     - { role: feeder_dismount, tags: ['feeder-dismount'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: ombi, tags: ['ombi'] }
     - { role: resilio, tags: ['resilio'] }
     - { role: nextcloud, tags: ['nextcloud'] }
-    - { role: lidarr, tags: ['lidarr'] }
     - { role: emby, tags: ['emby'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: traktarr, tags: ['traktarr'] }
