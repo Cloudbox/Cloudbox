@@ -26,6 +26,7 @@ Featured Applications:
 - Emby
 - Sonarr
 - Radarr
+- Lidarr
 - Plexdrive
 - NZBGet
 - ruTorrent
