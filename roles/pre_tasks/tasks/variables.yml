@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set cloudflare_enabled variable
+- name: "Set 'cloudflare_enabled' variable"
   set_fact:
     cloudflare_enabled: "{{ true if not(
         (cloudflare_api_token is undefined)
@@ -19,11 +19,11 @@
       )
       else false }}"
 
-- name: Set localhost_ip variable
+- name: "Set 'localhost_ip' variable"
   set_fact:
     localhost_ip: "127.0.0.1"
 
-- name: Set plex_account_enabled variable
+- name: "Set 'plex_account_enabled' variable"
   set_fact:
     plex_account_enabled: "{{ true if not(
         (plex is undefined)
@@ -46,7 +46,7 @@
       )
       else false }}"
 
-- name: Set pushover_api_token variable when using older settings
+- name: "Set 'pushover_api_token' variable when using older settings"
   set_fact:
     pushover_app_token: "{{backup.pushover_app_token}}"
   when: not(
@@ -63,7 +63,7 @@
         (backup.pushover_user_key | trim == '')
       )
 
-- name: Set pushover_api_token variable when using older settings
+- name: "Set 'pushover_api_token' variable when using older settings"
   set_fact:
     pushover_user_key: "{{backup.pushover_user_key}}"
   when: not(
@@ -80,7 +80,7 @@
         (backup.pushover_user_key | trim == '')
       )
 
-- name: Set pushover_enabled variable
+- name: "Set 'pushover_enabled' variable"
   set_fact:
     pushover_enabled: "{{ true if not(
         (pushover_app_token is undefined)
@@ -116,7 +116,7 @@
       )
       else false }}"
 
-- name: Set nzbs_downloads_path variable
+- name: "Set 'nzbs_downloads_path' variable"
   set_fact:
     nzbs_downloads_path:
       - "{{downloads.nzbs}}:/downloads/nzbs"
@@ -134,7 +134,7 @@
         (downloads.nzbs | trim == '')
       )
 
-- name: Set torrents_downloads_path variable
+- name: "Set 'torrents_downloads_path' variable"
   set_fact:
     torrents_downloads_path:
       - "{{downloads.torrents}}:/downloads/torrents"
@@ -152,7 +152,7 @@
         (downloads.torrents | trim == '')
       )
 
-- name: Set old_nzbget_downloads_path variable
+- name: "Set 'old_nzbget_downloads_path' variable"
   set_fact:
     old_nzbget_downloads_path:
       - "{{nzbget.downloads}}:/downloads/nzbget"
@@ -170,7 +170,7 @@
         (nzbget.downloads | trim == '')
       )
 
-- name: Set old_rutorrent_downloads_path variable
+- name: "Set 'old_rutorrent_downloads_path' variable"
   set_fact:
     old_rutorrent_downloads_path:
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
