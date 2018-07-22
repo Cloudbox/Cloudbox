@@ -72,7 +72,7 @@
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^ScriptDir\s?='
-    line: 'ScriptDir=/scripts'
+    line: 'ScriptDir=/scripts/nzbget'
     state: present
 
 - name: Change LockFile path
