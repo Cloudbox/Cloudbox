@@ -11,7 +11,7 @@
 * [Horjulf](https://github.com/horjulf) - ruTorrent + autodl Docker Image (creator); Plex Autoscan; Traktarr, Plex Patrol, Arrpush, and others.
 * [RXWatcher](https://github.com/RXWatcher1) - Cloudbox.
 * [Vuur](https://github.com/vuur) -  Web Design; Admin of GitHub, Discord, and Reddit.
-* [Captain-NaCl](https://github.com/Captain-NaCl) - Cloudbox; Cloudbox Wiki.
+* [TheBradz](https://github.com/TheBradz) - Cloudbox; Cloudbox Wiki.
 * [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki.
 * [Hotio](https://gitlab.com/hotio) - Suitarr Docker Image (creator).
 * [Mitchell Klijs](https://github.com/mitchellklijs) - Traktarr; Cloudplow.
