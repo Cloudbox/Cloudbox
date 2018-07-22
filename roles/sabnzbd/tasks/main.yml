@@ -11,8 +11,8 @@
 ---
 - name: Sanity Check
   fail:
-    msg: "The new 'nzbs downloads path' settings are needed for this."
-  when: (nzbs_downloads_path is undefined)|default(true,true)
+    msg: "The new 'nzbs download path' setting is required."
+  when: (nzbs_downloads_path is not defined)|default(true)
 
 - name: "Set DNS Record on CloudFlare"
   include_role:
