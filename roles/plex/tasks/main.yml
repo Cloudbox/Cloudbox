@@ -145,6 +145,7 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
+      - "/opt/scripts:/scripts"
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
