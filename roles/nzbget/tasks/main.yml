@@ -62,13 +62,13 @@
   with_items:
     - "{{downloads.nzbs}}"
     - "{{downloads.nzbs}}/nzbget"
-  when: (nzbs_downloads_path is defined)|default(false,true)
+  when: (nzbs_downloads_path is defined)|default(false)
 
 - name: Create old downloads directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "{{nzbget.downloads}}"
-  when: (old_nzbget_downloads_path is defined)|default(false,true)
+  when: (old_nzbget_downloads_path is defined)|default(false)
 
 - name: Check nzbget.conf exists
   stat:
