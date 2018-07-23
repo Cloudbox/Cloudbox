@@ -62,6 +62,24 @@
     path: "/opt/nzbhydra2/app/nzbhydra.yml"
   register: nzbhydra2_yml
 
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbhydra2:/config"
+      - "/mnt:/mnt"
+
+- name: Check to see if NZBHydra1 is installed
+  stat:
+    path: "/opt/nzbhydra/hydra/nzbhydra.db"
+  register: nzbhydra1
+
+- name: Set migration_path variable
+  set_fact:
+    migration_path:
+      - "/opt/nzbhydra/hydra:/nzbhydra1:ro"
+  when: nzbhydra1.stat.exists
+
 - name: Create and start container
   docker_container:
     name: nzbhydra2
@@ -78,10 +96,7 @@
       VIRTUAL_PORT: 5076
       LETSENCRYPT_HOST: "nzbhydra2.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nzbhydra2:/config"
-      - "/opt/nzbhydra/hydra:/nzbhydra1"
+    volumes: "{{ default_volumes + migration_path|default([]) }}"
     networks:
       - name: cloudbox
         aliases:
