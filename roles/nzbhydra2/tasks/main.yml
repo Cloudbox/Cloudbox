@@ -69,12 +69,12 @@
       - "/opt/nzbhydra2:/config"
       - "/mnt:/mnt"
 
-- name: Check to see if NZBHydra1 is installed
+- name: Check to see if nzbhydra1 is installed
   stat:
     path: "/opt/nzbhydra/hydra/nzbhydra.db"
   register: nzbhydra1
 
-- name: Set migration_path variable
+- name: Set migration_path variable if nzbhydra1 is installed
   set_fact:
     migration_path:
       - "/opt/nzbhydra/hydra:/nzbhydra1:ro"
