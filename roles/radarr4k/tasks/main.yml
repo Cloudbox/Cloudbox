@@ -91,3 +91,16 @@
     purge_networks: yes
     restart_policy: always
     state: started
+
+- name: check if sickbeard_mp4_automator is installed
+  stat:
+    path: /opt/scripts/sickbeard_mp4_automator
+  register: sma_installed
+
+- name: install sickbeard_mp4_automator
+  shell: |
+    docker exec -i radarr4k bash -c 'apt update && apt install -y python-pip ffmpeg'
+    docker exec -i radarr4k bash -c 'pip install setuptools requests requests[security] requests-cache babelfish "guessit<2" "subliminal<2"'
+    docker exec -i radarr4k bash -c 'pip uninstall -y stevedore'
+    docker exec -i radarr4k bash -c 'pip install stevedore==1.19.1 python-dateutil deluge-client qtfaststart'
+  when: sma_installed.stat.exists and sma_installed.stat.isdir

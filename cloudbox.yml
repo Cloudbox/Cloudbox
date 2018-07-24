@@ -60,3 +60,4 @@
     - { role: plexlibrary, tags: ['plexlibrary'] }
     - { role: sabnzbd, tags: ['sabnzbd'] }
     - { role: nginx, tags: ['nginx'] }
+    - { role: sickbeard_mp4_automator, tags: ['sickbeard_mp4_automator'] }
