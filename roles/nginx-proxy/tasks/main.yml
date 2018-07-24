@@ -41,10 +41,9 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:ro"
-      - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:ro"
+      - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
-      - "/etc/nginx/vhost.d"
       - "/usr/share/nginx/html"
       - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf"
     labels:
