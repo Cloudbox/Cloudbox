@@ -15,6 +15,17 @@
   vars:
     subdomain: netdata
 
+- name: Create htpasswd
+  htpasswd:
+    path: "/opt/nginx-proxy/htpasswd/{{item}}.{{domain}}"
+    name: "{{user}}"
+    password: "{{passwd}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+  with_items:
+    - netdata
+    
 - name: Stop and remove any existing container
   docker_container:
     name: netdata
