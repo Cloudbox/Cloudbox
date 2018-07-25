@@ -13,16 +13,6 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: "{{item}}"
-  with_items:
-    - "{{domain}}"
-    - "www"
-  when: organizr.direct_domain|default(false,true)
-
-- name: "Set DNS Record on CloudFlare"
-  include_role:
-    name: cloudflare
-  vars:
     subdomain: organizrv1
 
 - name: Stop and remove any existing container
@@ -45,9 +35,9 @@
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('organizrv1.' + domain + ',' + 'www.' + domain + ',' + domain,'organizrv1.' + domain) }}"
+      VIRTUAL_HOST: "organizrv1.{{domain}}"
       VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('organizrv1.' + domain + ',' + 'www.' + domain + ',' + domain,'organizrv1.' + domain) }}"
+      LETSENCRYPT_HOST: "organizrv1.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
