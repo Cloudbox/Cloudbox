@@ -19,14 +19,11 @@
 
 - name: Remove trailing slash from backup paths
   set_fact:
-    backup:
+    tmp_backup:
       tar_dest: "{{ (backup.tar_dest | default('',true)) | regex_replace('\\/$', '') }}"
       rsync_dest: "{{ (backup.rsync_dest | default('',true)) | regex_replace('\\/$', '') }}"
       rclone_dest: "{{ (backup.rclone_dest | default('',true)) | regex_replace('\\/$', '') }}"
-      keep_local_copy: "{{ (backup.keep_local_copy | default(true,true)) }}"
-      use_rclone: "{{ (backup.keep_local_copy | default(false,true)) }}"
-      use_rsync: "{{ (backup.keep_local_copy | default(false,true)) }}"
-      cron_time: "{{ (backup.keep_local_copy | default('weekly',true)) }}"
-      cron_state: "{{ (backup.keep_local_copy | default('absent',true)) }}"
-      pushover_app_token: "{{ (backup.keep_local_copy | default('',true)) }}"
-      pushover_user_key: "{{ (backup.keep_local_copy | default('',true)) }}"
+      
+- name: Remove trailing slash from backup paths
+  set_fact:
+    backup: "{{ backup | combine(tmp_backup) }}"
