@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Ensure system is Ubuntu 16.04 or 18.04"
+- name: "Ensure system is either Ubuntu 16.04 or Ubuntu 18.04"
   fail: msg="Cloudbox is specifically designed for Ubuntu 16.04 or 18.04"
   when: ansible_distribution_version is version_compare('16.04', '!=') and ansible_distribution_version is version_compare('18.04', '!=')
   tags: always
