@@ -56,7 +56,7 @@
 - name: Create and start container
   docker_container:
     name: organizr
-    image: "tronyx/docker-organizr-v2"
+    image: "tronyx/docker-organizr-v2:plex"
     pull: yes
     published_ports:
       - "127.0.0.1:7421:80"
@@ -77,3 +77,14 @@
     purge_networks: yes
     restart_policy: always
     state: started
+
+- name: Download Plex Theme
+  get_url:
+    url:  "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
+    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0644
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
