@@ -15,7 +15,7 @@
 
 - name: "Display System Info"
   debug:
-    msg: "System is running {{ ansible_distribution }} {{ ansible_distribution_version }}."
+    msg: "System is running {{ ansible_lsb.description if ansible_lsb is defined else (ansible_distribution + ' ' + ansible_distribution_version) }}."
   tags: always
 
 - name: Get all available tags
