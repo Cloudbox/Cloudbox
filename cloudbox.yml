@@ -24,7 +24,7 @@
     - { role: nginx-proxy, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nginx-proxy'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
     - { role: plexpy, tags: ['cloudbox', 'mediabox', 'plexpy'] }
-    - { role: plexrequests, tags: ['cloudbox', 'mediabox', 'plexrequests'] }
+    - { role: ombi, tags: ['cloudbox', 'mediabox', 'ombi'] }
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
     - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
@@ -39,7 +39,7 @@
     - { role: feeder_mount, tags: ['feeder-mount'] }
     - { role: feeder_dismount, tags: ['feeder-dismount'] }
     - { role: watchtower, tags: ['watchtower'] }
-    - { role: ombi, tags: ['ombi'] }
+    - { role: plexrequests, tags: ['plexrequests'] }
     - { role: resilio, tags: ['resilio'] }
     - { role: nextcloud, tags: ['nextcloud'] }
     - { role: emby, tags: ['emby'] }
