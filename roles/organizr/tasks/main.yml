@@ -78,6 +78,11 @@
     restart_policy: always
     state: started
 
+- name: Wait for Organizr.css to be created
+  wait_for:
+    path: "/opt/organizr/www/Dashboard/css/themes/Organizr.css"
+    state: present
+
 - name: Download Plex Theme
   get_url:
     url:  "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
