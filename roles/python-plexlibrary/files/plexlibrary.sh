@@ -1,6 +1,6 @@
 #!/bin/bash
 #########################################################################
-# Title:         Cloudbox: Plex Library Cron Helper Script              #
+# Title:         Cloudbox: Python-PlexLibrary Helper Script             #
 # Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -11,13 +11,13 @@
 
 PATH='/usr/bin:/bin:/usr/local/bin'
 export PYTHONIOENCODING=UTF-8
-echo $(date) >> /opt/plexlibrary/plexlibrary_cron.log
-echo "" >> /opt/plexlibrary/plexlibrary_cron.log
+echo $(date) >> /opt/python-plexlibrary/plexlibrary.log
+echo "" >> /opt/python-plexlibrary/plexlibrary.log
 
-for file in /opt/plexlibrary/recipes/*
+for file in /opt/python-plexlibrary/recipes/*
 do
     if [ ! -d "${file}" ]; then
-        /usr/bin/python /opt/plexlibrary/plexlibrary/plexlibrary.py $(basename "$file" .yml) >> /opt/plexlibrary/plexlibrary_cron.log
-        echo "" >> /opt/plexlibrary/plexlibrary_cron.log
+        /usr/bin/python /opt/python-plexlibrary/plexlibrary/plexlibrary.py $(basename "$file" .yml) >> /opt/python-plexlibrary/plexlibrary.log
+        echo "" >> /opt/python-plexlibrary/plexlibrary.log
     fi
 done
