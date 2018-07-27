@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: UnionFS Mount Service                        #
-# Path:          /etc/systemd/system/unionfs.service                    #
+# Title:         Cloudbox: Feeder Mount Service                         #
+# Path:          /etc/systemd/system/feeder.service                     #
 # Author(s):     Desimaniac, L3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -10,17 +10,17 @@
 #########################################################################
 
 [Unit]
-Description=UnionFS Mount
-After=network-online.target plexdrive.service
+Description=Feeder Mount
+After=network-online.target
 
 [Service]
-Type=forking
-GuessMainPID=no
 User={{user}}
 Group={{user}}
-ExecStartPre=/bin/sleep 30
-ExecStart=/usr/bin/unionfs-fuse -o cow,allow_other,nonempty /mnt/feeder=RW:/mnt/plexdrive=RO /mnt/unionfs
-ExecStop=/bin/fusermount -uz /mnt/unionfs
+Type=simple
+ExecStart=/usr/bin/rclone mount feeder: /feeder --copy-links --fast-list --allow-other --dir-cache-time=1m --log-file=/home/{{user}}/logs/feeder_mount.log --max-read-ahead=200M -v --allow-non-empty
+ExecStop=/bin/fusermount -uz /mnt/feeder
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=default.target
