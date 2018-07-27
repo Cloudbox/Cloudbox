@@ -16,16 +16,6 @@
       - "/home/{{user}}/logs"
       - "/home/{{user}}/logs/backup"
 
-  - name: "Check if 'backup.lock' is present."
-    stat:
-      path: "{{playbook_dir}}/backup.lock"
-    register: backup_lock
-
-  - name: "Fail when 'backup.lock 'exists."
-    fail:
-      msg: "Backup is already in progress. Please wait for it to complete."
-    when: backup_lock.stat.exists
-
   - name: "Create 'backup.lock'."
     file:
       path: "{{playbook_dir}}/backup.lock"
@@ -33,7 +23,6 @@
       owner: "{{user}}"
       group: "{{user}}"
       mode: 0775
-    when: backup_lock.stat.exists == False
 
   - name: "Get Start Time"
     set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
@@ -371,7 +360,6 @@
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: absent
-    when: backup_lock.stat.exists == False
 
   - name: "Reset logs folder ownership."
     shell: "chown -R {{user}}:{{user}} /home/{{user}}/logs/"
