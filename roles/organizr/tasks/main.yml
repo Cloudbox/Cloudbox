@@ -89,7 +89,7 @@
     dest: "/opt/organizr/www/Dashboard/css/themes/"
     owner: "{{user}}"
     group: "{{user}}"
-    mode: 0644
+    mode: 0664
     force: yes
     validate_certs: no
   ignore_errors: yes

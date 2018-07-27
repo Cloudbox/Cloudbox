@@ -89,7 +89,7 @@
   copy:
     src: "{{ rclone_tmp_dir.stdout }}/rclone.1"
     dest: /usr/local/share/man/man1/rclone.1
-    mode: 0644
+    mode: 0664
     owner: root
     group: root
 
