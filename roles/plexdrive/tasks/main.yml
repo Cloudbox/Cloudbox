@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Plexdrive Role                               #
-# Author(s):     L3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -13,15 +13,18 @@
     path: "/etc/systemd/system/plexdrive.service"
   register: plexdrive_service
 
-- name: Check if plexdrive service is running
-  command: systemctl status plexdrive
-  ignore_errors: yes
-  register: plexdrive_status
+- name: Populate Service Facts
+  service_facts:
+  when: plexdrive_service.stat.exists
+
+- name: Get plexdrive service state
+  set_fact:
+    plexdrive_service_running: "{{ (services['plexdrive.service']['state'] == \"running\") }}"
   when: plexdrive_service.stat.exists
 
 - name: Stop existing plexdrive service
   systemd: state=stopped name=plexdrive
-  when: (plexdrive_service.stat.exists) and (plexdrive_status is success)
+  when: plexdrive_service.stat.exists and plexdrive_service_running
 
 - name: Create plexdrive directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -44,7 +47,7 @@
     src: plexdrive.service.js2
     dest: /etc/systemd/system/plexdrive.service
     force: yes
-  when: plexdrive_service.stat.exists == False
+  when: not plexdrive_service.stat.exists
 
 - name: Systemd daemon-reload
   systemd: state=stopped name=plexdrive daemon_reload=yes enabled=no
