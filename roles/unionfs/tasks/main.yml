@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: UnionFS Role                                 #
-# Author(s):     L3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -26,6 +26,15 @@
   systemd: state=stopped name=unionfs
   when: unionfs_service.stat.exists and unionfs_service_running
 
+- name: Create /mnt/unionfs and subdirs
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /mnt/unionfs
+    - /mnt/unionfs/Media
+    - /mnt/unionfs/Media/Movies
+    - /mnt/unionfs/Media/Music
+    - /mnt/unionfs/Media/TV
+
 - name: Install fuse
   apt:
     name: fuse
@@ -44,16 +53,7 @@
     src: unionfs.service.js2
     dest: /etc/systemd/system/unionfs.service
     force: yes
-  when: unionfs_service.stat.exists == False
-
-- name: Create /mnt/unionfs and subdirs
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - /mnt/unionfs
-    - /mnt/unionfs/Media
-    - /mnt/unionfs/Media/Movies
-    - /mnt/unionfs/Media/Music
-    - /mnt/unionfs/Media/TV
+  when: not unionfs_service.stat.exists
 
 - name: Start unionfs service
   systemd: state=started name=unionfs daemon_reload=yes enabled=yes
