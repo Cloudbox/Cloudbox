@@ -227,7 +227,7 @@
       state: touch
       owner: "{{user}}"
       group: "{{user}}"
-      mode: 0755
+      mode: 0775
       force: yes
     with_items:
      - "ansible.cfg"
@@ -243,7 +243,7 @@
       state: touch
       owner: "{{user}}"
       group: "{{user}}"
-      mode: 0755
+      mode: 0775
       force: yes
     when: backup_excludes_file.stat.exists
 

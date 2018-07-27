@@ -72,7 +72,7 @@
   copy:
     src: "{{ rclone_tmp_dir.stdout }}/rclone"
     dest: "/usr/bin/rclone"
-    mode: 0755
+    mode: 0775
     owner: root
     group: root
     force: yes
