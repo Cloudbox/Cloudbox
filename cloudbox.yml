@@ -36,8 +36,8 @@
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
-    - { role: feeder-mount, tags: ['feeder-mount'] }
-    - { role: feeder-dismount, tags: ['feeder-dismount'] }
+    - { role: feeder_mount, tags: ['feeder_mount'] }
+    - { role: feeder_dismount, tags: ['feeder_dismount'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: plexrequests, tags: ['plexrequests'] }
     - { role: resilio, tags: ['resilio'] }
