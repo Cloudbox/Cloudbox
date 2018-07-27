@@ -33,7 +33,7 @@
   get_url:
     url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
     dest: /opt/plexdrive/plexdrive
-    mode: 0755
+    mode: 0775
     owner: "{{user}}"
     group: "{{user}}"
     force: yes
