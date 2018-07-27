@@ -42,6 +42,7 @@
 - name: "Get 'backup.lock' age."
   set_fact:
     backup_lock_age: "{{ ( (((ansible_date_time.epoch|int) - (backup_lock.stat.ctime|int)) / 3600) | int )  }}"
+  when: backup_lock.stat.exists
   tags: always
 
 - name: "Delete stale 'backup.lock'."
