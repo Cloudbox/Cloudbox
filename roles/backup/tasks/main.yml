@@ -7,7 +7,6 @@
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
-
 ---
 - block:
   - name: "Create log directory."
@@ -152,7 +151,8 @@
         --warning=no-file-removed \
         --exclude-from '{{ backup_excludes_file.stat.exists | ternary(playbook_dir + '/backup_excludes.txt', playbook_dir + '/roles/backup/files/backup_excludes.txt') }}' \
         -cf '{{backup.tar_dest}}/cloudbox.tar' \
-        -C /opt .
+        -C /opt . \
+        2> /home/{{user}}/logs/backup/cloudbox_backup_tar_stderr.log
     become: yes
     become_user: "{{user}}"
     args:
