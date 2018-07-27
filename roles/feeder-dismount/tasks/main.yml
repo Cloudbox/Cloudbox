@@ -15,6 +15,7 @@
 
 - name: "Stop running docker containers"
   shell: 'docker stop {{docker_running_containers.stdout}}'
+  when: not (docker_running_containers.stdout | trim == '')
   ignore_errors: yes
 
 - name: Stop unionfs service
@@ -75,4 +76,5 @@
 
 - name: "Start docker containers"
   shell: 'docker start {{docker_running_containers.stdout}}'
+  when: not (docker_running_containers.stdout | trim == '')
   ignore_errors: yes
