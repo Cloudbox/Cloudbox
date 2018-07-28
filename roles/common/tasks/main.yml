@@ -55,6 +55,7 @@
     - unzip
     - p7zip
     - curl
+    - httpie
     - sqlite3
     - vnstat
     - tree
