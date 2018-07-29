@@ -28,7 +28,6 @@
     - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/DeleteSamples.py"
     - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/SafeRename.py"
     - "https://raw.githubusercontent.com/Prinz23/nzbget-pp-reverse/master/reverse_name.py"
-    - "https://raw.githubusercontent.com/Prinz23/nzbgetpp/master/unzip.py"
   ignore_errors: yes
 
 - name: Download unzip.py script
@@ -41,7 +40,7 @@
   register: unzip_py
   ignore_errors: yes
 
-- name: Add unrar path to rarfile.py script
+- name: Add unrar path to rarfile.py
   lineinfile:
     path: "/opt/scripts/nzbget/nzbgetpp/rarfile/rarfile.py"
     regexp: '^UNRAR_TOOL\s?=.*'
