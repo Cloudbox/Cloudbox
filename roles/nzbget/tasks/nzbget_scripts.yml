@@ -32,24 +32,14 @@
   ignore_errors: yes
 
 - name: Download unzip.py script
-  unarchive:
-    src: "{{item}}"
-    dest: "/opt/scripts/nzbget/nzbgetpp"
-    copy: no
-    mode: 0775
-    owner: "{{user}}"
-    group: "{{user}}"
-    validate_certs: no
+  git:
+    repo: "https://github.com/Prinz23/nzbgetpp"
+    dest: "/opt/scripts/nzbget/nzbgetpp/"
+    force: yes
+  become: yes
+  become_user: "{{user}}"
   register: unzip_py
-  with_items:
-    - "https://github.com/Prinz23/nzbgetpp/archive/master.zip"
   ignore_errors: yes
-
-- name: Organize unzip.py scripts into proper folder
-  shell: |
-    mv /opt/scripts/nzbget/nzbgetpp/nzbgetpp-master/* /opt/scripts/nzbget/nzbgetpp/
-    rm -rf /opt/scripts/nzbget/nzbgetpp/nzbgetpp-master
-  when: unzip_py.changed
 
 - name: Add unrar path to rarfile.py script
   lineinfile:
@@ -57,7 +47,7 @@
     regexp: '^UNRAR_TOOL\s?=.*'
     line: 'UNRAR_TOOL = "/app/unrar"'
     state: present
-  when: unzip_py.changed
+  when: unzip_py is success
 
 - name: Download completion checker Script
   unarchive:
