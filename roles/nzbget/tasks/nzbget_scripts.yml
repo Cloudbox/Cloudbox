@@ -1,0 +1,73 @@
+#########################################################################
+# Title:         Cloudbox: NZBGet - Scripts Task                        #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create nzbget script directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/scripts/nzbget
+    - /opt/scripts/nzbget/nzbgetpp
+
+- name: Download various scripts
+  get_url:
+    url:  "{{item}}"
+    dest: "/opt/scripts/nzbget/"
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+    force: yes
+    validate_certs: no
+  with_items:
+    - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/flatten.py"
+    - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/DeleteSamples.py"
+    - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/SafeRename.py"
+    - "https://raw.githubusercontent.com/Prinz23/nzbget-pp-reverse/master/reverse_name.py"
+    - "https://raw.githubusercontent.com/Prinz23/nzbgetpp/master/unzip.py"
+  ignore_errors: yes
+
+- name: Download unzip.py script
+  unarchive:
+    src: "{{item}}"
+    dest: "/opt/scripts/nzbget/nzbgetpp"
+    copy: no
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+    validate_certs: no
+  register: unzip_py
+  with_items:
+    - "https://github.com/Prinz23/nzbgetpp/archive/master.zip"
+  ignore_errors: yes
+
+- name: Organize unzip.py scripts into proper folder
+  shell: |
+    mv /opt/scripts/nzbget/nzbgetpp/nzbgetpp-master/* /opt/scripts/nzbget/nzbgetpp/
+    rm -rf /opt/scripts/nzbget/nzbgetpp/nzbgetpp-master
+  when: unzip_py.changed
+
+- name: Add unrar path to rarfile.py script
+  lineinfile:
+    path: "/opt/scripts/nzbget/nzbgetpp/rarfile/rarfile.py"
+    regexp: '^UNRAR_TOOL\s?=.*'
+    line: 'UNRAR_TOOL = "/app/unrar"'
+    state: present
+  when: unzip_py.changed
+
+- name: Download completion checker Script
+  unarchive:
+    src: "{{item}}"
+    dest: "/opt/scripts/nzbget/"
+    copy: no
+    mode: 0775
+    owner: "{{user}}"
+    group: "{{user}}"
+    validate_certs: no
+  with_items:
+    - "https://forum.nzbget.net/download/file.php?id=660"
+  ignore_errors: yes
