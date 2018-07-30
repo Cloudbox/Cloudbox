@@ -26,7 +26,6 @@
   with_items:
     - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/flatten.py"
     - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/DeleteSamples.py"
-    - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/SafeRename.py"
     - "https://raw.githubusercontent.com/Prinz23/nzbget-pp-reverse/master/reverse_name.py"
   ignore_errors: yes
 
