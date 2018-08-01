@@ -33,7 +33,7 @@
 - name: Create and start container
   docker_container:
     name: nginx-proxy
-    image: "jwilder/nginx-proxy@sha256:76d9ed11c131fadc7546e3b9b085970e13ff45186171b975ad60830f5ca0d689"
+    image: "jwilder/nginx-proxy"
     pull: yes
     published_ports:
       - "80:80"
