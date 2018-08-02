@@ -52,6 +52,7 @@
   apt: "name={{item}} state=present"
   with_items:
     - nano
+    - zip
     - unzip
     - p7zip
     - curl
