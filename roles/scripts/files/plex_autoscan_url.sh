@@ -21,7 +21,7 @@ BBLUE="\033[1;34m"
 
 # Print banner
 if [ -x "$(command -v toilet)" ]; then
-    echo " "
+    echo ""
     toilet 'Plex Autoscan URL' -f standard --filter metal --filter border:metal --width 86
 fi
 
@@ -53,12 +53,12 @@ elif ! [ -x "$(command -v yq)" ]; then
     $NORMAL"Run '"$BWHITE"sudo pip install yq"$NORMAL"' to install." >&2
     echo ""
     exit 1
-elif [[ ! -f $CB_ACCOUNTS ]]; then
-    echo -e $BRED" Error: "$NORMAL"File '"$BWHITE$CB_ACCOUNTS$NORMAL"' is not found." >&2
-    echo ""
-    exit 1
 elif [[ ! -f $PAS_CONFIG ]]; then
     echo -e $BRED" Error: "$NORMAL"File '"$BWHITE$PAS_CONFIG$NORMAL"' is not found." >&2
+    echo ""
+    exit 1
+elif [[ ! -f $CB_ACCOUNTS ]]; then
+    echo -e $BRED" Error: "$NORMAL"File '"$BWHITE$CB_ACCOUNTS$NORMAL"' is not found." >&2
     echo ""
     exit 1
 fi
