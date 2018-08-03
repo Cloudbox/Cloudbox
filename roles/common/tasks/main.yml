@@ -116,6 +116,7 @@
     - dnspython
     - yq
     - lxml
+    - apprise
   ignore_errors: yes
 
 - name: Set default shell
