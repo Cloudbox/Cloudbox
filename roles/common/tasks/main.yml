@@ -11,16 +11,15 @@
 - name: Create common directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
+    - /home/{{user}}/logs
+    - /home/{{user}}/.config
+    - /home/{{user}}/.config/pip
     - /mnt/local
-    - /mnt/local/.unionfs-fuse
     - /mnt/local/Media
     - /mnt/local/Media/Movies
     - /mnt/local/Media/Music
     - /mnt/local/Media/TV
     - /opt
-    - /home/{{user}}/logs
-    - /home/{{user}}/.config
-    - /home/{{user}}/.config/pip
 
 - name: Set '/opt' permissions
   shell: "chmod -R ugo+X /opt"

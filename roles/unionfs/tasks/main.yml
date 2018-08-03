@@ -34,6 +34,7 @@
     - /mnt/unionfs/Media/Movies
     - /mnt/unionfs/Media/Music
     - /mnt/unionfs/Media/TV
+    - /mnt/local/.unionfs-fuse
 
 - name: Install fuse
   apt:
