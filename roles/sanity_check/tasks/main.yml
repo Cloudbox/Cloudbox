@@ -39,9 +39,9 @@
   register: backup_lock
   tags: always
 
-- name: "Get 'backup.lock' age."
+- name: "Get 'backup.lock' age (in hours)."
   set_fact:
-    backup_lock_age: "{{ ( (((ansible_date_time.epoch|int) - (backup_lock.stat.ctime|int)) / 3600) | int )  }}"
+    backup_lock_age: "{{ ( (((ansible_date_time.epoch|int) - (backup_lock.stat.ctime|int)) / (60*60) ) | int )  }}"
   when: backup_lock.stat.exists
   tags: always
 
