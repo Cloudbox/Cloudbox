@@ -21,15 +21,9 @@
     - /mnt/local/Media/TV
     - /opt
 
-- name: Set '/opt' permissions
-  shell: "chmod -R ugo+X /opt"
-  args:
-    warn: no
-
-- name: Set '/opt' ownership
-  shell: "chown -R {{user}}:{{user}} /opt"
-  args:
-    warn: no
+- name: (Re)Set permissions
+  import_tasks: "permissions.yml"
+  tags: permissions-fix
 
 - name: Add multiverse repositories
   apt_repository:
