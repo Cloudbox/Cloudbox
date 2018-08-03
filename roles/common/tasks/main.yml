@@ -119,11 +119,6 @@
     - apprise
   ignore_errors: yes
 
-- name: Set default shell
-  import_role:
-    name: shell
-  tags: shell
-
 - name: Install z
   import_role:
     name: z
