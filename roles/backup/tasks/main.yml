@@ -24,7 +24,8 @@
       mode: 0775
 
   - name: "Get Start Time"
-    set_fact: start_time="{{lookup('pipe','date \"+%s\"')}}"
+    set_fact:
+      start_time: "{{ lookup('pipe','date \"+%s\"') }}"
 
   - name: "Pushover Message: Started Cloudbox backup task."
     include_role:
@@ -303,13 +304,18 @@
     when: backup.use_rsync
 
   - name: "Get End Time"
-    set_fact: end_time="{{lookup('pipe','date \"+%s\"')}}"
+    set_fact:
+      end_time: "{{ lookup('pipe','date \"+%s\"') }}"
 
-  - name: "Pushover Message: Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
+  - name: "Calculate Total Time"
+    set_fact:
+      total_time: "{{ (((end_time|int) - (start_time|int)) / 60) | int | abs }}"
+
+  - name: "Pushover Message: Finished Cloudbox backup task in {{ total_time }} minutes."
     include_role:
       name: pushover
     vars:
-      message: "Finished Cloudbox backup task in {{  ((((end_time|int) - (start_time|int)) /60)|int|abs) }} minutes."
+      message: "Finished Cloudbox backup task in {{ total_time }} minutes."
 
   - name: "Start cloudplow service."
     systemd:
