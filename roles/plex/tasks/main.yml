@@ -118,6 +118,8 @@
   docker_container:
     name: plex
     image: "plexinc/pms-docker:{{plex.tag}}"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     published_ports:
       - "{{ (( plex.open_port | default(false,true)) | ternary('', '127.0.0.1:')) + '32400:32400/tcp' }}"

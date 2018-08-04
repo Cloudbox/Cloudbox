@@ -18,6 +18,8 @@
   docker_container:
     name: watchtower
     image: "v2tec/watchtower"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     command: sonarr radarr jackett nzbhydra nzbget organizr plexpy plexrequests portainer watchtower nginx-proxy letsencrypt --cleanup --interval 15
     volumes:

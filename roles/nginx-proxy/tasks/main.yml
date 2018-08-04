@@ -34,6 +34,8 @@
   docker_container:
     name: nginx-proxy
     image: "jwilder/nginx-proxy"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     published_ports:
       - "80:80"
@@ -60,6 +62,8 @@
   docker_container:
     name: letsencrypt
     image: "jrcs/letsencrypt-nginx-proxy-companion"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
