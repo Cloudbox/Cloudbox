@@ -70,6 +70,8 @@
   docker_container:
     name: sonarr
     image: "hotio/suitarr:sonarr"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8989"

@@ -32,6 +32,8 @@
   docker_container:
     name: nginx
     image: linuxserver/nginx
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     env:
       PUID: "{{uid}}"

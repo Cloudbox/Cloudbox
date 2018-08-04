@@ -73,6 +73,8 @@
   docker_container:
     name: rutorrent
     image: horjulf/rutorrent-autodl
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     published_ports:
       - "127.0.0.1:3111:80"

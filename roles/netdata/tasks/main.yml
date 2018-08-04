@@ -35,6 +35,8 @@
   docker_container:
     name: netdata
     image: "titpetric/netdata:latest"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     capabilities:
       - SYS_PTRACE

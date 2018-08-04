@@ -29,6 +29,8 @@
   docker_container:
     name: resilio
     image: "resilio/sync"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     published_ports:
       - "127.0.0.1:8888:8888"

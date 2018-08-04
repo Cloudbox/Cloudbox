@@ -30,6 +30,8 @@
   docker_container:
     name: telly
     image: "tombowditch/telly"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     volumes:
     - "/etc/localtime:/etc/localtime:ro"

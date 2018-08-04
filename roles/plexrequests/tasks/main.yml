@@ -29,6 +29,8 @@
   docker_container:
     name: plexrequests
     image: "linuxserver/plexrequests"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     published_ports:
       - "127.0.0.1:3000:3000"

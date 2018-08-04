@@ -64,6 +64,8 @@
   docker_container:
     name: sabnzbd
     image: hotio/suitarr:sabnzbd
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     published_ports:
       - "127.0.0.1:8081:8080"

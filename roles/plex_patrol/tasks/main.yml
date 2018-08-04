@@ -42,6 +42,8 @@
   docker_container:
     name: plex_patrol
     image: "cloudb0x/plex_patrol:latest"
+    labels:
+        "com.github.cloudbox.cloudbox.managed": "true"
     pull: yes
     user: "{{uid}}:{{gid}}"
     volumes:
