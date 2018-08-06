@@ -59,3 +59,12 @@
   with_items:
     - "https://forum.nzbget.net/download/file.php?id=660"
   ignore_errors: yes
+
+- name: Import HashRenamer.py
+  copy:
+    src: "HashRenamer.py"
+    dest: "/opt/scripts/nzbget/HashRenamer.py"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
