@@ -16,6 +16,14 @@
   import_tasks: "variables.yml"
   tags: always
 
+# Only called when specific tag is used
+- name: Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled
+  tags: plex_auth_token
+
+# Sub-Domain Tasks
 - name: "Set Cloudbox Type to 'cloudbox'"
   set_fact:
     cloudbox_type: "cloudbox"
@@ -31,7 +39,7 @@
     cloudbox_type: "feederbox"
   tags: feederbox
 
-# Add cloudbox_type subdomain
+## Add cloudbox_type subdomain
 - name: "Cloudflare: Add '{{cloudbox_type}}' subdomain to '{{domain}}'"
   import_tasks: "add_subdomain.yml"
   when: cloudflare_enabled
@@ -40,7 +48,7 @@
     - mediabox
     - feederbox
 
-# Remove cloudbox subdomain for Mediabox/Feederbox setups.
+## Remove cloudbox subdomain for Mediabox/Feederbox setups.
 - name: "Cloudflare: Remove 'cloudbox' subdomain from '{{domain}}'"
   import_tasks: "remove_subdomain.yml"
   when: cloudflare_enabled
