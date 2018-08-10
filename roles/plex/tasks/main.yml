@@ -55,7 +55,7 @@
   when: plex_account_enabled and not (
       (plex_prefs.stat.exists)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (continuous_integration)
     )
 
 - name: Set plex_claim_code variable
@@ -64,7 +64,7 @@
   when: plex_account_enabled and not (
       (plex_prefs.stat.exists)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (continuous_integration)
     )
 
 - name: Ask user for plex claim code
@@ -76,7 +76,7 @@
       or
       (plex_account_enabled)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (continuous_integration)
     )
 
 - name: Set plex_claim_code variable
@@ -87,7 +87,7 @@
       or
       (plex_account_enabled)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (continuous_integration)
     )
 
 - debug: msg="Using Plex Claim Code{{':'}} {{plex_claim_code}}"

@@ -85,5 +85,5 @@
   when: not (
         (emby_system_xml.exists)
         or
-        ((continuous_integration|default(false,true))|bool)
+        (continuous_integration)
     )

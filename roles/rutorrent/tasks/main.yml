@@ -100,5 +100,5 @@
   when: not (
         (rtorrent_rc.stat.exists)
         or
-        ((continuous_integration|default(false,true))|bool)
+        (continuous_integration)
     )
