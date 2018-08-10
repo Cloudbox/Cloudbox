@@ -26,6 +26,15 @@
     password: "{{ passwd | password_hash('sha512') }}"
     update_password: on_create
     append: yes
+  register: user_info
+
+# For CI Testing
+- name: "Set 'uid', 'gid', and 'vgid'"
+  set_fact:
+    uid: "{{ user_info.uid }}"
+    gid: "{{ user_info.group }}"
+    vgid: "{{ lookup('pipe','getent group video | cut -d: -f3') }}"
+  when: (uid is undefined) or (uid is none) or (uid | trim == '')
 
 - name: Set default shell
   import_role:
@@ -82,7 +91,24 @@
   ignore_errors: yes
   when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
 
-- name: Quit playbook after creation of new cloudbox folder location
+- name: "Quit playbook after creation of new cloudbox folder location"
   fail:
     msg: "Please re-login with the '{{user}}' account (or 'sudo su {{user}}') and run the Cloudbox playbook from the '{{cloudbox_home_folder}}/' path."
   when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
+
+- name: User Account Sanity Check
+  block:
+
+  - name: "Check if user account exists"
+    shell: "id -un {{user}} >/dev/null 2>&1;"
+    register: user_check
+    failed_when: user_check.rc > 1
+    tags: always
+
+  - name: "Fail when user account does not exist"
+    fail:
+      msg: "The user '{{user}}' does not exist!"
+    when: user_check.rc == 1
+    tags: always
+
+  when: not ((continuous_integration|default(false,true))|bool)
