@@ -21,7 +21,7 @@
 - name: Upgrade APT packages
   apt:
     upgrade: dist
-  when: not ((continuous_integration|default(false,true))|bool)
+  when: not continuous_integration
 
 - name: Remove useless packages from the cache
   apt:

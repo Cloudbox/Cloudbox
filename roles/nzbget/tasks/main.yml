@@ -111,12 +111,12 @@
 
 - name: Scripts Task
   include_tasks: "nzbget_scripts.yml"
-  when: not (continuous_integration|default(false,true))|bool)
+  when: not continuous_integration
 
 - name: Settings Task
   include_tasks: "nzbget_settings.yml"
   when: not (
         (nzbget_conf.stat.exists)
         or
-        ((continuous_integration|default(false,true))|bool)
+        (continuous_integration)
     )

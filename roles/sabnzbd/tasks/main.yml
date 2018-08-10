@@ -91,5 +91,5 @@
   when: not (
         (sabnzbd_ini.stat.exists)
         or
-        ((continuous_integration|default(false,true))|bool)
+        (continuous_integration)
     )

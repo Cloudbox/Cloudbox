@@ -64,7 +64,7 @@
 - name: "Get current git branch"
   shell: git rev-parse --abbrev-ref HEAD
   register: git_branch
-  when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
+  when: (playbook_dir != cloudbox_home_folder) and not (continuous_integration)
 
 - name: "Clone Cloudbox project into '/home/{{user}}/cloudbox'"
   git:
@@ -75,7 +75,7 @@
   become: yes
   become_user: "{{user}}"
   ignore_errors: yes
-  when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
+  when: (playbook_dir != cloudbox_home_folder) and not (continuous_integration)
 
 - name: "Copy files to new home folder"
   copy:
@@ -89,12 +89,12 @@
     - "{{playbook_dir}}/*.cfg"
     - "{{playbook_dir}}/*.conf"
   ignore_errors: yes
-  when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
+  when: (playbook_dir != cloudbox_home_folder) and not (continuous_integration)
 
 - name: "Quit playbook after creation of new cloudbox folder location"
   fail:
     msg: "Please re-login with the '{{user}}' account (or 'sudo su {{user}}') and run the Cloudbox playbook from the '{{cloudbox_home_folder}}/' path."
-  when: (playbook_dir != cloudbox_home_folder) and not ((continuous_integration|default(false,true))|bool)
+  when: (playbook_dir != cloudbox_home_folder) and not (continuous_integration)
 
 - name: User Account Sanity Check
   block:
@@ -111,4 +111,4 @@
     when: user_check.rc == 1
     tags: always
 
-  when: not ((continuous_integration|default(false,true))|bool)
+  when: not continuous_integration
