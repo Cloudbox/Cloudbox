@@ -25,3 +25,7 @@
 - name: Set plex_auth_token variable
   set_fact:
     plex_auth_token: "{{ plex_token_raw.json.user.authToken | regex_replace('\n', '') }}"
+
+- name: Display Plex Auth Token
+  debug:
+    msg: "Your Plex Auth Token is: {{plex_auth_token}}"
