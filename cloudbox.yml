@@ -10,7 +10,6 @@
     - { role: pre_tasks }
     - { role: kernel, tags: ['kernel'] }
     - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
-    - { role: user, tags: ['always'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
     - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
