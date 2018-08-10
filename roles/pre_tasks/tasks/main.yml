@@ -20,13 +20,6 @@
   import_tasks: "variables.yml"
   tags: always
 
-# Only called when specific tag is used
-- name: Plex Auth Token role
-  import_role:
-    name: plex_auth_token
-  when: plex_account_enabled
-  tags: plex_auth_token
-
 # Sub-Domain Tasks
 - name: "Set Cloudbox Type to 'cloudbox'"
   set_fact:

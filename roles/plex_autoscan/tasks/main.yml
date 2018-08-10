@@ -36,15 +36,17 @@
     requirements: /opt/plex_autoscan/requirements.txt
     executable: pip2
 
+# No plex_autoscan_config.stat.exists conditional to allow for separate use
+- name: Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled
+  tags: plex_auth_token
+
 - name: Check config exists
   stat:
     path: "/opt/plex_autoscan/config/config.json"
   register: plex_autoscan_config
-
-- name: Import Plex Auth Token role
-  import_role:
-    name: plex_auth_token
-  when: plex_account_enabled and not plex_autoscan_config.stat.exists
 
 - name: "Generate 32 character SERVER_PASS"
   shell: "pwgen 32 1"
