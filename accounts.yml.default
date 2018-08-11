@@ -10,3 +10,4 @@ plex:
 pushover:
   app_token:
   user_key:
+  priority:
