@@ -18,6 +18,11 @@
     msg: "System is running {{ ansible_lsb.description if ansible_lsb is defined else (ansible_distribution + ' ' + ansible_distribution_version) }}."
   tags: always
 
+- name: "Set 'continuous_integration' variable"
+  set_fact:
+    continuous_integration: "{{ continuous_integration | default(false,true) }}"
+  tags: always
+
 - name: "Get all available tags"
   shell: ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
   register: t
