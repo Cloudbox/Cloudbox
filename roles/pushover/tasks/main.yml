@@ -13,5 +13,6 @@
     msg: "{{message}}"
     app_token: "{{ pushover.app_token | default(pushover_app_token,true) }}"
     user_key: "{{ pushover.user_key | default(pushover_user_key,true) }}"
+    pri: "{{ pushover.priority | default(0,true) }}"
   when: pushover_enabled
   ignore_errors: yes
