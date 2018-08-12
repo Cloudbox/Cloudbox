@@ -17,7 +17,7 @@ init:
   - sh: curl -s https://cloudbox.rocks/install_dependencies.sh | sudo -H sh
 
 install:
-  - sh: cd ${CLOUDBOX_FOLDER} && cp -n ansible.cfg.default ansible.cfg; cp -n settings.yml.default settings.yml; cp -n adv_settings.yml.default adv_settings.yml
+  - sh: cd ${CLOUDBOX_FOLDER} && cp -n ansible.cfg.default ansible.cfg; cp -n accounts.yml.default accounts.yml; cp -n settings.yml.default settings.yml; cp -n adv_settings.yml.default adv_settings.yml
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
   - sh: sudo ansible-playbook cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
 
