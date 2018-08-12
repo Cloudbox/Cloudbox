@@ -86,6 +86,8 @@
       LETSENCRYPT_HOST: "rutorrent.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes: "{{ default_volumes + torrents_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

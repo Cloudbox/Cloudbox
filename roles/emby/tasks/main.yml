@@ -59,6 +59,8 @@
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
     devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

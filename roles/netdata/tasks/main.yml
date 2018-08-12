@@ -25,7 +25,7 @@
     mode: 0664
   with_items:
     - netdata
-    
+
 - name: Stop and remove any existing container
   docker_container:
     name: netdata
@@ -50,6 +50,8 @@
       - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

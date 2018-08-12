@@ -51,6 +51,8 @@
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
       - "/opt/scripts:/scripts"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

@@ -44,6 +44,8 @@
       - "/opt/resilio:/mnt/sync"
       - "/mnt:/mnt/mounted_folders/mnt"
       - "/home:/mnt/mounted_folders/home"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

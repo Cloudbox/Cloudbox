@@ -78,6 +78,8 @@
       LETSENCRYPT_EMAIL: "{{email}}"
       LC_ALL: "C"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

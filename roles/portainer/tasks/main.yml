@@ -41,6 +41,8 @@
       VIRTUAL_PORT: 9000
       LETSENCRYPT_HOST: "portainer.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
