@@ -43,6 +43,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/mariadb:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
@@ -71,6 +73,8 @@
       - "/opt/nextcloud/conf:/config"
       - "/opt/nextcloud/data:/data"
       - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

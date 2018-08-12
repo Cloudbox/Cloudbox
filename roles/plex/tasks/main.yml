@@ -152,6 +152,8 @@
       - "/tmp:/tmp"
     devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
     etc_hosts: "{{plex_default_hosts | combine(plex_custom_hosts|default([])) }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

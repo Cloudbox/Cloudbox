@@ -47,7 +47,8 @@
       - "/usr/share/nginx/html"
       - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf"
     labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+      "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
@@ -70,6 +71,8 @@
       - "nginx-proxy"
     env:
       DEBUG: true
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

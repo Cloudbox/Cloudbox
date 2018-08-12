@@ -44,6 +44,8 @@
       TELLY_FILTER_REGEX_MODE: true
       TELLY_DISCOVERY_SSDP: true
       TELLY_LOG_REQUESTS: "{{ telly.log_requests | default ('') }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

@@ -42,6 +42,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/ombi:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

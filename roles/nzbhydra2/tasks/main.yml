@@ -97,6 +97,8 @@
       LETSENCRYPT_HOST: "nzbhydra2.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes: "{{ default_volumes + migration_path|default([]) }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:

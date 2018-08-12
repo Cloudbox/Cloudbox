@@ -81,6 +81,8 @@
       - "/mnt/unionfs/Media/Movies:/movies"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
