@@ -39,7 +39,7 @@
       (rclone_conf_user_dir.stat.exists)
     )
 
-- name: "Check if {{backup.tar_dest}} exists"
+- name: "Check if '{{backup.tar_dest}}' exists"
   stat:
     path: "{{backup.tar_dest}}"
     get_attributes: false
@@ -48,7 +48,7 @@
     get_mime: false
   register: backup_location
 
-- name: "Create backup location {{backup.tar_dest}}"
+- name: "Create backup location '{{backup.tar_dest}}'"
   file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
   when: backup_location.stat.exists == False
 
@@ -67,13 +67,13 @@
   with_items:
     - "/home/{{user}}/.config/rclone"
 
-- name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
+- name: "Fetch 'cloudbox.tar' from '{{backup.rclone_dest}}'"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: yes
   become_user: "{{user}}"
   when: ((backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
 
-- name: "Fetch cloudbox.tar from {{backup.rsync_dest}}"
+- name: "Fetch 'cloudbox.tar' from {{backup.rsync_dest}}"
   synchronize:
     src: "{{backup.rsync_dest}}/cloudbox.tar"
     dest: "{{backup.tar_dest}}/"
@@ -92,8 +92,8 @@
     get_mime: false
   register: cloudbox_tar2
 
-- name: "Fail if cloudbox.tar does not exist"
-  fail: msg="There must have been an issue retrieving the cloudbox.tar file as it does not exist at {{backup.tar_dest}}/cloudbox.tar"
+- name: "Fail if 'cloudbox.tar' does not exist"
+  fail: msg="There must have been an issue retrieving the 'cloudbox.tar' file as it does not exist at '{{backup.tar_dest}}/cloudbox.tar'"
   when: cloudbox_tar2.stat.exists == False
 
 - name: "Wait for 10 seconds before unarchiving"
