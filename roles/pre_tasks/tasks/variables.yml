@@ -8,6 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+# Needed again for cloudbox_mod.
+- name: "Set 'continuous_integration' variable"
+  set_fact:
+    continuous_integration: "{{ continuous_integration | default(false,true) }}"
+
 - name: "Set 'cloudflare_enabled' variable"
   set_fact:
     cloudflare_enabled: "{{ true if not(
