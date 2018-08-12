@@ -106,32 +106,32 @@
   debug:
     msg: "Rclone {{rclone_version.stdout}} installed."
 
-- name: Check if rclone.conf exists in cloudbox folder
+- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
   stat:
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf_playbook_dir
 
-- name: "Move rclone.conf in cloudbox folder to default location"
+- name: "Move 'rclone.conf' from '{{playbook_dir}}' folder to default location"
   shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
   when: rclone_conf_playbook_dir.stat.exists
 
-- name: Check if rclone.conf exists at default location
+- name: "Check if 'rclone.conf' exists at default location"
   stat:
     path: "/home/{{user}}/.config/rclone/rclone.conf"
   register: rclone_conf_default_path
 
-- name: Do the following block when rclone.conf is not at default location
+- name: "Do the following block when 'rclone.conf' is not at default location"
   block:
 
-  - name: Find location of rclone.conf when not at default location
+  - name: "Find location of 'rclone.conf' when not at default location"
     shell: rclone config file
     register: rclone_conf_current_location
 
-  - name: Move rclone.conf to default location if found elsewhere
+  - name: "Move 'rclone.conf' to default location if found elsewhere"
     shell: "mv '{{ rclone_conf_current_location.stdout_lines | last }}' '/home/{{user}}/.config/rclone/rclone.conf'"
     when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
 
-  - name: Create blank rclone.conf if not found elsewhere
+  - name: "Create blank 'rclone.conf' if not found elsewhere"
     file:
       path: "/home/{{user}}/.config/rclone/rclone.conf"
       state: touch
