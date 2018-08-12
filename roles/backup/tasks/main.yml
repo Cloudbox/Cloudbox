@@ -181,12 +181,19 @@
       get_mime: false
     register: backup_new
 
-  - name: "Pushover Message: Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }} GB)."
+  - name: Abort backup when tar creation fails.
+    fail: msg="There must have been an issue creating the 'cloudbox.tar' file as it does not exist at '{{backup.tar_dest}}/cloudbox.tar'"
+    when: not backup_new.stat.exists
+
+  - name: "Calculate Backup Size"
+    set_fact:
+      backup_size: "{{ ( ( backup_new.stat.size / (1024*1024*1024) ) | round(0, 'ceil') | int | abs ) }}"
+
+  - name: "Pushover Message: Backup archive created (file size: {{ backup_size }} GB)."
     include_role:
       name: pushover
     vars:
-      message: "Backup archive created (file size: {{ ( ( backup_new.stat.size / (1024*1024*1024) ) | int | abs ) }} GB)."
-    when: not (backup_new is undefined)
+      message: "Backup archive created (file size: {{ backup_size }} GB)."
     ignore_errors: yes
 
   - name: "Remove 'cloudbox.tar.backup' from '{{backup.tar_dest}}'."
@@ -262,6 +269,8 @@
     shell: "rclone moveto '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/archived/{{ item }}_{{ rclone_timestamp.stdout | default('old', true) }}' 2>/dev/null"
     become: yes
     become_user: "{{user}}"
+    register: rclone_move
+    failed_when: rclone_move.rc > 3
     ignore_errors: yes
     when: backup.use_rclone
     with_items:
@@ -274,7 +283,7 @@
      - "cloudbox.tar"
 
   - name: "Use rclone to upload backup to '{{backup.rclone_dest}}'."
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -vv --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rclone
