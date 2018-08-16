@@ -81,6 +81,7 @@
       - "/mnt/unionfs/Media/TV:/tv"
       - "{{nzbget.downloads}}:/downloads/nzbget"
       - "{{rutorrent.downloads}}:/downloads/rutorrent"
+      - "{{deluge.downloads}}:/downloads/deluge"
       - "/mnt:/mnt"
       - "/opt/scripts:/scripts"
     networks:
