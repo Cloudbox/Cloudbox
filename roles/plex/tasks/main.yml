@@ -150,3 +150,6 @@
   import_role:
     name: webtools
   tags: webtools
+
+- name : Install Unrar & Unzip
+  shell : docker exec -i plex bash -c 'apt-get update && apt install unzip unrar -y'
