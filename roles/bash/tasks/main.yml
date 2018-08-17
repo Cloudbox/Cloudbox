@@ -8,6 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+
+- name: Create .bashrc if not present
+  file:
+    path: "/home/{{user}}/.bashrc"
+    state: touch 
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0770
+
 - name: Set default editor to nano in .bashrc
   lineinfile:
     dest: "/home/{{user}}/.bashrc"
