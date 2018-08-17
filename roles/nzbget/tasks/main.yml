@@ -114,6 +114,7 @@
 - name: Scripts Task
   include_tasks: "nzbget_scripts.yml"
   when: not continuous_integration
+  tags: nzbget-scripts
 
 - name: Settings Task
   include_tasks: "nzbget_settings.yml"
