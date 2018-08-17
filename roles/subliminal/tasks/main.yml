@@ -1,0 +1,24 @@
+#########################################################################
+# Title:         Cloudbox: Subliminal Role                              #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Install Subliminal
+  pip: "name={{item}}"
+  with_items:
+    - "git+https://github.com/Diaoul/subliminal.git@develop"
+  ignore_errors: yes
+
+- name: "Get Subliminal version"
+  shell: "/usr/local/bin/subliminal --version | head -n 1 | awk '{ print $3 }'"
+  register: subliminal_version
+  ignore_errors: yes
+
+- name: "Display Subliminal version"
+  debug:
+    msg: "Subliminal {{subliminal_version.stdout}} installed."

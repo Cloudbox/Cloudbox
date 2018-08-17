@@ -156,8 +156,7 @@
   ignore_errors: yes
 
 - name: Install Subliminal
-  pip: "name={{item}}"
-  with_items:
-    - "git+https://github.com/Diaoul/subliminal.git@develop"
-  ignore_errors: yes
+  import_role:
+    name: subliminal
   tags: subliminal
+  ignore_errors: yes
