@@ -183,7 +183,9 @@
 - name: "Install WebTools"
   import_role:
     name: webtools
-  tags: webtools
+  tags:
+    - webtools
+    - reinstall-webtools
 
 - name: "Forced Automatic Quality Settings"
   import_tasks: "forced_quality_settings.yml"
