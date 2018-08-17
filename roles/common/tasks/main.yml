@@ -117,13 +117,6 @@
     - apprise
   ignore_errors: yes
 
-- name: Install subliminal
-  pip: "name={{item}}"
-  with_items:
-    - "https://github.com/Diaoul/subliminal/archive/develop.zip"
-  tags: subliminal
-  ignore_errors: yes
-
 - name: Install z
   import_role:
     name: z
@@ -159,3 +152,10 @@
     name: nethogs
   tags: nethogs
   ignore_errors: yes
+
+- name: Install Subliminal
+  pip: "name={{item}}"
+  with_items:
+    - "git+https://github.com/Diaoul/subliminal.git@develop"
+  ignore_errors: yes
+  tags: subliminal
