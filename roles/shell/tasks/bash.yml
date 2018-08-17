@@ -8,7 +8,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set default editor to nano in .bashrc
+- name: Check if '.bashrc' exists
+  stat:
+    path: "/home/{{user}}/.bashrc"
+  register: bashrc
+
+- name: "Copy '/etc/skel/.bashrc' to '/home/{{user}}/.bashrc'"
+  copy:
+    src: "/etc/skel/.bashrc"
+    dest: "/home/{{user}}/.bashrc"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+  when: not bashrc.stat.exists
+
+- name: Set default editor to nano in '.bashrc'
   lineinfile:
     dest: "/home/{{user}}/.bashrc"
     regexp: "^export EDITOR="
