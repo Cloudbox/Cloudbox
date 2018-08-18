@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: quassel
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -61,14 +53,17 @@
     published_ports:
       - "4242:4242"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/quassel:/config"
-    restart_policy: always
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - quassel
+    purge_networks: yes
+    restart_policy: always
     state: started

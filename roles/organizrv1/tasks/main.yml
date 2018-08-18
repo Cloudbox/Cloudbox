@@ -1,0 +1,53 @@
+#########################################################################
+# Title:         Cloudbox: OrganizrV1 Role                              #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  lsiocommunity/organizr                                 #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: organizrv1
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: organizrv1
+    state: absent
+
+- name: Create organizrv1 directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/organizrv1
+
+- name: Create and start container
+  docker_container:
+    name: organizrv1
+    image: "lsiocommunity/organizr"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:7422:80"
+    env:
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+      VIRTUAL_HOST: "organizrv1.{{domain}}"
+      VIRTUAL_PORT: 80
+      LETSENCRYPT_HOST: "organizrv1.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/organizrv1:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - organizrv1
+    purge_networks: yes
+    restart_policy: always
+    state: started

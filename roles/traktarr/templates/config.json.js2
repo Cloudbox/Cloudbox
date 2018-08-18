@@ -95,13 +95,13 @@
     "debug": false
   },
   "radarr": {
-    "api_key": "",
+    "api_key": "{{ radarr_api_key | default('',true) }}",
     "profile": "HD-1080p",
     "url": "https://radarr.{{domain}}",
     "root_folder": "/movies/"
   },
   "sonarr": {
-    "api_key": "",
+    "api_key": "{{ sonarr_api_key | default('',true) }}",
     "profile": "HD-1080p",
     "url": "https://sonarr.{{domain}}",
     "root_folder": "/tv/",

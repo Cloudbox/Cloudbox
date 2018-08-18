@@ -11,49 +11,45 @@
 - name: Create common directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
+    - /home/{{user}}/logs
+    - /home/{{user}}/.config
+    - /home/{{user}}/.config/pip
     - /mnt/local
-    - /mnt/local/.unionfs-fuse
     - /mnt/local/Media
     - /mnt/local/Media/Movies
     - /mnt/local/Media/Music
     - /mnt/local/Media/TV
     - /opt
-    - /home/{{user}}/logs
-    - /home/{{user}}/.config
-    - /home/{{user}}/.config/pip
 
-- name: Check plexdrive mount folder exist
-  stat:
-    path: /mnt/plexdrive
-  register: plexdrive_mnt
+- name: (Re)Set permissions
+  import_tasks: "permissions.yml"
+  tags: permissions-fix
 
-- name: Create /mnt/plexdrive
-  file:
-    path: /mnt/plexdrive
-    state: directory
-    mode: 0755
-    owner: "{{user}}"
-    group: "{{user}}"
-    recurse: yes
-  when: plexdrive_mnt.stat.exists == False
+- name: Add multiverse repositories
+  apt_repository:
+    repo: "{{item}}"
+    state: present
+  with_items:
+    - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
+    - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
+    - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
+    - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
+  register: apt_multiverse_repositories
 
-- name: Set /opt permissions
-  shell: "chmod -R ugo+X /opt"
-  args:
-    warn: no
-
-- name: Set /opt ownership
-  shell: "chown -R {{user}}:{{user}} /opt"
-  args:
-    warn: no
+- name: Update APT packages list
+  apt:
+    update_cache: yes
+  when: apt_multiverse_repositories.changed
 
 - name: Install common packages
   apt: "name={{item}} state=present"
   with_items:
     - nano
+    - zip
     - unzip
     - p7zip
     - curl
+    - httpie
     - sqlite3
     - vnstat
     - tree
@@ -92,14 +88,14 @@
     path: "/usr/bin/unrar"
   register: unrar_binary
 
-- name: Install unrar-free
+- name: Install unrar-free if unrar was not installed
   apt: "name={{item}} state=present"
   with_items:
     - unrar-free
   ignore_errors: yes
   when: not unrar_binary.stat.exists
 
-- name: "Import pip.conf into /home/{{user}}/.config/pip/"
+- name: "Import pip.conf into /home/{{user}}/.config/pip/pip.conf"
   copy:
     src: "pip.conf"
     dest: "/home/{{user}}/.config/pip/pip.conf"
@@ -115,9 +111,16 @@
     - certbot
     - ansible-toolbox
     - ndg-httpsclient
-    - docker-py
     - dnspython
     - yq
+    - lxml
+    - apprise
+  ignore_errors: yes
+
+- name: Install z
+  import_role:
+    name: z
+  tags: z
   ignore_errors: yes
 
 - name: Install nodejs
@@ -150,20 +153,8 @@
   tags: nethogs
   ignore_errors: yes
 
-- name: Set bash as default shell
+- name: Install Subliminal
   import_role:
-    name: bash
-  when: shell|default('zsh',true) == "bash"
-  tags: shell
-
-- name: Set zsh as default shell
-  import_role:
-    name: zsh
-  when: shell|default('zsh',true) == "zsh"
-  tags: shell
-
-- name: Install z
-  import_role:
-    name: z
-  tags: z
+    name: subliminal
+  tags: subliminal
   ignore_errors: yes

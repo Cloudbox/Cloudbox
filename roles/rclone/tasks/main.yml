@@ -8,16 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Verify that Rclone version was specified
-  fail: msg="You must specify the Rclone version in settings.yml"
-  when: (
-      (rclone.version is undefined)
-      or
-      (rclone.version is none)
-      or
-      (rclone.version | trim == '')
-      )
-
 - name: Ensure unzip is installed
   apt:
     name: unzip
@@ -34,12 +24,42 @@
   args:
     warn: no
 
-- name: Build version tag
-  set_fact: rclone_version_tag="{{ ((rclone.version == 'latest') | ternary('current', 'v{{ "%.2f"|format(rclone.version) }}')) }}"
+- name: Check if rclone version was specified
+  set_fact:
+    rclone_version_specified: "{{ true if not (
+        (rclone is undefined)
+        or
+        (rclone is none)
+        or
+        (rclone | trim == '')
+        or
+        (rclone.version is undefined)
+        or
+        (rclone.version is none)
+        or
+        (rclone.version | trim == '')
+      )
+      else false }}"
 
-- name: "Unarchive rclone version: {{rclone_version_tag}}"
+- name: Set rclone_download_url for current version
+  set_fact:
+    rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
+  when: rclone.version == 'latest' or rclone.version == 'current' or not rclone_version_specified
+
+- name: Set rclone_download_url for beta version
+  set_fact:
+    rclone_download_url: "https://beta.rclone.org/rclone-beta-latest-linux-amd64.zip"
+  when: rclone.version == 'beta'
+
+- name: Set rclone_download_url for specified version
+  set_fact:
+    rclone_download_url: 'https://downloads.rclone.org/v{{ "%.2f"|format(rclone.version) }}/rclone-v{{ "%.2f"|format(rclone.version) }}-linux-amd64.zip'
+  when: rclone_version_specified and not (rclone.version == 'beta' or rclone.version == 'latest' or rclone.version == 'current')
+  ignore_errors: yes
+
+- name: "Download and unarchive rclone"
   unarchive:
-    src: "https://downloads.rclone.org/{{ '' if rclone.version == 'latest' else rclone_version_tag + '/' }}rclone-{{ rclone_version_tag }}-linux-amd64.zip"
+    src: "{{ rclone_download_url | default('https://downloads.rclone.org/rclone-current-linux-amd64.zip',true) }}"
     dest: /tmp
     copy: no
     validate_certs: no
@@ -52,9 +72,10 @@
   copy:
     src: "{{ rclone_tmp_dir.stdout }}/rclone"
     dest: "/usr/bin/rclone"
-    mode: 0755
+    mode: 0775
     owner: root
     group: root
+    force: yes
 
 - name: Make dir for local manpages
   file:
@@ -68,7 +89,7 @@
   copy:
     src: "{{ rclone_tmp_dir.stdout }}/rclone.1"
     dest: /usr/local/share/man/man1/rclone.1
-    mode: 0644
+    mode: 0664
     owner: root
     group: root
 
@@ -77,40 +98,40 @@
   changed_when: false
 
 - name: Get rclone version
-  shell: rclone --version | head -n 1 | awk '{ print substr($2, 2, 4) }'
+  shell: rclone --version | head -n 1 | awk '{ print substr($2, 2) }'
   register: rclone_version
   ignore_errors: yes
 
 - name: "Display rclone version"
   debug:
-    msg: "rclone version {{rclone_version.stdout}} installed."
+    msg: "Rclone {{rclone_version.stdout}} installed."
 
-- name: Check if rclone.conf exists in cloudbox folder
+- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
   stat:
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf_playbook_dir
 
-- name: "Move rclone.conf in cloudbox folder to default location"
+- name: "Move 'rclone.conf' from '{{playbook_dir}}' folder to default location"
   shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
   when: rclone_conf_playbook_dir.stat.exists
 
-- name: Check if rclone.conf exists at default location
+- name: "Check if 'rclone.conf' exists at default location"
   stat:
     path: "/home/{{user}}/.config/rclone/rclone.conf"
   register: rclone_conf_default_path
 
-- name: Do the following block when rclone.conf is not at default location
+- name: "Do the following block when 'rclone.conf' is not at default location"
   block:
 
-  - name: Find location of rclone.conf when not at default location
+  - name: "Find location of 'rclone.conf' when not at default location"
     shell: rclone config file
     register: rclone_conf_current_location
 
-  - name: Move rclone.conf to default location if found elsewhere
+  - name: "Move 'rclone.conf' to default location if found elsewhere"
     shell: "mv '{{ rclone_conf_current_location.stdout_lines | last }}' '/home/{{user}}/.config/rclone/rclone.conf'"
     when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
 
-  - name: Create blank rclone.conf if not found elsewhere
+  - name: "Create blank 'rclone.conf' if not found elsewhere"
     file:
       path: "/home/{{user}}/.config/rclone/rclone.conf"
       state: touch

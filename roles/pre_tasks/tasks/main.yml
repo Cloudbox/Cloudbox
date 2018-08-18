@@ -8,54 +8,47 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Set User Variables
+  import_tasks: "user.yml"
+  tags: always
 
-- name: "Set Cloudbox Type to \"cloudbox\""
+- name: Clean Paths
+  import_tasks: "clean_paths.yml"
+  tags: always
+
+- name: Set Cloudbox Variables
+  import_tasks: "variables.yml"
+  tags: always
+
+# Sub-Domain Tasks
+- name: "Set Cloudbox Type to 'cloudbox'"
   set_fact:
     cloudbox_type: "cloudbox"
   tags: cloudbox
 
-- name: "Set Cloudbox Type to \"mediabox\""
+- name: "Set Cloudbox Type to 'mediabox'"
   set_fact:
     cloudbox_type: "mediabox"
   tags: mediabox
 
-- name: "Set Cloudbox Type to \"feederbox\""
+- name: "Set Cloudbox Type to 'feederbox'"
   set_fact:
     cloudbox_type: "feederbox"
   tags: feederbox
 
-- name: Setting CloudFlare DNS Record for Cloudbox Type
-  include_role:
-    name: cloudflare
-  vars:
-    subdomain: "{{cloudbox_type}}"
-  when: not(
-      (cloudbox_type is undefined)
-      or
-      (cloudbox_type is none)
-      or
-      (cloudbox_type | trim == '')
-    )
+## Add cloudbox_type subdomain
+- name: "Cloudflare: Add '{{cloudbox_type}}' subdomain to '{{domain}}'"
+  import_tasks: "add_subdomain.yml"
+  when: cloudflare_enabled
   tags:
     - cloudbox
     - mediabox
     - feederbox
 
-- name: Remove cloudbox subdomain for plex/feeder boxes
-  cloudflare_dns:
-    account_api_token: "{{cloudflare_api_token}}"
-    account_email: "{{email}}"
-    zone: "{{domain}}"
-    state: absent
-    type: A
-    record: "cloudbox"
-  when: not(
-      (cloudflare_api_token is undefined)
-      or
-      (cloudflare_api_token is none)
-      or
-      (cloudflare_api_token | trim == '')
-    )
+## Remove cloudbox subdomain for Mediabox/Feederbox setups.
+- name: "Cloudflare: Remove 'cloudbox' subdomain from '{{domain}}'"
+  import_tasks: "remove_subdomain.yml"
+  when: cloudflare_enabled
   tags:
     - mediabox
     - feederbox

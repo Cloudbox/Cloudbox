@@ -1,0 +1,54 @@
+##########################################################################
+# Title:         Cloudbox: Plex - Forced Automatic Quality Settings      #
+# Author(s):     Desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.rocks           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+#   Based on the work by Michael Zemsky (https://github.com/zmike808)    #
+##########################################################################
+
+---
+- name: Install lxml pip module
+  pip: "name={{item}} state=latest"
+  with_items:
+    - lxml
+  ignore_errors: yes
+
+- name: Wait for 'Preferences.xml' to be created by Plex
+  wait_for:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    state: present
+
+# forceAutoAdjustQuality - Forces clients to use automatic quality for media unless the quality is set higher than the quality of the video.
+
+- name: "Set 'forceAutoAdjustQuality' to '{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('Enabled','Disabled') }}'."
+  xml:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    xpath: /Preferences
+    attribute: forceAutoAdjustQuality
+    value: "{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('1','0') }}"
+    state: present
+  register: x
+  ignore_errors: yes
+
+# AllowHighOutputBitrates - Forces transcode quality to upscale. But can cause high bandwidth usage for clients.
+
+- name: "Set 'AllowHighOutputBitrates' to '{{ (plex.allow_high_output_bitrates|default(false,true)) | ternary('Enabled','Disabled') }}'."
+  xml:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    xpath: /Preferences
+    attribute: AllowHighOutputBitrates
+    value: "{{ (plex.allow_high_output_bitrates|default(false,true)) | ternary('1','0') }}"
+    state: present
+  register: y
+  ignore_errors: yes
+
+- name: Restart plex container
+  docker_container:
+    name: plex
+    state: started
+    restart: yes
+  when: x.changed or y.changed

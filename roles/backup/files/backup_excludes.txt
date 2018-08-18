@@ -1,0 +1,35 @@
+# Cloudbox
+
+./bazarr/app/log/*
+
+./cloudplow/cloudplow.log
+./cloudplow/cloudplow.log.*
+./cloudplow/locks/*
+
+./lidarr/app/MediaCover/*
+
+./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*
+
+./plex_autoscan/plex_autoscan.log
+./plex_autoscan/plex_autoscan.log.*
+
+./plexdrive/cache.bolt
+
+./plex_dupefinder/activity.log
+./plex_dupefinder/decisions.log
+
+./plexlibrary/plexlibrary_cron.log
+
+./plexpy/logs/*
+
+./radarr/app/logs/*
+./radarr/app/MediaCover/*
+
+./radarr4k/app/logs/*
+./radarr4k/app/MediaCover/*
+
+./sonarr/app/logs/*
+./sonarr/app/MediaCover/*
+
+./sonarr4k/app/logs/*
+./sonarr4k/app/MediaCover/*

@@ -9,14 +9,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
 - name: Stop and remove any existing container
   docker_container:
     name: watchtower
@@ -27,12 +19,15 @@
     name: watchtower
     image: "v2tec/watchtower"
     pull: yes
-    command: sonarr radarr jackett nzbhydra nzbget organizr plexpy plexrequests portainer watchtower nginx-proxy letsencrypt --cleanup --interval 15
+    command: sonarr radarr lidarr jackett nzbhydra2 nzbget organizr plexpy ombi portainer watchtower nginx-proxy letsencrypt --cleanup --interval 15
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - watchtower
+    purge_networks: yes
     state: stopped

@@ -9,11 +9,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: netdata
+
+- name: Create htpasswd
+  htpasswd:
+    path: "/opt/nginx-proxy/htpasswd/{{item}}.{{domain}}"
+    name: "{{user}}"
+    password: "{{passwd}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+  with_items:
+    - netdata
 
 - name: Stop and remove any existing container
   docker_container:
@@ -39,9 +50,12 @@
       - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - netdata
+    purge_networks: yes
     restart_policy: always
     state: started

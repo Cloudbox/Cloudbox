@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: nextcloud
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing containers
   docker_container: "name={{item}} state=absent"
@@ -45,16 +37,19 @@
     published_ports:
       - "127.0.0.1:3306:3306"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       MYSQL_ROOT_PASSWORD: "password321"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/mariadb:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - mariadb
+    purge_networks: yes
     restart_policy: always
     state: started
 
@@ -66,8 +61,8 @@
     published_ports:
       - "127.0.0.1:4645:443"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "nextcloud.{{domain}}"
       VIRTUAL_PORT: 443
       VIRTUAL_PROTO: https
@@ -78,9 +73,12 @@
       - "/opt/nextcloud/conf:/config"
       - "/opt/nextcloud/data:/data"
       - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - nextcloud
+    purge_networks: yes
     restart_policy: always
     state: started

@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check cloudbox.tar exists"
+- name: "Check if 'cloudbox.tar' exists"
   stat:
     path: "{{backup.tar_dest}}/cloudbox.tar"
     get_attributes: false
@@ -17,29 +17,30 @@
     get_mime: false
   register: cloudbox_tar1
 
-- name: Fail when no backup upload tool has been enabled or no local backup copy exists
-  fail: msg="You must set atleast one backup.use_* option in order to perform a restore"
-  when: (backup.use_rclone == False and backup.use_rsync == False) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
+- name: Fail when no backup tool has been enabled or when no local backup tar exists
+  fail: msg="You must enable either rclone or rsync, in the backup settings, to perform a restore."
+  when: not (cloudbox_tar1.stat.exists or backup.use_rclone or backup.use_rsync)
 
-- name: Check if rclone.conf exists in cloudbox folder
-  stat:
-    path: "{{playbook_dir}}/rclone.conf"
-  register: rclone_conf_playbook_dir
+- name: Fail when both backup tools are enabled
+  fail: msg="You can only have either rclone enabled or rsync enabled, but not both."
+  when: (not cloudbox_tar1.stat.exists) and (backup.use_rclone and backup.use_rsync)
 
-- name: Check if rclone.conf exists in default location
-  stat:
-    path: "/home/{{user}}/.config/rclone/rclone.conf"
-  register: rclone_conf_user_dir
+- name: Install rclone
+  include_role:
+    name: rclone
+  when: (not cloudbox_tar1.stat.exists) and (backup.use_rclone)
 
-- name: Fail when no rclone.conf is found
-  fail: msg="You must place your rclone.conf file in {{playbook_dir}} or setup Rclone via rclone config"
-  when: backup.use_rclone and not(
-      (rclone_conf_playbook_dir.stat.exists)
-      or
-      (rclone_conf_user_dir.stat.exists)
-    )
+- name: Test rclone remote
+  shell: "rclone lsd {{backup.rclone_dest}}"
+  register: rclone_test
+  failed_when: rclone_test.rc > 3
+  when: (not cloudbox_tar1.stat.exists) and (backup.use_rclone)
 
-- name: "Check if {{backup.tar_dest}} exists"
+- name: "Fail when rclone is misconfigured."
+  fail: msg="The rclone remote is misconfigured - You must place a valid 'rclone.conf' file in '{{playbook_dir}}' (or setup Rclone via 'rclone config') and verify that the 'rclone_dest' in settings is valid."
+  when: (not cloudbox_tar1.stat.exists) and ((backup.use_rclone) and (rclone_test.rc > 0))
+
+- name: "Check if '{{backup.tar_dest}}' exists"
   stat:
     path: "{{backup.tar_dest}}"
     get_attributes: false
@@ -48,32 +49,17 @@
     get_mime: false
   register: backup_location
 
-- name: "Create backup location {{backup.tar_dest}}"
+- name: "Create backup location '{{backup.tar_dest}}'"
   file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
-  when: backup_location.stat.exists == False
+  when: not backup_location.stat.exists
 
-- name: Check rclone installed
-  stat:
-    path: "/usr/bin/rclone"
-  register: rclone_bin
-
-- name: Install rclone
-  include_role:
-    name: rclone
-  when: backup.use_rclone and rclone_bin.stat.exists == False
-
-- name: Ensure rclone folders exists
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - "/home/{{user}}/.config/rclone"
-
-- name: "Fetch cloudbox.tar from {{backup.rclone_dest}}"
+- name: "Fetch 'cloudbox.tar' from '{{backup.rclone_dest}}'"
   command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: yes
   become_user: "{{user}}"
-  when: ((backup.use_rclone and backup.use_rsync) or (backup.use_rclone and backup.use_rsync == False)) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
+  when: (not cloudbox_tar1.stat.exists) and (backup.use_rclone)
 
-- name: "Fetch cloudbox.tar from {{backup.rsync_dest}}"
+- name: "Fetch 'cloudbox.tar' from {{backup.rsync_dest}}"
   synchronize:
     src: "{{backup.rsync_dest}}/cloudbox.tar"
     dest: "{{backup.tar_dest}}/"
@@ -81,9 +67,9 @@
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
   become: yes
   become_user: "{{user}}"
-  when: (backup.use_rclone == False and backup.use_rsync) and not(backup.keep_local_copy and cloudbox_tar1.stat.exists)
+  when: (not cloudbox_tar1.stat.exists) and (backup.use_rsync)
 
-- name: "Check if cloudbox.tar exists"
+- name: "Check if 'cloudbox.tar' exists"
   stat:
     path: "{{backup.tar_dest}}/cloudbox.tar"
     get_attributes: false
@@ -91,28 +77,31 @@
     get_md5: false
     get_mime: false
   register: cloudbox_tar2
+  when: (not cloudbox_tar1.stat.exists)
 
-- name: "Fail if cloudbox.tar does not exist"
-  fail: msg="There must have been an issue retrieving the cloudbox.tar file as it does not exist at {{backup.tar_dest}}/cloudbox.tar"
-  when: cloudbox_tar2.stat.exists == False
+- name: "Fail if 'cloudbox.tar' does not exist"
+  fail: msg="There must have been an issue retrieving the 'cloudbox.tar' file as it does not exist at '{{backup.tar_dest}}/cloudbox.tar'"
+  when: (not cloudbox_tar1.stat.exists) and (not cloudbox_tar2.stat.exists)
 
 - name: "Wait for 10 seconds before unarchiving"
   wait_for:
     timeout: 10
 
-- name: Create /opt directory
+- name: "Create '/opt' directory"
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt
 
 - name: "Unarchive cloudbox.tar to /opt"
   shell: "tar -xf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+  register: unarchive
 
-- name: Remove cloudbox.tar
+- name: "Remove 'cloudbox.tar' when `keep_local_copy` is disabled."
   file:
     path: "{{backup.tar_dest}}/cloudbox.tar"
     state: absent
-  when: backup.keep_local_copy == False
+  when: not backup.keep_local_copy
 
 - debug:
-    msg: Finished unarchiving the contents of cloudbox.tar to /opt/. You are now ready to install Cloudbox.
+    msg: Finished restoring the backup. You are now ready to install Cloudbox.
+  when: unarchive is success

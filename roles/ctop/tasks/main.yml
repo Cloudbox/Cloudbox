@@ -10,14 +10,16 @@
 ---
 - name: Get latest ctop URL
   shell: curl -s https://api.github.com/repos/bcicen/ctop/releases/latest | jq -r ".assets[] | select(.name | test(\"linux-amd64\")) | .browser_download_url"
+  args:
+    executable: /bin/bash
   register: ctop_download_url
   ignore_errors: yes
 
 - name: Install ctop
   get_url:
-    url:  "{{ ctop_download_url.stdout }}"
+    url:  "{{ ctop_download_url.stdout | default('https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64',true) }}"
     dest: /usr/local/bin/ctop
-    mode: 0755
+    mode: 0775
     owner: root
     group: root
     force: yes
@@ -31,4 +33,4 @@
 
 - name: "Display ctop version"
   debug:
-    msg: "ctop version {{ctop_version.stdout}} installed."
+    msg: "ctop {{ctop_version.stdout}} installed."

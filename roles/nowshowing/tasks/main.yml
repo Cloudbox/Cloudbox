@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: nowshowing
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -41,8 +33,8 @@
     published_ports:
       - "127.0.0.1:6878:6878"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "nowshowing.{{domain}}"
       VIRTUAL_PORT: 6878
       LETSENCRYPT_HOST: "nowshowing.{{domain}}"
@@ -50,9 +42,12 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nowshowing:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - nowshowing
+    purge_networks: yes
     restart_policy: always
     state: started

@@ -10,14 +10,16 @@
 ---
 - name: Get latest hostess URL
   shell: curl -s https://api.github.com/repos/cbednarski/hostess/releases/latest | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url"
+  args:
+    executable: /bin/bash
   register: hostess_download_url
   ignore_errors: yes
 
 - name: Install hostess
   get_url:
-    url:  "{{ hostess_download_url.stdout }}"
+    url:  "{{ hostess_download_url.stdout | default('https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64',true) }}"
     dest: /usr/local/bin/hostess
-    mode: 0755
+    mode: 0775
     owner: root
     group: root
     force: yes
@@ -31,4 +33,4 @@
 
 - name: "Display hostess version"
   debug:
-    msg: "hostess version {{hostess_version.stdout}} installed."
+    msg: "hostess {{hostess_version.stdout}} installed."

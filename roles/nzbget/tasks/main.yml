@@ -9,29 +9,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: nzbget
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
     name: nzbget
     state: absent
 
-- name: Create nzbget directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt/nzbget
+# START - Suitarr Migration Tasks
+- name: Check folder exists
+  stat:
+    path: /opt/nzbget
+  register: folder
 
 - name: Check subfolder1 exists
   stat:
@@ -50,27 +43,45 @@
     mv /tmp/app /opt/nzbget/
     find /opt/nzbget/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/nzbget
-  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Move 'NZBGet' subfolder to 'app' subfolder
   shell: |
     mv /opt/nzbget/NZBGet /opt/nzbget/app
     chown -R {{user}}:{{user}} /opt/nzbget
-  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+# END - Suitarr Migration Tasks
 
-- name: Create nzbget download directory
-  file: "path={{nzbget.downloads}} state=directory mode=0775 owner={{user}} group={{user}}"
+- name: Create nzbget directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/nzbget
 
-- name: "Set {{nzbget.downloads}} permissions"
-  shell: "chmod -R 775 {{nzbget.downloads}}"
+- name: Create new downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{downloads.nzbs}}"
+    - "{{downloads.nzbs}}/nzbget"
+  when: (nzbs_downloads_path is defined)|default(false)
 
-- name: "Set {{nzbget.downloads}} owner"
-  shell: "chown -R {{user}}:{{user}} {{nzbget.downloads}}"
+- name: Create old downloads directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "{{nzbget.downloads}}"
+  when: (old_nzbget_downloads_path is defined)|default(false)
 
 - name: Check nzbget.conf exists
   stat:
     path: "/opt/nzbget/app/nzbget.conf"
   register: nzbget_conf
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbget:/config"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
 
 - name: Create and start container
   docker_container:
@@ -82,30 +93,33 @@
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "nzbget.{{domain}}"
       VIRTUAL_PORT: 6789
       LETSENCRYPT_HOST: "nzbget.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       LC_ALL: "C"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nzbget:/config"
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-      - "/mnt:/mnt"
-      - "/opt/scripts:/scripts"
-    restart_policy: always
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + old_nzbget_downloads_path|default([]) }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - nzbget
+    purge_networks: yes
+    restart_policy: always
     state: started
 
-- name: Settings Tweaks
+- name: Scripts Task
+  import_tasks: "nzbget_scripts.yml"
+  when: not continuous_integration
+  tags: nzbget-scripts
+
+- name: Settings Task
   include_tasks: "nzbget_settings.yml"
   when: not (
         (nzbget_conf.stat.exists)
         or
-        ((continuous_integration|default(false,true))|bool)
+        (continuous_integration)
     )

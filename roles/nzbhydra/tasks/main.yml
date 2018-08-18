@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: nzbhydra
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -33,6 +25,16 @@
   with_items:
     - /opt/nzbhydra
     - /opt/nzbhydra/hydra/
+
+- name: Check if config files are located at old location
+  stat:
+    path: "/opt/nzbhydra/nzbhydra.cfg"
+  register: old_config_path
+
+- name: Check if config files are located at new location
+  stat:
+    path: "/opt/nzbhydra/hydra/settings.cfg"
+  register: new_config_path
 
 - name: Copy config files from Suitarr to LSIO
   copy:
@@ -48,6 +50,7 @@
     - {src: "nzbhydra.db-shm", dest: "nzbhydra.db-shm"}
     - {src: "nzbhydra.db-wal", dest: "nzbhydra.db-wal"}
   register: transfer
+  when: (old_config_path.stat.exists) and (not new_config_path.stat.exists)
   ignore_errors: yes
 
 - name: Remove Suitarr config files after transfer
@@ -55,7 +58,7 @@
     path: "/opt/nzbhydra/{{item.item.src}}"
     state: absent
   with_items: "{{transfer.results}}"
-  when: transfer is changed
+  when: (old_config_path.stat.exists) and (not new_config_path.stat.exists)
 
 - name: Create and start container
   docker_container:
@@ -65,8 +68,8 @@
     published_ports:
       - "127.0.0.1:5075:5075"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "nzbhydra.{{domain}}"
       VIRTUAL_PORT: 5075
       LETSENCRYPT_HOST: "nzbhydra.{{domain}}"
@@ -74,9 +77,12 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - nzbhydra
+    purge_networks: yes
     restart_policy: always
     state: started

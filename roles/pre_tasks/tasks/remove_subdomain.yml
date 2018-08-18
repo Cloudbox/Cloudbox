@@ -1,6 +1,5 @@
-#!/bin/bash
 #########################################################################
-# Title:         Cloudbox: Plex Library Cron Helper Script              #
+# Title:         Cloudbox: Pre-Tasks Role - Remove Subdomain Task       #
 # Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,16 +7,15 @@
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
+---
+- name: Get IP Address
+  ipinfoio_facts:
 
-PATH='/usr/bin:/bin:/usr/local/bin'
-export PYTHONIOENCODING=UTF-8
-echo $(date) >> /opt/plexlibrary/plexlibrary_cron.log
-echo "" >> /opt/plexlibrary/plexlibrary_cron.log
-
-for file in /opt/plexlibrary/recipes/*
-do
-    if [ ! -d "${file}" ]; then
-        /usr/bin/python /opt/plexlibrary/plexlibrary/plexlibrary.py $(basename "$file" .yml) >> /opt/plexlibrary/plexlibrary_cron.log
-        echo "" >> /opt/plexlibrary/plexlibrary_cron.log
-    fi
-done
+- name: "Cloudflare: Remove 'cloudbox' subdomain from '{{domain}}'"
+  cloudflare_dns:
+    account_api_token: "{{cloudflare_api_token}}"
+    account_email: "{{email}}"
+    zone: "{{domain}}"
+    state: absent
+    type: A
+    record: "cloudbox"

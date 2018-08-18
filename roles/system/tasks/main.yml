@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Update packages
+- name: Update APT packages list
   apt:
     update_cache: yes
 
@@ -18,10 +18,10 @@
     - apt-utils
     - byobu
 
-- name: Upgrade packages
+- name: Upgrade APT packages
   apt:
     upgrade: dist
-  when: not ((continuous_integration|default(false,true))|bool)
+  when: not continuous_integration
 
 - name: Remove useless packages from the cache
   apt:

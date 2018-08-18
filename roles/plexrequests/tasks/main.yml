@@ -9,19 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: "{{ plexrequests.subdomain|default('plexrequests',true) }}"
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
@@ -41,8 +33,8 @@
     published_ports:
       - "127.0.0.1:3000:3000"
     env:
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{domain}}"
       VIRTUAL_PORT: 3000
       LETSENCRYPT_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{domain}}"
@@ -50,9 +42,12 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexrequests:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - plexrequests
+    purge_networks: yes
     restart_policy: always
     state: started

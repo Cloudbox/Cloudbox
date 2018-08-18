@@ -1,12 +1,14 @@
+#########################################################################
+# Title:         Cloudbox: Telly Role                                   #
+# Author(s):     EnorMOZ, Desimaniac                                    #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  tombowditch/telly                                      #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
 - name: "Assert that all Telly related settings are filled in."
   assert:
     that:
@@ -27,21 +29,27 @@
 - name: Create and start container
   docker_container:
     name: telly
-    image: "tombowditch/telly"
+    image: "tellytv/telly"
     pull: yes
     volumes:
     - "/etc/localtime:/etc/localtime:ro"
     - "/opt/telly:/opt/telly"
     env:
-      PLAYLIST: "{{telly.playlist}}"
-      STREAMS: "{{telly.streams}}"
-      LISTEN: "0.0.0.0:6077"
-      BASE: "telly:6077"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+      TELLY_IPTV_PLAYLIST: "{{telly.playlist}}"
+      TELLY_IPTV_STREAMS: "{{telly.streams}}"
+      TELLY_WEB_LISTEN_ADDRESS: "0.0.0.0:6077"
+      TELLY_WEB_BASE_ADDRESS: "telly:6077"
+      TELLY_FILTER_REGEX_MODE: true
+      TELLY_DISCOVERY_SSDP: true
+      TELLY_LOG_REQUESTS: "{{ telly.log_requests | default ('') }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - telly
+    purge_networks: yes
     restart_policy: always
     state: started

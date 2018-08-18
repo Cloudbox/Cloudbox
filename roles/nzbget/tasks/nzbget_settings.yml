@@ -1,8 +1,7 @@
 #########################################################################
-# Title:         Cloudbox: NZBGet Settings Sub Tasks                    #
+# Title:         Cloudbox: NZBGet - Settings Task                       #
 # Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
@@ -14,10 +13,6 @@
   wait_for:
     path: "/opt/nzbget/app/nzbget.conf"
     state: present
-
-- name: "Wait for 10 seconds before stopping nzbget container"
-  wait_for:
-    timeout: 10
 
 - name: Stop container to customize nzbget.conf
   docker_container:
@@ -46,13 +41,12 @@
     line: 'FormAuth=yes'
     state: present
 
-
 # Paths
 - name: Change MainDir to downloads directory
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^MainDir\s?='
-    line: 'MainDir=/downloads/nzbget'
+    line: 'MainDir=/downloads/nzbs/nzbget'
     state: present
 
 - name: Change QueueDir path
@@ -73,7 +67,7 @@
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^ScriptDir\s?='
-    line: 'ScriptDir=/scripts'
+    line: 'ScriptDir=/scripts/nzbget'
     state: present
 
 - name: Change LockFile path

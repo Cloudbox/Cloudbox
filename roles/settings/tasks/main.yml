@@ -19,13 +19,14 @@
     path: "{{playbook_dir}}/cloudbox.yml"
   register: cloudbox_yml
 
-- name: "Ansible Config Sub Tasks"
+- name: "Ansible Config Sub-Task"
   include_tasks: "ansible_config.yml"
   with_items:
     - "ansible.cfg"
 
-- name: "Cloudbox Settings Sub Tasks"
+- name: "Cloudbox Settings Sub-Task"
   include_tasks: "cloudbox_settings.yml"
   with_items:
-    - "adv_settings.yml"
+    - "accounts.yml"
     - "settings.yml"
+    - "adv_settings.yml"

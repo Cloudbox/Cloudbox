@@ -8,14 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Gathering list of running docker containers"
-  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
-  register: docker_running_containers
+- name: "Gather list of running Cloudbox-managed Docker containers."
+  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
+  register: cloudbox_managed_containers
   ignore_errors: yes
 
-- name: "Stop running docker containers"
-  shell: 'docker stop {{docker_running_containers.stdout}}'
+- name: "Stop all running Cloudbox-managed Docker containers."
+  shell: "docker stop {{cloudbox_managed_containers.stdout}}"
   ignore_errors: yes
+  when: not (cloudbox_managed_containers.stdout | trim == '')
 
 - name: Stop unionfs service
   systemd: state=stopped name=unionfs
@@ -125,6 +126,7 @@
   wait_for:
     timeout: 5
 
-- name: "Start docker containers"
-  shell: 'docker start {{docker_running_containers.stdout}}'
+- name: "Start all previously running Cloudbox-managed Docker containers."
+  shell: 'docker start {{cloudbox_managed_containers.stdout}}'
   ignore_errors: yes
+  when: not (cloudbox_managed_containers.stdout | trim == '')

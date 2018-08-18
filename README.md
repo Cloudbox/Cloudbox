@@ -17,28 +17,35 @@
 
 Cloudbox is an Ansible and Docker based solution for rapidly deploying a cloud media server.
 
-This project is designed for fresh systems and limited to x64 machines running Ubuntu Server 16.04 or 18.04 LTS.
+This project is designed for fresh systems and limited to x64 machines running either Ubuntu Server 16.04 or Ubuntu Server 18.04.
 
 
 Featured Applications:
+
 - Plex
 - Emby
 - Sonarr
 - Radarr
+- Lidarr
 - Plexdrive
 - NZBGet
 - ruTorrent
 - Tautulli (PlexPy)
-- NZBHydra
+- NZBHydra2
 - Jackett
+- Ombi
+- Plex Requests
 - Plex Autoscan
-- UnionFS Cleaner
+- Cloudplow
 - Organizr
 - Portainer
-
+- Traktarr
+- Plex Dupefinder
+- Plex Patrol
+- and more...
 
 
 
 ***
 
-_If you find this project helpful, feel free to make a small donation via Paypal [l3uddz@gmail.com](https://www.paypal.me/l3uddz), bitcoin: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL or litecoin: LRx1Z4AvKUJWa9pKnHrcsMemhG8S5w7uLp._
+_If you find this project helpful, feel free to make a small donation via [Monzo](https://monzo.me/jamesbayliss9) (Credit Cards, Apple Pay, Google Pay, and others; no fees), [Paypal](https://www.paypal.me/l3uddz) (l3uddz@gmail.com), and Bitcoin (3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL)._

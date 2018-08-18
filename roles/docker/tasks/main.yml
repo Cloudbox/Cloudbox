@@ -8,21 +8,36 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check to see if docker is installed"
+- name: Check to see if docker is installed
   stat:
     path: "/usr/bin/docker"
   register: docker_binary
 
-- name: "Gather list of running Docker containers"
+- name: Populate Service Facts
+  service_facts:
+  when: docker_binary.stat.exists
+
+- name: Get Docker service state
+  set_fact:
+    docker_service_running: "{{ (services['docker.service']['state'] == \"running\") }}"
+  when: docker_binary.stat.exists
+
+- name: Gather list of running Docker containers
   shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
   register: docker_running_containers
   ignore_errors: yes
-  when: docker_binary.stat.exists
+  when: (docker_binary.stat.exists) and (docker_service_running)
 
-- name: "Stop all running Docker containers."
+- name: Stop all running Docker containers
   shell: "docker stop {{docker_running_containers.stdout}}"
   ignore_errors: yes
-  when: docker_binary.stat.exists
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
+
+- name: Stop docker service
+  systemd:
+    name: docker
+    state: stopped
+  when: (docker_binary.stat.exists) and (docker_service_running)
 
 - name: Install required packages
   apt: "name={{item}} state=present"
@@ -36,89 +51,79 @@
     id: 0EBFCD88
     url: https://download.docker.com/linux/ubuntu/gpg
 
-- name: Add official repository for 16.04
-  apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-  when: ansible_distribution_version == "16.04"
-
-- name: Add official repository for 18.04
+- name: Add official repository
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} edge"
-  when: ansible_distribution_version == "18.04"
+  register: apt_docker_repositories
+
+- name: Update APT packages list
+  apt:
+    update_cache: yes
+  when: apt_docker_repositories.changed
 
 - name: Release docker-ce from hold
   dpkg_selections:
     name: docker-ce
     selection: install
 
-- name: Install docker-ce for 16.04
-  apt:
-    name: docker-ce=18.03.1~ce-0~ubuntu
-    state: present
-    update_cache: yes
-    force: yes
-  when: ansible_distribution_version == "16.04"
-
-- name: Install docker-ce for 18.04
+- name: Install docker-ce
   apt:
     name: docker-ce=18.05.0~ce~3-0~ubuntu
     state: present
     update_cache: yes
     force: yes
-  when: ansible_distribution_version == "18.04"
 
 - name: Put docker-ce into hold
   dpkg_selections:
     name: docker-ce
     selection: hold
 
-- name: Check docker daemon.json exists
-  stat:
-    path: /etc/docker/daemon.json
-  register: docker_daemon
+- name: Uninstall docker-py pip module
+  pip:
+    name: docker-py
+    state: absent
+  ignore_errors: yes
 
-- name: Stop docker to enable overlay2
-  systemd: state=stopped name=docker enabled=yes
-  when: docker_daemon.stat.exists == False
+- name: Install docker pip module
+  pip:
+    name: docker
+    state: latest
+  ignore_errors: yes
 
 - name: Import daemon.json
   copy: "src=daemon.json dest=/etc/docker/daemon.json force=yes mode=0775"
-  when: docker_daemon.stat.exists == False
 
-- name: Start docker
-  systemd: state=started name=docker enabled=yes
-  when: docker_daemon.stat.exists == False
-
-- name: "Wait for 30 seconds before commencing"
-  wait_for:
-    timeout: 30
-
-- name: Check override folder exists
-  stat:
-    path: /etc/systemd/system/docker.service.d
-  register: docker_override
-
-- name: Create override folder
+- name: Create override directory
   file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
-  when: docker_override.stat.exists == False
 
 - name: Import override file
   copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
+
+- name: Start docker
+  systemd: state=started name=docker enabled=yes
+
+- name: Wait for 30 seconds before commencing
+  wait_for:
+    timeout: 30
+
+- name: "Stop all Docker containers"
+  shell: "docker stop $(docker ps -aq)"
+  register: s
+  failed_when: s.rc > 1
+  ignore_errors: yes
+
+- name: "Import Docker Housekeeping tasks"
+  import_tasks: "docker_housekeeping.yml"
+
+- name: "Import Docker Network tasks"
+  import_tasks: "docker_network.yml"
+
+- name: "Re-start all previously running Docker containers"
+  shell: 'docker start {{docker_running_containers.stdout}}'
+  ignore_errors: yes
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
 
 - name: "Install ctop"
   import_role:
     name: ctop
   tags: ctop
-
-- name: Create cloudbox network
-  docker_network:
-    name: cloudbox
-    ipam_options:
-      subnet: '172.18.0.0/16'
-      gateway: '172.18.0.254'
-      iprange: '172.18.0.0/24'
-
-- name: "Restart all previously running Docker containers."
-  shell: 'docker start {{docker_running_containers.stdout}}'
-  ignore_errors: yes
-  when: docker_binary.stat.exists

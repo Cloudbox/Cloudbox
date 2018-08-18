@@ -26,10 +26,4 @@
     type: A
     value: "{{ip}}"
     record: "{{subdomain}}"
-  when: not(
-      (cloudflare_api_token is undefined)
-      or
-      (cloudflare_api_token is none)
-      or
-      (cloudflare_api_token | trim == '')
-    )
+  when: cloudflare_enabled

@@ -9,29 +9,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: jackett
-
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
 
 - name: Stop and remove any existing container
   docker_container:
     name: jackett
     state: absent
 
-- name: Create jackett directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt/jackett
+# START - Suitarr Migration Tasks
+- name: Check folder exists
+  stat:
+    path: /opt/jackett
+  register: folder
 
 - name: Check subfolder1 exists
   stat:
@@ -50,13 +43,19 @@
     mv /tmp/app /opt/jackett/
     find /opt/jackett/* -type d -empty -delete
     chown -R {{user}}:{{user}} /opt/jackett
-  when: not (subfolder1.stat.exists or subfolder2.stat.exists)
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Move 'Jackett' subfolder to 'app' subfolder
   shell: |
     mv /opt/jackett/Jackett /opt/jackett/app
     chown -R {{user}}:{{user}} /opt/jackett
-  when: (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
+# END - Suitarr Migration Tasks
+
+- name: Create jackett directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/jackett
 
 - name: Create and start container
   docker_container:
@@ -68,8 +67,8 @@
     env:
       VERSION: "unstable"
       BACKUP: "no"
-      PUID: "{{uid.stdout}}"
-      PGID: "{{gid.stdout}}"
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
       VIRTUAL_HOST: "jackett.{{domain}}"
       VIRTUAL_PORT: 9117
       LETSENCRYPT_HOST: "jackett.{{domain}}"
@@ -77,9 +76,12 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"
-    restart_policy: always
-    state: started
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - jackett
+    purge_networks: yes
+    restart_policy: always
+    state: started

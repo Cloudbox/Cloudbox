@@ -24,7 +24,7 @@
    "PLEX_EMPTY_TRASH_MAX_FILES":100,
    "PLEX_EMPTY_TRASH_ZERO_DELETED":false,
    "PLEX_LD_LIBRARY_PATH":"/usr/lib/plexmediaserver",
-   "PLEX_LOCAL_URL":"http://plex.{{domain}}",
+   "PLEX_LOCAL_URL":"http://localhost:32400",
    "PLEX_SCANNER":"/usr/lib/plexmediaserver/Plex\\ Media\\ Scanner",
    "PLEX_SECTION_PATH_MAPPINGS":{
       "1":[
@@ -32,10 +32,13 @@
       ],
       "2":[
          "/TV/"
+      ],
+      "3":[
+         "/Music/"
       ]
    },
    "PLEX_SUPPORT_DIR":"/var/lib/plexmediaserver/Library/Application\\ Support",
-   "PLEX_TOKEN":"",
+   "PLEX_TOKEN":"{{ plex_auth_token | default('') }}",
    "PLEX_USER":"plex",
    "PLEX_WAIT_FOR_EXTERNAL_SCANNERS":true,
    "RCLONE_RC_CACHE_EXPIRE":{
@@ -64,15 +67,15 @@
          "/mnt/unionfs/Media/Movies/",
          "My Drive/Media/Movies/"
       ],
-      "/data/Music/":[
-         "/music/",
-         "/mnt/unionfs/Media/Music/",
-         "My Drive/Media/Music/"
-      ],
       "/data/TV/":[
          "/tv/",
          "/mnt/unionfs/Media/TV/",
          "My Drive/Media/TV/"
+      ],
+      "/data/Music/":[
+         "/music/",
+         "/mnt/unionfs/Media/Music/",
+         "My Drive/Media/Music/"
       ]
    },
    "SERVER_PORT":3468,

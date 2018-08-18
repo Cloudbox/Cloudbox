@@ -29,16 +29,17 @@
     - /opt/scripts
     - /opt/scripts/docker
     - /opt/scripts/frontail
-    - /opt/scripts/nzb
-    - /opt/scripts/nginx
+    - /opt/scripts/nzbget
+    - /opt/scripts/sabnzbd
+    - /opt/scripts/nginx-proxy
     - /opt/scripts/plex
     - /opt/scripts/plex_autoscan
     - /opt/scripts/plexpy
-    - /opt/scripts/torrent
+    - /opt/scripts/torrents
 
 - name: Check arrpush.legacy.sh exists
   stat:
-    path: "/opt/scripts/torrent/arrpush.legacy.sh"
+    path: "/opt/scripts/torrents/arrpush.legacy.sh"
     get_attributes: false
     get_checksum: false
     get_md5: false
@@ -48,7 +49,7 @@
 - name: Import arrpush.legacy.sh
   copy:
     src: "arrpush.legacy.sh"
-    dest: "/opt/scripts/torrent/arrpush.legacy.sh"
+    dest: "/opt/scripts/torrents/arrpush.legacy.sh"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
@@ -58,7 +59,7 @@
 - name: Import remaining torrent scripts
   copy:
     src: "{{item}}"
-    dest: "/opt/scripts/torrent/{{item}}"
+    dest: "/opt/scripts/torrents/{{item}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
@@ -82,7 +83,7 @@
 - name: Import revoke_certs.sh
   template:
     src: "revoke_certs.sh.js2"
-    dest: "/opt/scripts/nginx/revoke_certs.sh"
+    dest: "/opt/scripts/nginx-proxy/revoke_certs.sh"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775

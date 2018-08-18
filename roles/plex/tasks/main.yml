@@ -9,24 +9,21 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Setting CloudFlare DNS Record"
+- name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
     subdomain: plex
 
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
 - name: Create plex directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/plex
+    - "/opt/plex"
+    - "/opt/plex/Library"
+    - "/opt/plex/Library/Application Support"
+    - "/opt/plex/Library/Application Support/Plex Media Server"
+    - "/opt/plex/Library/Logs"
+    - "/opt/plex/Library/Logs/Plex Media Server"
     - "{{plex.transcodes}}"
 
 - name: Stop and remove any existing container
@@ -38,43 +35,84 @@
   docker_image:
     name: "plexinc/pms-docker:{{plex.tag}}"
 
-- name: Check Preferences.xml exists
-  stat:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
-  register: plex_prefs
-
 - name: Check /dev/dri exists
   stat:
     path: "/dev/dri"
   register: dev_dri
 
-- name: Ask user for his plex server claim id
-  pause:
-    prompt: "To continue the plex installation, you must visit https://plex.tv/claim and retrieve a claim token, paste it below and press enter"
+- name: Check Preferences.xml exists
+  stat:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+  register: plex_prefs
+
+- name: Get plex server claim code
+  uri:
+    url: https://plex.tv/api/claim/token.json
+    user: "{{plex.user}}"
+    password: "{{plex.pass}}"
+    force_basic_auth: yes
   register: plex_claim
+  when: plex_account_enabled and not (
+      (plex_prefs.stat.exists)
+      or
+      (continuous_integration)
+    )
+
+- name: Set plex_claim_code variable
+  set_fact:
+    plex_claim_code: "{{plex_claim.json.token}}"
+  when: plex_account_enabled and not (
+      (plex_prefs.stat.exists)
+      or
+      (continuous_integration)
+    )
+
+- name: Ask user for plex claim code
+  pause:
+    prompt: "To continue the installation of Plex, please visit 'https://plex.tv/claim', login with your Plex account, copy the Claim Code, paste it below, and press ENTER."
+  register: plex_claim_code_prompt
   when: not (
       (plex_prefs.stat.exists)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (plex_account_enabled)
+      or
+      (continuous_integration)
     )
 
-- debug: msg="Using plex claim token {{plex_claim.user_input}}"
+- name: Set plex_claim_code variable
+  set_fact:
+    plex_claim_code: "{{plex_claim_code_prompt.user_input}}"
   when: not (
       (plex_prefs.stat.exists)
       or
-      ((continuous_integration|default(false,true))|bool)
+      (plex_account_enabled)
+      or
+      (continuous_integration)
     )
 
-- name: Set default hosts
-  set_fact:
-    plex_default_hosts: { "metric.plex.tv": "127.0.0.1", "metrics.plex.tv": "127.0.0.1", "analytics.plex.tv": "127.0.0.1" }
+- debug: msg="Using Plex Claim Code{{':'}} {{plex_claim_code}}"
+  when: not (
+      (plex_claim_code is undefined)
+      or
+      (plex_claim_code is none)
+      or
+      (plex_claim_code | trim == '')
+    )
 
-- name: Grab IP for Lazyman
-  set_fact: lazyman_ip="{{ lookup('dig', 'powersports.ml.', '@8.8.8.8', 'qtype=A') }}"
-
-- name: Set custom hosts
+- name: Grab lazyman IP
   set_fact:
-    plex_custom_hosts: { "playback.svcs.mlb.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip,'127.0.0.1') }}", "mf.svc.nhl.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip,'127.0.0.1') }}", "mlb-ws-mf.media.mlb.com": "{{ (lazyman_ip|ipv4) | ternary(lazyman_ip, '127.0.0.1') }}" }
+    lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
+
+- name: Set plex host variables
+  set_fact:
+    plex_default_hosts:
+      "metric.plex.tv": "{{ localhost_ip }}"
+      "metrics.plex.tv": "{{ localhost_ip }}"
+      "analytics.plex.tv": "{{ localhost_ip }}"
+    plex_custom_hosts:
+      "mf.svc.nhl.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
+      "mlb-ws-mf.media.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
+      "playback.svcs.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
 
 - name: Create and start container
   docker_container:
@@ -82,7 +120,7 @@
     image: "plexinc/pms-docker:{{plex.tag}}"
     pull: yes
     published_ports:
-      - "127.0.0.1:32400:32400/tcp"
+      - "{{ (( plex.open_port | default(false,true)) | ternary('', '127.0.0.1:')) + '32400:32400/tcp' }}"
       - "3005:3005/tcp"
       - "8324:8324/tcp"
       - "32469:32469/tcp"
@@ -94,9 +132,9 @@
       - "33400:33400/tcp"
       - "33443:33443/tcp"
     env:
-      PLEX_UID: "{{uid.stdout}}"
-      PLEX_GID: "{{gid.stdout}}"
-      PLEX_CLAIM: "{{plex_claim.user_input| default (omit)}}"
+      PLEX_UID: "{{uid}}"
+      PLEX_GID: "{{gid}}"
+      PLEX_CLAIM: "{{ plex_claim_code | default (omit)}}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
       ADVERTISE_IP: "http://plex.{{domain}}:80/,https://plex.{{domain}}:443/"
       VIRTUAL_HOST: "plex.{{domain}}"
@@ -107,17 +145,21 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
+      - "/opt/scripts:/scripts"
       - "{{plex.transcodes}}:/transcode"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
       - "/tmp:/tmp"
     devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
-    restart_policy: always
     etc_hosts: "{{plex_default_hosts | combine(plex_custom_hosts|default([])) }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - plex
+    purge_networks: yes
+    restart_policy: always
     state: started
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
@@ -138,15 +180,13 @@
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
     state: present
 
-- name: Create plex_autoscan Logs folder
-  file:
-    path: "/opt/plex/Library/Logs/Plex Media Server"
-    state: directory
-    mode: 0775
-    owner: "{{user}}"
-    group: "{{user}}"
-
 - name: "Install WebTools"
   import_role:
     name: webtools
-  tags: webtools
+  tags:
+    - webtools
+    - reinstall-webtools
+
+- name: "Forced Automatic Quality Settings"
+  import_tasks: "forced_quality_settings.yml"
+  tags: plex_forced_quality_settings

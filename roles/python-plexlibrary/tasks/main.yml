@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Plex Library Role                            #
+# Title:         Cloudbox: Python-PlexLibrary Role                      #
 # Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,15 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create plexlibrary directories
+- name: Create python-plexlibrary directories
   file: "path={{item}} state=directory owner={{user}} group={{user}} recurse=yes"
   with_items:
-    - "/opt/plexlibrary"
+    - "/opt/python-plexlibrary"
 
-- name: Clone plexlibrary
+- name: Clone python-plexlibrary
   git:
     repo: "https://github.com/adamgot/python-plexlibrary/"
-    dest: "/opt/plexlibrary"
+    dest: "/opt/python-plexlibrary"
     version: master
     force: yes
   become: yes
@@ -24,39 +24,39 @@
 
 - name: Install pip requirements
   pip:
-    requirements: "/opt/plexlibrary/requirements.txt"
+    requirements: "/opt/python-plexlibrary/requirements.txt"
     executable: pip
 
 - name: Check config exists
   stat:
-    path: "/opt/plexlibrary/config.yml"
-  register: plexlibrary_config
+    path: "/opt/python-plexlibrary/config.yml"
+  register: python_plexlibrary_config
 
 - name: Create config from template
   copy:
-    src: "/opt/plexlibrary/config-template.yml"
-    dest: "/opt/plexlibrary/config.yml"
+    src: "/opt/python-plexlibrary/config-template.yml"
+    dest: "/opt/python-plexlibrary/config.yml"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
     force: no
-  when: not plexlibrary_config.stat.exists
+  when: not python_plexlibrary_config.stat.exists
 
-- name: Copy examples to plexlibrary folder
+- name: Copy examples to python-plexlibrary folder
   copy:
     src: "{{item}}"
-    dest: "/opt/plexlibrary/recipes/examples/cloudbox/"
+    dest: "/opt/python-plexlibrary/recipes/examples/cloudbox/"
     owner: "{{user}}"
     group: "{{user}}"
-    mode: 0644
+    mode: 0664
     force: yes
   with_fileglob:
     - "*.yml"
 
-- name: Copy plexlibrary.sh to plexlibrary folder
+- name: Copy plexlibrary.sh to python-plexlibrary folder
   copy:
     src: "plexlibrary.sh"
-    dest: "/opt/plexlibrary/plexlibrary.sh"
+    dest: "/opt/python-plexlibrary/plexlibrary.sh"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
@@ -64,18 +64,18 @@
 
 - name: Set plexlibrary.sh as executable
   file:
-    path: "/opt/plexlibrary/plexlibrary.sh"
+    path: "/opt/python-plexlibrary/plexlibrary.sh"
     mode: a+x
 
 - name: "Create /usr/local/bin symlink"
   file:
-    src: "/opt/plexlibrary/plexlibrary.sh"
+    src: "/opt/python-plexlibrary/plexlibrary.sh"
     dest: "/usr/local/bin/plexlibrary"
     state: link
 
 - name: "Add items to .gitignore"
   lineinfile:
-    path: "/opt/plexlibrary/.gitignore"
+    path: "/opt/python-plexlibrary/.gitignore"
     state: present
     insertafter: EOF
     line: '{{item}}'
@@ -86,8 +86,8 @@
 
 - name: "Schedule cron task for daily update."
   cron:
-    name: "Plex Library"
+    name: "Python-PlexLibrary"
     user: "{{user}}"
-    job: "/opt/plexlibrary/plexlibrary.sh"
+    job: "/opt/python-plexlibrary/plexlibrary.sh"
     special_time: daily
     state: present

@@ -8,14 +8,16 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-
 - name: Install required packages
   apt: "name={{item}} state=latest"
   with_items:
     - cpufrequtils
     - linux-tools-common
     - linux-tools-generic
-    - linux-tools-{{ ansible_kernel }}
+
+- name: "Install linux-tools-{{ ansible_kernel }}"
+  shell: "apt-get install -qq $(apt-cache search -n linux-tools-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
+  ignore_errors: yes
 
 - name: Check /etc/default/cpufrequtils exists
   stat:

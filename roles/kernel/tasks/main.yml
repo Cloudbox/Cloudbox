@@ -8,11 +8,20 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Check if kernel update is required.
+  fail: msg="Kernel does not require updating."
+  when: ansible_kernel is version_compare('4.10', '>=') or ansible_distribution_version != "16.04"
+
 - name: Upgrade kernel
   apt:
     name: linux-generic-hwe-16.04
     update_cache: yes
     state: latest
+  register: r
 
 - name: Reboot
   shell: reboot
+  when: r.changed
+
+- name: Kernel Task Ended
+  fail: msg="Kernel task ended."

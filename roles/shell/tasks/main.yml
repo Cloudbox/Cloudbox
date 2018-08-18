@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Bash Role                                     #
+# Title:         Cloudbox: Shell Role                                   #
 # Author(s):     Desimaniac, L3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,19 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set default editor to nano in .bashrc
-  lineinfile:
-    dest: "/home/{{user}}/.bashrc"
-    regexp: "^export EDITOR="
-    line: "export EDITOR=nano"
-    state: present
-
 - name: Set bash as default shell
-  user:
-    name: "{{user}}"
-    shell: /bin/bash
-  register: default_shell
+  import_tasks: "bash.yml"
+  when: shell|default('zsh',true) == "bash"
 
-- debug:
-    msg: "bash is now set as your default shell. You will need to re-login for changes to take effect."
-  when: default_shell is changed
+- name: Set zsh as default shell
+  import_tasks: "zsh.yml"
+  when: shell|default('zsh',true) == "zsh"

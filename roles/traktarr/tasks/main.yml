@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Traktarr Role                                #
-# Author(s):     L3uddz                                                 #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check service exists
+- name: Check if traktarr service exists
   stat:
     path: "/etc/systemd/system/traktarr.service"
   register: traktarr_service
@@ -28,27 +28,78 @@
     dest: /opt/traktarr
     version: master
     force: yes
+  become: yes
+  become_user: "{{user}}"
 
 - name: Install pip requirements
   pip:
     requirements: /opt/traktarr/requirements.txt
     executable: pip3
 
-- name: Check config exists
+- name: Check if traktarr config exists
   stat:
     path: "/opt/traktarr/config.json"
   register: traktarr_config
+
+- name: "Check if sonarr exists"
+  stat:
+    path: "/opt/sonarr/app/config.xml"
+  register: sonarr_config
+  when: not traktarr_config.stat.exists
+
+- name: "When sonarr exists, add api key to traktar config"
+  block:
+
+  - name: Pull sonarr api key
+    xml:
+      path: "/opt/sonarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set sonarr api Key
+    set_fact:
+      sonarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (not traktarr_config.stat.exists) and (sonarr_config.stat.exists)
+
+- name: "Check if radarr exists"
+  stat:
+    path: "/opt/radarr/app/config.xml"
+  register: radarr_config
+  when: not traktarr_config.stat.exists
+
+- name: "When radarr exists, add api key to traktar config"
+  block:
+
+  - name: Pull radarr api key
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set radarr api Key
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (not traktarr_config.stat.exists) and (radarr_config.stat.exists)
 
 - name: Import default config
   template:
     src: config.json.js2
     dest: /opt/traktarr/config.json
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
     force: yes
-  when: traktarr_config.stat.exists == False
+  when: not traktarr_config.stat.exists
 
 - name: Set traktarr.py as executable
   file:
     path: /opt/traktarr/traktarr.py
+    owner: "{{user}}"
+    group: "{{user}}"
     mode: a+x
 
 - name: Set directory permissions
@@ -65,7 +116,7 @@
     src: traktarr.service.js2
     dest: /etc/systemd/system/traktarr.service
     force: yes
-  when: traktarr_service.stat.exists == False
+  when: not traktarr_service.stat.exists
 
-- name: Load service file
+- name: Load traktarr service
   systemd: state=stopped name=traktarr daemon_reload=yes enabled=no

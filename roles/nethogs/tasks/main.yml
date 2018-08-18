@@ -11,7 +11,7 @@
 - name: Make sure nethogs package is not installed
   apt: "name=nethogs state=absent"
 
-- name: Install nethog dependancies
+- name: Install nethog dependencies
   apt: name="{{item}}" state=present update_cache=yes
   become: true
   with_items:
@@ -45,4 +45,4 @@
 
 - name: "Display nethogs version"
   debug:
-    msg: "nethogs version {{nethogs_version.stdout}} installed."
+    msg: "nethogs {{nethogs_version.stdout}} installed."

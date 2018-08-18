@@ -10,19 +10,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Get {{user}} uid"
-  shell: "id -u {{user}}"
-  register: uid
-
-- name: "Get {{user}} gid"
-  shell: "id -g {{user}}"
-  register: gid
-
 - name: Create nginx-proxy directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/nginx-proxy
     - /opt/nginx-proxy/htpasswd
+    - /opt/nginx-proxy/vhost.d
 
 - name: Import proxy.conf
   copy: "src=proxy.conf dest=/opt/nginx-proxy/proxy.conf force=yes owner={{user}} group={{user}} mode=0775"
@@ -40,7 +33,7 @@
 - name: Create and start container
   docker_container:
     name: nginx-proxy
-    image: "jwilder/nginx-proxy@sha256:76d9ed11c131fadc7546e3b9b085970e13ff45186171b975ad60830f5ca0d689"
+    image: "jwilder/nginx-proxy"
     pull: yes
     published_ports:
       - "80:80"
@@ -48,17 +41,19 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:ro"
+      - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
-      - "/etc/nginx/vhost.d"
       - "/usr/share/nginx/html"
       - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf"
     labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+      "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - nginx-proxy
+    purge_networks: yes
     restart_policy: always
     state: started
 
@@ -70,14 +65,18 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy:/etc/nginx/certs:rw"
+      - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     volumes_from:
       - "nginx-proxy"
     env:
       DEBUG: true
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
           - letsencrypt
+    purge_networks: yes
     restart_policy: always
     state: started
