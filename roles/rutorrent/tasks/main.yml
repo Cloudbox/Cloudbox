@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: ruTorrent Role                               #
-# Author(s):     L3uddz, Horjulf                                        #
+# Author(s):     L3uddz, Desimaniac, Horjulf                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/rutorrent-autodl                               #
 # --                                                                    #
@@ -45,6 +45,17 @@
   stat:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
   register: rtorrent_rc
+
+- name: Check if rtorrent.rc requires upgrading
+  set_fact:
+    standard_settings_needs_upgrading: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('peer_exchange') }}"
+    subdir_settings_exist: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('/downloads/torrents/rutorrent/completed/') }}"
+  when: rtorrent_rc.stat.exists
+
+- name: Backup previous rtorrent.rc file
+  shell: mv '/opt/rutorrent/rtorrent/rtorrent.rc' '/opt/rutorrent/rtorrent/rtorrent.rc.bak'
+  ignore_errors: yes
+  when: (rtorrent_rc.stat.exists) and (standard_settings_needs_upgrading|default(false,true))
 
 - name: Check if plugins.ini exists
   stat:
@@ -97,10 +108,24 @@
     stop_timeout: 300
     state: started
 
-- name: Settings Tweaks
-  include_tasks: "rutorrent_settings.yml"
-  when: not (
-        (rtorrent_rc.stat.exists)
-        or
-        (continuous_integration)
-    )
+# Done for new setups (or setups requiring updating for updated rtorrent version).
+- name: Standard Settings Tweaks
+  include_tasks: "rutorrent_standard_settings.yml"
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
+
+# Done for new setups (or setups requiring updating for updated rtorrent version).
+- name: Subdir Settings Tweaks
+  include_tasks: "rutorrent_subdir_settings.yml"
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading and subdirs_settings_exist))
+
+- name: Start container to apply changes
+  docker_container:
+    name: rutorrent
+    state: started
+  when: (not continuous_integration)
+        and
+        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
