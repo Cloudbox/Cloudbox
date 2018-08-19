@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: ruTorrent Role -  Settings Tasks             #
-# Author(s):     L3uddz, Horjulf                                        #
+# Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/rutorrent-autodl                               #
 # --                                                                    #
@@ -36,136 +36,113 @@
 - name: Stop container to customize rtorrent.rc
   docker_container:
     name: rutorrent
-    image: horjulf/rutorrent-autodl
     state: stopped
 
+# Disable DHT - i.e. disables trackerless torrents.
 - name: Disable DHT
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^dht\s?='
-    line: 'dht = disable'
+    regexp: '^dht.mode.set\s?=.*'
+    line: 'dht.mode.set = disable'
     state: present
 
+# Disable Peer exchange (PEX) - i.e. allows torrents marked private, only.
 - name: Disable PEX
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^peer_exchange\s?='
-    line: 'peer_exchange = no'
+    regexp: '^protocol.pex.set\s?=.*'
+    line: 'protocol.pex.set = no'
     state: present
 
+# Minimum number of peers to connect to per torrent
 - name: Reduce min_peers
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^min_peers\s?='
-    line: 'min_peers = 1'
+    regexp: '^throttle.min_peers.normal.set\s?=.*'
+    line: 'throttle.min_peers.normal.set = 1'
     state: present
 
+# Maximum number of simultaneous upload slots per torrent.
 - name: Increase max_uploads
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^max_uploads\s?='
-    line: 'max_uploads = 1024'
+    regexp: '^throttle.max_uploads.set\s?=.*'
+    line: 'throttle.max_uploads.set = 1024'
     state: present
 
-- name: Disable check_hash
+# Maximum number of simultaneous downloads slots globally
+- name: Set max_downloads_global to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^check_hash\s?='
-    line: 'check_hash = no'
+    regexp: '^throttle.max_downloads.global.set\s?=.*'
+    line: 'throttle.max_downloads.global.set = 1024'
     state: present
 
-- name: Set upload_rate to unlimited
+# Maximum number of simultaneous downloads and uploads slots globally
+- name: Set max_uploads_global to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^upload_rate\s?='
-    line: 'upload_rate = 0'
+    regexp: '^throttle.max_uploads.global.set\s?=.*'
+    line: 'throttle.max_uploads.global.set = 1024'
     state: present
 
-- name: Set download_rate to unlimited
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^download_rate\s?='
-    line: 'download_rate = 0'
-    state: present
-
-- name: Set global upload_rate to unlimited
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle.global_up.max_rate.set_kb\s?='
-    line: 'throttle.global_up.max_rate.set_kb = 0'
-    state: present
-
+# Global download rate in KiB
 - name: Set global download_rate to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle.global_down.max_rate.set_kb\s?='
+    regexp: '^throttle.global_down.max_rate.set_kb\s?=.*'
     line: 'throttle.global_down.max_rate.set_kb = 0'
     state: present
 
+# Global upload rate in KiB
+- name: Set global upload_rate to unlimited
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^throttle.global_up.max_rate.set_kb\s?.*=.*'
+    line: 'throttle.global_up.max_rate.set_kb = 0'
+    state: present
+
+# Maximum number of open files rtorrent can keep open.
 - name: Set max_open_files to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.max_open_files.set\s?='
+    regexp: '^network.max_open_files.set\s?=.*'
     line: 'network.max_open_files.set = 1024'
     state: present
 
 - name: Set encryption parameters
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^encryption\s?='
-    line: 'encryption = allow_incoming,enable_retry,prefer_plaintext'
+    regexp: '^protocol.encryption.set\s?=*'
+    line: 'protocol.encryption.set = allow_incoming,try_outgoing,enable_retry,prefer_plaintext'
     state: present
 
-- name: Set max_downloads_global to 1024
+- name: Disable - Hash check.
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^max_downloads_global\s?='
-    line: 'max_downloads_global = 1024'
+    regexp: '^pieces.hash.on_completion.set\s?=.*'
+    line: 'pieces.hash.on_completion.set = no'
     state: present
 
-- name: Set max_uploads_global to 1024
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^max_uploads_global\s?='
-    line: 'max_uploads_global = 1024'
-    state: present
-
+# Allocate disk space
 - name: Set file_allocate to no
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^system.file_allocate.set\s?='
-    line: 'system.file_allocate.set = no'
+    regexp: '^system.file.allocate.set\s?=.*'
+    line: 'system.file.allocate.set = 0'
     state: present
 
-- name: Set incoming directory
+- name: Set download directory
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^directory\s?='
-    line: 'directory = /downloads/torrents/rutorrent/incoming'
+    regexp: '^directory.default.set\s?=.*'
+    line: 'directory.default.set = /downloads/rutorrent'
     state: present
-
-- name: Set watched directory
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    line: 'schedule = watch_directory,5,5,"load.start=/downloads/torrents/rutorrent/watched/*.torrent,d.delete_tied="'
-    state: present
-
-- name: Set completed directory
-  lineinfile:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    line: '{{item}}'
-    state: present
-  with_items:
-    - '# move completed downloads from incoming/ to completed/'
-    - 'method.insert = d.get_finished_dir, simple, "cat=/downloads/torrents/rutorrent/completed/,$d.custom1="'
-    - 'method.insert = d.data_path, simple, "if=(d.is_multi_file), (cat,(d.directory),/), (cat,(d.directory),/,(d.name))"'
-    - 'method.insert = d.move_to_complete, simple, "d.directory.set=$argument.1=; execute=mkdir,-p,$argument.1=; execute=mv,-u,$argument.0=,$argument.1=; d.save_full_session="'
-    - 'method.set_key = event.download.finished,move_complete,"d.move_to_complete=$d.data_path=,$d.get_finished_dir="'
 
 - name: Set upload_max_filesize to 8M
   lineinfile:
     path: "/opt/rutorrent/php/php.ini"
-    regexp: '^upload_max_filesize\s?='
+    regexp: '^upload_max_filesize\s?=.*'
     line: 'upload_max_filesize = 8M'
     state: present
 
@@ -195,8 +172,3 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-
-- name: Start container to apply changes
-  docker_container:
-    name: rutorrent
-    state: started
