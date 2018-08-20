@@ -39,6 +39,7 @@ $GREEN│ Title:             Plex Autoscan URL Script                           
 $NORMAL"
 
 # Config files
+CB_ANSIBLE="$HOME/cloudbox/ansible.cfg"
 CB_ACCOUNTS="$HOME/cloudbox/accounts.yml"
 PAS_CONFIG="/opt/plex_autoscan/config/config.json"
 
@@ -83,7 +84,8 @@ SERVER_PASS=$(cat $PAS_CONFIG | jq -r .SERVER_PASS)
 head -1 $CB_ACCOUNTS | grep -q \$ANSIBLE_VAULT
 rc=$?
 if [[ $rc == 0 ]]; then
-    DOMAIN=$(ansible-vault view $CB_ACCOUNTS | yq -r .domain)
+    VAULT_FILE=$(cat $CB_ANSIBLE | grep vault_password_file | awk '{ print $3 }')
+    DOMAIN=$(ansible-vault view --vault-password-file=$VAULT_FILE $CB_ACCOUNTS | yq -r .domain)
 elif [[ $rc == 1 ]]; then
     DOMAIN=$(cat $CB_ACCOUNTS | yq -r .domain)
 fi
