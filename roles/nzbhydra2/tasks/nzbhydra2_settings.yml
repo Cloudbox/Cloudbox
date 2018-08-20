@@ -24,6 +24,16 @@
     name: nzbhydra2
     state: stopped
 
+- name: Set URL Base
+  lineinfile:
+    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backrefs: yes
+  with_items:
+    - {regexp: '(urlBase:)\s?.*', line: '  \1 null'}
+
 - name: Update auth settings
   lineinfile:
     path: "/opt/nzbhydra2/app/nzbhydra.yml"
@@ -47,7 +57,7 @@
     line: "{{ item.line }}"
     state: present
   with_items:
-    - {line: '    password: "{{passwd}}"'}
+    - {line: '    password: "{noop}{{passwd}}"'}
     - {line: '    username: "{{user}}"'}
     - {line: '    showIndexerSelection: true'}
     - {line: '    maySeeStats: true'}
