@@ -30,6 +30,12 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.2.6] - 2018-08-19
+
+### Fixed
+- NZBHydra2: Sets base to null value (new installs only).
+- Plex Autoscan URL Script: Allows script to be run from any location.
+
 ## [1.2.5] - 2018-08-19
 
 ### Changed
@@ -643,6 +649,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.6]: https://github.com/cloudbox/cloudbox/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/cloudbox/cloudbox/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/cloudbox/cloudbox/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/cloudbox/cloudbox/compare/v1.2.2...v1.2.3
