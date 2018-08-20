@@ -30,6 +30,9 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+### Changed
+- Plex Autoscan URL Script: Tweaked grep command.
+
 ## [1.2.6] - 2018-08-19
 
 ### Fixed
@@ -56,6 +59,7 @@ Changelog Format:
 - Plex Auth Token role.
   - Used to generate plex auth tokens.
   - Requires Plex login info in settings.
+  - Can use '--tags plex_auth_token' to display the token.
 - SABnzbd
   - Install tag: --tags sabnzbd
   - Role fails when new download path settings are not set.
@@ -116,7 +120,6 @@ Changelog Format:
 - Plex: adv_settings option to open/close port 32400 on host.
 - Plex: Create some folders ahead of time. Prevents container from creating them in root.
 - Plex: Mounted /scripts to plex.
-- Plex Auth Token: Can now use 'plex_auth_token' tag to display the token.
 - Plex Autoscan: Pre-filled Plex token when Plex login is set.
 - Plex Autoscan: Added Music section into PLEX_SECTION_PATH_MAPPINGS for default config.
 - Plex Autoscan URL Script: Support for [un]vaulted accounts.yml.
@@ -147,7 +150,6 @@ Changelog Format:
 - Settings: Adds in hash_behavior into ansible.cfg if missing.
 - Settings: New downloads folder structure.
   - This will allow for more downloaders to be added without the need to modify PVR (eg Sonarr) mounts.
-  - Wiki will reflect these new paths once it gets pushed to the Master branch.
   - Left backwards compatibility for previous downloads folder
   settings (for now). Will eventually remove them from settings.yml.
 - Shell Role: Replaces ZSH and Bash roles. Use adv_settings.yml to switch between them.
