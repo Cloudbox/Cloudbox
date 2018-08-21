@@ -34,6 +34,8 @@ Changelog Format:
 
 ### Changed
 - Plex Autoscan URL Script: Tweaked grep command.
+
+### Fixed
 - Rutorrent: Added missing auth info to nginx.conf.
 
 ## [1.2.6] - 2018-08-19
