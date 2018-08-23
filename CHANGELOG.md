@@ -76,7 +76,7 @@ Changelog Format:
 - Settings: Addition of accounts.yml.
   - Shifting of account related settings from settings.yml into accounts.yml.
 - Subliminal
-- Wiki: For a primer on Ansible Vaulting, and instructions on how to encrypt the accounts.yml, take a look at the newly created [Ansible Vault](https://github.com/Cloudbox/Cloudbox/wiki/Ansible-Vault) wiki page.
+- Wiki: For a primer on Ansible Vaulting, and instructions on how to encrypt the accounts.yml, take a look at the newly created [Ansible Vault Primer](https://github.com/Cloudbox/Cloudbox/wiki/Ansible-Vault-Primer) wiki page.
 
 ### Changed
 - Ansible: Added hash behavior merge
