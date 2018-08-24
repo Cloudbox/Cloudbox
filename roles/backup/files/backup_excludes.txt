@@ -1,4 +1,12 @@
-# Cloudbox
+#########################################################################
+# Title:         Cloudbox: Backup Excludes List                         #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 
 ./bazarr/app/log/*
 
