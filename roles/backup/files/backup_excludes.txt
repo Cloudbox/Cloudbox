@@ -9,6 +9,7 @@
 ./lidarr/app/MediaCover/*
 
 ./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*
+./plex/Library/Application Support/Plex Media Server/Cache/Transcode/*
 
 ./plex_autoscan/plex_autoscan.log
 ./plex_autoscan/plex_autoscan.log.*
