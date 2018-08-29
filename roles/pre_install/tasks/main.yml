@@ -23,7 +23,7 @@
     name: "{{user}}"
     group: "{{user}}"
     groups: "{{user}},docker,sudo"
-    password: "{{ passwd | password_hash('sha512') }}"
+    password: "{{ passwd | string | password_hash('sha512') }}"
     update_password: on_create
     append: yes
   register: user_info
