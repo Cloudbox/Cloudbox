@@ -112,6 +112,15 @@
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf_playbook_dir
 
+- name: "Check if 'rclone.conf' exists in default location"
+  stat:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+  register: rclone_conf_default_path
+
+- name: "Backup existing 'rclone.conf' at default location"
+  shell: "mv '/home/{{user}}/.config/rclone/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf.bak'"
+  when: rclone_conf_playbook_dir.stat.exists and rclone_conf_default_path.stat.exists
+
 - name: "Move 'rclone.conf' from '{{playbook_dir}}' folder to default location"
   shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
   when: rclone_conf_playbook_dir.stat.exists
