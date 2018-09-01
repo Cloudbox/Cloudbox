@@ -19,6 +19,7 @@
 - name: Set watched directory
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^.*#.*schedule.*=.*watch_directory.*'
     line: 'schedule = watch_directory,5,5,"load.start=/downloads/torrents/rutorrent/watched/*.torrent,d.delete_tied="'
     state: present
 
