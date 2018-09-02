@@ -341,6 +341,7 @@
   - name: "Get ansible-playbook binary path."
     shell: "which ansible-playbook"
     register: playbook_binary
+    tags: set-backup
 
   - name: "Schedule cron backup."
     cron:
@@ -348,6 +349,7 @@
       special_time: "{{backup.cron_time}}"
       job: "PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/backup/cloudbox_backup'-{{ '`' }}date +\\%Y-\\%m-\\%d_\\%H-\\%M-\\%S{{ '`' }}.log 2>&1"
       state: "{{backup.cron_state}}"
+    tags: set-backup
 
   - debug:
       msg: "Backup Completed Successfully."
