@@ -343,12 +343,19 @@
     register: playbook_binary
     tags: set-backup
 
-  - name: "Schedule cron backup."
+  - name: "Remove legacy cron backup task."
     cron:
       name: "Backup Cloudbox"
+      state: absent
+    tags: set-backup
+
+  - name: "Schedule cron backup."
+    cron:
+      name: "Cloudbox Backup"
       special_time: "{{backup.cron_time}}"
-      job: "PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/backup/cloudbox_backup'-{{ '`' }}date +\\%Y-\\%m-\\%d_\\%H-\\%M-\\%S{{ '`' }}.log 2>&1"
+      job: "sudo PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/backup/cloudbox_backup.log' 2>&1"
       state: "{{backup.cron_state}}"
+      user: "{{user}}"
     tags: set-backup
 
   - debug:
