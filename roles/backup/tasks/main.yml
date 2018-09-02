@@ -283,7 +283,7 @@
      - "cloudbox.tar"
 
   - name: "Use rclone to upload backup to '{{backup.rclone_dest}}'."
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -vv --transfers=2 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=4 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -300,7 +300,7 @@
       src: "{{backup.tar_dest}}/"
       dest: "{{backup.rsync_dest}}/"
       rsync_opts:
-        - "--log-file='/home/{{user}}/logs/backup/cloudbox_backup_rsync-{{lookup('pipe','date +%Y-%m-%d_%H-%M-%S')}}.log'"
+        - "--log-file='/home/{{user}}/logs/backup/cloudbox_backup_rsync.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rsync
