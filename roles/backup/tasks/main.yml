@@ -168,7 +168,7 @@
         --warning=no-file-removed \
         --exclude-from '{{ (backup_excludes_file is defined and backup_excludes_file.stat.exists) | ternary(playbook_dir + '/backup_excludes.txt', playbook_dir + '/roles/backup/files/backup_excludes.txt') }}' \
         -cf "{{backup.tar_dest}}/opt/"{}.tar {} \; \
-        2> /home/{{user}}/logs/backup/cloudbox_backup_tar_stderr.log
+        2> /home/{{user}}/logs/cloudbox_backup_tar_stderr.log
     args:
       executable: /bin/bash
       warn: no
@@ -278,7 +278,7 @@
       timeout: 5
 
   - name: "Use rclone to upload backup to '{{backup.rclone_dest}}'."
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=4 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone.log'"
+    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=4 --drive-chunk-size=64M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rclone
@@ -295,7 +295,7 @@
       src: "{{backup.tar_dest}}/"
       dest: "{{backup.rsync_dest}}/"
       rsync_opts:
-        - "--log-file='/home/{{user}}/logs/backup/cloudbox_backup_rsync.log'"
+        - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync.log'"
     become: yes
     become_user: "{{user}}"
     when: backup.use_rsync
@@ -354,7 +354,7 @@
     cron:
       name: "Cloudbox Backup"
       special_time: "{{backup.cron_time}}"
-      job: "sudo PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/backup/cloudbox_backup.log' 2>&1"
+      job: "sudo PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/cloudbox_backup.log' 2>&1"
       state: "{{backup.cron_state}}"
       user: "{{user}}"
     tags: set-backup
