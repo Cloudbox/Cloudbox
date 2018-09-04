@@ -27,7 +27,7 @@
 ./plex_dupefinder/activity.log
 ./plex_dupefinder/decisions.log
 
-./plexlibrary/plexlibrary_cron.log
+./python-plexlibrary/plexlibrary.log
 
 ./plexpy/logs/*
 
