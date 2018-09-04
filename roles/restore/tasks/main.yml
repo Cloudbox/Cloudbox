@@ -29,10 +29,15 @@
   register: rclone_binary
   when: (dir_files.matched|int == 0) and (backup.use_rclone)
 
+- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
+  stat:
+    path: "{{playbook_dir}}/rclone.conf"
+  register: rclone_conf_playbook_dir
+
 - name: Install rclone
   include_role:
     name: rclone
-  when: (dir_files.matched|int == 0) and (backup.use_rclone) and (not rclone_binary.stat.exists)
+  when: ((dir_files.matched|int == 0) and (backup.use_rclone) and (not rclone_binary.stat.exists)) or (rclone_conf_playbook_dir.stat.exists)
 
 - name: Test rclone remote
   shell: "rclone lsd {{backup.rclone_dest}}"
