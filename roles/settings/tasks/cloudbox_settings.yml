@@ -36,7 +36,7 @@
   # Normal Tasks
   - name: "Copy '{{item}}.default' to '{{item}}'."
     copy:
-      src: "{{playbook_dir}}/{{item}}.default"
+      src: "{{playbook_dir}}/defaults/{{item}}.default"
       dest: "{{playbook_dir}}/{{item}}"
       owner: "{{cloudbox_yml.stat.uid}}"
       group: "{{cloudbox_yml.stat.gid}}"
@@ -52,7 +52,7 @@
   # Hash Check
   - name: "Get stats on '{{item}}.default' for hash check."
     stat:
-      path: "{{playbook_dir}}/{{item}}.default"
+      path: "{{playbook_dir}}/defaults/{{item}}.default"
     register: file_default
     when: item == 'accounts.yml'
 
@@ -66,7 +66,7 @@
     when: item == 'accounts.yml'
 
   - name: "Run 'settings-updater.py' for '{{item}}'."
-    script: "roles/settings/files/settings-updater.py '{{playbook_dir}}' '{{item}}.default' '{{item}}'"
+    script: "roles/settings/files/settings-updater.py '{{playbook_dir}}' 'defaults/{{item}}.default' '{{item}}'"
     become: yes
     become_user: "{{cloudbox_yml.stat.pw_name}}"
     register: settings_updater
