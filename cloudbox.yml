@@ -1,9 +1,9 @@
 ---
 - hosts: localhost
   vars_files:
-    - ['accounts.yml', 'accounts.yml.default']
-    - ['settings.yml', 'settings.yml.default']
-    - ['adv_settings.yml', 'adv_settings.yml.default']
+    - ['accounts.yml', 'defaults/accounts.yml.default']
+    - ['settings.yml', 'defaults/settings.yml.default']
+    - ['adv_settings.yml', 'defaults/adv_settings.yml.default']
   roles:
     - { role: sanity_check }
     - { role: settings, tags: ['always', 'settings'] }
