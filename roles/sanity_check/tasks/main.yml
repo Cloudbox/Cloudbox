@@ -26,7 +26,10 @@
 - name: "Get all available tags"
   shell: ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
   register: t
-  when: not continuous_integration
+  when:
+   - not continuous_integration
+   - "'cloudbox_' not in playbook_dir"
+   - "'community' not in playbook_dir"
   tags: always
 
 - name: "Ensure valid tag(s) were provided."
@@ -35,7 +38,10 @@
       - '"{{item}}" in t.stdout_lines'
     msg: "You must supply valid tag(s) via '--tags TAG' (get a list of valid tags by running 'ansible-playbook cloudbox.yml --list-tags')"
   with_items: "{{ansible_run_tags}}"
-  when: not continuous_integration
+  when:
+   - not continuous_integration
+   - "'cloudbox_' not in playbook_dir"
+   - "'community' not in playbook_dir"
   tags: always
 
 - name: "Check if 'backup.lock' is present"
