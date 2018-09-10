@@ -2,7 +2,7 @@
 # Title:         Cloudbox: The Lounge Role                              #
 # Author(s):     L3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Docker Image:  linuxserver/thelounge                                  #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
 #########################################################################
