@@ -78,6 +78,7 @@
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+      UMASK: 002
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "sonarr4k.{{domain}}"
       VIRTUAL_PORT: 8989
