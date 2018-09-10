@@ -72,6 +72,7 @@
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+      UMASK: 002
       VIRTUAL_HOST: "sabnzbd.{{domain}}"
       VIRTUAL_PORT: 8080
       LETSENCRYPT_HOST: "sabnzbd.{{domain}}"

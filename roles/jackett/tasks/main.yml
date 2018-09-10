@@ -69,6 +69,7 @@
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+      UMASK: 002
       VIRTUAL_HOST: "jackett.{{domain}}"
       VIRTUAL_PORT: 9117
       LETSENCRYPT_HOST: "jackett.{{domain}}"
