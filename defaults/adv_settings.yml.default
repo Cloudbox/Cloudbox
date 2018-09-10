@@ -6,6 +6,9 @@ plex:
   allow_high_output_bitrates: no
 organizr:
   direct_domain: no
+nginx:
+  direct_domain: no
+  subdomain: web
 ombi:
   subdomain: ombi
 plexrequests:
