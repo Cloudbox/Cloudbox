@@ -25,12 +25,19 @@
     force: yes
     validate_certs: no
   ignore_errors: yes
+  register: x
 
 - name: "Get ctop version"
   shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/.$//'"
   register: ctop_version
   ignore_errors: yes
+  when: x is success
 
 - name: "Display ctop version"
   debug:
     msg: "ctop {{ctop_version.stdout}} installed."
+  when: x is success
+
+- debug:
+    msg: "ctop install failed."
+  when: x is not success
