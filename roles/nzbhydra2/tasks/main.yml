@@ -92,6 +92,7 @@
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
+      UMASK: 002
       VIRTUAL_HOST: "nzbhydra2.{{domain}}"
       VIRTUAL_PORT: 5076
       LETSENCRYPT_HOST: "nzbhydra2.{{domain}}"

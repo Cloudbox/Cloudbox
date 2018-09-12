@@ -1,4 +1,12 @@
-# Cloudbox
+#########################################################################
+# Title:         Cloudbox: Backup Excludes List                         #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 
 ./bazarr/app/log/*
 
@@ -9,6 +17,7 @@
 ./lidarr/app/MediaCover/*
 
 ./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*
+./plex/Library/Application Support/Plex Media Server/Cache/Transcode/*
 
 ./plex_autoscan/plex_autoscan.log
 ./plex_autoscan/plex_autoscan.log.*
@@ -18,7 +27,7 @@
 ./plex_dupefinder/activity.log
 ./plex_dupefinder/decisions.log
 
-./plexlibrary/plexlibrary_cron.log
+./python-plexlibrary/plexlibrary.log
 
 ./plexpy/logs/*
 

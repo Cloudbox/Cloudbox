@@ -8,16 +8,20 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Ensure unzip is installed
-  apt:
-    name: unzip
-    state: present
+- name: Install common packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - unzip
+    - man-db
 
 - name: Create rclone directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - "/home/{{user}}/.config"
     - "/home/{{user}}/.config/rclone"
+
+- name: "Legacy rclone uninstaller"
+  include_tasks: "legacy_uninstaller.yml"
 
 - name: Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64
@@ -110,6 +114,15 @@
   stat:
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf_playbook_dir
+
+- name: "Check if 'rclone.conf' exists in default location"
+  stat:
+    path: "/home/{{user}}/.config/rclone/rclone.conf"
+  register: rclone_conf_default_path
+
+- name: "Backup existing 'rclone.conf' at default location"
+  shell: "mv '/home/{{user}}/.config/rclone/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf.bak'"
+  when: rclone_conf_playbook_dir.stat.exists and rclone_conf_default_path.stat.exists
 
 - name: "Move 'rclone.conf' from '{{playbook_dir}}' folder to default location"
   shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"

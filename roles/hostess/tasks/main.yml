@@ -25,12 +25,19 @@
     force: yes
     validate_certs: no
   ignore_errors: yes
+  register: x
 
 - name: "Get hostess version"
   shell: "/usr/local/bin/hostess --version | head -n 1 | awk '{ print $3 }'"
   register: hostess_version
   ignore_errors: yes
+  when: x is success
 
 - name: "Display hostess version"
   debug:
     msg: "hostess {{hostess_version.stdout}} installed."
+  when: x is success
+
+- debug:
+    msg: "hostess install failed."
+  when: x is not success

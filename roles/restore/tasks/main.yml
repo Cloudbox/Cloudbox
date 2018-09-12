@@ -8,37 +8,46 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check if 'cloudbox.tar' exists"
-  stat:
-    path: "{{backup.tar_dest}}/cloudbox.tar"
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: cloudbox_tar1
+- name: Check if previous backup exists locally
+  find:
+    paths: "{{backup.tar_dest}}/opt"
+    file_type: file
+    patterns: '*.tar'
+  register: dir_files
 
-- name: Fail when no backup tool has been enabled or when no local backup tar exists
+- name: Fail when no backup method is enabled or when no local backup exists
   fail: msg="You must enable either rclone or rsync, in the backup settings, to perform a restore."
-  when: not (cloudbox_tar1.stat.exists or backup.use_rclone or backup.use_rsync)
+  when: not ((dir_files.matched|int != 0) or (backup.use_rclone) or (backup.use_rsync))
 
-- name: Fail when both backup tools are enabled
+- name: Fail when both backup methods are enabled
   fail: msg="You can only have either rclone enabled or rsync enabled, but not both."
-  when: (not cloudbox_tar1.stat.exists) and (backup.use_rclone and backup.use_rsync)
+  when: (dir_files.matched|int == 0) and (backup.use_rclone and backup.use_rsync)
+
+- name: Check if rclone is installed
+  stat:
+    path: "/usr/bin/rclone"
+  register: rclone_binary
+  when: (dir_files.matched|int == 0) and (backup.use_rclone)
+
+- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
+  stat:
+    path: "{{playbook_dir}}/rclone.conf"
+  register: rclone_conf_playbook_dir
 
 - name: Install rclone
   include_role:
     name: rclone
-  when: (not cloudbox_tar1.stat.exists) and (backup.use_rclone)
+  when: ((dir_files.matched|int == 0) and (backup.use_rclone) and (not rclone_binary.stat.exists)) or (rclone_conf_playbook_dir.stat.exists)
 
 - name: Test rclone remote
   shell: "rclone lsd {{backup.rclone_dest}}"
   register: rclone_test
-  failed_when: rclone_test.rc > 3
-  when: (not cloudbox_tar1.stat.exists) and (backup.use_rclone)
+  failed_when: rclone_test.rc > 5
+  when: (dir_files.matched|int == 0) and (backup.use_rclone)
 
 - name: "Fail when rclone is misconfigured."
   fail: msg="The rclone remote is misconfigured - You must place a valid 'rclone.conf' file in '{{playbook_dir}}' (or setup Rclone via 'rclone config') and verify that the 'rclone_dest' in settings is valid."
-  when: (not cloudbox_tar1.stat.exists) and ((backup.use_rclone) and (rclone_test.rc > 0))
+  when: (dir_files.matched|int == 0) and ((backup.use_rclone) and (rclone_test.rc > 0))
 
 - name: "Check if '{{backup.tar_dest}}' exists"
   stat:
@@ -48,40 +57,39 @@
     get_md5: false
     get_mime: false
   register: backup_location
+  when: (dir_files.matched|int == 0)
 
 - name: "Create backup location '{{backup.tar_dest}}'"
   file: path={{backup.tar_dest}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
-  when: not backup_location.stat.exists
+  when: (dir_files.matched|int == 0) and (not backup_location.stat.exists)
 
-- name: "Fetch 'cloudbox.tar' from '{{backup.rclone_dest}}'"
-  command: "rclone copy '{{backup.rclone_dest}}/cloudbox.tar' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --log-file='{{playbook_dir}}/restore_rclone.log'"
+- name: "Fetch backup from '{{backup.rclone_dest}}'"
+  command: "rclone copy '{{backup.rclone_dest}}/' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --exclude 'archived/**' --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: yes
   become_user: "{{user}}"
-  when: (not cloudbox_tar1.stat.exists) and (backup.use_rclone)
+  when: (dir_files.matched|int == 0) and (backup.use_rclone)
 
-- name: "Fetch 'cloudbox.tar' from {{backup.rsync_dest}}"
+- name: "Fetch backup from {{backup.rsync_dest}}"
   synchronize:
-    src: "{{backup.rsync_dest}}/cloudbox.tar"
+    src: "{{backup.rsync_dest}}/"
     dest: "{{backup.tar_dest}}/"
     rsync_opts:
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
   become: yes
   become_user: "{{user}}"
-  when: (not cloudbox_tar1.stat.exists) and (backup.use_rsync)
+  when: (dir_files.matched|int == 0) and (backup.use_rsync)
 
-- name: "Check if 'cloudbox.tar' exists"
-  stat:
-    path: "{{backup.tar_dest}}/cloudbox.tar"
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: cloudbox_tar2
-  when: (not cloudbox_tar1.stat.exists)
+- name: "Check if tar files were retrieved"
+  find:
+    paths: "{{backup.tar_dest}}/opt"
+    file_type: file
+    patterns: '*.tar'
+  register: dir_files2
+  when: (dir_files.matched|int == 0)
 
-- name: "Fail if 'cloudbox.tar' does not exist"
-  fail: msg="There must have been an issue retrieving the 'cloudbox.tar' file as it does not exist at '{{backup.tar_dest}}/cloudbox.tar'"
-  when: (not cloudbox_tar1.stat.exists) and (not cloudbox_tar2.stat.exists)
+- name: "Fail if tar files are missing"
+  fail: msg="There must have been an issue retrieving the tar files as they are missing in '{{backup.tar_dest}}/opt/'"
+  when: (dir_files.matched|int == 0) and (dir_files2.matched|int == 0)
 
 - name: "Wait for 10 seconds before unarchiving"
   wait_for:
@@ -92,13 +100,19 @@
   with_items:
     - /opt
 
-- name: "Unarchive cloudbox.tar to /opt"
-  shell: "tar -xf '{{backup.tar_dest}}/cloudbox.tar' -C /opt ."
+- name: "Set '/opt' permissions"
+  import_tasks: "permissions.yml"
+  tags: permissions-fix
+
+- name: "Unarchive backup tars to /opt"
+  shell: "tar -xf '{{item}}' -C /opt ."
+  with_fileglob:
+  - "{{backup.tar_dest}}/opt/*.tar"
   register: unarchive
 
-- name: "Remove 'cloudbox.tar' when `keep_local_copy` is disabled."
+- name: "Remove '{{backup.tar_dest}}'"
   file:
-    path: "{{backup.tar_dest}}/cloudbox.tar"
+    path: "{{backup.tar_dest}}"
     state: absent
   when: not backup.keep_local_copy
 

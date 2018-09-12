@@ -30,6 +30,38 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.2.8] - 2018-09-11
+
+### Added
+- Submodule: ansible-ghetto-json
+
+### Changed
+- AppVeyor: Updated dependencies installer url.
+- AppVeyor: Added submodule update command.
+- Backup: Adds /opt/plex/.../cache/transcode path into backup excludes.
+- Backup: Adds 'set-backup' tag to toggle cron task.
+- Backup: Removed dates from log file names.
+- Backup: Sets cron task under user's crontab (vs root).
+- Backup: Now creates a tar for each folder in '/opt' vs just one 'cloudbox.tar' file.
+- Backup: Will shut down traktarr during backups.
+- Backup: Logs now go to '~/logs' vs '~/logs/backup/'.
+- Cloudplow: Set default config to skip symlinks during upload.
+- Nginx: Added support for customizable subdomain option via 'adv_settings.yml'.
+- Organizr: direct_domain=yes will not create/use organizr subdomain.
+- Permissions: Moved permissions fix to restore.
+- Pre-Install: Converts all integer passwords to string.
+- Pre-Tasks: Added conditional to prevent errors when old or new downloads settings are missing in 'settings.yml'.
+- Python-PlexLibrary: Script will now output log to display as well.
+- Restore: Will import rclone role when an rclone.conf exists in playbook dir.
+- Restore: Added support for restoring multiple tar files.
+- Rclone: Backup previous rclone.conf when moving one from playbook dir.
+- Rclone: Cleans up legacy rclone install.
+- Rclone: Installs 'man-db'.
+- ruTorrent: Moved location of watched folder setting in .rc file.
+- SanityCheck: Will not check for tags when running community/cloudbox_mod.
+- Settings: Put all \*.defaults into 'defaults/' folder.
+- Suitarr: Added umask 002 permissions.
+
 ## [1.2.7] - 2018-08-21
 
 ### Changed
@@ -76,7 +108,7 @@ Changelog Format:
 - Settings: Addition of accounts.yml.
   - Shifting of account related settings from settings.yml into accounts.yml.
 - Subliminal
-- Wiki: For a primer on Ansible Vaulting, and instructions on how to encrypt the accounts.yml, take a look at the newly created [Ansible Vault](https://github.com/Cloudbox/Cloudbox/wiki/Ansible-Vault) wiki page.
+- Wiki: For a primer on Ansible Vaulting, and instructions on how to encrypt the accounts.yml, take a look at the newly created [Ansible Vault Primer](https://github.com/Cloudbox/Cloudbox/wiki/Ansible-Vault-Primer) wiki page.
 
 ### Changed
 - Ansible: Added hash behavior merge
@@ -656,6 +688,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.8]: https://github.com/cloudbox/cloudbox/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/cloudbox/cloudbox/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/cloudbox/cloudbox/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/cloudbox/cloudbox/compare/v1.2.4...v1.2.5
