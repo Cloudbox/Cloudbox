@@ -16,12 +16,19 @@
     mode: 0775
     validate_certs: no
   ignore_errors: yes
+  register: x
 
 - name: "Get ngrok version"
   shell: "/usr/local/bin/ngrok -v | head -n 1 | awk '{ print $3 }'"
   register: ngrok_version
   ignore_errors: yes
+  when: x is success
 
 - name: "Display ngrok version"
   debug:
     msg: "ngrok {{ngrok_version.stdout}} installed."
+  when: x is success
+
+- debug:
+    msg: "ngrok install failed."
+  when: x is not success

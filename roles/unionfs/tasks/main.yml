@@ -26,14 +26,10 @@
   systemd: state=stopped name=unionfs
   when: unionfs_service.stat.exists and unionfs_service_running
 
-- name: Create /mnt/unionfs and subdirs
+- name: Create unionfs directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /mnt/unionfs
-    - /mnt/unionfs/Media
-    - /mnt/unionfs/Media/Movies
-    - /mnt/unionfs/Media/Music
-    - /mnt/unionfs/Media/TV
     - /mnt/local/.unionfs-fuse
 
 - name: Install fuse
