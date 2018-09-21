@@ -91,21 +91,21 @@
     file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
     ignore_errors: yes
 
-  - name: "Gather list of running Cloudbox-managed Docker containers."
+  - name: "Gather list of running Docker containers."
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
     register: cloudbox_managed_containers
     ignore_errors: yes
 
-  - name: "Stop all running Cloudbox-managed Docker containers."
+  - name: "Stop all running Docker containers."
     shell: "docker stop {{cloudbox_managed_containers.stdout}}"
     ignore_errors: yes
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Stopped Cloudbox-managed Docker containers."
+  - name: "Pushover Message: Stopped Docker containers."
     include_role:
       name: pushover
     vars:
-      message: "Stopped Cloudbox-managed Docker containers."
+      message: "Stopped Docker containers."
       when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: Populate Service Facts
@@ -199,16 +199,16 @@
     wait_for:
       timeout: 5
 
-  - name: "Start all previously running Cloudbox-managed Docker containers."
+  - name: "Start all previously running Docker containers."
     shell: 'docker start {{cloudbox_managed_containers.stdout}}'
     ignore_errors: yes
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Started Cloudbox-managed Docker containers."
+  - name: "Pushover Message: Started Docker containers."
     include_role:
       name: pushover
     vars:
-      message: "Started Cloudbox-managed Docker containers."
+      message: "Started Docker containers."
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: "Wait for 10 seconds before uploads"
@@ -351,7 +351,7 @@
       wait_for:
         timeout: 5
 
-    - name: "Start all previously running Cloudbox-managed Docker containers."
+    - name: "Start all previously running Docker containers."
       shell: 'docker start {{cloudbox_managed_containers.stdout}}'
       ignore_errors: yes
       when: not (cloudbox_managed_containers.stdout | trim == '')
