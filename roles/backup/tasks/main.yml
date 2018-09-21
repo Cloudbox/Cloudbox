@@ -143,22 +143,6 @@
       state: stopped
     when: cloudplow_service.stat.exists and cloudplow_service_running
 
-  - name: Check if 'traktarr.service' exists
-    stat:
-      path: "/etc/systemd/system/traktarr.service"
-    register: traktarr_service
-
-  - name: Get traktarr service state
-    set_fact:
-      traktarr_service_running: "{{ (services['traktarr.service']['state'] == \"running\") }}"
-    when: traktarr_service.stat.exists
-
-  - name: Stop traktarr service
-    systemd:
-      name: traktarr
-      state: stopped
-    when: traktarr_service.stat.exists and traktarr_service_running
-
   - name: "Archiving '/opt' to '{{backup.tar_dest}}/opt/'."
     shell: |
       find /opt/ -mindepth 1 -maxdepth 1 -type d -execdir \
@@ -327,12 +311,6 @@
       state: started
     when: cloudplow_service.stat.exists and cloudplow_service_running
 
-  - name: "Start traktarr service."
-    systemd:
-      name: traktarr
-      state: started
-    when: traktarr_service.stat.exists and traktarr_service_running
-
   - name: "Remove {{backup.tar_dest}}."
     file:
       path: "{{backup.tar_dest}}"
@@ -383,13 +361,6 @@
         name: cloudplow
         state: started
       when: cloudplow_service.stat.exists and cloudplow_service_running
-
-    - name: "Start traktarr service."
-      systemd:
-        name: traktarr
-        state: started
-      when: traktarr_service.stat.exists and traktarr_service_running
-
     - debug:
         msg: 'Backup terminated due to an error.'
 
