@@ -19,7 +19,7 @@
 
 - name: Get unionfs service state
   set_fact:
-    unionfs_service_running: "{{ (services['unionfs.service']['state'] == \"running\") }}"
+    unionfs_service_running: "{{ (services['unionfs.service'] is defined) and (services['unionfs.service']['state'] == \"running\") }}"
   when: unionfs_service.stat.exists
 
 - name: Stop existing unionfs service
