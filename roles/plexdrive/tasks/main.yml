@@ -19,7 +19,7 @@
 
 - name: Get plexdrive service state
   set_fact:
-    plexdrive_service_running: "{{ (services['plexdrive.service']['state'] == \"running\") }}"
+    plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == \"running\") }}"
   when: plexdrive_service.stat.exists
 
 - name: Stop existing plexdrive service
