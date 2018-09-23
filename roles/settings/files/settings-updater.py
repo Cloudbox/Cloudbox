@@ -7,7 +7,7 @@
     # URL:           https://github.com/cloudbox/cloudbox                   #
     # Description:   Adds variables to settings.yml.                        #
     # --                                                                    #
-    #         Part of the Cloudbox project: https://cloudbox.rocks          #
+    #         Part of the Cloudbox project: https://cloudbox.works          #
     #########################################################################
     #                   GNU General Public License v3.0                     #
     #########################################################################

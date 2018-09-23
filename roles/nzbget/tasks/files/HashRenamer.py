@@ -6,7 +6,7 @@
 # URL:           https://github.com/cloudbox/cloudbox                        #
 # Description:   Renames hashed media files to match the source NZB.         #
 # --                                                                         #
-#            Part of the Cloudbox project: https://cloudbox.rocks            #
+#            Part of the Cloudbox project: https://cloudbox.works            #
 ##############################################################################
 #                     GNU General Public License v3.0                        #
 ##############################################################################
