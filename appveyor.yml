@@ -14,7 +14,7 @@ environment:
   CLOUDBOX_FOLDER: "/home/appveyor/projects/cloudbox/"
 
 init:
-  - sh: curl -s https://cloudbox.rocks/dep.sh | sudo -H sh
+  - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
 
 install:
   - sh: cd ${CLOUDBOX_FOLDER}
