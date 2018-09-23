@@ -1,7 +1,7 @@
 <br /><img src="https://raw.githubusercontent.com/Cloudbox/assets/master/images/readme/Cloudbox-logo_dark.png" width="600">
 
 <br /><br />
-[![Website](https://img.shields.io/badge/Website-https%3A%2F%2Fcloudbox.rocks-blue.svg)](https://cloudbox.rocks)
+[![Website](https://img.shields.io/badge/Website-https%3A%2F%2Fcloudbox.works-blue.svg)](https://cloudbox.works)
 [![Wiki](https://img.shields.io/badge/Wiki-https%3A%2F%2Fgithub.com%2Fcloudbox%2Fcloudbox%2Fwiki-blue.svg)](https://github.com/cloudbox/cloudbox/wiki)
 [![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2Fcloudbox-blue.svg)](https://reddit.com/r/Cloudbox)
 [![Discord](https://img.shields.io/discord/381077432285003776.svg?colorB=177DC1&label=Discord)](https://discord.io/cloudbox)

@@ -7,7 +7,7 @@
     # URL:           https://github.com/cloudbox/cloudbox                   #
     # Description:   Cleanup auto extracted files in ruTorrent downloads.   #
     # --                                                                    #
-    #         Part of the Cloudbox project: https://cloudbox.rocks          #
+    #         Part of the Cloudbox project: https://cloudbox.works          #
     #########################################################################
     #                   GNU General Public License v3.0                     #
     #########################################################################
