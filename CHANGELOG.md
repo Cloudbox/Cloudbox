@@ -38,13 +38,13 @@ Changelog Format:
 ### Changed
 - AppVeyor: Updated dependencies installer url.
 - AppVeyor: Added submodule update command.
-- Backup: Adds /opt/plex/.../cache/transcode path into backup excludes.
+- Backup: Adds `/opt/plex/.../cache/transcode` path into backup excludes.
 - Backup: Adds 'set-backup' tag to toggle cron task.
 - Backup: Removed dates from log file names.
 - Backup: Sets cron task under user's crontab (vs root).
 - Backup: Now creates a tar for each folder in '/opt' vs just one 'cloudbox.tar' file.
 - Backup: Will shut down traktarr during backups.
-- Backup: Logs now go to '~/logs' vs '~/logs/backup/'.
+- Backup: Logs now go to `~/logs` vs `~/logs/backup/`.
 - Cloudplow: Set default config to skip symlinks during upload.
 - Nginx: Added support for customizable subdomain option via 'adv_settings.yml'.
 - Organizr: direct_domain=yes will not create/use organizr subdomain.
@@ -59,7 +59,7 @@ Changelog Format:
 - Rclone: Installs 'man-db'.
 - ruTorrent: Moved location of watched folder setting in .rc file.
 - SanityCheck: Will not check for tags when running community/cloudbox_mod.
-- Settings: Put all \*.defaults into 'defaults/' folder.
+- Settings: Put all `*.defaults` into `defaults/` folder.
 - Suitarr: Added umask 002 permissions.
 
 ## [1.2.7] - 2018-08-21
