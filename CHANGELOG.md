@@ -30,6 +30,17 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.2.9] - 2018-09-26
+
+### Changed
+- Backup: Added more safeguards for when a service file is disabled.
+- Backup: Removed traktarr.service checks.
+- Backup: Simplified Docker related messages.
+- Docker: Added safeguard for when a service file is disabled.
+- Plexdrive: Added safeguard for when service file is disabled.
+- UnionFS: Added safeguard for when service file is disabled.
+- URL: Updated url to https://cloudbox.works.
+
 ## [1.2.8] - 2018-09-11
 
 ### Added
@@ -688,6 +699,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.9]: https://github.com/cloudbox/cloudbox/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/cloudbox/cloudbox/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/cloudbox/cloudbox/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/cloudbox/cloudbox/compare/v1.2.5...v1.2.6
