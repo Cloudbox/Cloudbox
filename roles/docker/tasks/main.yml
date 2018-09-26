@@ -3,7 +3,7 @@
 # Author(s):     L3uddz, Desimaniac, EnorMOZ                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
@@ -19,7 +19,7 @@
 
 - name: Get Docker service state
   set_fact:
-    docker_service_running: "{{ (services['docker.service']['state'] == \"running\") }}"
+    docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == \"running\") }}"
   when: docker_binary.stat.exists
 
 - name: Gather list of running Docker containers

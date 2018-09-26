@@ -3,7 +3,7 @@
 # Author(s):     L3uddz, Desimaniac, RXWatcher1                         #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
@@ -91,21 +91,21 @@
     file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
     ignore_errors: yes
 
-  - name: "Gather list of running Cloudbox-managed Docker containers."
+  - name: "Gather list of running Docker containers."
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
     register: cloudbox_managed_containers
     ignore_errors: yes
 
-  - name: "Stop all running Cloudbox-managed Docker containers."
+  - name: "Stop all running Docker containers."
     shell: "docker stop {{cloudbox_managed_containers.stdout}}"
     ignore_errors: yes
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Stopped Cloudbox-managed Docker containers."
+  - name: "Pushover Message: Stopped Docker containers."
     include_role:
       name: pushover
     vars:
-      message: "Stopped Cloudbox-managed Docker containers."
+      message: "Stopped Docker containers."
       when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: Populate Service Facts
@@ -118,7 +118,7 @@
 
   - name: Get plexdrive service state
     set_fact:
-      plexdrive_service_running: "{{ (services['plexdrive.service']['state'] == \"running\") }}"
+      plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == \"running\") }}"
     when: plexdrive_service.stat.exists
 
   - name: Stop plexdrive service
@@ -134,7 +134,7 @@
 
   - name: Get cloudplow service state
     set_fact:
-      cloudplow_service_running: "{{ (services['cloudplow.service']['state'] == \"running\") }}"
+      cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == \"running\") }}"
     when: cloudplow_service.stat.exists
 
   - name: Stop cloudplow service
@@ -142,22 +142,6 @@
       name: cloudplow
       state: stopped
     when: cloudplow_service.stat.exists and cloudplow_service_running
-
-  - name: Check if 'traktarr.service' exists
-    stat:
-      path: "/etc/systemd/system/traktarr.service"
-    register: traktarr_service
-
-  - name: Get traktarr service state
-    set_fact:
-      traktarr_service_running: "{{ (services['traktarr.service']['state'] == \"running\") }}"
-    when: traktarr_service.stat.exists
-
-  - name: Stop traktarr service
-    systemd:
-      name: traktarr
-      state: stopped
-    when: traktarr_service.stat.exists and traktarr_service_running
 
   - name: "Archiving '/opt' to '{{backup.tar_dest}}/opt/'."
     shell: |
@@ -215,16 +199,16 @@
     wait_for:
       timeout: 5
 
-  - name: "Start all previously running Cloudbox-managed Docker containers."
+  - name: "Start all previously running Docker containers."
     shell: 'docker start {{cloudbox_managed_containers.stdout}}'
     ignore_errors: yes
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Started Cloudbox-managed Docker containers."
+  - name: "Pushover Message: Started Docker containers."
     include_role:
       name: pushover
     vars:
-      message: "Started Cloudbox-managed Docker containers."
+      message: "Started Docker containers."
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: "Wait for 10 seconds before uploads"
@@ -327,12 +311,6 @@
       state: started
     when: cloudplow_service.stat.exists and cloudplow_service_running
 
-  - name: "Start traktarr service."
-    systemd:
-      name: traktarr
-      state: started
-    when: traktarr_service.stat.exists and traktarr_service_running
-
   - name: "Remove {{backup.tar_dest}}."
     file:
       path: "{{backup.tar_dest}}"
@@ -373,7 +351,7 @@
       wait_for:
         timeout: 5
 
-    - name: "Start all previously running Cloudbox-managed Docker containers."
+    - name: "Start all previously running Docker containers."
       shell: 'docker start {{cloudbox_managed_containers.stdout}}'
       ignore_errors: yes
       when: not (cloudbox_managed_containers.stdout | trim == '')
@@ -383,13 +361,6 @@
         name: cloudplow
         state: started
       when: cloudplow_service.stat.exists and cloudplow_service_running
-
-    - name: "Start traktarr service."
-      systemd:
-        name: traktarr
-        state: started
-      when: traktarr_service.stat.exists and traktarr_service_running
-
     - debug:
         msg: 'Backup terminated due to an error.'
 

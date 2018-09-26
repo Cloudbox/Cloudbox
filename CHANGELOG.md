@@ -30,6 +30,17 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.2.9] - 2018-09-26
+
+### Changed
+- Backup: Added more safeguards for when a service file is disabled.
+- Backup: Removed traktarr.service checks.
+- Backup: Simplified Docker related messages.
+- Docker: Added safeguard for when a service file is disabled.
+- Plexdrive: Added safeguard for when service file is disabled.
+- UnionFS: Added safeguard for when service file is disabled.
+- URL: Updated url to https://cloudbox.works.
+
 ## [1.2.8] - 2018-09-11
 
 ### Added
@@ -38,13 +49,13 @@ Changelog Format:
 ### Changed
 - AppVeyor: Updated dependencies installer url.
 - AppVeyor: Added submodule update command.
-- Backup: Adds /opt/plex/.../cache/transcode path into backup excludes.
+- Backup: Adds `/opt/plex/.../cache/transcode` path into backup excludes.
 - Backup: Adds 'set-backup' tag to toggle cron task.
 - Backup: Removed dates from log file names.
 - Backup: Sets cron task under user's crontab (vs root).
 - Backup: Now creates a tar for each folder in '/opt' vs just one 'cloudbox.tar' file.
 - Backup: Will shut down traktarr during backups.
-- Backup: Logs now go to '~/logs' vs '~/logs/backup/'.
+- Backup: Logs now go to `~/logs` vs `~/logs/backup/`.
 - Cloudplow: Set default config to skip symlinks during upload.
 - Nginx: Added support for customizable subdomain option via 'adv_settings.yml'.
 - Organizr: direct_domain=yes will not create/use organizr subdomain.
@@ -59,7 +70,7 @@ Changelog Format:
 - Rclone: Installs 'man-db'.
 - ruTorrent: Moved location of watched folder setting in .rc file.
 - SanityCheck: Will not check for tags when running community/cloudbox_mod.
-- Settings: Put all \*.defaults into 'defaults/' folder.
+- Settings: Put all `*.defaults` into `defaults/` folder.
 - Suitarr: Added umask 002 permissions.
 
 ## [1.2.7] - 2018-08-21
@@ -688,6 +699,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.2.9]: https://github.com/cloudbox/cloudbox/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/cloudbox/cloudbox/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/cloudbox/cloudbox/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/cloudbox/cloudbox/compare/v1.2.5...v1.2.6

@@ -3,7 +3,7 @@
 # Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
@@ -19,7 +19,7 @@
 
 - name: Get plexdrive service state
   set_fact:
-    plexdrive_service_running: "{{ (services['plexdrive.service']['state'] == \"running\") }}"
+    plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == \"running\") }}"
   when: plexdrive_service.stat.exists
 
 - name: Stop existing plexdrive service
