@@ -6,9 +6,9 @@
     - ['adv_settings.yml', 'defaults/adv_settings.yml.default']
   roles:
     - { role: sanity_check }
+    - { role: kernel, tags: ['kernel'] }
     - { role: settings, tags: ['always', 'settings'] }
     - { role: pre_tasks }
-    - { role: kernel, tags: ['kernel'] }
     - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
