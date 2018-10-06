@@ -22,8 +22,6 @@
 ./plex_autoscan/plex_autoscan.log
 ./plex_autoscan/plex_autoscan.log.*
 
-./plexdrive/cache.bolt
-
 ./plex_dupefinder/activity.log
 ./plex_dupefinder/decisions.log
 
