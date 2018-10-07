@@ -1,8 +1,9 @@
 #########################################################################
 # Title:         Cloudbox: Sonarr Role                                  #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Author(s):     L3uddz, Desimaniac, andrewkhunn                        #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
+#                andrewkhunn/suitarr_mp4_automator                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -66,10 +67,25 @@
       - "/mnt:/mnt"
       - "/mnt/unionfs/Media/TV:/tv"
 
+- name: Check if sickbeard_mp4_automator is installed
+  stat:
+    path: /opt/scripts/sickbeard_mp4_automator
+  register: sma
+
+- name: Set default image to be installed
+  set_fact:
+    image: hotio/suitarr
+  when: sma.stat.isdir is not defined
+
+- name: Set sickbeard_mp4_automator image if present
+  set_fact:
+    image: andrewkhunn/suitarr_mp4_automator
+  when: sma.stat.isdir is defined and sma.stat.isdir
+
 - name: Create and start container
   docker_container:
     name: sonarr
-    image: "hotio/suitarr:sonarr"
+    image: "{{image}}:sonarr"
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8989"

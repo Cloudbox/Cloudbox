@@ -1,0 +1,65 @@
+#########################################################################
+# Title:         Cloudbox: sickbeard_mp4_automator Role                 #
+# Author(s):     andrewkhunn                                            #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create sickbeard_mp4_automator directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/scripts/sickbeard_mp4_automator
+
+- name: Clone sickbeard_mp4_automator
+  git:
+    repo: https://github.com/mdhiggins/sickbeard_mp4_automator
+    dest: /opt/scripts/sickbeard_mp4_automator
+    version: master
+    force: yes
+
+- name: Import sample config
+  template:
+    src: autoProcess.ini.default
+    dest: /opt/scripts/sickbeard_mp4_automator/autoProcess.ini.default
+    force: yes
+
+- name: Delete post_process extras
+  file:
+    path: "{{item}}"
+    state: absent
+  with_items:
+    - /opt/scripts/sickbeard_mp4_automator/post_process/iTunes.py
+    - /opt/scripts/sickbeard_mp4_automator/post_process/sample.bat
+    - /opt/scripts/sickbeard_mp4_automator/post_process/sample.py
+    - /opt/scripts/sickbeard_mp4_automator/post_process/resources/add_to_iTunes.scpt
+    - /opt/scripts/sickbeard_mp4_automator/post_process/resources/iTunes.bat
+
+- name: Import plex_autoscan.py
+  template:
+    src: plex_autoscan.py.default
+    dest: /opt/scripts/sickbeard_mp4_automator/post_process/plex_autoscan.py
+    force: no
+
+- name: Set directory permissions
+  file: "path=/opt/scripts/sickbeard_mp4_automator state=directory owner={{user}} group={{user}} recurse=yes"
+
+- name: Check if media managers are installed
+  stat:
+    path: /opt/{{item}}
+  register: "{{item}}"
+  with_items:
+    - radarr
+    - sonarr
+
+- name: Reinstall Radarr to switch image to suitarr_mp4_automator
+  include_role:
+    name: radarr
+  when: radarr.stat.isdir is defined and radarr.stat.isdir
+
+- name: Reinstall Sonarr to switch image to suitarr_mp4_automator
+  include_role:
+    name: sonarr
+  when: sonarr.stat.isdir is defined and sonarr.stat.isdir
