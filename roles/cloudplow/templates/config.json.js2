@@ -41,7 +41,7 @@
             ],
             "rclone_extras": {
                 "--checkers": 16,
-                "--drive-chunk-size": "64M",
+                "--drive-chunk-size": "128M",
                 "--stats": "60s",
                 "--transfers": 8,
                 "--verbose": 1,
