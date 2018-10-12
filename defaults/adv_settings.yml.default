@@ -4,6 +4,7 @@ plex:
   open_port: no
   force_auto_adjust_quality: no
   allow_high_output_bitrates: no
+  db_cache_size: default
 organizr:
   direct_domain: no
 nginx:
