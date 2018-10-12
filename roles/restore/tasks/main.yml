@@ -64,7 +64,7 @@
   when: (dir_files.matched|int == 0) and (not backup_location.stat.exists)
 
 - name: "Fetch backup from '{{backup.rclone_dest}}'"
-  command: "rclone copy '{{backup.rclone_dest}}/' '{{backup.tar_dest}}' --stats=30s -v --transfers=2 --exclude 'archived/**' --log-file='{{playbook_dir}}/restore_rclone.log'"
+  command: "rclone copy '{{backup.rclone_dest}}/' '{{backup.tar_dest}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --exclude 'archived/**' --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: yes
   become_user: "{{user}}"
   when: (dir_files.matched|int == 0) and (backup.use_rclone)
