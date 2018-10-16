@@ -19,8 +19,7 @@
     - byobu
 
 - name: Upgrade APT packages
-  apt:
-    upgrade: dist
+  shell: apt-get dist-upgrade -y --allow-unauthenticated
   when: not continuous_integration
 
 - name: Remove useless packages from the cache
