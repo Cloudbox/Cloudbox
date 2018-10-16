@@ -73,21 +73,13 @@
     ignore_errors: yes
     failed_when: settings_updater.rc == 1
 
-  - name: "Check 'settings-updater.py' run status for errors with updating 'adv_settings.yml'."
-    debug: msg="The script 'settings_updater.py' exited with an error when updating 'adv_settings.yml. Check 'settings-updater.log' for details."
-    when: "(item == 'adv_settings.yml') and (settings_updater.rc == 1)"
-
-  - name: "Check 'settings-updater.py' run status for new settings in 'adv_settings.yml'."
-    debug: msg="The script 'settings_updater.py' added new settings to 'adv_settings.yml'. Check 'settings-updater.log' for details."
-    when: "(item == 'adv_settings.yml') and (settings_updater.rc == 2)"
-
   - name: "Check 'settings-updater.py' run status for errors with updating '{{item}}'."
     fail: msg="The script 'settings_updater.py' exited with an error when updating '{{item}}'. Check 'settings-updater.log' for details."
-    when: "(item == 'accounts.yml' or item == 'settings.yml') and (settings_updater.rc == 1)"
+    when: settings_updater.rc == 1
 
   - name: "Check 'settings-updater.py' run status for new settings in '{{item}}'."
     fail: msg="The script 'settings_updater.py' added new settings to '{{item}}'. Check 'settings-updater.log' for details."
-    when: "(item == 'accounts.yml' or item == 'settings.yml') and (settings_updater.rc == 2)"
+    when: settings_updater.rc == 2
 
   always:
   - name: "Re-encrypt '{{item}}' if previously encrypted."
