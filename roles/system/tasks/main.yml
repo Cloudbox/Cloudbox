@@ -200,6 +200,15 @@
     value: fq
     state: present
 
+- name: Set vnstat to proper default interface
+  lineinfile:
+    path: "/etc/vnstat.conf"
+    regexp: '(Interface)\s?.*'
+    line: '\1 "{{ansible_default_ipv4.interface}}"'
+    state: present
+    backrefs: yes
+  when: (ansible_default_ipv4 is defined) and (ansible_default_ipv4.type == "ether")
+
 - debug:
     msg: "System mounts: are {{ ansible_mounts }}"
 
