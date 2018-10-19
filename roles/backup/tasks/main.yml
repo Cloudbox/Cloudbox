@@ -73,6 +73,7 @@
      - "{{playbook_dir}}/accounts.yml"
      - "{{playbook_dir}}/settings.yml"
      - "{{playbook_dir}}/adv_settings.yml"
+     - "{{playbook_dir}}/backup_config.yml"
      - "/home/{{user}}/.config/rclone/rclone.conf"
     ignore_errors: yes
 
@@ -265,6 +266,7 @@
      - "accounts.yml"
      - "settings.yml"
      - "adv_settings.yml"
+     - "backup_config.yml"
      - "rclone.conf"
      - "backup_excludes.txt"
      - "cloudbox.tar"
