@@ -21,6 +21,24 @@
     when: ('set-backup' in ansible_run_tags) and not ('backup' in ansible_run_tags)
     tags: set-backup
 
+  - name: "Get Start Time"
+    set_fact:
+      start_time: "{{ lookup('pipe','date \"+%s\"') }}"
+
+  - name: "Pushover Message: Started Cloudbox backup task"
+    include_role:
+      name: pushover
+    vars:
+      message: "Started Cloudbox backup task"
+
+  - name: "Create 'backup.lock'."
+    file:
+      path: "{{playbook_dir}}/backup.lock"
+      state: touch
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+
   - name: Check if previous backup exists locally
     find:
       paths: "{{local.destination}}"
@@ -41,24 +59,6 @@
       - "/home/{{user}}/logs/backup"
       - "{{local.destination}}"
       - "{{local.destination}}/opt"
-
-  - name: "Create 'backup.lock'."
-    file:
-      path: "{{playbook_dir}}/backup.lock"
-      state: touch
-      owner: "{{user}}"
-      group: "{{user}}"
-      mode: 0775
-
-  - name: "Get Start Time"
-    set_fact:
-      start_time: "{{ lookup('pipe','date \"+%s\"') }}"
-
-  - name: "Pushover Message: Started Cloudbox backup task"
-    include_role:
-      name: pushover
-    vars:
-      message: "Started Cloudbox backup task"
 
   - name: "Copy files to '{{local.destination}}'"
     copy:
