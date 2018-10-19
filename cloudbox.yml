@@ -4,6 +4,7 @@
     - ['accounts.yml', 'defaults/accounts.yml.default']
     - ['settings.yml', 'defaults/settings.yml.default']
     - ['adv_settings.yml', 'defaults/adv_settings.yml.default']
+    - ['backup_config.yml', 'backup_config.yml.default']
   roles:
     - { role: sanity_check }
     - { role: kernel, tags: ['kernel'] }

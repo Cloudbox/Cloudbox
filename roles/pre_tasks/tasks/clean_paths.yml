@@ -18,14 +18,3 @@
     nzbget: { downloads: "{{ (nzbget.downloads | default('',true)) | regex_replace('\\/$', '') }}" }
     rutorrent: { downloads: "{{ (rutorrent.downloads | default('',true)) | regex_replace('\\/$', '') }}" }
   when: (nzbget is defined) and (rutorrent is defined)
-
-- name: Remove trailing slash from 'backup' paths
-  set_fact:
-    tmp_backup:
-      tar_dest: "{{ (backup.tar_dest | default('',true)) | regex_replace('\\/$', '') }}"
-      rsync_dest: "{{ (backup.rsync_dest | default('',true)) | regex_replace('\\/$', '') }}"
-      rclone_dest: "{{ (backup.rclone_dest | default('',true)) | regex_replace('\\/$', '') }}"
-
-- name: Merge changes into 'backup' key
-  set_fact:
-    backup: "{{ backup | combine(tmp_backup) }}"

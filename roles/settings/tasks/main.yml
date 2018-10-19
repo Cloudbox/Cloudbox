@@ -30,3 +30,4 @@
     - "accounts.yml"
     - "settings.yml"
     - "adv_settings.yml"
+    - "backup_config.yml"
