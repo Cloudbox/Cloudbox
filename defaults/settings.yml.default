@@ -20,5 +20,3 @@ backup:
   use_rclone: false
   cron_time: weekly
   cron_state: absent
-  pushover_app_token:
-  pushover_user_key:
