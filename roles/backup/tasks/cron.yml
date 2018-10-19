@@ -1,0 +1,26 @@
+#########################################################################
+# Title:         Backup: Cron Tasks                                     #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Get ansible-playbook binary path."
+  shell: "which ansible-playbook"
+  register: playbook_binary
+
+- name: "Remove legacy cron backup task."
+  cron:
+    name: "Backup Cloudbox"
+    state: absent
+
+- name: "Schedule cron backup."
+  cron:
+    name: "Cloudbox Backup"
+    special_time: "{{cron.cron_time}}"
+    job: "sudo PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/cloudbox_backup.log' 2>&1"
+    state: "{{cron.cron_state}}"
+    user: "{{user}}"

@@ -1,0 +1,32 @@
+#########################################################################
+# Title:         Backup: Variables                                      #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# Set basic variable(s)
+- name: "Get 'cloudbox.yml' info."
+  stat:
+    path: "{{playbook_dir}}/backup.yml"
+  register: backup_yml
+
+- name: Set variables
+  set_fact:
+    user: "{{backup_yml.stat.pw_name}}"
+
+# Remove trailing forward slashes from backup paths
+- name: Remove trailing forward slashes from backup paths
+  set_fact:
+    local_tmp: { destination: "{{ (local.destination | default('',true)) | regex_replace('\\/$', '') }}" }
+    rclone_tmp: { destination: "{{ (rclone.destination | default('',true)) | regex_replace('\\/$', '') }}" }
+    rsync_tmp: { destination: "{{ (rsync.destination | default('',true)) | regex_replace('\\/$', '') }}" }
+
+- name: Merge changes back
+  set_fact:
+    local: "{{ local | combine(local_tmp) }}"
+    rclone: "{{ rclone | combine(rclone_tmp) }}"
+    rsync: "{{ rsync | combine(rsync_tmp) }}"
