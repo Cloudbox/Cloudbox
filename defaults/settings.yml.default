@@ -11,3 +11,4 @@ plex:
   transcodes: /home/{{user}}/transcodes
 rclone:
   version: latest
+shell: zsh
