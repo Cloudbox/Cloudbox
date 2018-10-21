@@ -103,15 +103,15 @@
   with_items:
     - /opt
 
-- name: "Set '/opt' permissions"
-  import_tasks: "permissions.yml"
-  tags: permissions-fix
-
 - name: "Unarchive backup tars to /opt"
   shell: "tar -xf '{{item}}' -C /opt ."
   with_fileglob:
   - "{{local.destination}}/opt/*.tar"
   register: unarchive
+
+- name: "Set '/opt' ownership and permissions"
+  import_tasks: "permissions.yml"
+  tags: permissions-fix
 
 - name: "Remove '{{local.destination}}'"
   file:
