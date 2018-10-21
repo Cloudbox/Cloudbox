@@ -30,3 +30,26 @@
     local: "{{ local | combine(local_tmp) }}"
     rclone: "{{ rclone | combine(rclone_tmp) }}"
     rsync: "{{ rsync | combine(rsync_tmp) }}"
+
+- name: "Set 'vault_service_enabled' variable"
+  set_fact:
+    vault_service_enabled: "{{ true if not(
+        (vault_service is undefined)
+        or
+        (vault_service is none)
+        or
+        (vault_service | trim == '')
+        or
+        (vault_service.user is undefined)
+        or
+        (vault_service.user is none)
+        or
+        (vault_service.user | trim == '')
+        or
+        (vault_service.pass is undefined)
+        or
+        (vault_service.pass is none)
+        or
+        (vault_service.pass | trim == '')
+      )
+      else false }}"

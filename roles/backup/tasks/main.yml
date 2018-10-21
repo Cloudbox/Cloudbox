@@ -14,7 +14,9 @@
 
   - name: Variables
     import_tasks: "variables.yml"
-    tags: set-backup
+    tags:
+     - set-backup
+     - vault-service
 
   - name: Cron
     import_tasks: "cron.yml"
@@ -91,6 +93,11 @@
       mode: 0775
       force: yes
     when: backup_excludes_list.stat.exists
+
+  - name: vault_service
+    import_tasks: "vault_service.yml"
+    when: vault_service_enabled
+    tags: vault-service
 
   - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
     synchronize:
