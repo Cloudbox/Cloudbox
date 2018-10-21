@@ -29,7 +29,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Started Cloudbox backup task"
+      message: "Started Cloudbox backup task."
 
   - name: "Create 'backup.lock'."
     file:
@@ -199,7 +199,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Backup archive created (file size: {{backup_size}})"
+      message: "Backup archive created (file size: {{backup_size}})."
     ignore_errors: yes
 
   - name: "Start plexdrive service"
@@ -221,7 +221,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Started Docker containers"
+      message: "Started Docker containers."
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
   - name: "Wait for 10 seconds before uploads"
@@ -285,7 +285,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Rclone uploaded backup to '{{rclone.destination}}'"
+      message: "Rclone uploaded backup to '{{rclone.destination}}'."
     when: rclone.enabled
 
   - name: "Use rsync to upload backup to '{{rsync.destination}}'"
@@ -302,7 +302,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Rsync uploaded backup to '{{rsync.destination}}'"
+      message: "Rsync uploaded backup to '{{rsync.destination}}'."
     when: rsync.enabled
 
   - name: "Get End Time"
@@ -317,7 +317,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Finished Cloudbox backup task in {{ total_time }} minutes"
+      message: "Finished Cloudbox backup task in {{ total_time }} minutes."
 
   - name: "Start cloudplow service"
     systemd:
@@ -362,7 +362,7 @@
       include_role:
         name: pushover
       vars:
-        message: "Backup terminated due to an error"
+        message: "Backup terminated due to an error."
 
   always:
   - name: "Remove 'backup.lock'"
