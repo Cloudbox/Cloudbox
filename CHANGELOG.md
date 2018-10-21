@@ -58,7 +58,7 @@ Changelog Format:
 - Backup: Added support for Cloudbox Vault Service (more on this later).
 - Backup: Updated cron task to reflect new backup.yml playbook.
 - Restore: Now calls Pre_Install role to make sure user account exists and create one if it doesn't.
-- Rclone: rclone.conf will now set to  correct permissions when importing from playbook dir.
+- Rclone: `rclone.conf` will now be set to correct permissions, when importing from playbook dir.
 
 ## [1.2.9] - 2018-09-26
 
