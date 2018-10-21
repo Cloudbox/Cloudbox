@@ -94,9 +94,24 @@
   fail: msg="There must have been an issue retrieving the tar files as they are missing in '{{local.destination}}/opt/'"
   when: (dir_files.matched|int == 0) and (dir_files2.matched|int == 0)
 
-- name: "Wait for 10 seconds before unarchiving"
+- name: "Wait for 10 seconds before commencing"
   wait_for:
     timeout: 10
+
+- name: "Look for 'backup_excludes.txt' file in '{{local.destination}}'"
+  stat:
+    path: "{{local.destination}}/backup_excludes.txt"
+  register: backup_excludes_file
+
+- name: "Copy 'backup_excludes.txt' from '{{local.destination}}'."
+  copy:
+    src: "{{local.destination}}/backup_excludes.txt"
+    dest: "{{playbook_dir}}"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: backup_excludes_file.stat.exists
 
 - name: "Create '/opt' directory"
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
