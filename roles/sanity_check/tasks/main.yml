@@ -51,17 +51,19 @@
   register: backup_lock
   tags: always
 
-- name: "Get 'backup.lock' age (in hours)."
+# Age in hours
+- name: "Get age of 'backup.lock' file"
   set_fact:
     backup_lock_age: "{{ ( (((ansible_date_time.epoch|int) - (backup_lock.stat.ctime|int)) / (60*60) ) | int )  }}"
   when: backup_lock.stat.exists
   tags: always
 
-- name: "Delete stale 'backup.lock'."
+# Delete if older than 2 hours.
+- name: "Delete stale 'backup.lock'"
   file:
     path: "{{playbook_dir}}/backup.lock"
     state: absent
-  when: (backup_lock.stat.exists) and (backup_lock_age|int >= 1)
+  when: (backup_lock.stat.exists) and (backup_lock_age|int >= 2)
   tags: always
 
 - name: "Fail when 'backup.lock' exists."

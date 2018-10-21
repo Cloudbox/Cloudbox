@@ -12,7 +12,7 @@
     #                   GNU General Public License v3.0                     #
     #########################################################################
 
-    Sonarr Setup:
+    Sonarr/Sonarr4K Setup:
     -------------
     1. Click "Settings" -> "Connect".
 
@@ -36,7 +36,7 @@
 
     ========================================================================
 
-    Radarr Setup:
+    Radarr/Radarr4K Setup:
     -------------
     1. Click "Settings" -> "Connect".
 
@@ -104,17 +104,17 @@ log = logging.getLogger("TorrentCleanup")
 if len(sys.argv) <= 1:
     log.error("You must specify an argument of either sonarr/radarr/lidarr.")
     sys.exit(0)
-elif sys.argv[1].lower() == "sonarr":
+elif 'sonarr' in sys.argv[1].lower():
     sourceFile = os.environ.get('sonarr_episodefile_sourcepath')
     sourceFolder = os.environ.get('sonarr_episodefile_sourcefolder')
-elif sys.argv[1].lower() == "radarr":
+elif 'radarr' in sys.argv[1].lower():
     sourceFile = os.environ.get('radarr_moviefile_sourcepath')
     sourceFolder = os.environ.get('radarr_moviefile_sourcefolder')
-elif sys.argv[1].lower() == "lidarr":
+elif 'lidarr' in sys.argv[1].lower():
     sourceFile = os.environ.get('lidarr_trackfile_sourcepath')
     sourceFolder = os.environ.get('lidarr_trackfile_sourcefolder')
 else:
-    log.error("Unable to determine cleanup requester. This must be either sonarr, radarr, or lidarr.")
+    log.error("Unable to determine cleanup requester. This must be either 'sonarr', 'radarr', or 'lidarr'.")
     sys.exit(0)
 
 if os.path.exists(sourceFile) and os.path.isfile(sourceFile):

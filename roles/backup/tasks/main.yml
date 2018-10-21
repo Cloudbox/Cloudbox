@@ -9,26 +9,29 @@
 #########################################################################
 ---
 - block:
-  - name: Check if previous backup exists locally
-    find:
-      paths: "{{backup.tar_dest}}"
-      file_type: file
-      patterns: '*.tar'
-      recurse: yes
-    register: dir_files
+  - name: Sanity Check
+    import_tasks: "sanity_check.yml"
 
-  # Use mv because Ansible copy & delete takes a lot longer.
-  - name: "Moving '{{backup.tar_dest}}' to '{{backup.tar_dest}}.old'."
-    shell: "mv '{{backup.tar_dest}}' '{{backup.tar_dest}}.old'"
-    when: dir_files.matched|int != 0
+  - name: Variables
+    import_tasks: "variables.yml"
+    tags:
+     - set-backup
+     - vault-service
 
-  - name: "Create backup folders."
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-    with_items:
-      - "/home/{{user}}/logs"
-      - "/home/{{user}}/logs/backup"
-      - "{{backup.tar_dest}}"
-      - "{{backup.tar_dest}}/opt"
+  - name: Cron
+    import_tasks: "cron.yml"
+    when: ('set-backup' in ansible_run_tags) and not ('backup' in ansible_run_tags)
+    tags: set-backup
+
+  - name: "Get Start Time"
+    set_fact:
+      start_time: "{{ lookup('pipe','date \"+%s\"') }}"
+
+  - name: "Pushover Message: Started Cloudbox backup task"
+    include_role:
+      name: pushover
+    vars:
+      message: "Started Cloudbox backup task."
 
   - name: "Create 'backup.lock'."
     file:
@@ -38,20 +41,31 @@
       group: "{{user}}"
       mode: 0775
 
-  - name: "Get Start Time"
-    set_fact:
-      start_time: "{{ lookup('pipe','date \"+%s\"') }}"
+  - name: Check if previous backup exists locally
+    find:
+      paths: "{{local.destination}}"
+      file_type: file
+      patterns: '*.tar'
+      recurse: yes
+    register: dir_files
 
-  - name: "Pushover Message: Started Cloudbox backup task."
-    include_role:
-      name: pushover
-    vars:
-      message: "Started Cloudbox backup task."
+  # Use mv because Ansible copy & delete takes a lot longer.
+  - name: "Moving '{{local.destination}}' to '{{local.destination}}.old'"
+    shell: "mv '{{local.destination}}' '{{local.destination}}.old'"
+    when: dir_files.matched|int != 0
 
-  - name: "Copy files to '{{backup.tar_dest}}'."
+  - name: "Create backup folders."
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+    with_items:
+      - "/home/{{user}}/logs"
+      - "/home/{{user}}/logs/backup"
+      - "{{local.destination}}"
+      - "{{local.destination}}/opt"
+
+  - name: "Copy files to '{{local.destination}}'"
     copy:
       src: "{{item}}"
-      dest: "{{backup.tar_dest}}"
+      dest: "{{local.destination}}"
       owner: "{{user}}"
       group: "{{user}}"
       mode: 0775
@@ -61,25 +75,31 @@
      - "{{playbook_dir}}/accounts.yml"
      - "{{playbook_dir}}/settings.yml"
      - "{{playbook_dir}}/adv_settings.yml"
+     - "{{playbook_dir}}/backup_config.yml"
      - "/home/{{user}}/.config/rclone/rclone.conf"
     ignore_errors: yes
 
-  - name: "Look for 'backup_excludes.txt' file in cloudbox folder."
+  - name: "Look for 'backup_excludes_list.txt' file in cloudbox folder"
     stat:
-      path: "{{playbook_dir}}/backup_excludes.txt"
-    register: backup_excludes_file
+      path: "{{playbook_dir}}/backup_excludes_list.txt"
+    register: backup_excludes_list
 
-  - name: "Copy files to '{{backup.tar_dest}}'."
+  - name: "Copy files to '{{local.destination}}'."
     copy:
-      src: "{{playbook_dir}}/backup_excludes.txt"
-      dest: "{{backup.tar_dest}}"
+      src: "{{playbook_dir}}/backup_excludes_list.txt"
+      dest: "{{local.destination}}"
       owner: "{{user}}"
       group: "{{user}}"
       mode: 0775
       force: yes
-    when: backup_excludes_file.stat.exists
+    when: backup_excludes_list.stat.exists
 
-  - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup."
+  - name: vault_service
+    import_tasks: "vault_service.yml"
+    when: vault_service_enabled
+    tags: vault-service
+
+  - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
     synchronize:
       src: "/etc/systemd/system/"
       dest: "/opt/systemd-backup"
@@ -87,21 +107,21 @@
       recursive: yes
     ignore_errors: yes
 
-  - name: "Make systemd-backup folder readable/writeable by '{{user}}'."
+  - name: "Make systemd-backup folder readable/writeable by '{{user}}'"
     file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
     ignore_errors: yes
 
-  - name: "Gather list of running Docker containers."
+  - name: "Gather list of running Docker containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
     register: cloudbox_managed_containers
     ignore_errors: yes
 
-  - name: "Stop all running Docker containers."
+  - name: "Stop all running Docker containers"
     shell: "docker stop {{cloudbox_managed_containers.stdout}}"
     ignore_errors: yes
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Stopped Docker containers."
+  - name: "Pushover Message: Stopped Docker containers"
     include_role:
       name: pushover
     vars:
@@ -143,15 +163,15 @@
       state: stopped
     when: cloudplow_service.stat.exists and cloudplow_service_running
 
-  - name: "Archiving '/opt' to '{{backup.tar_dest}}/opt/'."
+  - name: "Archiving '/opt' to '{{local.destination}}/opt/'"
     shell: |
       find /opt/ -mindepth 1 -maxdepth 1 -type d -execdir \
       tar \
         --ignore-failed-read \
         --warning=no-file-changed \
         --warning=no-file-removed \
-        --exclude-from '{{ (backup_excludes_file is defined and backup_excludes_file.stat.exists) | ternary(playbook_dir + '/backup_excludes.txt', playbook_dir + '/roles/backup/files/backup_excludes.txt') }}' \
-        -cf "{{backup.tar_dest}}/opt/"{}.tar {} \; \
+        --exclude-from '{{ (backup_excludes_list is defined and backup_excludes_list.stat.exists) | ternary(playbook_dir + '/backup_excludes_list.txt', playbook_dir + '/roles/backup/files/backup_excludes_list.txt') }}' \
+        -cf "{{local.destination}}/opt/"{}.tar {} \; \
         2> /home/{{user}}/logs/cloudbox_backup_tar_stderr.log
     args:
       executable: /bin/bash
@@ -159,52 +179,52 @@
 
   - name: Check if tar files were created
     find:
-      paths: "{{backup.tar_dest}}/opt/"
+      paths: "{{local.destination}}/opt/"
       file_type: file
       patterns: '*.tar'
     register: dir_files2
 
-  - name: Abort backup when tar creation fails.
-    fail: msg="There must have been an issue during the tar creation tasks as they are missing in '{{backup.tar_dest}}/opt/'"
+  - name: Abort backup when tar creation fails
+    fail: msg="There must have been an issue during the tar creation tasks as they are missing in '{{local.destination}}/opt/'"
     when: dir_files2.matched|int == 0
 
-  - name: "Remove {{backup.tar_dest}}.old'"
+  - name: "Remove '{{local.destination}}.old'"
     file:
-      path: "{{backup.tar_dest}}.old"
+      path: "{{local.destination}}.old"
       state: absent
     when: dir_files2.matched|int != 0
 
-  - name: "Get '{{backup.tar_dest}}/' size"
-    shell: du -sh --apparent-size {{backup.tar_dest}} | /usr/bin/awk '{print $1}'
+  - name: "Get '{{local.destination}}/' size"
+    shell: du -sh --apparent-size {{local.destination}} | /usr/bin/awk '{print $1}'
     register: backup_new
 
   - name: "Set backup_size"
     set_fact:
       backup_size: "{{backup_new.stdout}}B"
 
-  - name: "Pushover Message: Backup archive created (file size: {{backup_size}})."
+  - name: "Pushover Message: Backup archive created (file size: {{backup_size}})"
     include_role:
       name: pushover
     vars:
       message: "Backup archive created (file size: {{backup_size}})."
     ignore_errors: yes
 
-  - name: "Start plexdrive service."
+  - name: "Start plexdrive service"
     systemd:
       name: plexdrive
       state: started
     when: plexdrive_service.stat.exists and plexdrive_service_running
 
-  - name: "Wait for 5 seconds before starting containers."
+  - name: "Wait for 5 seconds before starting containers"
     wait_for:
       timeout: 5
 
-  - name: "Start all previously running Docker containers."
+  - name: "Start all previously running Docker containers"
     shell: 'docker start {{cloudbox_managed_containers.stdout}}'
     ignore_errors: yes
     when: not (cloudbox_managed_containers.stdout | trim == '')
 
-  - name: "Pushover Message: Started Docker containers."
+  - name: "Pushover Message: Started Docker containers"
     include_role:
       name: pushover
     vars:
@@ -215,81 +235,83 @@
     wait_for:
       timeout: 10
 
-  - name: "Reset folder ownership."
-    shell: "chown -R {{user}}:{{user}} {{backup.tar_dest}}/"
+  - name: "Reset folder ownership"
+    shell: "chown -R {{user}}:{{user}} {{local.destination}}/"
     args:
       warn: no
 
   # Reset mod dates to avoid conflicts during rclone backup. Ansible module doesn't touch folder contents via wildcard.
-  - name: "Reset permissions and mod dates to files in '{{backup.tar_dest}}/'."
-    shell: find '{{backup.tar_dest}}' -type f  -exec touch {} +
+  - name: "Reset permissions and mod dates to files in '{{local.destination}}/'"
+    shell: find '{{local.destination}}' -type f  -exec touch {} +
     become: yes
     become_user: "{{user}}"
     args:
       executable: /bin/bash
       warn: no
 
-  # Due to a touch command in a previous backup, all files on backup.rclone_dest have same mod dates, therefore, only one file's mod date is needed.
-  - name: "Get datestamp for previous '{{backup.rclone_dest}}/settings.yml'."
-    shell: "rclone lsl {{ backup.rclone_dest }}/settings.yml | sed -e 's/^[ \t]*//' | cut -d ' ' -f 2,3 | cut -d '.' -f 1 | sed s/' '/_/g | sed s/':'/./g"
+  # Due to a touch command in a previous backup, all files on rclone.destination have same mod dates, therefore, only one file's mod date is needed.
+  - name: "Get datestamp for previous '{{rclone.destination}}/settings.yml'"
+    shell: "rclone lsl {{ rclone.destination }}/settings.yml | sed -e 's/^[ \t]*//' | cut -d ' ' -f 2,3 | cut -d '.' -f 1 | sed s/' '/_/g | sed s/':'/./g"
     become: yes
     become_user: "{{user}}"
     register: rclone_timestamp
     ignore_errors: yes
-    when: backup.use_rclone
+    when: rclone.enabled
 
   # If rclone_timestamp is blank (would happen if settings.yml was not at destination), default the naming of files to '/archived/old/filename.ext', else /archived/date/filename.ext.
-  - name: "Archive previous files in '{{backup.rclone_dest}}'."
-    shell: "rclone moveto '{{ backup.rclone_dest }}/{{ item }}' '{{ backup.rclone_dest }}/archived/{{ rclone_timestamp.stdout | default('old', true) }}/{{ item }}' 2>/dev/null"
+  - name: "Archive previous files in '{{rclone.destination}}'"
+    shell: "rclone moveto '{{ rclone.destination }}/{{ item }}' '{{ rclone.destination }}/archived/{{ rclone_timestamp.stdout | default('old', true) }}/{{ item }}' 2>/dev/null"
     become: yes
     become_user: "{{user}}"
     register: rclone_move
     failed_when: rclone_move.rc > 3
     ignore_errors: yes
-    when: backup.use_rclone
+    when: rclone.enabled
     with_items:
      - "opt"
      - "ansible.cfg"
      - "accounts.yml"
      - "settings.yml"
      - "adv_settings.yml"
+     - "backup_config.yml"
      - "rclone.conf"
      - "backup_excludes.txt"
+     - "backup_excludes_list.txt"
      - "cloudbox.tar"
 
   - name: "Wait for 5 seconds before uploading"
     wait_for:
       timeout: 5
 
-  - name: "Use rclone to upload backup to '{{backup.rclone_dest}}'."
-    command: "rclone copy '{{backup.tar_dest}}' '{{backup.rclone_dest}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone.log'"
+  - name: "Use rclone to upload backup to '{{rclone.destination}}'"
+    command: "rclone copy '{{local.destination}}' '{{rclone.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone.log'"
     become: yes
     become_user: "{{user}}"
-    when: backup.use_rclone
+    when: rclone.enabled
 
-  - name: "Pushover Message: Rclone uploaded backup to '{{backup.rclone_dest}}'."
+  - name: "Pushover Message: Rclone uploaded backup to '{{rclone.destination}}'"
     include_role:
       name: pushover
     vars:
-      message: "Rclone uploaded backup to '{{backup.rclone_dest}}'."
-    when: backup.use_rclone
+      message: "Rclone uploaded backup to '{{rclone.destination}}'."
+    when: rclone.enabled
 
-  - name: "Use rsync to upload backup to '{{backup.rsync_dest}}'."
+  - name: "Use rsync to upload backup to '{{rsync.destination}}'"
     synchronize:
-      src: "{{backup.tar_dest}}/"
-      dest: "{{backup.rsync_dest}}/"
+      src: "{{local.destination}}/"
+      dest: "{{rsync.destination}}/"
       rsync_opts:
         - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync.log'"
     become: yes
     become_user: "{{user}}"
-    when: backup.use_rsync
+    when: rsync.enabled
 
-  - name: "Pushover Message: Rsync uploaded backup to '{{backup.rsync_dest}}'."
+  - name: "Pushover Message: Rsync uploaded backup to '{{rsync.destination}}'"
     include_role:
       name: pushover
     vars:
-      message: "Rsync uploaded backup to '{{backup.rsync_dest}}'."
-    when: backup.use_rsync
+      message: "Rsync uploaded backup to '{{rsync.destination}}'."
+    when: rsync.enabled
 
   - name: "Get End Time"
     set_fact:
@@ -299,79 +321,59 @@
     set_fact:
       total_time: "{{ (((end_time|int) - (start_time|int)) / 60) | int | abs }}"
 
-  - name: "Pushover Message: Finished Cloudbox backup task in {{ total_time }} minutes."
+  - name: "Pushover Message: Finished Cloudbox backup task in {{ total_time }} minutes"
     include_role:
       name: pushover
     vars:
       message: "Finished Cloudbox backup task in {{ total_time }} minutes."
 
-  - name: "Start cloudplow service."
+  - name: "Start cloudplow service"
     systemd:
       name: cloudplow
       state: started
     when: cloudplow_service.stat.exists and cloudplow_service_running
 
-  - name: "Remove {{backup.tar_dest}}."
+  - name: "Remove {{local.destination}}"
     file:
-      path: "{{backup.tar_dest}}"
+      path: "{{local.destination}}"
       state: absent
-    when: (dir_files2.matched|int != 0) and (not backup.keep_local_copy)
-
-  - name: "Get ansible-playbook binary path."
-    shell: "which ansible-playbook"
-    register: playbook_binary
-    tags: set-backup
-
-  - name: "Remove legacy cron backup task."
-    cron:
-      name: "Backup Cloudbox"
-      state: absent
-    tags: set-backup
-
-  - name: "Schedule cron backup."
-    cron:
-      name: "Cloudbox Backup"
-      special_time: "{{backup.cron_time}}"
-      job: "sudo PATH='/usr/bin:/bin:/usr/local/bin' env ANSIBLE_CONFIG='{{playbook_dir}}/ansible.cfg' '{{playbook_binary.stdout}}' '{{playbook_dir}}/cloudbox.yml' --tags backup --skip-tags settings >> '/home/{{user}}/logs/cloudbox_backup.log' 2>&1"
-      state: "{{backup.cron_state}}"
-      user: "{{user}}"
-    tags: set-backup
+    when: (dir_files2.matched|int != 0) and (not local.keep_local_copy)
 
   - debug:
       msg: "Backup Completed Successfully."
 
   rescue:
-    - name: "Start plexdrive service."
+    - name: "Start plexdrive service"
       systemd:
         name: plexdrive
         state: started
       when: plexdrive_service.stat.exists and plexdrive_service_running
 
-    - name: "Wait for 5 seconds before starting containers."
+    - name: "Wait for 5 seconds before starting containers"
       wait_for:
         timeout: 5
 
-    - name: "Start all previously running Docker containers."
+    - name: "Start all previously running Docker containers"
       shell: 'docker start {{cloudbox_managed_containers.stdout}}'
       ignore_errors: yes
       when: not (cloudbox_managed_containers.stdout | trim == '')
 
-    - name: "Start cloudplow service."
+    - name: "Start cloudplow service"
       systemd:
         name: cloudplow
         state: started
       when: cloudplow_service.stat.exists and cloudplow_service_running
     - debug:
-        msg: 'Backup terminated due to an error.'
+        msg: 'Backup terminated due to an error'
 
-    - name: "Pushover Message: Backup terminated due to an error."
+    - name: "Pushover Message: Backup terminated due to an error"
       include_role:
         name: pushover
       vars:
         message: "Backup terminated due to an error."
 
   always:
-  - name: "Remove 'backup.lock'."
+  - name: "Remove 'backup.lock'"
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: absent
