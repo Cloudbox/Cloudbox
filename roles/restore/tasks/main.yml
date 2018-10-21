@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Pre Install
+  import_role:
+    name: pre_install
+
 - name: Variables
   import_tasks: "variables.yml"
 
