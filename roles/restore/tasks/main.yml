@@ -98,20 +98,20 @@
   wait_for:
     timeout: 10
 
-- name: "Look for 'backup_excludes.txt' file in '{{local.destination}}'"
+- name: "Look for 'backup_excludes_list.txt' file in '{{local.destination}}'"
   stat:
-    path: "{{local.destination}}/backup_excludes.txt"
-  register: backup_excludes_file
+    path: "{{local.destination}}/backup_excludes_list.txt"
+  register: backup_excludes_list
 
-- name: "Copy 'backup_excludes.txt' from '{{local.destination}}'."
+- name: "Copy 'backup_excludes_list.txt' from '{{local.destination}}'."
   copy:
-    src: "{{local.destination}}/backup_excludes.txt"
+    src: "{{local.destination}}/backup_excludes_list.txt"
     dest: "{{playbook_dir}}"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: backup_excludes_file.stat.exists
+  when: backup_excludes_list.stat.exists
 
 - name: "Create '/opt' directory"
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"

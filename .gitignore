@@ -4,7 +4,8 @@
 /settings.yml
 /adv_settings.yml
 /rclone.conf
-/backup_excludes.txt
+/backup_config.yml
+/backup_excludes_list.txt
 /backup.lock
 /cloudbox.retry
 /*.log
