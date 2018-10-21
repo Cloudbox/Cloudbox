@@ -134,7 +134,7 @@
     force: yes
   when: rclone_conf_playbook_dir.stat.exists
 
-- name: "Remove the 'rclone.conf' copy from the  '{{playbook_dir}}' folder"
+- name: "Remove the 'rclone.conf' copy from the '{{playbook_dir}}' folder"
   file: "path={{item}} state=absent"
   with_items:
     - "{{playbook_dir}}/rclone.conf"
