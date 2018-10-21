@@ -56,7 +56,7 @@ Changelog Format:
 - Restore: Restore backed up backup_excludes_list.txt file.
 - Readme: Tweaked.
 - Backup: Added support for Cloudbox Vault Service (more on this later).
-
+- Backup: Updated cron task to reflect new backup.yml playbook.
 
 ## [1.2.9] - 2018-09-26
 
