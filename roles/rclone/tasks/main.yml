@@ -120,18 +120,30 @@
     path: "/home/{{user}}/.config/rclone/rclone.conf"
   register: rclone_conf_default_path
 
-- name: "Backup existing 'rclone.conf' at default location"
+- name: "Backup existing 'rclone.conf' at default location (if it exists)"
   shell: "mv '/home/{{user}}/.config/rclone/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf.bak'"
   when: rclone_conf_playbook_dir.stat.exists and rclone_conf_default_path.stat.exists
 
-- name: "Move 'rclone.conf' from '{{playbook_dir}}' folder to default location"
-  shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
+- name: "Copy 'rclone.conf' from '{{playbook_dir}}' folder to default location"
+  copy:
+    src: "{{playbook_dir}}/rclone.conf"
+    dest: "/home/{{user}}/.config/rclone/rclone.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: rclone_conf_playbook_dir.stat.exists
+
+- name: "Remove the 'rclone.conf' copy from the  '{{playbook_dir}}' folder"
+  file: "path={{item}} state=absent"
+  with_items:
+    - "{{playbook_dir}}/rclone.conf"
   when: rclone_conf_playbook_dir.stat.exists
 
 - name: "Check if 'rclone.conf' exists at default location"
   stat:
     path: "/home/{{user}}/.config/rclone/rclone.conf"
-  register: rclone_conf_default_path
+  register: rclone_conf_default_path_2
 
 - name: "Do the following block when 'rclone.conf' is not at default location"
   block:
@@ -153,4 +165,4 @@
       group: "{{user}}"
     when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') != -1
 
-  when: not rclone_conf_default_path.stat.exists
+  when: not rclone_conf_default_path_2.stat.exists
