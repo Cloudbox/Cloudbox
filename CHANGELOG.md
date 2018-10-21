@@ -30,6 +30,34 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+- Kernel: Changed order in playbook file to run before/without settings updater.
+- Backup: Removed plexdrive cache file from excludes list.
+- Ombi: Corrected docker image name in role banner.
+- Backup: Set rclone drive chunk size to 128M.
+- CloudPlow: Set default config's rclone drive chunk size to 128M.
+- Restore: Set rclone drive chunk size to 128M.
+- Scripts: Added 2 basic .sh scripts (`download_torrents_from_google.sh` and `sync_torrents_to_google.sh`) to sync torrent download folder to google, and to copy from google to local disk.
+  - Useful if wanting to keep downloaded torrents when moving server.
+- Plex: Added db_cache_size option to adv_settings.yml.
+- Plexdrive: Added ExecStartPre line to give it more time to start.
+- Organizr: Updated docker image to `organizrtools/organizr-v2:plex`.
+- System: Set vnstat to proper default interface.
+- System: Replaced APT module for upgrading APT with shell command.
+- Settings: Ansible will now quit after a new items are added to `adv_settings.yml`.
+- Sanity Check: Minor tweaks to backup.lock tasks.
+- Pushover: Reorganized tasks.
+- Backup/Restore: Reorganized config and tasks.
+  - Backup has a new playbook, `backup.yml`. Will allow for clean cron tasks.
+  - Backup and Restore will also use a new settings file, `backup_config.yml`. This will make the main `settings.yml` easier to read for new users.
+- Shell: Moved shell option from `adv_settings.yml` to `settings.yml`.
+- AppVeyor: Updated to reflect new `backup_config.yml`.
+- TorrentCleaner: Added fault tolerance to arguments.
+- Backup/Restore: Renamed backup_excludes.txt to backup_excludex_list.txt
+- Restore: Restore backed up backup_excludes_list.txt file.
+- Readme: Tweaked.
+- Backup: Added support for Cloudbox Vault Service (more on this later).
+
+
 ## [1.2.9] - 2018-09-26
 
 ### Changed
