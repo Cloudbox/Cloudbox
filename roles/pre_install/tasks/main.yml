@@ -88,6 +88,7 @@
     - "{{playbook_dir}}/*.yml"
     - "{{playbook_dir}}/*.cfg"
     - "{{playbook_dir}}/*.conf"
+    - "{{playbook_dir}}/*.txt"
   ignore_errors: yes
   when: (playbook_dir != cloudbox_home_folder) and not (continuous_integration)
 
