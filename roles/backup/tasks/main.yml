@@ -77,20 +77,20 @@
      - "/home/{{user}}/.config/rclone/rclone.conf"
     ignore_errors: yes
 
-  - name: "Look for 'backup_excludes.txt' file in cloudbox folder"
+  - name: "Look for 'backup_excludes_list.txt' file in cloudbox folder"
     stat:
-      path: "{{playbook_dir}}/backup_excludes.txt"
-    register: backup_excludes_file
+      path: "{{playbook_dir}}/backup_excludes_list.txt"
+    register: backup_excludes_list
 
   - name: "Copy files to '{{local.destination}}'."
     copy:
-      src: "{{playbook_dir}}/backup_excludes.txt"
+      src: "{{playbook_dir}}/backup_excludes_list.txt"
       dest: "{{local.destination}}"
       owner: "{{user}}"
       group: "{{user}}"
       mode: 0775
       force: yes
-    when: backup_excludes_file.stat.exists
+    when: backup_excludes_list.stat.exists
 
   - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
     synchronize:
@@ -163,7 +163,7 @@
         --ignore-failed-read \
         --warning=no-file-changed \
         --warning=no-file-removed \
-        --exclude-from '{{ (backup_excludes_file is defined and backup_excludes_file.stat.exists) | ternary(playbook_dir + '/backup_excludes.txt', playbook_dir + '/roles/backup/files/backup_excludes.txt') }}' \
+        --exclude-from '{{ (backup_excludes_list is defined and backup_excludes_list.stat.exists) | ternary(playbook_dir + '/backup_excludes_list.txt', playbook_dir + '/roles/backup/files/backup_excludes_list.txt') }}' \
         -cf "{{local.destination}}/opt/"{}.tar {} \; \
         2> /home/{{user}}/logs/cloudbox_backup_tar_stderr.log
     args:
@@ -268,7 +268,7 @@
      - "adv_settings.yml"
      - "backup_config.yml"
      - "rclone.conf"
-     - "backup_excludes.txt"
+     - "backup_excludes_list.txt"
      - "cloudbox.tar"
 
   - name: "Wait for 5 seconds before uploading"
