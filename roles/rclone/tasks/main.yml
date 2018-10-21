@@ -152,8 +152,20 @@
     shell: rclone config file
     register: rclone_conf_current_location
 
-  - name: "Move 'rclone.conf' to default location if found elsewhere"
-    shell: "mv '{{ rclone_conf_current_location.stdout_lines | last }}' '/home/{{user}}/.config/rclone/rclone.conf'"
+  - name: "Copy 'rclone.conf' to default location if found elsewhere"
+    copy:
+      src: "{{ rclone_conf_current_location.stdout_lines | last }}"
+      dest: "/home/{{user}}/.config/rclone/rclone.conf"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+    when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
+
+  - name: "Remove that other 'rclone.conf' copy"
+    file: "path={{item}} state=absent"
+    with_items:
+      - "{{ rclone_conf_current_location.stdout_lines | last }}"
     when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
 
   - name: "Create blank 'rclone.conf' if not found elsewhere"
