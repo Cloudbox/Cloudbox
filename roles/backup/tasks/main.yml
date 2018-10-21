@@ -268,6 +268,7 @@
      - "adv_settings.yml"
      - "backup_config.yml"
      - "rclone.conf"
+     - "backup_excludes.txt"
      - "backup_excludes_list.txt"
      - "cloudbox.tar"
 
