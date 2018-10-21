@@ -39,7 +39,7 @@ Changelog Format:
 - Scripts: Added 2 basic .sh scripts (`download_torrents_from_google.sh` and `sync_torrents_to_google.sh`) to sync torrent download folder to google, and to copy from google to local disk.
   - Useful if wanting to keep downloaded torrents when moving server.
 - Plex: Added db_cache_size option to adv_settings.yml.
-- Plexdrive: Added ExecStartPre line to give it more time to start.
+- Plexdrive: Added `ExecStartPre` line to the service file to give it more time to start.
 - Organizr: Updated docker image to `organizrtools/organizr-v2:plex`.
 - System: Set vnstat to proper default interface.
 - System: Replaced APT module for upgrading APT with shell command.
@@ -57,6 +57,7 @@ Changelog Format:
 - Readme: Tweaked.
 - Backup: Added support for Cloudbox Vault Service (more on this later).
 - Backup: Updated cron task to reflect new backup.yml playbook.
+- Restore: Now calls Pre_Install role to make sure user account exists and create one if it doesn't.
 
 ## [1.2.9] - 2018-09-26
 
