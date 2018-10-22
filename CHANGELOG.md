@@ -59,6 +59,7 @@ Changelog Format:
 - Backup: Updated cron task to reflect new backup.yml playbook.
 - Restore: Now calls Pre_Install role to make sure user account exists and create one if it doesn't.
 - Rclone: `rclone.conf` will now be set to correct permissions, when importing from playbook dir.
+- Backup: Added entry for `accounts.yml` variable file to `backup.yml` playbook.
 
 ## [1.2.9] - 2018-09-26
 
