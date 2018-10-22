@@ -29,4 +29,4 @@
 - name: "Fail when 'backup.lock' exists"
   fail:
     msg: "A Backup task is currently in progress. Please wait for it to complete."
-  when: (backup_lock.stat.exists) and (backup_lock_age|int < 1)
+  when: (backup_lock.stat.exists) and (backup_lock_age|int < 2)
