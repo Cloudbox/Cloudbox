@@ -44,9 +44,9 @@
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      VIRTUAL_HOST: "{{ (nginx.direct_domain|default(false,true)) | ternary('www.' + domain + ',' + domain, nginx.subdomain|default('web',true) + '.' + domain) }}"
+      VIRTUAL_HOST: "{{ (nginx.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain, nginx.subdomain|default('web',true) + '.' + domain) }}"
       VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "{{ (nginx.direct_domain|default(false,true)) | ternary('www.' + domain + ',' + domain, nginx.subdomain|default('web',true) + '.' + domain) }}"
+      LETSENCRYPT_HOST: "{{ (nginx.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain, nginx.subdomain|default('web',true) + '.' + domain) }}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
