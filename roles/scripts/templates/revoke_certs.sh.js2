@@ -32,7 +32,7 @@ $NORMAL
 
 domain={{domain}}
 
-cd /opt/nginx-proxy
+cd /opt/nginx-proxy/certs
 
 sudo docker stop $(docker ps -aq)
 
