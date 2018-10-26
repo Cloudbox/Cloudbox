@@ -25,7 +25,7 @@
     method: 'POST'
     HEADER_Content-Type: "application/json"
     HEADER_X-Auth-Email: '{{ email }}'
-    HEADER_X-Auth-Key: '{{ cloudflare_api_token} }'
+    HEADER_X-Auth-Key: '{{ cloudflare_api_token }}'
     body_format: json
     body: { purge_everything: true }
     return_content: yes
