@@ -168,3 +168,9 @@
     name: subliminal
   tags: subliminal
   ignore_errors: yes
+
+- name: Purge Cloudflare Cache
+  import_tasks: "purge_cloudflare_cache.yml"
+  ignore_errors: yes
+  when: cloudflare_enabled
+  tags: purge-cloudflare-cache
