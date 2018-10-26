@@ -55,21 +55,22 @@
   shell: "update-rc.d ondemand disable"
   when: ansible_distribution_version == "16.04"
 
-- name: Check service exists
+- name: Check if cpupower.service exists
   stat:
     path: "/etc/systemd/system/cpupower.service"
   register: cpupower_service
 
-- name: Import cpupower.service
-  template:
-    src: cpupower.service
-    dest: /etc/systemd/system/cpupower.service
-    force: yes
-  when: cpupower_service.stat.exists == False
-
-- name: Start cpupower service
+- name: Stop and disable cpupower.service
   systemd:
-    state: started
+    state: stopped
     name: cpupower
     daemon_reload: yes
-    enabled: yes
+    enabled: no
+  ignore_errors: yes
+  when: cpupower_service.stat.exists
+
+- name: Delete cpupower.service
+  file:
+    path: /etc/systemd/system/cpupower.service
+    state: absent
+  when: cpupower_service.stat.exists
