@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Pre Install
-  import_role:
+  include_role:
     name: pre_install
 
 - name: Variables
