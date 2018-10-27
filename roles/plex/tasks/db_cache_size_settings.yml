@@ -22,7 +22,6 @@
 - name: Get Desired Plex DB Cache Size
   set_fact:
     desired_db_cache_size: "{{ '2000' if ( plex.db_cache_size == 'default' ) else ( plex.db_cache_size | regex_replace(',', '') | int ) }}"
-  register: desired_db_cache
 
 - name: Make Plex DB Edits
   block:
