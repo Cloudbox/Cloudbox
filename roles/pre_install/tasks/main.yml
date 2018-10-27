@@ -104,12 +104,10 @@
     shell: "id -un {{user}} >/dev/null 2>&1;"
     register: user_check
     failed_when: user_check.rc > 1
-    tags: always
 
   - name: "Fail when user account does not exist"
     fail:
       msg: "The user '{{user}}' does not exist!"
     when: user_check.rc == 1
-    tags: always
 
   when: not continuous_integration
