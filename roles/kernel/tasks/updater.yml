@@ -1,0 +1,116 @@
+#########################################################################
+# Title:         Kernel: Updater Task                                   #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Sanity check for string format
+  fail:
+    msg: "Kernel version must be in string format (i.e. quoted)."
+  when: (kernel.version | type_debug == "float") or ( kernel.version | type_debug  == "int" )
+
+- name: Sanity check for mininum kernel version
+  fail:
+    msg: "Kernel version must 4.10 or higher."
+  when: kernel.version is version('4.10', '<')
+
+- name: Sanity check for mininum kernel version for Ubuntu 18.04 LTS
+  fail:
+    msg: "Kernel version must be 4.15 or higher."
+  when: (kernel.version is version('4.15', '<')) and (ansible_distribution_version is version('18.04', '=='))
+
+- name: Set 'default_kernel_version' variable
+  set_fact:
+    default_kernel_version: "4.18.6"
+
+- name: Set 'desired_kernel_version' variable
+  set_fact:
+    desired_kernel_version: "{{ default_kernel_version if ( kernel.version == 'default' ) else ( (kernel.version | default(default_kernel_version)) | regex_replace('(v\\.|v)', '') ) }}"
+
+- name: Download and install 'ubuntu-mainline-kernel.sh'
+  get_url:
+    url:  https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
+    dest: /usr/local/bin/ubuntu-mainline-kernel.sh
+    mode: 0775
+    owner: root
+    group: root
+    force: yes
+    validate_certs: no
+
+- name: Get available kernel versions
+  shell: /usr/local/bin/ubuntu-mainline-kernel.sh -r | tail -n +2 | tr '\t\nv' ' '
+  register: x
+
+- name: Set 'available_kernel_versions' variable
+  set_fact:
+    available_kernel_versions: "{{ (x.stdout).split() }}"
+
+- name: Set 'run_kernel_update' variable
+  set_fact:
+    run_kernel_update: "{{ true if (
+        (desired_kernel_version in available_kernel_versions) and (desired_kernel_version not in ansible_kernel)
+        or
+        (desired_kernel_version not in available_kernel_versions) and (default_kernel_version not in ansible_kernel)
+      )
+      else false }}"
+
+- name: Kernel updating tasks
+  block:
+
+  - name: Set 'kernel_version_to_be_installed' variable
+    set_fact:
+      kernel_version_to_be_installed: "{{ ( desired_kernel_version ) if ( desired_kernel_version in available_kernel_versions ) else ( default_kernel_version ) }}"
+
+  - name: Get list of currently installed kernel versions
+    shell: /usr/local/bin/ubuntu-mainline-kernel.sh -l | tr '\t' '\n' | tr 'v' ' ' | sed 's/-.*//'  | tr '\n' ' '
+    register: y
+
+  - name: Set 'installed_kernel_versions' variable
+    set_fact:
+      installed_kernel_versions: "{{ (y.stdout).split() }}"
+
+  - name: Display message when desired kernel version is not available
+    debug:
+      msg: "Kernel version {{ desired_kernel_version }} is not available."
+    when: desired_kernel_version not in available_kernel_versions
+
+  - name: Display kernel version being installed
+    debug:
+      msg: "Installing kernel version {{ kernel_version_to_be_installed }} {{ ( desired_kernel_version not in available_kernel_versions ) | ternary('instead ','') }}..."
+
+  - name: Update kernel
+    shell: /usr/local/bin/ubuntu-mainline-kernel.sh --yes -i {{ desired_kernel_version if ( desired_kernel_version in available_kernel_versions ) else ( default_kernel_version ) }}
+    register: z
+
+  - name: Set 'kernel_versions_to_be_removed' variable
+    set_fact:
+      kernel_versions_to_be_removed: "{{ ((installed_kernel_versions | join (' ')) | regex_replace(kernel_version_to_be_installed)).split() }}"
+    when: z.changed
+
+  - name: Uninstall previously installed kernel versions
+    shell: /usr/local/bin/ubuntu-mainline-kernel.sh --yes -u "{{ item }}"
+    with_items: "{{ kernel_versions_to_be_removed }}"
+    when: (z.changed) and (kernel_versions_to_be_removed | trim != "")
+
+  - name: Fix any apt issues
+    shell: sudo apt-get -f install -y
+
+  - name: Reboot message
+    debug:
+      msg: "Kernel updated. System will now reboot..."
+    when: z.changed and install.auto_restart
+
+  - name: Auto Reboot
+    shell: reboot
+    when: z.changed and install.auto_restart
+
+  - name: Reboot exit
+    fail:
+      msg: "You will need to restart for kernel update to take effect."
+    when: z.changed and not install.auto_restart
+
+  when: run_kernel_update
