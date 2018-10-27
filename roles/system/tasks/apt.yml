@@ -8,7 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Update APT packages list
+- name: Fix any apt issues
+  shell: sudo apt-get -f install -y
+
+- name: Update apt packages list
   apt:
     update_cache: yes
 
@@ -18,7 +21,7 @@
     - apt-utils
     - byobu
 
-- name: Upgrade APT packages
+- name: Upgrade apt packages
   shell: apt-get dist-upgrade -y --allow-unauthenticated
   when: not continuous_integration
 
