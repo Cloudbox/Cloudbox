@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: apt task
+- name: System apt task
   include_tasks: "apt.yml"
 
 - name: Purge old kernels on reboot
@@ -17,10 +17,10 @@
     special_time: reboot
     job: "PATH='/usr/sbin:/usr/bin:/sbin:/bin' purge-old-kernels -qy"
 
-- name: sysctl task
+- name: System sysctl task
   include_tasks: "systctl.yml"
 
-- name: Mounts task
+- name: System mounts task
   include_tasks: "mounts.yml"
 
 - name: Check if intel_pstate directory exists.
@@ -28,10 +28,10 @@
     path: /sys/devices/system/cpu/intel_pstate
   register: p
 
-- name: CPU Frequency task
+- name: System CPU Frequency task
   include_tasks: "cpufrequency.yml"
   when: p.stat.isdir is defined and p.stat.isdir
 
-- name: CPU Power task
+- name: System CPU Power task
   include_tasks: "cpupower.yml"
   when: p.stat.isdir is defined and p.stat.isdir
