@@ -97,7 +97,7 @@
     when: (z.changed) and (kernel_versions_to_be_removed | trim != "")
 
   - name: Fix any apt issues
-    shell: sudo apt-get -f install -y
+    shell: apt-get --fix-broken --yes install
     when: z.changed
 
   - name: Reboot message
