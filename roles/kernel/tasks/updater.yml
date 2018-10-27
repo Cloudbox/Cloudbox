@@ -102,7 +102,7 @@
 
   - name: Reboot message
     debug:
-      msg: "Kernel updated. System will now reboot..."
+      msg: "Kernel updated. System will now reboot ..."
     when: z.changed and install.auto_restart
 
   - name: Auto Reboot
