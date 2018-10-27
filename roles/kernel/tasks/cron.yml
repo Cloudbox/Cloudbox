@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Kernel Role                                  #
+# Title:         Kernel: Cron Task                                      #
 # Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,9 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Kernel cron task
-  include_tasks: "cron.yml"
-
-- name: Kernel updater task
-  include_tasks: "updater.yml"
-  when: not continuous_integration
+- name: Purge old kernels on reboot
+  cron:
+    name: "Remove old kernels on reboot"
+    special_time: reboot
+    job: "PATH='/usr/sbin:/usr/bin:/sbin:/bin' purge-old-kernels -qy"

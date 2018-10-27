@@ -11,12 +11,6 @@
 - name: System apt task
   include_tasks: "apt.yml"
 
-- name: Purge old kernels on reboot
-  cron:
-    name: "Remove old kernels on reboot"
-    special_time: reboot
-    job: "PATH='/usr/sbin:/usr/bin:/sbin:/bin' purge-old-kernels -qy"
-
 - name: System sysctl task
   include_tasks: "systctl.yml"
 
