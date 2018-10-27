@@ -1,0 +1,31 @@
+#########################################################################
+# Title:         System: apt Task                                       #
+# Author(s):     L3uddz, Desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Update APT packages list
+  apt:
+    update_cache: yes
+
+- name: Install required packages
+  apt: "name={{item}} state=latest"
+  with_items:
+    - apt-utils
+    - byobu
+
+- name: Upgrade APT packages
+  shell: apt-get dist-upgrade -y --allow-unauthenticated
+  when: not continuous_integration
+
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: yes
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes
