@@ -130,7 +130,7 @@
 
 - name: "Set '/opt' ownership and permissions"
   import_tasks: "permissions.yml"
-  tags: permissions-fix
+  tags: opt-permissions
 
 - name: "Remove '{{local.destination}}'"
   file:
