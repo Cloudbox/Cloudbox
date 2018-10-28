@@ -26,6 +26,10 @@
   systemd: state=stopped name=plexdrive
   when: plexdrive_service.stat.exists and plexdrive_service_running
 
+- name: "Force unmount /mnt/plexdrive"
+  shell: "/bin/umount -f /mnt/plexdrive"
+  ignore_errors: yes
+
 - name: Create plexdrive directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
