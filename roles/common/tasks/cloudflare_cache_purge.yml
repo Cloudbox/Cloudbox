@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Common: Purge Cloudflare Cache                         #
+# Title:         Common: Cloudflare Cache Purge                         #
 # Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -13,9 +13,10 @@
   uri:
     url: 'https://api.cloudflare.com/client/v4/zones?name={{ domain }}'
     method: 'GET'
-    HEADER_Content-Type: "application/json"
-    HEADER_X-Auth-Email: '{{ email }}'
-    HEADER_X-Auth-Key: '{{ cloudflare_api_token }}'
+    headers:
+      Content-Type: "application/json"
+      X-Auth-Email: '{{ email }}'
+      X-Auth-Key: '{{ cloudflare_api_token }}'
     return_content: yes
   register: cf_zones
 
@@ -23,9 +24,9 @@
   uri:
     url: 'https://api.cloudflare.com/client/v4/zones/{{ cf_zones.json.result[0].id }}/purge_cache'
     method: 'POST'
-    HEADER_Content-Type: "application/json"
-    HEADER_X-Auth-Email: '{{ email }}'
-    HEADER_X-Auth-Key: '{{ cloudflare_api_token }}'
+    headers:
+      X-Auth-Email: '{{ email }}'
+      X-Auth-Key: '{{ cloudflare_api_token }}'
     body_format: json
     body: { purge_everything: true }
     return_content: yes
