@@ -13,19 +13,38 @@
     msg: "Kernel version must be in string format (i.e. quoted)."
   when: (kernel.version | type_debug == "float") or ( kernel.version | type_debug  == "int" )
 
-- name: Sanity check for mininum kernel version
-  fail:
-    msg: "Kernel version must 4.10 or higher."
-  when: kernel.version is version('4.10', '<')
-
-- name: Sanity check for mininum kernel version for Ubuntu 18.04 LTS
-  fail:
-    msg: "Kernel version must be 4.15 or higher."
-  when: (kernel.version is version('4.15', '<')) and (ansible_distribution_version is version('18.04', '=='))
-
 - name: Set 'default_kernel_version' variable
   set_fact:
     default_kernel_version: "4.18.6"
+
+- name: Sanity check for mininum kernel version for Ubuntu 16.04
+  debug:
+    msg: "Kernel version must be 4.10 or higher on Ubuntu 16.04. Using kernel version {{ default_kernel_version }} instead."
+  when: (kernel.version is version('4.10', '<')) and (ansible_distribution_version is version('16.04', '=='))
+
+- name: Sanity check for mininum kernel version for Ubuntu 18.04
+  debug:
+    msg: "Kernel version must be 4.15 or higher on Ubuntu 18.04. Using kernel version {{ default_kernel_version }} instead."
+  when: (kernel.version is version('4.15', '<')) and (ansible_distribution_version is version('18.04', '=='))
+
+- name: Sanity check for mininum kernel version for Ubuntu 18.10
+  debug:
+    msg: "Kernel version must be 4.18 or higher on Ubuntu 18.10. Using kernel version {{ default_kernel_version }} instead."
+  when: (kernel.version is version('4.18', '<')) and (ansible_distribution_version is version('18.04', '=='))
+
+- name: Set incompatible kernel versions to {{default_kernel_version}}
+  set_fact:
+    kernel_tmp: { version: "{{ default_kernel_version }}" }
+  when: ((kernel.version is version('4.10', '<')) and (ansible_distribution_version is version('16.04', '==')))
+        or
+        ((kernel.version is version('4.15', '<')) and (ansible_distribution_version is version('18.04', '==')))
+        or
+        ((kernel.version is version('4.18', '<')) and (ansible_distribution_version is version('18.10', '==')))
+
+- name: Merge changes back
+  set_fact:
+    kernel: "{{ kernel | combine(kernel_tmp) }}"
+  when: (kernel_tmp is defined) and (kernel_tmp != "")
 
 - name: Set 'desired_kernel_version' variable
   set_fact:
