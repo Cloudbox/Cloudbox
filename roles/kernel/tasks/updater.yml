@@ -78,7 +78,6 @@
   set_fact:
     remote_script_hash: "{{ blob_lookup.json.sha }}"
   when: (existing_local_script.stat.exists) and ((blob_lookup is succeeded) and (blob_lookup.json.sha is defined))
-  tags: test
 
 - name: Download and install 'ubuntu-mainline-kernel.sh'
   get_url:
@@ -118,7 +117,7 @@
     force: yes
   when: (not new_local_script.stat.exists)
         or
-        (validate_script.rc == 1)
+        ((new_local_script.stat.exists) and (validate_script.rc == 1))
 
 - name: Get available kernel versions
   shell: /usr/local/bin/ubuntu-mainline-kernel.sh -r | tail -n +2 | tr '\t\nv' ' '
