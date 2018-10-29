@@ -1,4 +1,4 @@
-#Cloudbox Related
+# Cloudbox
 /ansible.cfg
 /accounts.yml
 /settings.yml
@@ -9,3 +9,7 @@
 /backup.lock
 /cloudbox.retry
 /*.log
+
+
+# MacOS
+.DS_Store
