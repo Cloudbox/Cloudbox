@@ -30,7 +30,7 @@
 
 - name: Check if rclone version was specified
   set_fact:
-    rclone_version_specified: "{{ true if not (
+    rclone_version_is_specified: "{{ true if not (
         (rclone is undefined)
         or
         (rclone is none)
@@ -48,17 +48,17 @@
 - name: Set rclone_download_url for current version
   set_fact:
     rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
-  when: rclone.version == 'latest' or rclone.version == 'current' or not rclone_version_specified
+  when: (not rclone_version_is_specified) or (rclone.version == 'latest') or (rclone.version == 'current')
 
 - name: Set rclone_download_url for beta version
   set_fact:
     rclone_download_url: "https://beta.rclone.org/rclone-beta-latest-linux-amd64.zip"
-  when: rclone.version == 'beta'
+  when: (rclone_version_is_specified) and (rclone.version == 'beta')
 
 - name: Set rclone_download_url for specified version
   set_fact:
     rclone_download_url: 'https://downloads.rclone.org/v{{ "%.2f"|format(rclone.version) }}/rclone-v{{ "%.2f"|format(rclone.version) }}-linux-amd64.zip'
-  when: rclone_version_specified and not (rclone.version == 'beta' or rclone.version == 'latest' or rclone.version == 'current')
+  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current'))
   ignore_errors: yes
 
 - name: "Download and unarchive rclone"
