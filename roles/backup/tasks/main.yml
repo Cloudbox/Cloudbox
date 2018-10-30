@@ -194,7 +194,7 @@
       state: absent
     when: dir_files2.matched|int != 0
 
-  - name: "Get '{{local.destination}}/' size"
+  - name: "Get size of '{{local.destination}}'"
     shell: du -sh --apparent-size {{local.destination}} | /usr/bin/awk '{print $1}'
     register: backup_new
 
