@@ -48,6 +48,7 @@
       ADVANCED_GIT_BRANCH: nightly
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
       - "/opt/scripts:/scripts"
