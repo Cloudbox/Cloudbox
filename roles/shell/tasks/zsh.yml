@@ -43,6 +43,12 @@
     line: "export EDITOR=nano"
     state: present
 
+- name: Set default editor to nano in .zshrc
+  lineinfile:
+    dest: "/home/{{user}}/.zshrc"
+    line: "DISABLE_UPDATE_PROMPT=true"
+    state: present
+
 - name: "Check if /bin/zsh exists"
   stat:
     path: /bin/zsh
