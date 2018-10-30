@@ -164,7 +164,13 @@
 
 - name: Validate and set proper 'suitarr' key variables
   set_fact:
-    suitarr_tmp: { version: "{{ (suitarr.version) if (((suitarr_version_is_specified) and (suitarr.version != 'default')) and ((suitarr.version == 'unstable') or (suitarr.version == 'stable') or (suitarr.version == 'image'))) else (suitarr_default_version) }}" }
+    suitarr_tmp: { version: "{{ (suitarr.version) if (
+      (suitarr_version_is_specified)
+      and
+      (suitarr.version != 'default')
+      and
+      ((suitarr.version == 'unstable') or (suitarr.version == 'stable') or (suitarr.version == 'image'))
+      ) else (suitarr_default_version) }}" }
 
 - name: Merge changes back to 'suitarr' key
   set_fact:
