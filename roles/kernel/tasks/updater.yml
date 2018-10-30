@@ -95,7 +95,7 @@
         or
         (not existing_local_script.stat.exists)
 
-- name: Check for new 'ubuntu-mainline-kernel.sh'
+- name: Look for '/usr/local/bin/ubuntu-mainline-kernel.sh'
   stat:
     path: /usr/local/bin/ubuntu-mainline-kernel.sh
   register: new_local_script
@@ -174,20 +174,20 @@
     with_items: "{{ kernel_versions_to_be_removed }}"
     when: (z.changed) and (kernel_versions_to_be_removed | trim != "")
 
-  - name: Fix any apt issues
+  - name: Fix any potential apt issues
     shell: apt-get --fix-broken --yes install
     when: z.changed
 
-  - name: Reboot message
+  - name: Kernel update and reboot message
     debug:
       msg: "Kernel updated. System will now reboot ..."
     when: z.changed and install.auto_restart
 
-  - name: Auto Reboot
+  - name: Reboot
     shell: reboot
     when: z.changed and install.auto_restart
 
-  - name: Reboot exit
+  - name: Exit
     fail:
       msg: "You will need to restart for kernel update to take effect."
     when: z.changed and not install.auto_restart
