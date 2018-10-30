@@ -140,3 +140,39 @@
         (old_rutorrent_downloads_path is defined|default(false,true))
         )
         else false }}"
+
+- name: Set `suitarr_default_version` variable
+  set_fact:
+    suitarr_default_version: "unstable"
+
+- name: Check if 'suitarr.version' was specified
+  set_fact:
+    suitarr_version_is_specified: "{{ true if not (
+        (suitarr is undefined)
+        or
+        (suitarr is none)
+        or
+        (suitarr | trim == '')
+        or
+        (suitarr.version is undefined)
+        or
+        (suitarr.version is none)
+        or
+        (suitarr.version | trim == '')
+      )
+      else false }}"
+
+- name: Validate and set proper 'suitarr' key variables
+  set_fact:
+    suitarr_tmp: { version: "{{ (suitarr.version) if (((suitarr_version_is_specified) and (suitarr.version != 'default')) and ((suitarr.version == 'unstable') or (suitarr.version == 'stable') or (suitarr.version == 'image'))) else (suitarr_default_version) }}" }
+
+- name: Merge changes back to 'suitarr' key
+  set_fact:
+    suitarr: "{{ (suitarr_tmp) if (
+              (suitarr is undefined)
+              or
+              (suitarr is none)
+              or
+              (suitarr | trim == '')
+            )
+            else ((suitarr) | combine(suitarr_tmp))  }}"
