@@ -19,15 +19,24 @@
     path: "{{playbook_dir}}/cloudbox.yml"
   register: cloudbox_yml
 
-- name: "Ansible Config Sub-Task"
+- name: "Settings: Ansible Config"
   include_tasks: "ansible_config.yml"
   with_items:
     - "ansible.cfg"
 
-- name: "Cloudbox Settings Sub-Task"
+- name: Initialize empty lists and vars
+  set_fact:
+    files_updated_successfully: []
+    files_updated_unsuccessfully: []
+    exit_is_necessary: false
+
+- name: "Settings: Cloudbox Settings"
   include_tasks: "cloudbox_settings.yml"
   with_items:
     - "accounts.yml"
     - "settings.yml"
     - "adv_settings.yml"
     - "backup_config.yml"
+
+- name: "Settings: Exit After Changes"
+  include_tasks: "exit.yml"
