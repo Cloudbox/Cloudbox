@@ -31,7 +31,7 @@
     path: /opt/nginx-proxy/certs
   register: certs_folder
 
-- name: Move existing certs in to a 'certs' subfolder
+- name: Move existing certs into a 'certs' subfolder
   shell: |
     rm -rf /tmp/cb_certs
     mv /opt/nginx-proxy /tmp/cb_certs
