@@ -74,7 +74,7 @@
     published_ports:
       - "127.0.0.1:7878:7878"
     env:
-      VERSION: "unstable"
+      VERSION: "{{suitarr.version}}"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       UMASK: 002
