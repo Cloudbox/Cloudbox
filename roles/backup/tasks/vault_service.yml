@@ -112,7 +112,7 @@
     include_role:
       name: pushover
     vars:
-      message: "The following config file(s) were successfully encrypted and uploaded to the Vault Service: '{{ files_uploaded_list | trim }}'"
+      message: "Config files were successfully encrypted and uploaded to the Vault Service."
     when: files_uploaded_list | trim != ""
 
   when: unencrypted_files_list | trim == ""
