@@ -93,7 +93,7 @@ def upgrade_settings(defaults, current, key=None):
         if k not in current:
             res[k] = v
             upgraded = True
-            log.info("Added field %s%s", k, '' if not key else ' to %s' % key)
+            log.info("Added field: \'%s%s\'.", k, '' if not key else ' to \'%s\'.' % key)
         else:
             res[k] = current[k]
 
@@ -128,12 +128,12 @@ if __name__ == "__main__":
     # load settings
     default_settings = load_settings(os.path.join(playbook_dir, default_file))
     if not default_settings:
-        log.error("Failed loading %s, aborting...", default_file)
+        log.error("Failed loading \'%s\'. Aborting...", default_file)
         sys.exit(1)
 
     current_settings = load_settings(os.path.join(playbook_dir, current_file))
     if not current_settings:
-        log.error("Failed loading %s, aborting...", current_file)
+        log.error("Failed loading \'%s\'. Aborting...", current_file)
         sys.exit(1)
 
     # compare/upgrade settings
@@ -143,7 +143,7 @@ if __name__ == "__main__":
         sys.exit(0)
     else:
         if not dump_settings(upgraded_settings, os.path.join(playbook_dir, current_file)):
-            log.error("Failed dumping updated %s", current_file)
+            log.error("Failed dumping updated \'%s\'.", current_file)
             sys.exit(1)
-        log.info("Successfully upgraded %s", current_file)
+        log.info("Successfully upgraded: \'%s\'.", current_file)
         sys.exit(2)
