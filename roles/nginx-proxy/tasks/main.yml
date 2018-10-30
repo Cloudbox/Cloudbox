@@ -54,7 +54,13 @@
     - /opt/nginx-proxy/vhost.d
 
 - name: Import proxy.conf
-  copy: "src=proxy.conf dest=/opt/nginx-proxy/proxy.conf force=no owner={{user}} group={{user}} mode=0775"
+  copy:
+    src: "proxy.conf"
+    dest: "/opt/nginx-proxy/proxy.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
 
 - name: Create and start container
   docker_container:
