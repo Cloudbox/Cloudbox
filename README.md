@@ -62,6 +62,8 @@ If you find this project helpful, feel free to make a small donation to the deve
 
   - [Square Cash](https://cash.me/$desimaniac): Credit Cards
 
+  - [Paypal](https://www.paypal.me/desimaniac123): desimaniac@outlook.com
+
   - BTC: 3Jz922kDLQwjnFh986igeEmc72c8Hh5T3Y
 
   - LTC: MD2gTjR3Mur2pHZxo1cku3i9U8SuDU8k2B
