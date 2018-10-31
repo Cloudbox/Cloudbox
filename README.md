@@ -6,6 +6,8 @@
 [![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2Fcloudbox-blue.svg?colorB=177DC1&label=Reddit)](https://reddit.com/r/Cloudbox)
 [![Discord](https://img.shields.io/discord/381077432285003776.svg?colorB=177DC1&label=Discord)](https://discord.io/cloudbox)
 [![Feature Requests](https://img.shields.io/badge/Requests-Feathub-blue.svg?colorB=177DC1&label=Requests)](https://feathub.com/Cloudbox/Cloudbox)
+[![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/badge.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
+[![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/make-wish.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
 <br />
 [![License: GPL 3](https://img.shields.io/badge/License-GPL%203-blue.svg?colorB=177DC1&label=License)](LICENSE.md)
 [![Version](https://img.shields.io/github/release/cloudbox/cloudbox.svg?colorB=177DC1&label=Version)](https://github.com/cloudbox/cloudbox/releases)
@@ -50,9 +52,12 @@ Featured Applications:
 
 If you find this project helpful, feel free to make a small donation to the developers:
 
+
 - [l3uddz](https://github.com/l3uddz) (creator)
 
-  - [Monzo](https://monzo.me/jamesbayliss9): Credit Cards, Apple Pay, Google Pay
+  - [Monzo](https://monzo.me/jamesbayliss9): Credit Card, Apple Pay, Google Pay
+
+  - [Beerpay](https://beerpay.io/Cloudbox/Cloudbox): Credit Card, BTC
 
   - [Paypal: l3uddz@gmail.com](https://www.paypal.me/l3uddz)
 
@@ -60,7 +65,9 @@ If you find this project helpful, feel free to make a small donation to the deve
 
 - [desimaniac](https://github.com/Desimaniac) (developer)
 
-  - [Square Cash](https://cash.me/$desimaniac): Credit Cards
+  - [Square Cash](https://cash.me/$desimaniac): Credit Card
+
+  - [Beerpay](https://beerpay.io/Cloudbox/Cloudbox): Credit Card, BTC
 
   - [Paypal: desimaniac@outlook.com](https://www.paypal.me/desimaniac123)
 
