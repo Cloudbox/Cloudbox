@@ -48,4 +48,22 @@ Featured Applications:
 
 ***
 
-_If you find this project helpful, feel free to make a small donation via [Monzo](https://monzo.me/jamesbayliss9) (Credit Cards, Apple Pay, Google Pay, and others; no fees), [Paypal](https://www.paypal.me/l3uddz) (l3uddz@gmail.com), and Bitcoin (3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL)._
+If you find this project helpful, feel free to make a small donation to the developers:
+
+- [l3uddz](https://github.com/l3uddz) (creator)
+
+  - [Monzo](https://monzo.me/jamesbayliss9): Credit Cards, Apple Pay, Google Pay
+
+  - [Paypal](https://www.paypal.me/l3uddz): l3uddz@gmail.com
+
+  - BTC: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL
+
+- [desimaniac](https://github.com/Desimaniac) (developer)
+
+  - [Square Cash](https://cash.me/$desimaniac): Credit Cards
+
+  - BTC: 3Jz922kDLQwjnFh986igeEmc72c8Hh5T3Y
+
+  - LTC: MD2gTjR3Mur2pHZxo1cku3i9U8SuDU8k2B
+
+  - ETH: 0xE50B388Aa66593153801e4ff99bA23737c888BF9
