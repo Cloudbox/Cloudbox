@@ -182,7 +182,7 @@ done
 
 function main ()
 {
-    if (( 1 - SIMPLE )); then
+    if [[ ${SIMPLE} == ${FALSE} ]]; then
         banner1
         banner2
     fi
