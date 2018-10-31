@@ -54,7 +54,7 @@ If you find this project helpful, feel free to make a small donation to the deve
 
   - [Monzo](https://monzo.me/jamesbayliss9): Credit Cards, Apple Pay, Google Pay
 
-  - [Paypal](https://www.paypal.me/l3uddz): l3uddz@gmail.com
+  - [Paypal: l3uddz@gmail.com](https://www.paypal.me/l3uddz)
 
   - BTC: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL
 
@@ -62,7 +62,7 @@ If you find this project helpful, feel free to make a small donation to the deve
 
   - [Square Cash](https://cash.me/$desimaniac): Credit Cards
 
-  - [Paypal](https://www.paypal.me/desimaniac123): desimaniac@outlook.com
+  - [Paypal: desimaniac@outlook.com](https://www.paypal.me/desimaniac123)
 
   - BTC: 3Jz922kDLQwjnFh986igeEmc72c8Hh5T3Y
 
