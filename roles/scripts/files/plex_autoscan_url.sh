@@ -95,12 +95,12 @@ function sanity_check() {
 }
 
 function build_url() {
-    # Get variable(s) from Plex Autoscan config
+    # Get variables from Plex Autoscan config
     SERVER_IP=$(cat ${PAS_CONFIG} | jq -r .SERVER_IP)
     SERVER_PORT=$(cat ${PAS_CONFIG} | jq -r .SERVER_PORT)
     SERVER_PASS=$(cat ${PAS_CONFIG} | jq -r .SERVER_PASS)
 
-    # Get variable(s) from Cloudbox account settings
+    # Get variables from Cloudbox account settings
     head -1 ${CB_ACCOUNTS} | grep -q "\$ANSIBLE_VAULT"
     rc=$?
     if [[ ${rc} == 0 ]]; then
@@ -111,7 +111,7 @@ function build_url() {
     fi
 
     # If SERVER_IP is 0.0.0.0, assign public IP address to REAL_IP.
-    if [ ${SERVER_IP} = 0.0.0.0 ]; then
+    if [[ ${SERVER_IP} = 0.0.0.0 ]]; then
         REAL_IP="$(curl -s http://checkip.amazonaws.com)"
     else
         REAL_IP=${SERVER_IP}
@@ -132,7 +132,7 @@ function build_url() {
     declare -i COUNT=0
     SUBDOMAIN_IP=""
 
-    # Get subdomain who's IP address matches REAL_IP
+    # Determine which subdomain points to the actual host IP address (vs a CDN one, for example)
     while [[ ((${REAL_IP} != ${SUBDOMAIN_IP}) && (${COUNT} < ${SUBDOMAIN_LEN})) ]]; do
         SUBDOMAIN=${SUBDOMAINS[$COUNT]}
         SUBDOMAIN_IP=$(dig +short ${SUBDOMAIN})
