@@ -13,7 +13,7 @@
 
   - name: "Check 'settings-updater.py' for new settings."
     debug:
-      msg: "The 'settings_updater.py' script added new settings to the following files: '{{ files_updated_successfully | join(', ') | trim }}'. Please check these files for newly added settings. You can also review the log file, 'settings-updater.log'."
+      msg: "The 'settings_updater.py' script added new settings to the following {{ (files_updated_successfully | length > 1) | ternary('files','file') }}: '{{ files_updated_successfully | join(', ') | trim }}'. Please check {{ (files_updated_successfully | length > 1) | ternary('these files','this file') }} for newly added settings. You can also review the log file, 'settings-updater.log'."
     when: files_updated_successfully | length > 0
 
   - name: "Check 'settings-updater.py' run status for errors."
