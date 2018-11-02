@@ -47,19 +47,6 @@
     state: present
   when: unzip_py is success
 
-- name: Download completion checker Script
-  unarchive:
-    src: "{{item}}"
-    dest: "/opt/scripts/nzbget/"
-    copy: no
-    mode: 0775
-    owner: "{{user}}"
-    group: "{{user}}"
-    validate_certs: no
-  with_items:
-    - "https://forum.nzbget.net/download/file.php?id=660"
-  ignore_errors: yes
-
 - name: Import HashRenamer.py
   copy:
     src: "HashRenamer.py"
