@@ -1,0 +1,56 @@
+#########################################################################
+# Title:         Cloudbox: Sickbeard MP4 Automator                      #
+# Author(s):     Desimaniac, AndrewKhunn                                #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Create 'sickbeard_mp4_automator' directory"
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - "/opt/scripts/sickbeard_mp4_automator"
+
+- name: "Clone 'sickbeard_mp4_automator' repo"
+  git:
+    repo: "https://github.com/mdhiggins/sickbeard_mp4_automator"
+    dest: "/opt/scripts/sickbeard_mp4_automator"
+    version: master
+    force: yes
+  become: yes
+  become_user: "{{user}}"
+
+- name: "Wait for 'autoProcess.ini.sample' file"
+  wait_for:
+    path: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini.sample"
+    state: present
+
+- name: "Check if 'autoProcess.ini' file exists"
+  stat:
+    path: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
+  register: autoprocess_ini
+
+- name: "'autoProcess.ini' Task"
+  import_tasks: "autoprocess_ini.yml"
+  when: not autoprocess_ini.stat.exists
+
+- name: "Check if 'plex_autoscan.py' exists"
+  stat:
+    path: "/opt/scripts/sickbeard_mp4_automator/post_process/plex_autoscan.py"
+  register: plex_autoscan_py
+
+- name: "'plex_autoscan.py' Task"
+  import_tasks: "plex_autoscan_py.yml"
+  when: not plex_autoscan_py.stat.exists
+
+- name: "Update Docker Images Task"
+  include_tasks: "update_docker_images.yml"
+  loop:
+    - "sonarr"
+    - "sonarr4k"
+    - "radarr"
+    - "radarr4k"
+  loop_control:
+    loop_var: app

@@ -1,0 +1,168 @@
+#########################################################################
+# Title:         SMA: 'autoProcess.ini' Task                           #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create 'autoProcess.ini' file
+  copy:
+    src: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini.sample"
+    dest: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+
+- name: Remove non-relevant sections from 'autoProcess.ini'
+  ini_file:
+    path: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
+    section: "{{ item }}"
+    state: absent
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+  loop:
+    - "SickBeard"
+    - "CouchPotato"
+    - "uTorrent"
+    - "Deluge"
+    - "Sickrage"
+    - "SABNZBD"
+    - "Plex"
+
+# Sonarr Section
+- name: "Check if sonarr config exists"
+  stat:
+    path: "/opt/sonarr/app/config.xml"
+  register: sonarr_config_xml
+
+- name: "When sonarr exists, get config items, and set Sonarr section of 'autoProcess.ini'"
+  block:
+
+  - name: Get sonarr port
+    xml:
+      path: "/opt/sonarr/app/config.xml"
+      xpath: /Config/Port
+      content: text
+    register: sonarr_xmlresp_port
+
+  - name: Get sonarr web_root
+    xml:
+      path: "/opt/sonarr/app/config.xml"
+      xpath: /Config/UrlBase
+      content: text
+    register: sonarr_xmlresp_urlbase
+
+  - name: Pull sonarr api key
+    xml:
+      path: "/opt/sonarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: sonarr_xmlresp_apikey
+
+  - name: Set sonarr variables
+    set_fact:
+      sonarr_port: "{{ sonarr_xmlresp_port.matches[0].Port }}"
+      sonarr_web_root: "{{ sonarr_xmlresp_urlbase.matches[0].UrlBase }}"
+      sonarr_api_key: "{{ sonarr_xmlresp_apikey.matches[0].ApiKey }}"
+
+  - name: Set 'sonarr' section of 'autoProcess.ini'
+    ini_file:
+      path: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
+      section: Sonarr
+      option: "{{ item.option }}"
+      value: "{{ item.value }}"
+      state: present
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+    loop:
+      - { option: 'host', value: 'sonarr' }
+      - { option: 'port', value: "{{ sonarr_port | default('',true) }}" }
+      - { option: 'web_root', value: "{{ sonarr_web_root | default('',true) }}" }
+      - { option: 'apikey', value: "{{ sonarr_api_key | default('',true) }}" }
+
+  when: sonarr_config_xml.stat.exists
+
+# Radarr Section
+- name: "Check if radarr config exists"
+  stat:
+    path: "/opt/radarr/app/config.xml"
+  register: radarr_config_xml
+
+- name: "When sonarr exists, get config items, and set Radarr section of 'autoProcess.ini'"
+  block:
+
+  - name: Get radarr port
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/Port
+      content: text
+    register: radarr_xmlresp_port
+
+  - name: Get radarr web_root
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/UrlBase
+      content: text
+    register: radarr_xmlresp_urlbase
+
+  - name: Pull radarr api key
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: radarr_xmlresp_apikey
+
+  - name: Set radarr variables
+    set_fact:
+      radarr_port: "{{ radarr_xmlresp_port.matches[0].Port }}"
+      radarr_web_root: "{{ radarr_xmlresp_urlbase.matches[0].UrlBase }}"
+      radarr_api_key: "{{ radarr_xmlresp_apikey.matches[0].ApiKey }}"
+
+  - name: Set 'Radarr' section of 'autoProcess.ini'
+    ini_file:
+      path: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
+      section: Radarr
+      option: "{{ item.option }}"
+      value: "{{ item.value }}"
+      state: present
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+    loop:
+      - { option: 'host', value: 'radarr' }
+      - { option: 'port', value: "{{ radarr_port | default('',true) }}" }
+      - { option: 'web_root', value: "{{ radarr_web_root | default('',true) }}" }
+      - { option: 'apikey', value: "{{ radarr_api_key | default('',true) }}" }
+
+  when: radarr_config_xml.stat.exists
+
+# MP4 Section
+- name: Set 'MP4' section of 'autoProcess.ini'
+  ini_file:
+    path: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
+    section: MP4
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    state: present
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+  loop:
+    - { option: 'ffmpeg', value: '/usr/bin/ffmpeg' }
+    - { option: 'ffprobe', value: '/usr/bin/ffprobe' }
+    - { option: 'video-codec', value: 'h264, x264' }
+    - { option: 'h264-max-level', value: '4.1' }
+    - { option: 'ios-first-track-only', value: 'True' }
+    - { option: 'ios-audio-filter', value: 'pan=stereo|c0=0.25*c0+c2+0.6*c3|c1=0.25*c1+c2+0.6*c3' }
+    - { option: 'audio-codec', value: 'ac3, aac' }
+    - { option: 'convert-mp4', value: 'True' }
+    - { option: 'tag-language', value: 'eng' }
+    - { option: 'post-process', value: 'True' }
+    - { option: 'preopts', value: '' }
+    - { option: 'postopts', value: '-movflags, faststart' }

@@ -35,6 +35,7 @@
     - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
+    - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['sma_enabled'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
     - { role: feeder-mount, tags: ['feeder-mount'] }
     - { role: feeder-dismount, tags: ['feeder-dismount'] }

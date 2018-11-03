@@ -182,3 +182,12 @@
               (suitarr | trim == '')
             )
             else ((suitarr) | combine(suitarr_tmp))  }}"
+
+- name: "Set 'sma_enabled' role tag"
+  set_fact:
+    sma_enabled: "{{ true if (
+        (sickbeard_mp4_automator is defined)
+        and
+        (sickbeard_mp4_automator)
+        )
+        else false }}"
