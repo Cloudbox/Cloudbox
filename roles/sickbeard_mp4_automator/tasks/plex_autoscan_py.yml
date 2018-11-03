@@ -1,0 +1,41 @@
+#########################################################################
+# Title:         SMA: 'plex_autoscan.py' Task                           #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Check if plex_autoscan config exists"
+  stat:
+    path: "/opt/plex_autoscan/config/config.json"
+  register: plex_autoscan_config
+
+- name: "Import 'plex_autoscan_url.sh'"
+  copy:
+    src: "{{playbook_dir}}/roles/scripts/files/plex_autoscan_url.sh"
+    dest: "/opt/scripts/plex_autoscan/plex_autoscan_url.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: plex_autoscan_config.stat.exists
+
+- name: "Get plex autoscan url"
+  shell: "/opt/scripts/plex_autoscan/plex_autoscan_url.sh --simple"
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: "{{user}}"
+  register: plex_autoscan_url
+  when: plex_autoscan_config.stat.exists
+
+- name: "Import 'plex_autoscan.py'"
+  template:
+    src: "plex_autoscan.py.js2"
+    dest: "/opt/scripts/sickbeard_mp4_automator/post_process/plex_autoscan.py"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
