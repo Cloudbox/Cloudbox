@@ -12,7 +12,7 @@
   shell: "docker ps -aq --format '{{ '{{' }} .Names{{ '}}' }}' --filter name={{app}} | xargs echo"
   register: container_lookup
 
-- name: Set '{{app}}_is_installed' variable
+- name: Set 'container_is_installed' variable
   set_fact:
     container_is_installed: "{{ ( container_lookup.stdout | trim == app ) | ternary(true,false) }}"
 
