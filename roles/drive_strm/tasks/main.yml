@@ -25,10 +25,6 @@
     name: drive_strm
     state: absent
 
-- name: "Pull Docker image"
-  docker_image:
-    name: "l3uddz/drive_strm:latest"
-
 - name: "Check if '/opt/drive_strm/config.json' exists"
   stat:
     path: "/opt/drive_strm/config.json"
@@ -71,6 +67,11 @@
 
 - name: Do the following tasks when 'token.json' does not exist.
   block:
+
+    - name: "Pull Docker image"
+      docker_image:
+        name: "l3uddz/drive_strm:latest"
+        force: yes
 
     - name: "Retrieve authorization link"
       docker_container:
@@ -153,7 +154,7 @@
   docker_container:
     name: drive_strm
     image: "l3uddz/drive_strm:latest"
-    pull: no
+    pull: yes
     published_ports:
       - "7294:7294/tcp"
     user: "{{uid}}:{{gid}}"
