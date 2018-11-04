@@ -14,6 +14,9 @@
 ./cloudplow/cloudplow.log.*
 ./cloudplow/locks/*
 
+./drive_strm/cache.db*
+./drive_strm/*.log*
+
 ./lidarr/app/MediaCover/*
 
 ./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*

@@ -1,0 +1,25 @@
+{
+  "core": {
+    "debug": false
+  },
+  "google": {
+    "client_id": "{{ client_id.user_input | default('',true) }}",
+    "client_secret": "{{ client_secret.user_input | default('',true) }}",
+    "teamdrive": false,
+    "poll_interval": 120,
+    "ignore_paths": [
+      "My Drive/downloads/",
+      "My Drive/Backups/",
+      "My Drive/Media/Music/"
+    ]
+  },
+  "server": {
+    "listen_ip": "0.0.0.0",
+    "listen_port": 7294,
+    "direct_streams": false
+  },
+  "strm": {
+    "access_url": "https://strm.{{domain}}/",
+    "root_path": "/strm"
+  }
+}

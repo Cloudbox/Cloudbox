@@ -1,0 +1,178 @@
+#########################################################################
+# Title:            Cloudbox: Drive STRM                                #
+# Author(s):        Desimaniac, L3uddz                                  #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: strm
+
+- name: Create drive_strm directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - "/opt/drive_strm"
+    - "/mnt/strm"
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: drive_strm
+    state: absent
+
+- name: "Pull Docker image"
+  docker_image:
+    name: "l3uddz/drive_strm:latest"
+
+- name: "Check if '/opt/drive_strm/config.json' exists"
+  stat:
+    path: "/opt/drive_strm/config.json"
+  register: config_json
+
+- name: Do the following tasks when 'config.json' does not exist.
+  block:
+
+  - name: "Get user info"
+    pause:
+      prompt: "Enter your Google Drive Client ID"
+    register: client_id
+
+  - name: "Display Google Drive Client ID"
+    debug: msg="Using Google Drive Client ID{{':'}} {{client_id.user_input}}"
+
+  - name: "Get user info"
+    pause:
+      prompt: "Enter your Google Drive Client Secret"
+    register: client_secret
+
+  - name: "Display Google Drive Client Secret"
+    debug: msg="Using Google Drive Client Secret{{':'}} {{client_secret.user_input}}"
+
+  - name: Import 'config.json'
+    template:
+      src: config.json.js2
+      dest: /opt/drive_strm/config.json
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+
+  when: not config_json.stat.exists
+
+- name: "Check if '/opt/drive_strm/token.json' exists"
+  stat:
+    path: "/opt/drive_strm/token.json"
+  register: existing_token_json
+
+- name: Do the following tasks when 'token.json' does not exist.
+  block:
+
+    - name: "Retrieve authorization link"
+      docker_container:
+        name: drive_strm
+        image: "l3uddz/drive_strm:latest"
+        pull: no
+        command: ["python3", "drive_strm.py", "authorize", "-l"]
+        detach: no
+        user: "{{uid}}:{{gid}}"
+        volumes:
+          - "/etc/localtime:/etc/localtime:ro"
+          - "/opt/drive_strm:/config"
+          - "/mnt/strm:/strm"
+        networks:
+          - name: cloudbox
+            aliases:
+              - drive_strm
+        purge_networks: yes
+        state: started
+      register: authorize_link
+
+    - name: "Failed to retrive authorization link"
+      fail:
+        debug: "Failed to retrieve authorization link"
+      when: authorize_link.ansible_facts.docker_container.Output | trim == ""
+
+    - name: Stop and remove container
+      docker_container:
+        name: drive_strm
+        state: absent
+      when: authorize_link.ansible_facts.docker_container.Output | trim != ""
+
+    - name: "Authorization Link"
+      debug:
+        msg: "Authorization Link: {{ authorize_link.ansible_facts.docker_container.Output }}"
+
+    - name: "Authorization Link"
+      pause:
+        prompt: "Please visit the above link, retrive the authorization code, and enter it below"
+      register: authorization_code
+
+    - name: "Generate 'token.json'"
+      docker_container:
+        name: drive_strm
+        image: "l3uddz/drive_strm:latest"
+        pull: no
+        command: ["python3", "drive_strm.py", "authorize", "-c", "{{ authorization_code.user_input }}"]
+        detach: no
+        user: "{{uid}}:{{gid}}"
+        volumes:
+          - "/etc/localtime:/etc/localtime:ro"
+          - "/opt/drive_strm:/config"
+          - "/mnt/strm:/strm"
+        networks:
+          - name: cloudbox
+            aliases:
+              - drive_strm
+        purge_networks: yes
+        state: started
+
+    - name: "Check if '/opt/drive_strm/token.json' exists"
+      stat:
+        path: "/opt/drive_strm/token.json"
+      register: new_token_json
+
+    - name: "Failed to generate 'token.json'"
+      fail:
+        msg: "Failed to generate 'token.json'"
+      when: not new_token_json.stat.exists
+
+    - name: Stop and remove container
+      docker_container:
+        name: drive_strm
+        state: absent
+      when: new_token_json.stat.exists
+
+  when: not existing_token_json.stat.exists
+
+- name: Create and start container
+  docker_container:
+    name: drive_strm
+    image: "l3uddz/drive_strm:latest"
+    pull: no
+    published_ports:
+      - "7294:7294/tcp"
+    user: "{{uid}}:{{gid}}"
+    env:
+      VIRTUAL_HOST: "strm.{{domain}}"
+      VIRTUAL_PORT: 7294
+      LETSENCRYPT_HOST: "strm.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+      HTTPS_METHOD: noredirect
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/drive_strm:/config"
+      - "/mnt/strm:/strm"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "false"
+    networks:
+      - name: cloudbox
+        aliases:
+          - drive_strm
+    purge_networks: yes
+    restart_policy: always
+    state: started
