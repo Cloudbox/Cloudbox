@@ -3,13 +3,24 @@
     "debug": false
   },
   "google": {
+    "use_allowed_extensions": false,
+    "allowed_extensions":[
+      "webm","mkv","flv","vob","ogv","ogg","drc","gif",
+      "gifv","mng","avi","mov","qt","wmv","yuv","rm",
+      "rmvb","asf","amv","mp4","m4p","m4v","mpg","mp2",
+      "mpeg","mpe","mpv","m2v","m4v","svi","3gp","3g2",
+      "mxf","roq","nsv","f4v","f4p","f4a","f4b","mp3",
+      "flac","ts"
+    ],
+    "use_allowed_mimes": true,
+    "allowed_mimes": ["video"],
     "client_id": "{{ client_id.user_input | default('',true) }}",
     "client_secret": "{{ client_secret.user_input | default('',true) }}",
     "teamdrive": false,
     "poll_interval": 120,
     "ignore_paths": [
-      "My Drive/downloads/",
       "My Drive/Backups/",
+      "My Drive/downloads/",
       "My Drive/Media/Music/"
     ]
   },
