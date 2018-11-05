@@ -70,15 +70,15 @@
 
     - name: "Pull Docker image"
       docker_image:
-        name: "l3uddz/drive_strm:latest"
+        name: "cloudb0x/drive_strm:latest"
         force: yes
 
     - name: "Retrieve authorization link"
       docker_container:
         name: drive_strm
-        image: "l3uddz/drive_strm:latest"
+        image: "cloudb0x/drive_strm:latest"
         pull: no
-        command: ["python3", "drive_strm.py", "authorize", "-l"]
+        command: ["authorize", "-l"]
         detach: no
         user: "{{uid}}:{{gid}}"
         volumes:
@@ -116,9 +116,9 @@
     - name: "Generate 'token.json'"
       docker_container:
         name: drive_strm
-        image: "l3uddz/drive_strm:latest"
+        image: "cloudb0x/drive_strm:latest"
         pull: no
-        command: ["python3", "drive_strm.py", "authorize", "-c", "{{ authorization_code.user_input }}"]
+        command: ["authorize", "-c", "{{ authorization_code.user_input }}"]
         detach: no
         user: "{{uid}}:{{gid}}"
         volumes:
@@ -153,7 +153,7 @@
 - name: "Create and start container"
   docker_container:
     name: drive_strm
-    image: "l3uddz/drive_strm:latest"
+    image: "cloudb0x/drive_strm:latest"
     pull: yes
     published_ports:
       - "7294:7294/tcp"
