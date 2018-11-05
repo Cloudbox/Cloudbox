@@ -108,7 +108,7 @@
       debug:
         msg: "Authorization Link: {{ authorize_link.ansible_facts.docker_container.Output }}"
 
-    - name: "Authorization Link"
+    - name: "Authorization Code"
       pause:
         prompt: "Please visit the above link, retrive the authorization code, and enter it below"
       register: authorization_code
