@@ -17,8 +17,8 @@
           "mxf","roq","nsv","f4v","f4p","f4a","f4b","mp3",
           "flac","ts"
         ],
-        "mimes_types": true,
-        "mimes_types_list": ["video"]
+        "mime_types": true,
+        "mime_types_list": ["video"]
     },
     "client_id": "{{ client_id.user_input | default('',true) }}",
     "client_secret": "{{ client_secret.user_input | default('',true) }}",
