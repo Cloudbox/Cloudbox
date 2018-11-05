@@ -106,7 +106,7 @@
 
     - name: "Authorization Link"
       debug:
-        msg: "Authorization Link: {{ authorize_link.ansible_facts.docker_container.Output }}"
+        msg: "Authorization Link: {{ authorize_link.ansible_facts.docker_container.Output | trim }}"
 
     - name: "Authorization Code"
       pause:
