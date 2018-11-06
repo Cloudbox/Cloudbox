@@ -16,6 +16,8 @@ environment:
   CLOUDBOX_FOLDER: "/home/appveyor/projects/cloudbox/"
 
 init:
+  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
+  - ps: Update-AppveyorBuild -Version "$env:TAG_VERSION.$env:APPVEYOR_BUILD_NUMBER"
   - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
 
 install:
@@ -30,7 +32,3 @@ matrix:
 
 # to disable automatic builds
 build: off
-
-after_test:
-  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/$(APPVEYOR_REPO_NAME)/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
-  - ps: Update-AppveyorBuild -Version "$env:TAG_VERSION.$env:APPVEYOR_BUILD_NUMBER"
