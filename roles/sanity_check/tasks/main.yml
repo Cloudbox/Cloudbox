@@ -10,7 +10,7 @@
 ---
 - name: "Ensure system is Ubuntu 16.04 or newer"
   fail: msg="Cloudbox is specifically designed for Ubuntu versions 16.04 or newer"
-  when: ansible_distribution != 'Ubuntu' and ansible_distribution_version is version_compare('16.04', '<')
+  when: (ansible_distribution != 'Ubuntu') and (ansible_distribution_version is version_compare('16.04', '<'))
   tags: always
 
 - name: "Display System Info"
