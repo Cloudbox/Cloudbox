@@ -143,7 +143,7 @@
 
 - name: Set `suitarr_default_version` variable
   set_fact:
-    suitarr_default_version: "unstable"
+    suitarr_default_version: "image"
 
 - name: Check if 'suitarr.version' was specified
   set_fact:
