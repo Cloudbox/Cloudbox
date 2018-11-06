@@ -1,5 +1,5 @@
 ---
-version: 1.0.{build}
+version: 1.0.0-{build}
 
 skip_tags: true
 
@@ -7,7 +7,7 @@ skip_commits:
   files:
     - '*.md'
     - '*.yml.default'
-    - 'roles/scripts/files/*'
+    - 'roles/*/files/*'
   message: /\[minor\]/
 
 image: ubuntu
@@ -16,12 +16,13 @@ environment:
   CLOUDBOX_FOLDER: "/home/appveyor/projects/cloudbox/"
 
 init:
-  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
-  - ps: Update-AppveyorBuild -Version "$env:TAG_VERSION.$env:APPVEYOR_BUILD_NUMBER"
   - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
 
 install:
   - sh: cd ${CLOUDBOX_FOLDER}
+  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
+  - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
+  - sh: appveyor UpdateBuild -Version "${TAG_VERSION}-${BUILD_NUMBER}"
   - sh: git submodule update --init --recursive
   - sh: cp -n defaults/ansible.cfg.default ansible.cfg; cp -n defaults/accounts.yml.default accounts.yml; cp -n defaults/settings.yml.default settings.yml; cp -n defaults/adv_settings.yml.default adv_settings.yml; cp -n defaults/backup_config.yml.default backup_config.yml
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
