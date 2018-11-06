@@ -13,12 +13,12 @@
 
   - name: "Check 'settings-updater.py' for new settings."
     debug:
-      msg: "The 'settings_updater.py' script added new settings to the following {{ (files_updated_successfully | length > 1) | ternary('files','file') }}: '{{ files_updated_successfully | join(', ') | trim }}'. Please check {{ (files_updated_successfully | length > 1) | ternary('these files','this file') }} for newly added settings. You can also review the log file, 'settings-updater.log'."
+      msg: "The 'settings_updater.py' script updated the following file{{ files_updated_successfully | pluralize }}: '{{ files_updated_successfully | join(', ') | trim }}'. Please check {{ files_updated_successfully | pluralize('this file','these files') }} for the newly added settings. You can also review the log file, 'settings-updater.log'."
     when: files_updated_successfully | length > 0
 
   - name: "Check 'settings-updater.py' run status for errors."
     debug:
-      msg: "The 'settings_updater.py' script exited with an error when updating the following files: '{{ files_updated_unsuccessfully | join(', ') | trim }}'. Please check 'settings-updater.log' for details."
+      msg: "The 'settings_updater.py' script exited with an error when updating the following file{{ files_updated_unsuccessfully | pluralize }}: '{{ files_updated_unsuccessfully | join(', ') | trim }}'. Please check 'settings-updater.log' for details."
     when: files_updated_unsuccessfully | length > 0
 
   - name: "Exit so that user can check updated files and/or 'settings-updater.log'."
