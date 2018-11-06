@@ -1,4 +1,6 @@
 ---
+version: 1.0.{build}
+
 skip_tags: true
 
 skip_commits:
@@ -28,3 +30,7 @@ matrix:
 
 # to disable automatic builds
 build: off
+
+after_test:
+  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/$(APPVEYOR_REPO_NAME)/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
+  - ps: Update-AppveyorBuild -Version "$env:TAG_VERSION.$env:APPVEYOR_BUILD_NUMBER"
