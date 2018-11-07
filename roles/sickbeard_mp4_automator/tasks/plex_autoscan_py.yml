@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         SMA: 'sma_to_plex_autoscan.py' Task                    #
+# Title:         SMA: 'plex_autoscan.py' Task                           #
 # Author(s):     Desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -32,10 +32,10 @@
   register: plex_autoscan_url
   when: plex_autoscan_config.stat.exists
 
-- name: "Import 'sma_to_plex_autoscan.py'"
+- name: "Import 'plex_autoscan.py'"
   template:
-    src: "sma_to_plex_autoscan.py.js2"
-    dest: "/opt/scripts/sickbeard_mp4_automator/post_process/sma_to_plex_autoscan.py"
+    src: "plex_autoscan.py.js2"
+    dest: "/opt/scripts/sickbeard_mp4_automator/post_process/plex_autoscan.py"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775

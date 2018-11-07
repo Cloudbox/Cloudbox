@@ -36,14 +36,14 @@
   import_tasks: "autoprocess_ini.yml"
   when: not autoprocess_ini.stat.exists
 
-- name: "Check if 'sma_to_plex_autoscan.py' exists"
+- name: "Check if 'plex_autoscan.py' exists"
   stat:
-    path: "/opt/scripts/sickbeard_mp4_automator/post_process/sma_to_plex_autoscan.py"
-  register: sma_to_plex_autoscan_py
+    path: "/opt/scripts/sickbeard_mp4_automator/post_process/plex_autoscan.py"
+  register: plex_autoscan_py
 
-- name: "'sma_to_plex_autoscan.py' tasks"
-  import_tasks: "sma_to_plex_autoscan_py.yml"
-  when: not sma_to_plex_autoscan_py.stat.exists
+- name: "'plex_autoscan.py' Task"
+  import_tasks: "plex_autoscan_py.yml"
+  when: not plex_autoscan_py.stat.exists
 
 - name: "Update Docker Images Task"
   include_tasks: "update_docker_images.yml"
