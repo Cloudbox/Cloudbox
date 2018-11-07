@@ -9,12 +9,12 @@
 #########################################################################
 ---
 - name: Check if {{app}} is installed
-  shell: "docker ps -aq --format '{{ '{{' }} .Names{{ '}}' }}' --filter name={{app}} | xargs echo"
+  shell: docker ps -aq --format {% raw %}'{{ .Names}}'{% endraw %} --filter name='^/{{app}}$'
   register: container_lookup
 
 - name: Set 'container_is_installed' variable
   set_fact:
-    container_is_installed: "{{ ( container_lookup.stdout | trim == app ) | ternary(true,false) }}"
+    container_is_installed: "{{ ( (container_lookup.stdout | trim) == (app | quote) ) | ternary(true,false) }}"
 
 - name: Do following tasks when {{app}} is installed
   block:
