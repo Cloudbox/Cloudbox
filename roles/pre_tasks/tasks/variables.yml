@@ -129,8 +129,8 @@
         (nzbs_downloads_path is defined|default(false,true))
         or
         (old_nzbget_downloads_path is defined|default(false,true))
-        )
-        else false }}"
+      )
+      else false }}"
 
 - name: "Set 'torrents' role tag"
   set_fact:
@@ -138,8 +138,8 @@
         (torrents_downloads_path is defined|default(false,true))
         or
         (old_rutorrent_downloads_path is defined|default(false,true))
-        )
-        else false }}"
+      )
+      else false }}"
 
 - name: Set `suitarr_default_version` variable
   set_fact:
@@ -165,23 +165,24 @@
 - name: Validate and set proper 'suitarr' key variables
   set_fact:
     suitarr_tmp: { version: "{{ (suitarr.version) if (
-      (suitarr_version_is_specified)
-      and
-      (suitarr.version != 'default')
-      and
-      ((suitarr.version == 'unstable') or (suitarr.version == 'stable') or (suitarr.version == 'image'))
-      ) else (suitarr_default_version) }}" }
+        (suitarr_version_is_specified)
+        and
+        (suitarr.version != 'default')
+        and
+        ((suitarr.version == 'unstable') or (suitarr.version == 'stable') or (suitarr.version == 'image'))
+      )
+      else (suitarr_default_version) }}" }
 
 - name: Merge changes back to 'suitarr' key
   set_fact:
     suitarr: "{{ (suitarr_tmp) if (
-              (suitarr is undefined)
-              or
-              (suitarr is none)
-              or
-              (suitarr | trim == '')
-            )
-            else ((suitarr) | combine(suitarr_tmp))  }}"
+        (suitarr is undefined)
+        or
+        (suitarr is none)
+        or
+        (suitarr | trim == '')
+        )
+      else ((suitarr) | combine(suitarr_tmp))  }}"
 
 - name: "Set 'sma_enabled' role tag"
   set_fact:
@@ -190,4 +191,4 @@
         and
         (sickbeard_mp4_automator)
         )
-        else false }}"
+      else false }}"
