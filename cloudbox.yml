@@ -41,7 +41,7 @@
     - { role: feeder-dismount, tags: ['feeder-dismount'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: plexrequests, tags: ['plexrequests'] }
-    - { role: resilio, tags: ['resilio'] }
+    - { role: resilio-sync, tags: ['resilio-sync'] }
     - { role: nextcloud, tags: ['nextcloud'] }
     - { role: emby, tags: ['emby'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }
