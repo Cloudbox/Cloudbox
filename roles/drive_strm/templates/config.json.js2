@@ -32,6 +32,7 @@
   },
   "strm": {
     "access_url": "https://strm.{{domain}}/",
-    "root_path": "/strm"
+    "root_path": "/strm",
+    "show_transcodes": false
   }
 }
