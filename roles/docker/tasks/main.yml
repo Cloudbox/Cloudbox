@@ -114,6 +114,7 @@
 
 - name: "Import Docker Housekeeping tasks"
   import_tasks: "docker_housekeeping.yml"
+  tags: docker-housekeeping
 
 - name: "Import Docker Network tasks"
   import_tasks: "docker_network.yml"
