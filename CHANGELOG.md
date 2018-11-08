@@ -30,6 +30,12 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.3.1] - 2018-11-08
+- Docker: Added `docker-housekeeping` tag for Docker house keeping tasks.
+- Cloudplow: Fixed missing comma in default config.
+- Kernel: Added safeguards for when settings are undefined.
+- Plex: Added safeguards, to db_cache_size task, for when settings are undefined.
+
 ## [1.3.0] - 2018-11-08
 
 - Kernel: Changed order in playbook file to run before/without settings updater.
@@ -762,6 +768,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.3.1]: https://github.com/cloudbox/cloudbox/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/cloudbox/cloudbox/compare/v1.2.9...v1.3.0
 [1.2.9]: https://github.com/cloudbox/cloudbox/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/cloudbox/cloudbox/compare/v1.2.7...v1.2.8
