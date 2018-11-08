@@ -42,11 +42,6 @@
         or
         ((kernel.version|float is version('4.18', '<')) and (ansible_distribution_version is version('18.10', '==')))
 
-- name: Merge changes back
-  set_fact:
-    kernel: "{{ kernel | combine(kernel_tmp) }}"
-  when: (kernel_tmp is defined) and (kernel_tmp != "")
-
 - name: Set 'desired_kernel_version' variable
   set_fact:
     desired_kernel_version: "{{ default_kernel_version if ( kernel.version == 'default' ) else ( (kernel.version | default(default_kernel_version)) | regex_replace('(v\\.|v)', '') ) }}"
