@@ -19,9 +19,24 @@
     executable: /bin/bash
   register: current_db_cache_size
 
+- name: Set 'default_db_cache_size' variable
+  set_fact:
+    default_db_cache_size: '2000'
+
+- name: Check if 'kernel.version' was specified
+  set_fact:
+    db_cache_size_is_specified: "{{ true if not (
+        (plex.db_cache_size is undefined)
+        or
+        (plex.db_cache_size is none)
+        or
+        (plex.db_cache_size | trim == '')
+      )
+      else false }}"
+
 - name: Get Desired Plex DB Cache Size
   set_fact:
-    desired_db_cache_size: "{{ '2000' if ( plex.db_cache_size == 'default' ) else ( plex.db_cache_size | regex_replace(',', '') | int ) }}"
+    desired_db_cache_size: "{{ default_db_cache_size if ( (not db_cache_size_is_specified) or (plex.db_cache_size == 'default') ) else ( (plex.db_cache_size) | regex_replace(',', '') | int ) }}"
 
 - name: Make Plex DB Edits
   block:
@@ -32,7 +47,7 @@
       state: stopped
 
   - name: "Set Plex DB Cache Size to '{{ desired_db_cache_size | regex_replace(',', '') | int }}'"
-    shell: "sqlite3 \"/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db\" \"PRAGMA default_cache_size = '{{ desired_db_cache_size | regex_replace(',', '') | int }}';\""
+    shell: "sqlite3 \"/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db\" \"PRAGMA default_cache_size = '{{ desired_db_cache_size | int }}';\""
     args:
       executable: /bin/bash
 
