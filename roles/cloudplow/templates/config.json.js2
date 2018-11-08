@@ -22,7 +22,7 @@
         "max_streams_before_throttle": 1,
         "rclone": {
             "throttle_speeds": {
-                "0": "1000M"
+                "0": "1000M",
                 "1": "50M",
                 "2": "40M",
                 "3": "30M",
