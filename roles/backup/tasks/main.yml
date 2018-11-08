@@ -61,6 +61,7 @@
       - "/home/{{user}}/logs/backup"
       - "{{local.destination}}"
       - "{{local.destination}}/opt"
+      - "/opt/systemd-backup"
 
   - name: "Copy files to '{{local.destination}}'"
     copy:
@@ -100,16 +101,25 @@
     tags: vault-service
 
   - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
-    synchronize:
-      src: "/etc/systemd/system/"
-      dest: "/opt/systemd-backup"
-      mode: push
-      recursive: yes
+    shell: |
+      /usr/bin/rsync \
+        --delay-updates \
+        -F \
+        --compress \
+        --archive \
+        --no-recursive \
+        --no-links \
+        --no-perms \
+        --include='*.service' \
+        --include='*.mount' \
+        /etc/systemd/system/* /opt/systemd-backup/
+    args:
+      executable: /bin/bash
+      warn: no
     ignore_errors: yes
 
-  - name: "Make systemd-backup folder readable/writeable by '{{user}}'"
+  - name: "Reset permissions of '/opt/systemd-backup'"
     file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-    ignore_errors: yes
 
   - name: "Gather list of running Docker containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
