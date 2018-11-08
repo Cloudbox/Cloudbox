@@ -8,10 +8,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Sanity check for string format
-  fail:
-    msg: "Kernel version must be in string format (i.e. quoted)."
-  when: not (
+- name: Check if 'kernel.version' was specified
+  set_fact:
+    kernel_version_is_specified: "{{ true if not (
         (kernel is undefined)
         or
         (kernel is none)
@@ -24,7 +23,12 @@
         or
         (kernel.version | trim == '')
       )
-      and (
+      else false }}"
+
+- name: Sanity check for string format
+  fail:
+    msg: "Kernel version must be in string format (i.e. quoted)."
+  when: kernel_version_is_specified and (
         (kernel.version | type_debug == "float")
         or
         (kernel.version | type_debug  == "int")
@@ -36,10 +40,13 @@
 
 - name: Set 'desired_kernel_version' variable
   set_fact:
-    desired_kernel_version: "{{ default_kernel_version if
-      ( ((kernel|default('',true)).version | default(default_kernel_version,true)) == 'default')
-    else
-      ( ((kernel|default('',true)).version | default(default_kernel_version,true)) | regex_replace('(v\\.|v)', '') ) }}"
+    desired_kernel_version: "{{ default_kernel_version if (
+        (not kernel_version_is_specified)
+        or
+        (kernel.version | trim == 'default')
+      )
+      else (
+        (kernel.version) | regex_replace('(v\\.|v)', ''))  }}"
 
 # Make sure adv_settings.yml has the mininum kernel supported.
 - name: Sanity check for mininum kernel version for Ubuntu 16.04
@@ -180,32 +187,66 @@
     shell: /usr/local/bin/ubuntu-mainline-kernel.sh --yes -i {{ desired_kernel_version if ( desired_kernel_version in available_kernel_versions ) else ( default_kernel_version ) }}
     register: z
 
-  - name: Set 'kernel_versions_to_be_removed' variable
-    set_fact:
-      kernel_versions_to_be_removed: "{{ ((installed_kernel_versions | join (' ')) | regex_replace(kernel_version_to_be_installed)).split() }}"
+  - name: Do the following tasks when kernel has been updated
+    block:
+
+    - name: Set 'kernel_versions_to_be_removed' variable
+      set_fact:
+        kernel_versions_to_be_removed: "{{ ((installed_kernel_versions | join (' ')) | regex_replace(kernel_version_to_be_installed)).split() }}"
+
+    - name: Uninstall previously installed kernel versions
+      shell: /usr/local/bin/ubuntu-mainline-kernel.sh --yes -u "{{ item }}"
+      with_items: "{{ kernel_versions_to_be_removed }}"
+      when: (kernel_versions_to_be_removed | trim != "")
+
+    - name: Fix any potential apt issues
+      shell: apt-get --fix-broken --yes install
+
+    - name: Check if 'install.autorestart' was specified
+      set_fact:
+        auto_restart_option_is_specified: "{{ true if not (
+            (install is undefined)
+            or
+            (install is none)
+            or
+            (install | trim == '')
+            or
+            (install.auto_restart is undefined)
+            or
+            (install.auto_restart is none)
+            or
+            (install.auto_restart | trim == '')
+          )
+          else false }}"
+
+    - name: Set 'autorestart' variable
+      set_fact:
+        autorestart: "{{ false if (
+            (auto_restart_option_is_specified)
+            and
+            (not install.auto_restart)
+          )
+          else true }}"
+
+    - name: Kernel update and reboot message
+      debug:
+        msg: "Kernel updated. System will now reboot ..."
+      when: autorestart
+
+    - name: Reboot
+      shell: reboot
+      when: autorestart
+
+    - name: Exit
+      fail:
+        msg: "You will need to restart for kernel update to take effect."
+      when: not autorestart
+
     when: z.changed
-
-  - name: Uninstall previously installed kernel versions
-    shell: /usr/local/bin/ubuntu-mainline-kernel.sh --yes -u "{{ item }}"
-    with_items: "{{ kernel_versions_to_be_removed }}"
-    when: (z.changed) and (kernel_versions_to_be_removed | trim != "")
-
-  - name: Fix any potential apt issues
-    shell: apt-get --fix-broken --yes install
-    when: z.changed
-
-  - name: Kernel update and reboot message
-    debug:
-      msg: "Kernel updated. System will now reboot ..."
-    when: (z.changed) and (install.auto_restart|default(true,true))
-
-  - name: Reboot
-    shell: reboot
-    when: (z.changed) and (install.auto_restart|default(true,true))
-
-  - name: Exit
-    fail:
-      msg: "You will need to restart for kernel update to take effect."
-    when: (z.changed) and not (install.auto_restart|default(true,true))
 
   when: run_kernel_update
+
+- name: Display message when kernel does not to be updated
+  debug:
+    msg: "Kernel does not need to be updated."
+  when: not run_kernel_update
