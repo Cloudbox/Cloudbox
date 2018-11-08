@@ -1,7 +1,8 @@
 {
     "core": {
         "dry_run": false,
-	    "rclone_config_path": "/home/{{user}}/.config/rclone/rclone.conf"
+        "rclone_binary_path": "/usr/bin/rclone",
+        "rclone_config_path": "/home/{{user}}/.config/rclone/rclone.conf"
     },
     "hidden": {
         "/mnt/local/.unionfs-fuse": {
@@ -17,9 +18,11 @@
         "url": "https://plex.{{domain}}",
         "token": "{{ plex_auth_token | default('') }}",
         "poll_interval": 60,
+        "verbose_notifications": false,
         "max_streams_before_throttle": 1,
         "rclone": {
             "throttle_speeds": {
+                "0": "1000M"
                 "1": "50M",
                 "2": "40M",
                 "3": "30M",
@@ -41,7 +44,7 @@
             ],
             "rclone_extras": {
                 "--checkers": 16,
-                "--drive-chunk-size": "64M",
+                "--drive-chunk-size": "128M",
                 "--stats": "60s",
                 "--transfers": 8,
                 "--verbose": 1,

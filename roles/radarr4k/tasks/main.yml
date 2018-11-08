@@ -57,6 +57,10 @@
   with_items:
     - /opt/radarr4k
 
+- name: Set 'suitarr_image' variable
+  set_fact:
+    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator','hotio/suitarr') }}"
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -69,12 +73,12 @@
 - name: Create and start container
   docker_container:
     name: radarr4k
-    image: hotio/suitarr:radarr
+    image: "{{suitarr_image}}:radarr"
     pull: yes
     published_ports:
       - "127.0.0.1:7879:7878"
     env:
-      VERSION: "unstable"
+      VERSION: "{{suitarr.version}}"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       UMASK: 002

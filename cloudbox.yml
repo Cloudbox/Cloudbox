@@ -4,11 +4,12 @@
     - ['accounts.yml', 'defaults/accounts.yml.default']
     - ['settings.yml', 'defaults/settings.yml.default']
     - ['adv_settings.yml', 'defaults/adv_settings.yml.default']
+    - ['backup_config.yml', 'defaults/backup_config.yml.default']
   roles:
     - { role: sanity_check }
     - { role: settings, tags: ['always', 'settings'] }
     - { role: pre_tasks }
-    - { role: kernel, tags: ['kernel'] }
+    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'kernel'] }
     - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
@@ -34,12 +35,13 @@
     - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
+    - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['sma_enabled'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
     - { role: feeder-mount, tags: ['feeder-mount'] }
     - { role: feeder-dismount, tags: ['feeder-dismount'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: plexrequests, tags: ['plexrequests'] }
-    - { role: resilio, tags: ['resilio'] }
+    - { role: resilio-sync, tags: ['resilio-sync'] }
     - { role: nextcloud, tags: ['nextcloud'] }
     - { role: emby, tags: ['emby'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }

@@ -11,8 +11,26 @@
 - name: "Pushover Message"
   pushover:
     msg: "{{message}}"
-    app_token: "{{ pushover.app_token | default(pushover_app_token,true) }}"
-    user_key: "{{ pushover.user_key | default(pushover_user_key,true) }}"
+    app_token: "{{ pushover.app_token }}"
+    user_key: "{{ pushover.user_key }}"
     pri: "{{ pushover.priority | default(0,true) }}"
-  when: pushover_enabled
+  when: not(
+      (pushover is undefined)
+      or
+      (pushover is none)
+      or
+      (pushover | trim == '')
+      or
+      (pushover.app_token is undefined)
+      or
+      (pushover.app_token is none)
+      or
+      (pushover.app_token | trim == '')
+      or
+      (pushover.user_key is undefined)
+      or
+      (pushover.user_key is none)
+      or
+      (pushover.user_key | trim == '')
+    )
   ignore_errors: yes

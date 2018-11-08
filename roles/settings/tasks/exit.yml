@@ -1,0 +1,46 @@
+#########################################################################
+# Title:         Settings: Exit After Changes                           #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# Exit When settings have been updated
+- block:
+
+  - name: "Check 'settings-updater.py' for new settings."
+    debug:
+      msg: "The 'settings_updater.py' script updated the following file{{ files_updated_successfully | pluralize }}: '{{ files_updated_successfully | join(', ') | trim }}'. Please check {{ files_updated_successfully | pluralize('this file','these files') }} for the newly added settings. You can also review the log file, 'settings-updater.log'."
+    when: files_updated_successfully | length > 0
+
+  - name: "Check 'settings-updater.py' run status for errors."
+    debug:
+      msg: "The 'settings_updater.py' script exited with an error when updating the following file{{ files_updated_unsuccessfully | pluralize }}: '{{ files_updated_unsuccessfully | join(', ') | trim }}'. Please check 'settings-updater.log' for details."
+    when: files_updated_unsuccessfully | length > 0
+
+  - name: "Exit so that user can check updated files and/or 'settings-updater.log'."
+    fail:
+      msg: "Cloudbox Installer will now exist."
+
+  when: exit_is_necessary
+
+# Make sure accounts.yml has been filled in by user
+- name: "Get stats on 'accounts.yml' for hash check."
+  stat:
+    path: "{{playbook_dir}}/accounts.yml"
+  register: accounts_yml
+
+- name: "Get stats on 'accounts.yml.default' for hash check."
+  stat:
+    path: "{{playbook_dir}}/defaults/accounts.yml.default"
+  register: accounts_yml_default
+
+- name: "Ensure 'accounts.yml' does not match 'accounts.yml.default'."
+  assert:
+    that:
+      - accounts_yml.stat.exists
+      - accounts_yml.stat.checksum != accounts_yml_default.stat.checksum
+    msg: "You have not edited your 'accounts.yml' file, yet. Please fill in your settings and retry. For more info, see the Wiki page 'Install: Settings'."

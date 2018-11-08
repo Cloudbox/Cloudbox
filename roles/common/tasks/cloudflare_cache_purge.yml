@@ -1,0 +1,39 @@
+#########################################################################
+# Title:         Common: Cloudflare Cache Purge                         #
+# Author(s):     Desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# https://github.com/advertine/ansible-cloudflare-purge
+- name: List Cloudflare zones
+  uri:
+    url: 'https://api.cloudflare.com/client/v4/zones?name={{ domain }}'
+    method: 'GET'
+    headers:
+      Content-Type: "application/json"
+      X-Auth-Email: '{{ email }}'
+      X-Auth-Key: '{{ cloudflare_api_token }}'
+    return_content: yes
+  register: cf_zones
+
+- name: Purge Cloudflare cache for '{{ domain }}'
+  uri:
+    url: 'https://api.cloudflare.com/client/v4/zones/{{ cf_zones.json.result[0].id }}/purge_cache'
+    method: 'POST'
+    headers:
+      X-Auth-Email: '{{ email }}'
+      X-Auth-Key: '{{ cloudflare_api_token }}'
+    body_format: json
+    body: { purge_everything: true }
+    return_content: yes
+    status_code: 200
+  register: cf_purge
+
+- name: Print result of cache purge
+  debug:
+    msg: "Purging of Cloudflare cache for '{{ domain }}' was successful."
+  when: (cf_purge.json.success is defined) and (cf_purge.json.success)

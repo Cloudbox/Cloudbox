@@ -89,77 +89,77 @@
 - name: Rename movies category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category1.Name\s?=.*'
+    regexp: '^Category1\.Name\s?=.*'
     line: 'Category1.Name=movies'
     state: present
 
 - name: Add aliases to movies category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category1.Aliases\s?='
+    regexp: '^Category1\.Aliases\s?='
     line: 'Category1.Aliases=movies*, Movies*'
     state: present
 
 - name: Rename series category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category2.Name\s?=.*'
+    regexp: '^Category2\.Name\s?=.*'
     line: 'Category2.Name=series'
     state: present
 
 - name: Add aliases to series category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category2.Aliases\s?='
+    regexp: '^Category2\.Aliases\s?='
     line: 'Category2.Aliases=TV - HD, TV - SD, TV*'
     state: present
 
 - name: Rename music category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category3.Name\s?=.*'
+    regexp: '^Category3\.Name\s?=.*'
     line: 'Category3.Name=music'
     state: present
 
 - name: Add aliases to music category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category3.Aliases\s?='
+    regexp: '^Category3\.Aliases\s?='
     line: 'Category3.Aliases=audio*'
     state: present
 
 - name: Rename apps category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category4.Name\s?=.*'
+    regexp: '^Category4\.Name\s?=.*'
     line: 'Category4.Name=apps'
     state: present
 
 - name: Add aliases to apps category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category4.Aliases\s?='
+    regexp: '^Category4\.Aliases\s?='
     line: 'Category4.Aliases=apps*, pc*'
     state: present
 
 - name: Add Radarr category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category5.Name\s?='
+    regexp: '^Category5\.Name\s?='
     line: 'Category5.Name=radarr'
     state: present
 
 - name: Add Sonarr category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category6.Name\s?='
+    regexp: '^Category6\.Name\s?='
     line: 'Category6.Name=sonarr'
     state: present
 
 - name: Add Lidarr category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
-    regexp: '^Category7.Name\s?='
+    regexp: '^Category7\.Name\s?='
     line: 'Category7.Name=lidarr'
     state: present
 
@@ -170,6 +170,27 @@
     regexp: '^DiskSpace\s?=.*'
     line: 'DiskSpace=100000'
     state: present
+
+- name: Remove 'Task1' schedule
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: "{{ item.regexp }}"
+    state: absent
+  with_items:
+    - {regexp: '.Task1\.Time\=.*' }
+    - {regexp: '.Task1\.WeekDays\=.*' }
+    - {regexp: '.Task1\.Command\=.*' }
+    - {regexp: '.Task1\.Param\=.*' }
+
+- name: Create a'Tasks1' unpauser schedule
+  blockinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    block: |
+      Task1.Time=*,*:00,*:15,*:30,*:45
+      Task1.WeekDays=1-7
+      Task1.Command=UnpauseDownload
+      Task1.Param=
+    insertafter: "^### SCHEDULER"
 
 - name: Set HealthCheck
   lineinfile:

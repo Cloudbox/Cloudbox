@@ -73,6 +73,20 @@
     - lib32z1
   ignore_errors: yes
 
+- name: Check for '/etc/vnstat.conf'
+  stat:
+    path: "/etc/vnstat.conf"
+  register: vnstat_conf
+
+- name: Set vnstat to proper default interface
+  lineinfile:
+    path: "/etc/vnstat.conf"
+    regexp: '(Interface)\s?.*'
+    line: '\1 "{{ansible_default_ipv4.interface}}"'
+    state: present
+    backrefs: yes
+  when: (vnstat_conf.stat.exists) and (ansible_default_ipv4 is defined) and (ansible_default_ipv4.type == "ether")
+
 - name: Install unrar
   apt: "name={{item}} state=present"
   with_items:
@@ -153,4 +167,10 @@
   import_role:
     name: subliminal
   tags: subliminal
+  ignore_errors: yes
+
+- name: Cloudflare Cache Purge
+  import_tasks: "cloudflare_cache_purge.yml"
+  when: cloudflare_enabled
+  tags: cloudflare-cache-purge
   ignore_errors: yes

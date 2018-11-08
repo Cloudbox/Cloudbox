@@ -49,6 +49,13 @@
   when: (function_php.stat.exists) and (organizr_version.stdout is version('2.0', '<'))
 # END - Migration Tasks
 
+- name: Remove certain js files from organizr
+  file: "path=/opt/organizr/www/Dashboard/js/{{item}} state=absent"
+  with_items:
+    - "custom.min.js"
+    - "functions.js"
+  ignore_errors: yes
+
 - name: Create Organizr directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
@@ -57,16 +64,16 @@
 - name: Create and start container
   docker_container:
     name: organizr
-    image: "tronyx/docker-organizr-v2:plex"
+    image: "organizrtools/organizr-v2:plex"
     pull: yes
     published_ports:
       - "127.0.0.1:7421:80"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('www.' + domain + ',' + domain,'organizr.' + domain) }}"
+      VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain,'organizr.' + domain) }}"
       VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary('www.' + domain + ',' + domain,'organizr.' + domain) }}"
+      LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain,'organizr.' + domain) }}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

@@ -36,6 +36,7 @@
     - /opt/scripts/plex_autoscan
     - /opt/scripts/plexpy
     - /opt/scripts/torrents
+    - /opt/scripts/rclone
 
 - name: Check arrpush.legacy.sh exists
   stat:
@@ -135,3 +136,41 @@
     mode: 0775
     force: yes
   when: frontail_preset.stat.exists == False
+
+- name: Check if sync_torrents_to_google.sh exists
+  stat:
+    path: "/opt/scripts/rclone/sync_torrents_to_google.sh"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: sync_torrents_to_google
+
+- name: Import sync_torrents_to_google.sh
+  copy:
+    src: "sync_torrents_to_google.sh"
+    dest: "/opt/scripts/rclone/sync_torrents_to_google.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: sync_torrents_to_google.stat.exists == False
+
+- name: Check if download_torrents_from_google.sh exists
+  stat:
+    path: "/opt/scripts/rclone/download_torrents_from_google.sh"
+    get_attributes: false
+    get_checksum: false
+    get_md5: false
+    get_mime: false
+  register: download_torrents_from_google
+
+- name: Import download_torrents_from_google.sh
+  copy:
+    src: "download_torrents_from_google.sh"
+    dest: "/opt/scripts/rclone/download_torrents_from_google.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: download_torrents_from_google.stat.exists == False

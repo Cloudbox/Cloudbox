@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Ombi Role                                    #
 # Author(s):     RXWatcher1, L3uddz, Desimaniac                         #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Docker Image:  linuxserver/ombi                                       #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################

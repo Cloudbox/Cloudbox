@@ -30,7 +30,7 @@
 
 - name: Check if rclone version was specified
   set_fact:
-    rclone_version_specified: "{{ true if not (
+    rclone_version_is_specified: "{{ true if not (
         (rclone is undefined)
         or
         (rclone is none)
@@ -48,17 +48,17 @@
 - name: Set rclone_download_url for current version
   set_fact:
     rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
-  when: rclone.version == 'latest' or rclone.version == 'current' or not rclone_version_specified
+  when: (not rclone_version_is_specified) or (rclone.version == 'latest') or (rclone.version == 'current')
 
 - name: Set rclone_download_url for beta version
   set_fact:
     rclone_download_url: "https://beta.rclone.org/rclone-beta-latest-linux-amd64.zip"
-  when: rclone.version == 'beta'
+  when: (rclone_version_is_specified) and (rclone.version == 'beta')
 
 - name: Set rclone_download_url for specified version
   set_fact:
     rclone_download_url: 'https://downloads.rclone.org/v{{ "%.2f"|format(rclone.version) }}/rclone-v{{ "%.2f"|format(rclone.version) }}-linux-amd64.zip'
-  when: rclone_version_specified and not (rclone.version == 'beta' or rclone.version == 'latest' or rclone.version == 'current')
+  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current'))
   ignore_errors: yes
 
 - name: "Download and unarchive rclone"
@@ -120,18 +120,30 @@
     path: "/home/{{user}}/.config/rclone/rclone.conf"
   register: rclone_conf_default_path
 
-- name: "Backup existing 'rclone.conf' at default location"
+- name: "Backup existing 'rclone.conf' at default location (if it exists)"
   shell: "mv '/home/{{user}}/.config/rclone/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf.bak'"
   when: rclone_conf_playbook_dir.stat.exists and rclone_conf_default_path.stat.exists
 
-- name: "Move 'rclone.conf' from '{{playbook_dir}}' folder to default location"
-  shell: "mv '{{playbook_dir}}/rclone.conf' '/home/{{user}}/.config/rclone/rclone.conf'"
+- name: "Copy 'rclone.conf' from '{{playbook_dir}}' folder to default location"
+  copy:
+    src: "{{playbook_dir}}/rclone.conf"
+    dest: "/home/{{user}}/.config/rclone/rclone.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: rclone_conf_playbook_dir.stat.exists
+
+- name: "Remove the 'rclone.conf' copy from the '{{playbook_dir}}' folder"
+  file: "path={{item}} state=absent"
+  with_items:
+    - "{{playbook_dir}}/rclone.conf"
   when: rclone_conf_playbook_dir.stat.exists
 
 - name: "Check if 'rclone.conf' exists at default location"
   stat:
     path: "/home/{{user}}/.config/rclone/rclone.conf"
-  register: rclone_conf_default_path
+  register: rclone_conf_default_path_2
 
 - name: "Do the following block when 'rclone.conf' is not at default location"
   block:
@@ -140,8 +152,20 @@
     shell: rclone config file
     register: rclone_conf_current_location
 
-  - name: "Move 'rclone.conf' to default location if found elsewhere"
-    shell: "mv '{{ rclone_conf_current_location.stdout_lines | last }}' '/home/{{user}}/.config/rclone/rclone.conf'"
+  - name: "Copy 'rclone.conf' to default location if found elsewhere"
+    copy:
+      src: "{{ rclone_conf_current_location.stdout_lines | last }}"
+      dest: "/home/{{user}}/.config/rclone/rclone.conf"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+    when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
+
+  - name: "Remove that other 'rclone.conf' copy"
+    file: "path={{item}} state=absent"
+    with_items:
+      - "{{ rclone_conf_current_location.stdout_lines | last }}"
     when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
 
   - name: "Create blank 'rclone.conf' if not found elsewhere"
@@ -153,4 +177,4 @@
       group: "{{user}}"
     when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') != -1
 
-  when: not rclone_conf_default_path.stat.exists
+  when: not rclone_conf_default_path_2.stat.exists

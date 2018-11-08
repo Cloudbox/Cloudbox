@@ -1,9 +1,15 @@
 ---
-shell: zsh
+install:
+  auto_restart: yes
+kernel:
+  version: default
 plex:
   open_port: no
   force_auto_adjust_quality: no
-  allow_high_output_bitrates: no
+  force_high_output_bitrates: no
+  db_cache_size: default
+suitarr:
+  version: default
 organizr:
   direct_domain: no
 nginx:
@@ -17,3 +23,4 @@ telly:
   playlist: "/opt/telly/file.m3u or URL2M3U"
   streams: "1"
   log_requests:
+sickbeard_mp4_automator: no

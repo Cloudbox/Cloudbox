@@ -10,16 +10,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create nginx-proxy directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - /opt/nginx-proxy
-    - /opt/nginx-proxy/htpasswd
-    - /opt/nginx-proxy/vhost.d
-
-- name: Import proxy.conf
-  copy: "src=proxy.conf dest=/opt/nginx-proxy/proxy.conf force=yes owner={{user}} group={{user}} mode=0775"
-
 - name: Stop and remove any existing container
   docker_container:
     name: nginx-proxy
@@ -29,6 +19,48 @@
   docker_container:
     name: letsencrypt
     state: absent
+
+# BEGIN - Certs Sub-Folder Migration Tasks
+- name: Check if 'nginx_proxy' folder exists
+  stat:
+    path: /opt/nginx-proxy
+  register: nginx_proxy_folder
+
+- name: Check if 'certs' subfolder exists
+  stat:
+    path: /opt/nginx-proxy/certs
+  register: certs_folder
+
+- name: Move existing certs into a 'certs' subfolder
+  shell: |
+    rm -rf /tmp/cb_certs
+    mv /opt/nginx-proxy /tmp/cb_certs
+    mkdir /opt/nginx-proxy
+    mv /tmp/cb_certs /opt/nginx-proxy/certs
+    mv /opt/nginx-proxy/certs/htpasswd /opt/nginx-proxy/htpasswd
+    mv /opt/nginx-proxy/certs/vhost.d /opt/nginx-proxy/vhost.d
+    mv /opt/nginx-proxy/certs/proxy.conf /opt/nginx-proxy/proxy.conf
+    chown -R {{user}}:{{user}} /opt/nginx-proxy/
+    chmod -R 775 /opt/nginx-proxy/
+  when: (nginx_proxy_folder.stat.exists) and not (certs_folder.stat.exists)
+# END - Certs Sub-Folder Migration Tasks
+
+- name: Create nginx-proxy directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/nginx-proxy
+    - /opt/nginx-proxy/certs
+    - /opt/nginx-proxy/htpasswd
+    - /opt/nginx-proxy/vhost.d
+
+- name: Import proxy.conf
+  copy:
+    src: "proxy.conf"
+    dest: "/opt/nginx-proxy/proxy.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
 
 - name: Create and start container
   docker_container:
@@ -40,7 +72,7 @@
       - "443:443"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nginx-proxy:/etc/nginx/certs:ro"
+      - "/opt/nginx-proxy/certs:/etc/nginx/certs:ro"
       - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
@@ -64,7 +96,7 @@
     pull: yes
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nginx-proxy:/etc/nginx/certs:rw"
+      - "/opt/nginx-proxy/certs:/etc/nginx/certs:rw"
       - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     volumes_from:

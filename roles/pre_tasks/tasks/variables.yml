@@ -51,76 +51,6 @@
       )
       else false }}"
 
-- name: "Set 'pushover_api_token' variable when using older settings"
-  set_fact:
-    pushover_app_token: "{{backup.pushover_app_token}}"
-  when: not(
-        (backup.pushover_app_token is undefined)
-        or
-        (backup.pushover_app_token is none)
-        or
-        (backup.pushover_app_token | trim == '')
-        or
-        (backup.pushover_user_key is undefined)
-        or
-        (backup.pushover_user_key is none)
-        or
-        (backup.pushover_user_key | trim == '')
-      )
-
-- name: "Set 'pushover_api_token' variable when using older settings"
-  set_fact:
-    pushover_user_key: "{{backup.pushover_user_key}}"
-  when: not(
-        (backup.pushover_app_token is undefined)
-        or
-        (backup.pushover_app_token is none)
-        or
-        (backup.pushover_app_token | trim == '')
-        or
-        (backup.pushover_user_key is undefined)
-        or
-        (backup.pushover_user_key is none)
-        or
-        (backup.pushover_user_key | trim == '')
-      )
-
-- name: "Set 'pushover_enabled' variable"
-  set_fact:
-    pushover_enabled: "{{ true if not(
-        (pushover_app_token is undefined)
-        or
-        (pushover_app_token is none)
-        or
-        (pushover_app_token | trim == '')
-        or
-        (pushover_user_key is undefined)
-        or
-        (pushover_user_key is none)
-        or
-        (pushover_user_key | trim == '')
-        )
-      or not(
-        (pushover is undefined)
-        or
-        (pushover is none)
-        or
-        (pushover | trim == '')
-        or
-        (pushover.app_token is undefined)
-        or
-        (pushover.app_token is none)
-        or
-        (pushover.app_token | trim == '')
-        or
-        (pushover.user_key is undefined)
-        or
-        (pushover.user_key is none)
-        or
-        (pushover.user_key | trim == '')
-      )
-      else false }}"
-
 - name: "Set 'nzbs_downloads_path' variable"
   set_fact:
     nzbs_downloads_path:
@@ -199,8 +129,8 @@
         (nzbs_downloads_path is defined|default(false,true))
         or
         (old_nzbget_downloads_path is defined|default(false,true))
-        )
-        else false }}"
+      )
+      else false }}"
 
 - name: "Set 'torrents' role tag"
   set_fact:
@@ -208,5 +138,57 @@
         (torrents_downloads_path is defined|default(false,true))
         or
         (old_rutorrent_downloads_path is defined|default(false,true))
+      )
+      else false }}"
+
+- name: Set `suitarr_default_version` variable
+  set_fact:
+    suitarr_default_version: "image"
+
+- name: Check if 'suitarr.version' was specified
+  set_fact:
+    suitarr_version_is_specified: "{{ true if not (
+        (suitarr is undefined)
+        or
+        (suitarr is none)
+        or
+        (suitarr | trim == '')
+        or
+        (suitarr.version is undefined)
+        or
+        (suitarr.version is none)
+        or
+        (suitarr.version | trim == '')
+      )
+      else false }}"
+
+- name: Validate and set proper 'suitarr' key variables
+  set_fact:
+    suitarr_tmp: { version: "{{ (suitarr.version) if (
+        (suitarr_version_is_specified)
+        and
+        (suitarr.version != 'default')
+        and
+        ((suitarr.version == 'unstable') or (suitarr.version == 'stable') or (suitarr.version == 'image'))
+      )
+      else (suitarr_default_version) }}" }
+
+- name: Merge changes back to 'suitarr' key
+  set_fact:
+    suitarr: "{{ (suitarr_tmp) if (
+        (suitarr is undefined)
+        or
+        (suitarr is none)
+        or
+        (suitarr | trim == '')
         )
-        else false }}"
+      else ((suitarr) | combine(suitarr_tmp))  }}"
+
+- name: "Set 'sma_enabled' role tag"
+  set_fact:
+    sma_enabled: "{{ true if (
+        (sickbeard_mp4_automator is defined)
+        and
+        (sickbeard_mp4_automator)
+        )
+      else false }}"

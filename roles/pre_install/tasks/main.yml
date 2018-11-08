@@ -3,13 +3,13 @@
 # Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.rocks          #
+#         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Ensure using kernel 4.10 or newer
-  fail: msg="You must be using kernel 4.10.0-32-generic or newer! Use --tags kernel to upgrade first!"
+- name: Ensure kernel version is 4.10 or higher
+  fail: msg="You must be using kernel version 4.10 or higher!"
   when: ansible_kernel is version_compare('4.10', '<')
 
 - name: Create common groups
@@ -88,6 +88,7 @@
     - "{{playbook_dir}}/*.yml"
     - "{{playbook_dir}}/*.cfg"
     - "{{playbook_dir}}/*.conf"
+    - "{{playbook_dir}}/*.txt"
   ignore_errors: yes
   when: (playbook_dir != cloudbox_home_folder) and not (continuous_integration)
 
@@ -103,12 +104,10 @@
     shell: "id -un {{user}} >/dev/null 2>&1;"
     register: user_check
     failed_when: user_check.rc > 1
-    tags: always
 
   - name: "Fail when user account does not exist"
     fail:
       msg: "The user '{{user}}' does not exist!"
     when: user_check.rc == 1
-    tags: always
 
   when: not continuous_integration

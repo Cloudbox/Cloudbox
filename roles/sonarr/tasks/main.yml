@@ -1,8 +1,9 @@
 #########################################################################
-# Title:         Cloudbox: Sonarr Role                                  #
-# Author(s):     L3uddz, Desimaniac                                     #
-# URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Title:            Cloudbox: Sonarr Role                               #
+# Author(s):        L3uddz, Desimaniac                                  #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# Docker Image(s):  hotio/suitarr,                                      #
+#                   andrewkhunn/suitarr_mp4_automator                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -57,6 +58,10 @@
   with_items:
     - /opt/sonarr
 
+- name: Set 'suitarr_image' variable
+  set_fact:
+    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator','hotio/suitarr') }}"
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -69,12 +74,12 @@
 - name: Create and start container
   docker_container:
     name: sonarr
-    image: "hotio/suitarr:sonarr"
+    image: "{{suitarr_image}}:sonarr"
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8989"
     env:
-      VERSION: "unstable"
+      VERSION: "{{suitarr.version}}"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"

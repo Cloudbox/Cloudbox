@@ -88,7 +88,7 @@
     published_ports:
       - "127.0.0.1:5076:5076"
     env:
-      VERSION: "unstable"
+      VERSION: "{{suitarr.version}}"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"

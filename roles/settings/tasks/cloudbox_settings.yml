@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Cloudbox Settings Sub-Task                   #
+# Title:         Settings: Cloudbox Settings                            #
 # Author(s):     L3uddz, Desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,32 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- block:
-  # Decryption Tasks
+- name: Cloudbox Settings Updater Block
+  block:
+
+  # Check for and import settings files.
   - name: "Check if '{{item}}' exists."
     stat:
       path: "{{playbook_dir}}/{{item}}"
     register: file0
 
-  - name: "Check '{{item}}' for encryption."
-    shell: "head -1 {{item}} | grep -q \\$ANSIBLE_VAULT"
-    register: encryption_check
-    ignore_errors: yes
-    failed_when: encryption_check.rc > 1
-    when: file0.stat.exists
-
-  - name: "Set 'file_is_encrypted' variable."
-    set_fact:
-      file_is_encrypted: "{{ ((encryption_check.rc == 0) | default(false,true)) }}"
-    when: file0.stat.exists
-
-  - name: "Decrypt '{{item}}' when encrypted."
-    shell: "ansible-vault decrypt {{item}}"
-    become: yes
-    become_user: "{{cloudbox_yml.stat.pw_name}}"
-    when: file0.stat.exists and file_is_encrypted
-
-  # Normal Tasks
   - name: "Copy '{{item}}.default' to '{{item}}'."
     copy:
       src: "{{playbook_dir}}/defaults/{{item}}.default"
@@ -44,27 +27,29 @@
       force: yes
     when: not file0.stat.exists
 
-  - name: "Get stats on '{{item}}' for hash check."
-    stat:
-      path: "{{playbook_dir}}/{{item}}"
-    register: file
+  # Decryption Tasks
+  - name: Decryption Block
+    block:
 
-  # Hash Check
-  - name: "Get stats on '{{item}}.default' for hash check."
-    stat:
-      path: "{{playbook_dir}}/defaults/{{item}}.default"
-    register: file_default
-    when: item == 'accounts.yml'
+    - name: "Check '{{item}}' for encryption."
+      shell: "head -1 {{item}} | grep -q \\$ANSIBLE_VAULT"
+      register: encryption_check
+      ignore_errors: yes
+      failed_when: encryption_check.rc > 1
 
-  # Hash Check
-  - name: "Ensure '{{item}}' does not match '{{item}}.default'."
-    assert:
-      that:
-        - file.stat.exists
-        - file.stat.checksum != file_default.stat.checksum
-      msg: "You have not edited your '{{item}}' file, yet. Please fill in your settings and retry. For more info, see the Wiki page 'Install: Settings'."
-    when: item == 'accounts.yml'
+    - name: "Set 'file_is_encrypted' variable."
+      set_fact:
+        file_is_encrypted: "{{ ((encryption_check.rc == 0) | default(false,true)) }}"
 
+    - name: "Decrypt '{{item}}' when encrypted."
+      shell: "ansible-vault decrypt {{item}}"
+      become: yes
+      become_user: "{{cloudbox_yml.stat.pw_name}}"
+      when: file_is_encrypted
+
+    when: file0.stat.exists
+
+  # settings-updater.py tasks
   - name: "Run 'settings-updater.py' for '{{item}}'."
     script: "roles/settings/files/settings-updater.py '{{playbook_dir}}' 'defaults/{{item}}.default' '{{item}}'"
     become: yes
@@ -73,21 +58,20 @@
     ignore_errors: yes
     failed_when: settings_updater.rc == 1
 
-  - name: "Check 'settings-updater.py' run status for errors with updating 'adv_settings.yml'."
-    debug: msg="The script 'settings_updater.py' exited with an error when updating 'adv_settings.yml. Check 'settings-updater.log' for details."
-    when: "(item == 'adv_settings.yml') and (settings_updater.rc == 1)"
+  - name: Build 'files_updated_successfully' list
+    set_fact:
+      files_updated_successfully: "{{ files_updated_successfully }} + [ '{{ item }}' ]"
+    when: settings_updater.rc == 2
 
-  - name: "Check 'settings-updater.py' run status for new settings in 'adv_settings.yml'."
-    debug: msg="The script 'settings_updater.py' added new settings to 'adv_settings.yml'. Check 'settings-updater.log' for details."
-    when: "(item == 'adv_settings.yml') and (settings_updater.rc == 2)"
+  - name: Build 'files_updated_unsuccessfully' list
+    set_fact:
+      files_updated_unsuccessfully: "{{ files_updated_unsuccessfully }} + [ '{{ item }}' ]"
+    when: settings_updater.rc == 1
 
-  - name: "Check 'settings-updater.py' run status for errors with updating '{{item}}'."
-    fail: msg="The script 'settings_updater.py' exited with an error when updating '{{item}}'. Check 'settings-updater.log' for details."
-    when: "(item == 'accounts.yml' or item == 'settings.yml') and (settings_updater.rc == 1)"
-
-  - name: "Check 'settings-updater.py' run status for new settings in '{{item}}'."
-    fail: msg="The script 'settings_updater.py' added new settings to '{{item}}'. Check 'settings-updater.log' for details."
-    when: "(item == 'accounts.yml' or item == 'settings.yml') and (settings_updater.rc == 2)"
+  - name: Set 'exit_is_necessary' variable
+    set_fact:
+      exit_is_necessary: true
+    when: (settings_updater.rc == 2) or (settings_updater.rc == 1)
 
   always:
   - name: "Re-encrypt '{{item}}' if previously encrypted."

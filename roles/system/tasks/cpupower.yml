@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: CPU Power Task                               #
-# Author(s):     L3uddz, EnorMOZ                                        #
+# Title:         System: CPU Power Task                                 #
+# Author(s):     L3uddz, EnorMOZ, Desimaniac                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,68 +8,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install required packages
-  apt: "name={{item}} state=latest"
-  with_items:
-    - cpufrequtils
-    - linux-tools-common
-    - linux-tools-generic
-
-- name: "Install linux-tools-{{ ansible_kernel }}"
-  shell: "apt-get install -qq $(apt-cache search -n linux-tools-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
-  ignore_errors: yes
-
-- name: Check /etc/default/cpufrequtils exists
-  stat:
-    path: /etc/default/cpufrequtils
-  register: cpufrequtils_file
-
-- name: Create /etc/default/cpufrequtils
-  file:
-    path: /etc/default/cpufrequtils
-    state: touch
-  when: cpufrequtils_file.stat.exists == False
-
-- name: Set CPU frequency scaling governor to performance
-  lineinfile:
-    path: "/etc/default/cpufrequtils"
-    regexp: '^GOVENOR\s?='
-    line: 'GOVENOR="performance"'
-    state: present
-
-- name: Set CPU frequency scaling governor to performance
-  lineinfile:
-    path: "/etc/default/cpufrequtils"
-    regexp: '^GOVERNOR\s?='
-    line: 'GOVERNOR="performance"'
-    state: present
-
-- name: Ensure governor is enabled
-  lineinfile:
-    path: "/etc/default/cpufrequtils"
-    regexp: '^ENABLE\s?='
-    line: 'ENABLE="true"'
-    state: present
-
-- name: Disable ondemand CPU frequency scaling daemon
-  shell: "update-rc.d ondemand disable"
-  when: ansible_distribution_version == "16.04"
-
-- name: Check service exists
+- name: Check if cpupower.service exists
   stat:
     path: "/etc/systemd/system/cpupower.service"
   register: cpupower_service
 
-- name: Import cpupower.service
-  template:
-    src: cpupower.service
-    dest: /etc/systemd/system/cpupower.service
-    force: yes
-  when: cpupower_service.stat.exists == False
-
-- name: Start cpupower service
+- name: Stop and disable cpupower.service
   systemd:
-    state: started
+    state: stopped
     name: cpupower
     daemon_reload: yes
-    enabled: yes
+    enabled: no
+  ignore_errors: yes
+  when: cpupower_service.stat.exists
+
+- name: Delete cpupower.service
+  file:
+    path: /etc/systemd/system/cpupower.service
+    state: absent
+  when: cpupower_service.stat.exists

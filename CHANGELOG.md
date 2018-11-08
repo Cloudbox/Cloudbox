@@ -30,6 +30,69 @@ Changelog Format:
 # Changelog
 ## [Unreleased]
 
+## [1.3.0] - 2018-11-08
+
+- Kernel: Changed order in playbook file to run before/without settings updater.
+- Backup: Removed plexdrive cache file from excludes list.
+- Ombi: Corrected docker image name in role banner.
+- Backup: Set rclone drive chunk size to 128M.
+- CloudPlow: Set default config's rclone drive chunk size to 128M.
+- Restore: Set rclone drive chunk size to 128M.
+- Scripts: Added `download_torrents_from_google.sh` and `sync_torrents_to_google.sh` to sync torrent download folder to google, and to copy from google to local disk. Useful if wanting to keep downloaded torrents when moving server.
+- Plex: Added db_cache_size option to `adv_settings.yml`.
+- Plexdrive: Added `ExecStartPre` line to the service file to give it more time to start.
+- Organizr: Updated docker image to `organizrtools/organizr-v2:plex`.
+- System: Set vnstat to proper default interface.
+- System: Replaced APT module for upgrading APT with shell command.
+- Settings: Ansible will now quit after a new items are added to `adv_settings.yml`.
+- Pushover: Reorganized tasks.
+- Backup/Restore: Reorganized config and tasks.
+  - Backup has a new playbook, `backup.yml`. Will allow for clean cron tasks.
+  - Backup and Restore will also use a new settings file, `backup_config.yml`. This will make the main `settings.yml` easier to read for new users.
+- Shell: Moved shell option from `adv_settings.yml` to `settings.yml`.
+- AppVeyor: Updated to reflect new `backup_config.yml`.
+- TorrentCleaner: Added fault tolerance to arguments.
+- Backup/Restore: Renamed `backup_excludes.txt` to `backup_excludex_list.txt`.
+- Restore: Restore backed up `backup_excludes_list.txt` file.
+- Backup: Added support for Cloudbox Vault Service.
+- Backup: Updated cron task to reflect new backup.yml playbook.
+- Restore: Now calls Pre_Install role to make sure user account exists and create one if it doesn't.
+- Rclone: `rclone.conf` will now be set to correct permissions, when importing from playbook dir.
+- Letsencrypt: Store certs in `/opt/nginx-proxy/certs`.
+- Letsencrypt: Migrate existing certs over to `/opt/nginx-proxy/certs`.
+- System: Removed `cpupower.service`.
+  - Was causing problems for certain users.
+- Kernel: Added auto mainline kernel updater
+  - By default, the kernel version `4.18.6` is installed (the most recent and stable version).
+  - However, you can set a custom kernel version in `adv_settings.yml` as well. Be sure to put this in quotes or else trailing zeroes in single dot versions will drop off (eg `4.10` will become `4.1`).
+- Gitignore: Filter out `.DS_Store` for Macs.
+- Suitarr: Added option to set Docker image version via `adv_settings.yml`.
+  - Choices are `default` (let Cloudox decide), `image`, `stable`, and `unstable`.
+  - Currently Cloudbox `default` is set to `unstable`.
+- ZSH: Auto update Oh My Zsh without prompt.
+- Scripts: PAS URL Script can now take `-s`/`--simple` arguments to pass only url with no formatting or banners.
+- Nginx-Proxy: Updated proxy.conf to fix blocking of iframes.
+  - Will not update existing installs. To do so, remove `/opt/nginx-proxy/proxy.conf` and rerun `nginx-proxy` tag.
+- Restore: Renamed `/opt/` permissions fix tag to `opt-permissions-reset`.
+- Settings: Will now exit just once after all the setting files have been updated vs exiting after each one.
+- Readme: Expanded donation section.
+- NZBGet: Adds unpauser schedule task to new config.
+- NZBGet: Took out completion checker script for new installs.
+  - Does not work too well (ie pause + download  + pause + download, etc is slower than just downloading until it fails and I also don't see a need for it when most have unlimited provider accounts, anyway).
+  - If anyone still wants it, they can download themselves and drop it in the scripts folder.
+- Plex: Renamed `allow_high_output_bitrates` to `force_high_output_bitrates` in `adv_settings.yml`.
+- Ansible: Added new jinja filter 'pluralize'.
+  - It's a modified version of the one available here: https://github.com/audreyr/jinja2_pluralize
+- Plexdrive: Set max-chunks, in default service file, to `150` when system RAM is < 16 GB. Affects new users only.
+- Appveyor: Updated build number format. It will now be `Current Tag Version - New Commits since` (eg `1.2.9-118`).
+- Suitarr: Set `default` docker image version to `image`.
+- [Sickbeard MP4 Automator](https://github.com/mdhiggins/sickbeard_mp4_automator)
+  - Wiki guide: https://github.com/Cloudbox/Cloudbox/wiki/Extra%3A-Sickbeard-MP4-Automator
+  - Initially submitted by Andrew Khunn.
+- Resilio Sync: Renamed role, `/opt` folder, and tag to `resilio-sync`. Subdomain is now `resiliosync`.
+  - Existing installs will be migrated automatically when tag is ran.
+
+
 ## [1.2.9] - 2018-09-26
 
 ### Changed
@@ -699,6 +762,7 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.3.0]: https://github.com/cloudbox/cloudbox/compare/v1.2.9...v1.3.0
 [1.2.9]: https://github.com/cloudbox/cloudbox/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/cloudbox/cloudbox/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/cloudbox/cloudbox/compare/v1.2.6...v1.2.7
