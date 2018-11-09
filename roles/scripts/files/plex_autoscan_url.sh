@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #########################################################################
 # Title:         Plex Autoscan URL Script                               #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Description:   Prints out the Plex Autoscan URL.                      #
 # --                                                                    #
@@ -49,7 +49,7 @@ function banner2() {
 echo -e "
 ${GREEN}┌───────────────────────────────────────────────────────────────────────────────────┐
 ${GREEN}│ Title:             Plex Autoscan URL Script                                       │
-${GREEN}│ Author(s):         Desimaniac                                                     │
+${GREEN}│ Author(s):         desimaniac                                                     │
 ${GREEN}│ URL:               https://github.com/cloudbox/cloudbox                           │
 ${GREEN}│ Description:       Prints out the Plex Autoscan URL.                              │
 ${GREEN}├───────────────────────────────────────────────────────────────────────────────────┤

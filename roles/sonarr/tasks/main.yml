@@ -1,6 +1,6 @@
 #########################################################################
 # Title:            Cloudbox: Sonarr Role                               #
-# Author(s):        L3uddz, Desimaniac                                  #
+# Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
 # Docker Image(s):  hotio/suitarr,                                      #
 #                   andrewkhunn/suitarr_mp4_automator                   #
