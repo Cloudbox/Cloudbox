@@ -2,29 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 Changelog Format:
+
+Body:
 
 ## [Unreleased]
 
 ## [X.X.X] - YYYY-MM-DD
 
-### Added
-- entry.
+Commits listed in ascending order based on the date.
 
-### Changed
-- entry.
+Links:
 
-### Removed
-- entry.
+[MAJOR_VERSION(X).MINOR_VERSION(Y).PATCH_VERSION(Z)]: https://github.com/cloudbox/cloudbox/compare/X.Y.Z-1...X.Y.Z
 
-### Fixed
-- entry.
-
-
-[X.X.X]: https://github.com/cloudbox/cloudbox/compare/vX.X.X-1...vX.X.X
 -->
 
 # Changelog
@@ -770,10 +763,10 @@ git reset --hard 58964a8
 
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
-[1.3.1]: https://github.com/cloudbox/cloudbox/compare/v1.3.0...v1.3.1
-[1.3.0]: https://github.com/cloudbox/cloudbox/compare/v1.2.9...v1.3.0
-[1.2.9]: https://github.com/cloudbox/cloudbox/compare/v1.2.8...v1.2.9
-[1.2.8]: https://github.com/cloudbox/cloudbox/compare/v1.2.7...v1.2.8
+[1.3.1]: https://github.com/cloudbox/cloudbox/compare/1.3.0...1.3.1
+[1.3.0]: https://github.com/cloudbox/cloudbox/compare/1.2.9...1.3.0
+[1.2.9]: https://github.com/cloudbox/cloudbox/compare/1.2.8...1.2.9
+[1.2.8]: https://github.com/cloudbox/cloudbox/compare/v1.2.7...1.2.8
 [1.2.7]: https://github.com/cloudbox/cloudbox/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/cloudbox/cloudbox/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/cloudbox/cloudbox/compare/v1.2.4...v1.2.5
