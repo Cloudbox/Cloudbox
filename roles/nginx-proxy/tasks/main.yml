@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Nginx-Proxy Role                             #
-# Author(s):     L3uddz                                                 #
+# Author(s):     l3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Images: jwilder/nginx-proxy                                    #
 #                jrcs/letsencrypt-nginx-proxy-companion                 #

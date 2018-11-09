@@ -44,7 +44,9 @@ Changelog Format:
 - Backup: Set rclone drive chunk size to 128M.
 - CloudPlow: Set default config's rclone drive chunk size to 128M.
 - Restore: Set rclone drive chunk size to 128M.
-- Scripts: Added `download_torrents_from_google.sh` and `sync_torrents_to_google.sh` to sync torrent download folder to google, and to copy from google to local disk. Useful if wanting to keep downloaded torrents when moving server.
+- Scripts: Added `download_torrents_from_google.sh` and `sync_torrents_to_google.sh`
+  - Use to sync torrent download folder to google, and to copy from google to local disk.
+  - Useful if wanting to keep downloaded torrents when moving server.
 - Plex: Added db_cache_size option to `adv_settings.yml`.
 - Plexdrive: Added `ExecStartPre` line to the service file to give it more time to start.
 - Organizr: Updated docker image to `organizrtools/organizr-v2:plex`.
@@ -58,7 +60,7 @@ Changelog Format:
 - Shell: Moved shell option from `adv_settings.yml` to `settings.yml`.
 - AppVeyor: Updated to reflect new `backup_config.yml`.
 - TorrentCleaner: Added fault tolerance to arguments.
-- Backup/Restore: Renamed `backup_excludes.txt` to `backup_excludex_list.txt`.
+- Backup/Restore: Renamed `backup_excludes.txt` to `backup_excludes_list.txt`.
 - Restore: Restore backed up `backup_excludes_list.txt` file.
 - Backup: Added support for Cloudbox Vault Service.
 - Backup: Updated cron task to reflect new backup.yml playbook.
@@ -94,7 +96,7 @@ Changelog Format:
 - Suitarr: Set `default` docker image version to `image`.
 - [Sickbeard MP4 Automator](https://github.com/mdhiggins/sickbeard_mp4_automator)
   - Wiki guide: https://github.com/Cloudbox/Cloudbox/wiki/Extra%3A-Sickbeard-MP4-Automator
-  - Initially submitted by Andrew Khunn.
+  - Initially submitted by andrewkhunn.
 - Resilio Sync: Renamed role, `/opt` folder, and tag to `resilio-sync`. Subdomain is now `resiliosync`.
   - Existing installs will be migrated automatically when tag is ran.
 
@@ -558,7 +560,7 @@ git reset --hard 58964a8
 - Python modules
   - netaddr - for Ansible's `ipv4` filter.
   - dnspython - for Ansible's `dig` lookup.
-- [Heimdall](https://heimdall.site/) (_[Captain-NaCl](https://github.com/Captain-NaCl)_)
+- [Heimdall](https://heimdall.site/) (_[TheBradz](https://github.com/TheBradz)_)
   - subdomain: `heimdall`
   - install: `--tags install-heimdall`
   - folder: `/opt/heimdall`
@@ -612,7 +614,7 @@ git reset --hard 58964a8
   - install: `--tags install-thelounge`
   - folder: `/opt/thelounge`
 - [ZNC](https://wiki.znc.in/ZNC)
-  - Uses ZNC Docker image by [Horjulf](https://github.com/horjulf/docker-znc).
+  - Uses ZNC Docker image by [horjulf](https://github.com/horjulf/docker-znc).
   - subdomain: `znc`
   - install: `--tags install-znc`
   - folder: `/opt/znc`
@@ -721,7 +723,7 @@ git reset --hard 58964a8
 
 ### Changed
 - [ruTorrent](https://github.com/Novik/ruTorrent)
-  - Now uses ruTorrent Docker image by [Horjulf](https://github.com/horjulf/docker-rutorrent-autodl).
+  - Now uses ruTorrent Docker image by [horjulf](https://github.com/horjulf/docker-rutorrent-autodl).
   - subdomain: `rutorrent`
   - install: `--tags update-rutorrent`
   - folder: `/opt/rutorrent`

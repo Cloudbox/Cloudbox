@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Backup Excludes List                         #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #

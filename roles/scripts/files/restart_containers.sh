@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Restart Running Containers Script                      #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Description:   Stop running containers and start them back up.        #
 # --                                                                    #
@@ -19,7 +19,7 @@ echo -e "
 $GREEN
  ┌───────────────────────────────────────────────────────────────────────────────────┐
  │ Title:             Restart Running Containers Script                              │
- │ Author(s):         Desimaniac                                                     │
+ │ Author(s):         desimaniac                                                     │
  │ URL:               https://github.com/cloudbox/cloudbox                           │
  │ Description:       Stop running containers and start them back up.                │
  ├───────────────────────────────────────────────────────────────────────────────────┤

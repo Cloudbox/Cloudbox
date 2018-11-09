@@ -63,7 +63,7 @@ If you find this project helpful, feel free to make a small donation to the deve
 
   - BTC: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL
 
-- [desimaniac](https://github.com/Desimaniac) (developer)
+- [desimaniac](https://github.com/desimaniac) (developer)
 
   - [Square Cash](https://cash.me/$desimaniac): Credit Card
 
