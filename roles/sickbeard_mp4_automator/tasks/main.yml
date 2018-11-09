@@ -49,8 +49,6 @@
   include_tasks: "update_docker_images.yml"
   loop:
     - "sonarr"
-    - "sonarr4k"
     - "radarr"
-    - "radarr4k"
   loop_control:
     loop_var: app
