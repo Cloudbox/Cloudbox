@@ -125,6 +125,7 @@
     - yq
     - lxml
     - apprise
+    - jmespath
   ignore_errors: yes
 
 - name: Install z
