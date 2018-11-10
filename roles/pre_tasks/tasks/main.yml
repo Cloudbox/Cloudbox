@@ -16,8 +16,12 @@
   import_tasks: "clean_paths.yml"
   tags: always
 
-- name: Set Cloudbox Variables
-  import_tasks: "variables.yml"
+- name: Set Cloudbox vars
+  import_tasks: "vars.yml"
+  tags: always
+
+- name: Set Cloudbox role vars
+  import_tasks: "role_vars.yml"
   tags: always
 
 # Sub-Domain Tasks

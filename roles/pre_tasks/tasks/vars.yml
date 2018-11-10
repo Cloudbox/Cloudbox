@@ -123,24 +123,6 @@
         (rutorrent.downloads | trim == '')
       )
 
-- name: "Set 'nzbs' role tag"
-  set_fact:
-    nzbs: "{{ true if (
-        (nzbs_downloads_path is defined|default(false,true))
-        or
-        (old_nzbget_downloads_path is defined|default(false,true))
-      )
-      else false }}"
-
-- name: "Set 'torrents' role tag"
-  set_fact:
-    torrents: "{{ true if (
-        (torrents_downloads_path is defined|default(false,true))
-        or
-        (old_rutorrent_downloads_path is defined|default(false,true))
-      )
-      else false }}"
-
 - name: Set `suitarr_default_version` variable
   set_fact:
     suitarr_default_version: "image"
