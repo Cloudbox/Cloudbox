@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Fix timezone task
+  import_tasks: "timezone.yml"
+  ignore_errors: yes
+
 - name: apt tasks
   include_tasks: "apt.yml"
 
