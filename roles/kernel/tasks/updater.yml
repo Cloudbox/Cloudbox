@@ -199,6 +199,10 @@
       with_items: "{{ kernel_versions_to_be_removed }}"
       when: (kernel_versions_to_be_removed | trim != "")
 
+    - name: Wait 15 seconds before continuing
+      wait_for:
+        timeout: 15
+
     - name: Fix any potential apt issues
       shell: apt-get --fix-broken --yes install
 
