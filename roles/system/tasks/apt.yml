@@ -8,8 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Fix any apt issues
-  shell: sudo apt-get -f install -y
+- name: Fix any potential apt issues
+  shell: apt-get --fix-broken --yes install
 
 - name: Update apt packages list
   apt:
