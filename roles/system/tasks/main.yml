@@ -8,13 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: System apt task
+- name: apt tasks
   include_tasks: "apt.yml"
 
-- name: System sysctl task
+- name: sysctl tasks
   include_tasks: "systctl.yml"
 
-- name: System mounts task
+- name: Mounts tasks
   include_tasks: "mounts.yml"
 
 - name: Check if intel_pstate directory exists.
@@ -22,10 +22,10 @@
     path: /sys/devices/system/cpu/intel_pstate
   register: p
 
-- name: System CPU Frequency task
+- name: CPU Frequency tasks
   include_tasks: "cpufrequency.yml"
   when: p.stat.isdir is defined and p.stat.isdir
 
-- name: System CPU Power task
+- name: CPU Power tasks
   include_tasks: "cpupower.yml"
   when: p.stat.isdir is defined and p.stat.isdir
