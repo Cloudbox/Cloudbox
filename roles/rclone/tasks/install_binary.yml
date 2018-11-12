@@ -77,4 +77,4 @@
 
 - name: "Display rclone version"
   debug:
-    msg: "Installed Rclone version: {{rclone_version.stdout}}"
+    msg: "Rclone version {{rclone_version.stdout}} installed."
