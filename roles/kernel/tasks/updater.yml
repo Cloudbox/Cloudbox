@@ -48,20 +48,24 @@
       else (
         (kernel.version) | regex_replace('(v\\.|v)', ''))  }}"
 
+- name: Display the specified kernel version
+  debug:
+    msg: "The kernel version specified by you was: {{ desired_kernel_version }}"
+
 # Make sure adv_settings.yml has the mininum kernel supported.
 - name: Sanity check for mininum kernel version for Ubuntu 16.04
   debug:
-    msg: "The kernel version specified was {{ desired_kernel_version }}. The minimum supported kernel version on Ubuntu 16.04, with Cloudbox, is 4.10. Kernel updater will install the 'default' kernel version, {{ default_kernel_version }}, instead."
+    msg: "The minimum supported kernel version on Cloudbox with Ubuntu 16.04 is 4.10. Kernel updater will install the 'default' kernel version, {{ default_kernel_version }}, instead."
   when: (desired_kernel_version is version('4.10', '<')) and (ansible_distribution_version is version('16.04', '=='))
 
 - name: Sanity check for mininum kernel version for Ubuntu 18.04
   debug:
-    msg: "The kernel version specified was {{ desired_kernel_version }}. The minimum supported kernel version on Ubuntu 18.04 is 4.15. Kernel updater will install the 'default' kernel version, {{ default_kernel_version }}, instead."
+    msg: "The minimum supported kernel version on Ubuntu 18.04 is 4.15. Kernel updater will install the 'default' kernel version, {{ default_kernel_version }}, instead."
   when: (desired_kernel_version is version('4.15', '<')) and (ansible_distribution_version is version('18.04', '=='))
 
 - name: Sanity check for mininum kernel version for Ubuntu 18.10
   debug:
-    msg: "The kernel version specified was {{ desired_kernel_version }}. The minimum supported kernel version on Ubuntu 18.10 is 4.18. Kernel updater will install the 'default' kernel version, {{ default_kernel_version }}, instead."
+    msg: "The minimum supported kernel version on Ubuntu 18.10 is 4.18. Kernel updater will install the 'default' kernel version, {{ default_kernel_version }}, instead."
   when: (desired_kernel_version is version('4.18', '<')) and (ansible_distribution_version is version('18.10', '=='))
 
 - name: Set incompatible kernel versions to {{default_kernel_version}}
