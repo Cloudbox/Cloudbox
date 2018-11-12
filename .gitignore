@@ -6,10 +6,14 @@
 /rclone.conf
 /backup_config.yml
 /backup_excludes_list.txt
-/backup.lock
-/cloudbox.retry
 /*.log
 
+# Ansible
+/backup.lock
+/cloudbox.retry
 
 # MacOS
 .DS_Store
+
+# Python
+*.pyc
