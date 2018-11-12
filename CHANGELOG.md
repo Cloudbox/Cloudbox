@@ -68,7 +68,7 @@ Links:
 - Kernel: Added auto mainline kernel updater
   - By default, the kernel version `4.18.6` is installed (the most recent and stable version).
   - However, you can set a custom kernel version in `adv_settings.yml` as well. Be sure to put this in quotes or else trailing zeroes in single dot versions will drop off (eg `4.10` will become `4.1`).
-- Gitignore: Filter out `.DS_Store` for Macs.
+- Git: Filter out `.DS_Store` for Macs.
 - Suitarr: Added option to set Docker image version via `adv_settings.yml`.
   - Choices are `default` (let Cloudox decide), `image`, `stable`, and `unstable`.
   - Currently Cloudbox `default` is set to `unstable`.
@@ -156,7 +156,7 @@ Links:
 - Pre-Install: Cleaned up role a bit.
 - Pre-Install: Created variable `cloudflare_enabled`.
 - Cloudflare: Made use of cloudflare_enabled variable.
-- Gitignore: Added `rclone.conf` so having it in cloudbox folder doesnt git conflict.
+- Git: Added `rclone.conf` to `.gitignore` so that having it in the `cloudbox` folder does not caus any conflict.
 - Ansible: Enabled hash merge behavior (`hash_behavior`) in `ansible.cfg` (for new users).
 - Backup: Added a default `backup_excludes.txt` into the backup role.
   - If you want to have a custom excludes list, simply drop a `backup_excludes.txt` file in the cloudbox folder, and backup will use that one instead.
@@ -425,7 +425,7 @@ Links:
 - Docker: Force the installation of `docker-ce v17.09.0`
     - This is to prevent issues mentioned here: https://github.com/moby/moby/issues/35933.
 - General: Fixed misc SSL errors with Github links.
-- Gitignore: Added `.gitignore` to repo.
+- Git: Added `.gitignore` to repo.
   - `git pull` will no longer have conflicts with logs, retry files, etc.
 - Docker: Prevent it from being updated by placing version "on hold".
 - Backup: Added `keep_local_copy` option in `settings.yml` to keep or remove local backup (`cloudbox.tar`).
