@@ -22,7 +22,7 @@
       return_content: yes
     register: timezone_response
 
-  - name: "Set time zone to '{{ timezone_response.content | trim }}'"
+  - name: Set correct time zone when linked to folder
     timezone:
       name: "{{ timezone_response.content | trim }}"
 
