@@ -13,6 +13,7 @@
   with_items:
     - unzip
     - man-db
+    - jq
 
 - name: Create rclone directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
@@ -45,25 +46,72 @@
       )
       else false }}"
 
-- name: Set rclone_download_url for current version
-  set_fact:
-    rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
-  when: (not rclone_version_is_specified) or (rclone.version == 'latest') or (rclone.version == 'current')
+- name: Display rclone version specified
+  debug:
+    msg: "Rclone version specified: {{ rclone.version }}"
+  when: rclone_version_is_specified
 
-- name: Set rclone_download_url for beta version
+- name: Check if github rate limit is active
+  shell: curl -s https://api.github.com/repos/ncw/rclone/git/refs/tags | head -n 4
+  register: github_rate_limit_check
+
+- name: Set 'github_rate_limited'
   set_fact:
+    github_rate_limited: "{{ true if ('API rate limit exceeded' in github_rate_limit_check.stdout_lines) else false}}"
+
+- name: Display message about GitHub API limit
+  debug:
+    msg: "GitHub API limit has been reached. Unable to check if Rclone version {{ rclone.version }} is available. Will install the latest available version instead."
+  when: github_rate_limited
+
+- name: Set vars for current version
+  set_fact:
+    rclone_version_specified: "{{ rclone.version }}"
+    rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
+  when: (not rclone_version_is_specified) or (rclone.version == 'latest') or (rclone.version == 'current') or (github_rate_limited)
+
+- name: Set vars for beta version
+  set_fact:
+    rclone_version_specified: "{{ rclone.version }}"
     rclone_download_url: "https://beta.rclone.org/rclone-beta-latest-linux-amd64.zip"
   when: (rclone_version_is_specified) and (rclone.version == 'beta')
 
-- name: Set rclone_download_url for specified version
+- name: Set temp 'rclone_version_specified0' var for specified version
   set_fact:
-    rclone_download_url: 'https://downloads.rclone.org/v{{ "%.2f"|format(rclone.version) }}/rclone-v{{ "%.2f"|format(rclone.version) }}-linux-amd64.zip'
-  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current'))
-  ignore_errors: yes
+    rclone_version_specified0: "{{ ('%.2f'|format(rclone.version|float)) if ((rclone.version | type_debug == 'float') or (rclone.version | type_debug == 'int')) else ( '%.2f'|format((rclone.version | regex_replace('(^v\\.|^v)', '')) | float) )}}"
+  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current')) and (not github_rate_limited)
+
+- name: Check if version '{{ rclone_version_specified0 }}' is available
+  shell: curl -s https://api.github.com/repos/ncw/rclone/git/refs/tags | jq -r  '.[] | .ref' | sed 's/\/\?refs\/tags\/v//g' | grep '{{ rclone_version_specified0 }}'
+  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current')) and (not github_rate_limited)
+  register: rclone_version_specified0_check
+  failed_when: rclone_version_specified0_check.rc > 1
+
+- name: Set vars for specified version if available
+  set_fact:
+    rclone_version_specified: "{{ rclone_version_specified0 }}"
+    rclone_download_url: 'https://downloads.rclone.org/v{{ rclone_version_specified0 }}/rclone-v{{ rclone_version_specified0 }}-linux-amd64.zip'
+  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current')) and (not github_rate_limited) and ((rclone_version_specified0_check.stdout | trim != ''))
+
+- name: Display message if specified version is not available
+  debug:
+    msg: "Rclone version {{ rclone_version_specified0 }} is not available. Will install the latest available version instead."
+  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current')) and (not github_rate_limited) and (rclone_version_specified0_check.stdout | trim == '')
+
+- name: Set vars for specified version if not available
+  set_fact:
+    rclone_version_specified: "latest"
+    rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
+  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current')) and (not github_rate_limited) and (rclone_version_specified0_check.stdout | trim == '')
+
+- name: Display rclone version being installed
+  debug:
+    msg: "Installing Rclone version: {{ rclone_version_specified }}"
+  when: rclone_version_is_specified
 
 - name: "Download and unarchive rclone"
   unarchive:
-    src: "{{ rclone_download_url | default('https://downloads.rclone.org/rclone-current-linux-amd64.zip',true) }}"
+    src: "{{ rclone_download_url }}"
     dest: /tmp
     copy: no
     validate_certs: no
@@ -108,7 +156,7 @@
 
 - name: "Display rclone version"
   debug:
-    msg: "Rclone {{rclone_version.stdout}} installed."
+    msg: "Rclone version {{rclone_version.stdout}} installed."
 
 - name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
   stat:
