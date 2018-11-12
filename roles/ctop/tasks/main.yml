@@ -28,7 +28,7 @@
   register: x
 
 - name: "Get ctop version"
-  shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/.$//'"
+  shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
   register: ctop_version
   ignore_errors: yes
   when: x is success
