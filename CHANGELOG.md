@@ -156,7 +156,7 @@ Links:
 - Pre-Install: Cleaned up role a bit.
 - Pre-Install: Created variable `cloudflare_enabled`.
 - Cloudflare: Made use of cloudflare_enabled variable.
-- Git: Added `rclone.conf` to `.gitignore` so that having it in the `cloudbox` folder does not caus any conflict.
+- Git: Added `rclone.conf` to `.gitignore` so that having it in the `cloudbox` folder does not put the folder out of sync.
 - Ansible: Enabled hash merge behavior (`hash_behavior`) in `ansible.cfg` (for new users).
 - Backup: Added a default `backup_excludes.txt` into the backup role.
   - If you want to have a custom excludes list, simply drop a `backup_excludes.txt` file in the cloudbox folder, and backup will use that one instead.
