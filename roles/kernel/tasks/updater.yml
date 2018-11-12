@@ -46,7 +46,7 @@
         (kernel.version | trim == 'default')
       )
       else (
-        (kernel.version) | regex_replace('(v\\.|v)', ''))  }}"
+        (kernel.version) | regex_replace('(^v\\.|^v)', ''))  }}"
 
 - name: Display the specified kernel version
   debug:
