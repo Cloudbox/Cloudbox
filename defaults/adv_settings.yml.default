@@ -10,6 +10,8 @@ plex:
   db_cache_size: default
 suitarr:
   version: default
+emby:
+  version: default
 organizr:
   direct_domain: no
 nginx:

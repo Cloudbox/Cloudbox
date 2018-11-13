@@ -9,6 +9,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Sanity Check
+  import_tasks: "sanity_check.yml"
+
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
@@ -39,7 +42,7 @@
 - name: Create and start container
   docker_container:
     name: emby
-    image: "emby/embyserver:latest"
+    image: "emby/embyserver:{{emby.version}}"
     pull: yes
     published_ports:
       - "127.0.0.1:8096:8096"
