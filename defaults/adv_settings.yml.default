@@ -11,7 +11,7 @@ plex:
 suitarr:
   version: default
 emby:
-  version: default
+  version: latest
 organizr:
   direct_domain: no
 nginx:

@@ -9,9 +9,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Sanity Check
-  import_tasks: "sanity_check.yml"
-
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
