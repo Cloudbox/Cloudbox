@@ -3,8 +3,8 @@
 <br /><br />
 [![Website](https://img.shields.io/badge/Website-https%3A%2F%2Fcloudbox.works-blue.svg?colorB=177DC1&label=Website)](https://cloudbox.works)
 [![Wiki](https://img.shields.io/badge/Wiki-http%3A%2F%2Fcloudbox.wiki-blue.svg?colorB=177DC1&label=Wiki)](http://cloudbox.wiki)
-[![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2Fcloudbox-blue.svg?colorB=177DC1&label=Reddit)](https://reddit.com/r/Cloudbox)
 [![Discord](https://img.shields.io/discord/381077432285003776.svg?colorB=177DC1&label=Discord)](https://discord.io/cloudbox)
+[![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2Fcloudbox-blue.svg?colorB=177DC1&label=Reddit)](https://reddit.com/r/Cloudbox)
 [![Feature Requests](https://img.shields.io/badge/Requests-Feathub-blue.svg?colorB=177DC1&label=Requests)](https://feathub.com/Cloudbox/Cloudbox)
 [![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/badge.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
 [![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/make-wish.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
