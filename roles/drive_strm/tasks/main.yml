@@ -71,7 +71,6 @@
     - name: "Pull Docker image"
       docker_image:
         name: "cloudb0x/drive_strm:latest"
-        force: yes
 
     - name: "Retrieve authorization link"
       docker_container:
