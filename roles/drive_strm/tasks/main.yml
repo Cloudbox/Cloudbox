@@ -33,21 +33,21 @@
 - name: Do the following tasks when 'config.json' does not exist.
   block:
 
-  - name: "Get user info"
+  - name: "Get Google Drive Client ID"
     pause:
       prompt: "Enter your Google Drive Client ID"
     register: client_id
 
   - name: "Display Google Drive Client ID"
-    debug: msg="Using Google Drive Client ID{{':'}} {{client_id.user_input}}"
+    debug: msg="Using Google Drive Client ID{{':'}} {{ client_id.user_input }}"
 
-  - name: "Get user info"
+  - name: "Get Google Drive Client Secret"
     pause:
       prompt: "Enter your Google Drive Client Secret"
     register: client_secret
 
   - name: "Display Google Drive Client Secret"
-    debug: msg="Using Google Drive Client Secret{{':'}} {{client_secret.user_input}}"
+    debug: msg="Using Google Drive Client Secret{{':'}} {{ client_secret.user_input }}"
 
   - name: Import 'config.json'
     template:
