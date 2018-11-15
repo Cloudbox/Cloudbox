@@ -77,7 +77,7 @@
         name: drive_strm
         image: "cloudb0x/drive_strm:latest"
         pull: no
-        command: ["authorize", "-l"]
+        command: "{{item}}"
         detach: no
         keep_volumes: no
         cleanup: yes
@@ -93,15 +93,18 @@
         purge_networks: yes
         state: started
       register: authorize_link
+      loop:
+        - ["authorize", "-l"]
+        - ["authorize", "-l"]
 
     - name: "Failed to retrieve authorization link"
       fail:
         debug: "Failed to retrieve authorization link"
-      when: authorize_link.ansible_facts.docker_container.Output | trim == ""
+      when: authorize_link.results[1].ansible_facts.docker_container.Output | trim == ""
 
     - name: "Authorization Link"
       debug:
-        msg: "Authorization Link: {{ authorize_link.ansible_facts.docker_container.Output | trim }}"
+        msg: "Authorization Link: {{authorize_link.results[1].ansible_facts.docker_container.Output | trim }}"
 
     - name: "Authorization Code"
       pause:
