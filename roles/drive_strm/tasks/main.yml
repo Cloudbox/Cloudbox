@@ -79,6 +79,8 @@
         pull: no
         command: ["authorize", "-l"]
         detach: no
+        keep_volumes: no
+        cleanup: yes
         user: "{{uid}}:{{gid}}"
         volumes:
           - "/etc/localtime:/etc/localtime:ro"
@@ -97,12 +99,6 @@
         debug: "Failed to retrieve authorization link"
       when: authorize_link.ansible_facts.docker_container.Output | trim == ""
 
-    - name: "Stop and remove container"
-      docker_container:
-        name: drive_strm
-        state: absent
-      when: authorize_link.ansible_facts.docker_container.Output | trim != ""
-
     - name: "Authorization Link"
       debug:
         msg: "Authorization Link: {{ authorize_link.ansible_facts.docker_container.Output | trim }}"
@@ -119,6 +115,8 @@
         pull: no
         command: ["authorize", "-c", "{{ authorization_code.user_input }}"]
         detach: no
+        keep_volumes: no
+        cleanup: yes
         user: "{{uid}}:{{gid}}"
         volumes:
           - "/etc/localtime:/etc/localtime:ro"
@@ -140,12 +138,6 @@
       fail:
         msg: "Failed to generate 'token.json'"
       when: not new_token_json.stat.exists
-
-    - name: "Stop and remove container"
-      docker_container:
-        name: drive_strm
-        state: absent
-      when: new_token_json.stat.exists
 
   when: not existing_token_json.stat.exists
 
