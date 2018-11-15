@@ -33,6 +33,7 @@
   "strm": {
     "access_url": "https://strm.{{domain}}/",
     "root_path": "/strm",
-    "show_transcodes": false
+    "show_transcodes": false,
+    "chunk_size": 250000
   }
 }
