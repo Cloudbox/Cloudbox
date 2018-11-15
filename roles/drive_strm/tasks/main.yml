@@ -1,6 +1,6 @@
 #########################################################################
 # Title:            Cloudbox: Drive STRM                                #
-# Author(s):        Desimaniac, L3uddz                                  #
+# Author(s):        desimaniac, l3uddz                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -104,7 +104,7 @@
 
     - name: "Authorization Link"
       debug:
-        msg: "Authorization Link: {{authorize_link.results[1].ansible_facts.docker_container.Output | trim }}"
+        msg: "Authorization Link: {{ authorize_link.results[1].ansible_facts.docker_container.Output | trim }}"
 
     - name: "Authorization Code"
       pause:
