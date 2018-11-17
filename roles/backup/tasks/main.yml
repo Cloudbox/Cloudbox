@@ -160,7 +160,8 @@
   - name: "Execute 'cloudplow upload'"
     shell: "cloudplow upload"
     when: cloudplow_upload.enabled and cloudplow_service.stat.exists and cloudplow_service_running
-
+    ignore_errors: yes
+      
   - name: Stop cloudplow service
     systemd:
       name: cloudplow
