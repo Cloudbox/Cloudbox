@@ -157,6 +157,10 @@
       cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == \"running\") }}"
     when: cloudplow_service.stat.exists
 
+  - name: "Execute 'cloudplow upload'"
+    shell: "cloudplow upload"
+    when: cloudplow_upload.enabled and cloudplow_service.stat.exists and cloudplow_service_running
+
   - name: Stop cloudplow service
     systemd:
       name: cloudplow

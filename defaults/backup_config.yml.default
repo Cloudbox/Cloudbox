@@ -14,3 +14,5 @@ cron:
 vault_service:
   user:
   pass:
+cloudplow_upload:
+  enabled: false
