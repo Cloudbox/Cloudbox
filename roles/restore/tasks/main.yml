@@ -123,7 +123,9 @@
     - /opt
 
 - name: "Unarchive backup tars to /opt"
-  shell: "tar -xf '{{item}}' -C /opt ."
+  shell: |
+    mv /opt/{{ (item | basename | splitext)[0] }} /opt/{{ (item | basename | splitext)[0] }}_bak 2>/dev/null || :
+    tar -xf '{{item}}' -C /opt .
   with_fileglob:
   - "{{local.destination}}/opt/*.tar"
   register: unarchive
