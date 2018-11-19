@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: System Role                                  #
-# Author(s):     l3uddz, EnorMOZ, desimaniac                            #
+# Author(s):     l3uddz, desimaniac, EnorMOZ                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Fix timezone task
+- name: Fix timezone
   import_tasks: "timezone.yml"
   ignore_errors: yes
 
@@ -30,6 +30,5 @@
   include_tasks: "cpufrequency.yml"
   when: p.stat.isdir is defined and p.stat.isdir
 
-- name: CPU Power tasks
-  include_tasks: "cpupower.yml"
-  when: p.stat.isdir is defined and p.stat.isdir
+- name: Remove CPU Power task
+  include_tasks: "remove_cpupower.yml"
