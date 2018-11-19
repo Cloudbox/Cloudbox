@@ -15,6 +15,9 @@
 - name: apt tasks
   include_tasks: "apt.yml"
 
+- name: Network tasks
+  import_tasks: "network.yml"
+
 - name: sysctl tasks
   include_tasks: "systctl.yml"
 
