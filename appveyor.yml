@@ -16,7 +16,7 @@ init:
   - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
 
 install:
-  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | sed 's/^v//g')
+  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/')
   - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
   - sh: appveyor UpdateBuild -Version "${TAG_VERSION}-${BUILD_NUMBER}"
   - sh: git submodule update --init --recursive
