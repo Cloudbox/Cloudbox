@@ -39,6 +39,10 @@
       mode: 0755
       force: no
 
+  - name: Get NIC info
+    shell: lspci | grep Ethernet
+    register: nic
+
   - name: Disable TSO / TX
     blockinfile:
       path: "/etc/rc.local"
@@ -54,5 +58,6 @@
       owner: "root"
       group: "root"
       mode: 0755
+    when: ('I218' in nic.stdout) or ('I219' in nic.stdout)
 
   when: (ansible_default_ipv4 is defined) and (ansible_default_ipv4.type == "ether")
