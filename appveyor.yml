@@ -12,15 +12,11 @@ skip_commits:
 
 image: ubuntu
 
-environment:
-  CLOUDBOX_FOLDER: "/home/appveyor/projects/cloudbox/"
-
 init:
   - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
 
 install:
-  - sh: cd ${CLOUDBOX_FOLDER}
-  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
+  - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' | sed 's/^v//g')
   - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
   - sh: appveyor UpdateBuild -Version "${TAG_VERSION}-${BUILD_NUMBER}"
   - sh: git submodule update --init --recursive
