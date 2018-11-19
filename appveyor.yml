@@ -20,7 +20,7 @@ install:
   - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
   - sh: appveyor UpdateBuild -Version "${TAG_VERSION}-${BUILD_NUMBER}"
   - sh: git submodule update --init --recursive
-  - sh: for i in defaults/*; do echo cp -n $i "$(basename "${i%.*}")"; done
+  - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
   - sh: sudo ansible-playbook cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
 
