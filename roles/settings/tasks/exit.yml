@@ -23,7 +23,7 @@
 
   - name: "Exit so that user can check updated files and/or 'settings-updater.log'."
     fail:
-      msg: "Cloudbox Installer will now exist."
+      msg: "Cloudbox Installer will now exit."
 
   when: exit_is_necessary
 
