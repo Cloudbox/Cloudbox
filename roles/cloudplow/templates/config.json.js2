@@ -15,7 +15,7 @@
     },
     "nzbget": {
         "enabled": false,
-        "url": "https://{{seed}}:{{passwd}}@nzbget.{{domain}}"
+        "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
     },
     "plex": {
         "enabled": false,
