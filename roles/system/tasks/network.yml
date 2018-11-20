@@ -51,7 +51,6 @@
       marker: "### {mark} CLOUDBOX MANAGED BLOCK ###"
       block: |
         /sbin/ifconfig {{ansible_default_ipv4.interface}} txqueuelen 10000
-        sleep 10; ip route | while read p; do ip route change $p initcwnd 10 initrwnd 10; done
         ethtool -G {{ansible_default_ipv4.interface}} rx 4096 tx 4096
         ethtool -K {{ansible_default_ipv4.interface}} tso off tx off
       insertbefore: "^exit 0"
