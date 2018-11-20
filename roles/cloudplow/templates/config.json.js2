@@ -13,6 +13,10 @@
     },
     "notifications": {
     },
+    "nzbget": {
+        "enabled": false,
+        "url": "https://{{seed}}:{{passwd}}@nzbget.{{domain}}"
+    },
     "plex": {
         "enabled": false,
         "url": "https://plex.{{domain}}",
