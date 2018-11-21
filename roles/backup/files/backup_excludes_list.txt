@@ -14,7 +14,7 @@
 ./cloudplow/cloudplow.log.*
 ./cloudplow/locks/*
 
-./lidarr/app/MediaCover/*
+./lidarr/app/logs/*
 
 ./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*
 ./plex/Library/Application Support/Plex Media Server/Cache/Transcode/*
@@ -30,13 +30,9 @@
 ./plexpy/logs/*
 
 ./radarr/app/logs/*
-./radarr/app/MediaCover/*
 
 ./radarr4k/app/logs/*
-./radarr4k/app/MediaCover/*
 
 ./sonarr/app/logs/*
-./sonarr/app/MediaCover/*
 
 ./sonarr4k/app/logs/*
-./sonarr4k/app/MediaCover/*
