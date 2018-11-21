@@ -8,7 +8,7 @@ rutorrent:
   downloads:
 plex:
   tag: public
-  transcodes: /home/{{user}}/transcodes
+  transcodes: /mnt/local/transcodes
 rclone:
   version: latest
 shell: zsh
