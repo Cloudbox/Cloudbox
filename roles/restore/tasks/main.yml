@@ -24,17 +24,17 @@
 
 - name: Fail when no backup method is enabled or when no local backup exists
   fail: msg="You must enable either rclone or rsync, in the backup settings, to perform a restore."
-  when: not ((dir_files.matched|int != 0) or (rclone.enabled) or (rsync.enabled))
+  when: not ((dir_files.matched|int != 0) or (rclone.enable) or (rsync.enable))
 
 - name: Fail when both backup methods are enabled
   fail: msg="You can only have either rclone enabled or rsync enabled, but not both."
-  when: (dir_files.matched|int == 0) and (rclone.enabled and rsync.enabled)
+  when: (dir_files.matched|int == 0) and (rclone.enable and rsync.enable)
 
 - name: Check if rclone is installed
   stat:
     path: "/usr/bin/rclone"
   register: rclone_binary
-  when: (dir_files.matched|int == 0) and (rclone.enabled)
+  when: (dir_files.matched|int == 0) and (rclone.enable)
 
 - name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
   stat:
@@ -44,17 +44,17 @@
 - name: Install rclone
   include_role:
     name: rclone
-  when: ((dir_files.matched|int == 0) and (rclone.enabled) and (not rclone_binary.stat.exists)) or (rclone_conf_playbook_dir.stat.exists)
+  when: ((dir_files.matched|int == 0) and (rclone.enable) and (not rclone_binary.stat.exists)) or (rclone_conf_playbook_dir.stat.exists)
 
 - name: Test rclone remote
   shell: "rclone lsd {{rclone.destination}}"
   register: rclone_test
   failed_when: rclone_test.rc > 5
-  when: (dir_files.matched|int == 0) and (rclone.enabled)
+  when: (dir_files.matched|int == 0) and (rclone.enable)
 
 - name: "Fail when rclone is misconfigured."
   fail: msg="The rclone remote is misconfigured - You must place a valid 'rclone.conf' file in '{{playbook_dir}}' (or setup Rclone via 'rclone config') and verify that the 'rclone.destination' in settings is valid."
-  when: (dir_files.matched|int == 0) and ((rclone.enabled) and (rclone_test.rc > 0))
+  when: (dir_files.matched|int == 0) and ((rclone.enable) and (rclone_test.rc > 0))
 
 - name: "Check if '{{local.destination}}' exists"
   stat:
@@ -74,7 +74,7 @@
   command: "rclone copy '{{rclone.destination}}/' '{{local.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --exclude 'archived/**' --log-file='{{playbook_dir}}/restore_rclone.log'"
   become: yes
   become_user: "{{user}}"
-  when: (dir_files.matched|int == 0) and (rclone.enabled)
+  when: (dir_files.matched|int == 0) and (rclone.enable)
 
 - name: "Fetch backup from {{rsync.destination}}"
   synchronize:
@@ -84,7 +84,7 @@
       - "--log-file='{{playbook_dir}}/restore_rsync.log'"
   become: yes
   become_user: "{{user}}"
-  when: (dir_files.matched|int == 0) and (rsync.enabled)
+  when: (dir_files.matched|int == 0) and (rsync.enable)
 
 - name: "Check if tar files were retrieved"
   find:
@@ -138,7 +138,7 @@
   file:
     path: "{{local.destination}}"
     state: absent
-  when: not local.keep_local_copy
+  when: not local.enable
 
 - debug:
     msg: Finished restoring the backup. You are now ready to install Cloudbox.
