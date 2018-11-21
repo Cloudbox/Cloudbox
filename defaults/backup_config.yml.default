@@ -1,12 +1,12 @@
 ---
 local:
-  keep_local_copy: true
+  enable: yes
   destination: /home/{{user}}/Backups/Cloudbox
 rclone:
-  enabled: false
+  enable: yes
   destination: google:/Backups/Cloudbox
 rsync:
-  enabled: false
+  enable: no
   dest: rsync://somehost.com/Backups/Cloudbox
 cron:
   cron_time: weekly
