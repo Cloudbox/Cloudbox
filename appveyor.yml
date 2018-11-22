@@ -18,6 +18,7 @@ init:
 install:
   - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/')
   - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
+  - sh: echo "Build ${TAG_VERSION}-${BUILD_NUMBER}"
   - sh: appveyor UpdateBuild -Version "${TAG_VERSION}-${BUILD_NUMBER}"
   - sh: git submodule update --init --recursive
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
