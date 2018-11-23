@@ -58,5 +58,5 @@
         aliases:
           - nginx
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

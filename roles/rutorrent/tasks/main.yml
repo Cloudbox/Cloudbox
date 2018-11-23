@@ -104,7 +104,7 @@
         aliases:
           - rutorrent
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     stop_timeout: 300
     state: started
 
