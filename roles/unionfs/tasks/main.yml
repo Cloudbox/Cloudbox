@@ -27,7 +27,7 @@
   when: unionfs_service.stat.exists and unionfs_service_running
 
 - name: "Force unmount /mnt/unionfs"
-  shell: "/bin/umount -f /mnt/unionfs"
+  shell: "/bin/umount -f /mnt/unionfs 2>/dev/null || :"
   ignore_errors: yes
 
 - name: Create unionfs directories
