@@ -160,7 +160,7 @@
         aliases:
           - plex
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
