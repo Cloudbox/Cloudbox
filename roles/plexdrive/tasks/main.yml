@@ -27,7 +27,7 @@
   when: plexdrive_service.stat.exists and plexdrive_service_running
 
 - name: "Force unmount /mnt/plexdrive"
-  shell: "/bin/umount -f /mnt/plexdrive"
+  shell: "/bin/umount -f /mnt/plexdrive 2>/dev/null || :"
   ignore_errors: yes
 
 - name: Create plexdrive directories
