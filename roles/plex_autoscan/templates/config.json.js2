@@ -45,6 +45,7 @@
    "PLEX_WAIT_FOR_EXTERNAL_SCANNERS":true,
    "RCLONE_RC_CACHE_EXPIRE":{
       "ENABLED":false,
+      "FILE_EXISTS_TO_REMOTE_MAPPINGS": {},
       "MOUNT_FOLDER":"/mnt/rclone",
       "RC_URL":"http://localhost:5572"
    },
