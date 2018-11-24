@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Plex Autoscan Role                           #
-# Author(s):     l3uddz                                                 #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -14,7 +14,9 @@
   register: plex_autoscan_service
 
 - name: Stop existing plex_autoscan service
-  systemd: state=stopped name=plex_autoscan
+  systemd:
+    name: plex_autoscan
+    state: stopped
   when: plex_autoscan_service.stat.exists
 
 - name: Create plex_autoscan directories
@@ -36,7 +38,7 @@
     requirements: /opt/plex_autoscan/requirements.txt
     executable: pip2
 
-# No plex_autoscan_config.stat.exists conditional to allow for separate use
+# No plex_autoscan_config.stat.exists conditional to allow for independent use with tag.
 - name: Import Plex Auth Token role
   import_role:
     name: plex_auth_token
@@ -78,7 +80,9 @@
   when: not plex_autoscan_service.stat.exists
 
 - name: Start plex_autoscan service
-  systemd: state=started name=plex_autoscan daemon_reload=yes enabled=yes
+  systemd:
+    state: started
+    name: plex_autoscan
+    daemon_reload: yes
+    enabled: yes
 
-- name: Set directory permissions
-  file: "path=/opt/plex_autoscan state=directory owner={{user}} group={{user}} recurse=yes"
