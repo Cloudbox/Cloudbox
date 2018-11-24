@@ -103,9 +103,11 @@
   become: yes
   become_user: "{{user}}"
   ignore_errors: yes
+  tags: plex_autoscan_update_sections
 
 - name: Configure PLEX_SECTION_PATH_MAPPINGS
   command: "/opt/plex_autoscan/scan.py update_sections"
   become: yes
   become_user: "{{user}}"
   ignore_errors: yes
+  tags: plex_autoscan_update_sections
