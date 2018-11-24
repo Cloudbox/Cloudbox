@@ -8,15 +8,27 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check service exists
+- name: Check if plex_autoscan.service exists
   stat:
     path: "/etc/systemd/system/plex_autoscan.service"
   register: plex_autoscan_service
 
-- name: Stop existing plex_autoscan service
-  systemd:
-    name: plex_autoscan
-    state: stopped
+- name: Service Tasks
+  block:
+
+  - name: Populate Service Facts
+    service_facts:
+
+  - name: Get plex_autoscan service state
+    set_fact:
+      plex_autoscan_service_running: "{{ (services['plex_autoscan.service'] is defined) and (services['plex_autoscan.service']['state'] == 'running') }}"
+
+  - name: Stop plex_autoscan service
+    systemd:
+      name: plex_autoscan
+      state: stopped
+    when: plex_autoscan_service_running
+
   when: plex_autoscan_service.stat.exists
 
 - name: Create plex_autoscan directories
