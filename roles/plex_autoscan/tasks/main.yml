@@ -86,3 +86,8 @@
     daemon_reload: yes
     enabled: yes
 
+- name: Update config.json
+  command: "/opt/plex_autoscan/scan.py sections"
+  become: yes
+  become_user: "{{user}}"
+  ignore_errors: yes
