@@ -19,7 +19,7 @@ matrix:
 # build: off
 
 init:
-  - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
+  # - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
 
   - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
 
