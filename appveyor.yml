@@ -16,11 +16,9 @@ matrix:
   fast_finish: true
 
 # to disable automatic builds
-# build: off
+build: off
 
 init:
-  # - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
-
   - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
 
 install:
@@ -29,7 +27,7 @@ install:
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
   # - sh: sudo ansible-playbook cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
 
-after_build:
+on_finish:
   # - sh: TAG_VERSION=$(curl --silent "https://api.github.com/repos/${APPVEYOR_REPO_NAME}/releases/latest" | grep '"tag_name"' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/')
   # - sh: BUILD_NUMBER=$(git rev-list $(git rev-list --tags --no-walk --max-count=1)..HEAD --count)
   # - sh: echo "Build ${TAG_VERSION}-${BUILD_NUMBER}"
@@ -50,4 +48,5 @@ after_build:
         write-host "Update appveyor build version to: $env:appveyor_build_version"
         write-host "Update appveyor info version to: $env:appveyor_info_version"
       }
+
       gitVersion
