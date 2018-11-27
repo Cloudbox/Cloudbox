@@ -38,9 +38,10 @@
     path: "{{playbook_dir}}/defaults/accounts.yml.default"
   register: accounts_yml_default
 
-- name: "Ensure 'accounts.yml' does not match 'accounts.yml.default'."
+- name: "Ensure that 'accounts.yml' is configured."
   assert:
     that:
       - accounts_yml.stat.exists
       - accounts_yml.stat.checksum != accounts_yml_default.stat.checksum
-    msg: "You have not edited your 'accounts.yml' file, yet. Please fill in your settings and retry. For more info, see the Wiki page 'Install: Settings'."
+      - '"{{domain}}" != "testcloudbox.yml"'
+    msg: "You must configure 'accounts.yml' before running the Cloudbox installer."
