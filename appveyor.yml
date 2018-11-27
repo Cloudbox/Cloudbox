@@ -36,7 +36,11 @@ on_finish:
       function gitVersion() {
         $env:newhash=git rev-parse HEAD
         $env:shorthash=git rev-parse --short HEAD
-        $env:gitCommits=git describe --tags $env:APPVEYOR_REPO_BRANCH %{$_.split('-')[1]}
+        write-host "git describe --tags $env:APPVEYOR_REPO_BRANCH | %{$_.split('-')[1]}"
+        git describe --tags $env:APPVEYOR_REPO_BRANCH
+        git describe --tags $env:APPVEYOR_REPO_BRANCH | %{$_.split('-')[1]}
+        $env:gitCommits=git describe --tags $env:APPVEYOR_REPO_BRANCH | %{$_.split('-')[1]}
+        write-host $env:gitCommits
         $gitVersion=git describe --tags --abbrev=0 $env:APPVEYOR_REPO_BRANCH
         $env:newVersion="$gitVersion-$env:gitCommits"
         $env:appveyor_info_version="$env:newVersion-$env:APPVEYOR_REPO_BRANCH"
