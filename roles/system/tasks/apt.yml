@@ -8,6 +8,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Fix any potential dpkg issues
+  shell: dpkg --configure -a
+
 - name: Fix any potential apt issues
   shell: apt-get --fix-broken --yes install
 
