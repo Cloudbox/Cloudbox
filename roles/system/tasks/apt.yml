@@ -14,18 +14,24 @@
 - name: Fix any potential apt issues
   shell: apt-get --fix-broken --yes install
 
-- name: Update apt packages list
-  apt:
-    update_cache: yes
-
 - name: Install required packages
   apt: "name={{item}} state=latest"
   with_items:
     - apt-utils
     - byobu
 
-- name: Upgrade apt packages
-  shell: apt-get dist-upgrade -y --allow-unauthenticated
+- name: apt update
+  apt:
+    update_cache: yes
+
+# https://serverfault.com/a/839563
+- name: apt upgrade
+  shell: apt-get upgrade --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+  when: not continuous_integration
+
+# https://serverfault.com/a/839563
+- name: apt dist-upgrade
+  shell: apt-get dist-upgrade --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   when: not continuous_integration
 
 - name: Remove useless packages from the cache
