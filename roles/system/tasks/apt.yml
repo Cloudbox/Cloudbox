@@ -25,13 +25,15 @@
     update_cache: yes
 
 # https://serverfault.com/a/839563
+# https://raymii.org/s/tutorials/Silent-automatic-apt-get-upgrade.html
 - name: apt upgrade
-  shell: apt-get upgrade --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+  shell: DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get upgrade --quiet --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   when: not continuous_integration
 
 # https://serverfault.com/a/839563
+# https://raymii.org/s/tutorials/Silent-automatic-apt-get-upgrade.html
 - name: apt dist-upgrade
-  shell: apt-get dist-upgrade --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+  shell: DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get dist-upgrade --quiet --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   when: not continuous_integration
 
 - name: Remove useless packages from the cache
