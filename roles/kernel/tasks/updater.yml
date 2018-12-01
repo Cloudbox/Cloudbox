@@ -254,7 +254,7 @@
 
   when: run_kernel_update
 
-- name: Display message when kernel does not to be updated
+- name: Kernel was not updated
   debug:
-    msg: "Kernel does not need to be updated."
+    msg: "No Kernel update was done"
   when: not run_kernel_update
