@@ -18,6 +18,7 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - "/opt/drive_strm"
+    - "/opt/scripts/drive_strm"
     - "/mnt/strm"
 
 - name: Stop and remove any existing container
@@ -171,3 +172,12 @@
     purge_networks: yes
     restart_policy: always
     state: started
+
+- name: Import 'rebuild_strms.sh' script
+  copy:
+    src: "rebuild_strms.sh"
+    dest: "/opt/scripts/drive_strm/rebuild_strms.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
