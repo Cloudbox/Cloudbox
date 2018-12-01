@@ -114,7 +114,8 @@
     volumes_from:
       - "nginx-proxy"
     env:
-      DEBUG: true
+      FILES_UID: "{{uid}}"
+      FILES_GID: "{{gid}}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
