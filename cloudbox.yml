@@ -9,10 +9,11 @@
     - { role: sanity_check }
     - { role: settings, tags: ['always', 'settings'] }
     - { role: pre_tasks }
-    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'kernel'], when: ['run_kernel'] }
-    - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
+    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'kernel'], when: ['run_kernel'] }
+    - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
+    - { role: shell, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
     - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'common'] }

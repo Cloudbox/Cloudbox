@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Pre-Tasks Role - User Task                   #
+# Title:         Pre-Tasks: User Tasks                                  #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,22 +8,52 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check if user '{{user}}' exists"
-  shell: "id -un {{user}} >/dev/null 2>&1;"
-  register: user_check
-  failed_when: user_check.rc > 1
+- name: Create common groups
+  group: "name={{item}} state=present"
+  with_items:
+    - docker
+    - "{{user}}"
 
-- block:
+- name: "Create user: {{user}}"
+  user:
+    name: "{{user}}"
+    group: "{{user}}"
+    groups: "{{user}},docker,sudo"
+    password: "{{ passwd | string | password_hash('sha512') }}"
+    update_password: on_create
+    append: yes
+  register: user_info
 
-  - name: "Get '{{user}}' info"
-    user:
-      name: "{{user}}"
-    register: user_info
+- name: "Set 'uid', 'gid', and 'vgid'"
+  set_fact:
+    uid: "{{ user_info.uid }}"
+    gid: "{{ user_info.group }}"
+    vgid: "{{ lookup('pipe','getent group video | cut -d: -f3') }}"
 
-  - name: "Set 'uid', 'gid', and 'vgid'"
-    set_fact:
-      uid: "{{ user_info.uid }}"
-      gid: "{{ user_info.group }}"
-      vgid: "{{ lookup('pipe','getent group video | cut -d: -f3') }}"
+- name: Check sudoers exists
+  stat:
+    path: "/etc/sudoers"
+  register: sudoers
 
-  when: user_check.rc == 0
+- name: Set sudo group to NOPASSWD
+  lineinfile:
+    path: "/etc/sudoers"
+    regexp: '^%sudo\s'
+    line: '%sudo   ALL=(ALL) NOPASSWD:ALL'
+    state: present
+  when: sudoers.stat.exists == True
+
+- name: User Account Sanity Check
+  block:
+
+  - name: "Check if user account exists"
+    shell: "id -un {{user}} >/dev/null 2>&1;"
+    register: user_check
+    failed_when: user_check.rc > 1
+
+  - name: "Fail when user account does not exist"
+    fail:
+      msg: "The user '{{user}}' does not exist!"
+    when: user_check.rc == 1
+
+  when: not continuous_integration
