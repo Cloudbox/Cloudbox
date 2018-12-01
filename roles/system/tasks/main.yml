@@ -8,10 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Fix timezone
-  import_tasks: "timezone.yml"
-  ignore_errors: yes
-
 - name: apt tasks
   include_tasks: "apt.yml"
 
@@ -35,3 +31,7 @@
 
 - name: Remove CPU Power task
   include_tasks: "remove_cpupower.yml"
+
+- name: Fix timezone
+  import_tasks: "timezone.yml"
+  ignore_errors: yes
