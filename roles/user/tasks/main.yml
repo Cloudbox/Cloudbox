@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Pre-Tasks: User Tasks                                  #
+# Title:         Cloudbox: User Role                                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -55,5 +55,3 @@
     fail:
       msg: "The user '{{user}}' does not exist!"
     when: user_check.rc == 1
-
-  when: not continuous_integration
