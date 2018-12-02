@@ -55,3 +55,6 @@
     fail:
       msg: "The user '{{user}}' does not exist!"
     when: user_check.rc == 1
+
+- name: "Reset ownership of '/home/{{user}}/' path"
+  file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
