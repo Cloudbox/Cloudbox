@@ -12,9 +12,6 @@
   fail: msg="You must be using kernel version 4.10 or higher!"
   when: ansible_kernel is version_compare('4.10', '<')
 
-- name: "Create and/or set ownership of '/home/{{user}}/' path"
-  file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
-
 - name: Create 'cloudbox_home_folder' variable
   set_fact:
     cloudbox_home_folder: "/home/{{user}}/cloudbox"
