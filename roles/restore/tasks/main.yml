@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: User Role
+  include_role:
+    name: user
+
 - name: Variables
   import_tasks: "variables.yml"
 
