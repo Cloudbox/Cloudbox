@@ -70,14 +70,6 @@
 
   when: dot_bashrc.stat.exists
 
-- name: Get default shell of user
-  shell: "getent passwd {{user}} | cut -d: -f7"
-  register: shell
-  ignore_errors: yes
-
-- name: Source dot files
-  shell: "source {{ (shell.stdout == '/bin/bash') | ternary('/home/' + user + '/.bashrc','/home/' + user + '/.zshrc') }}"
-  args:
-    executable: "{{shell.stdout}}"
-  become: no
-  ignore_errors: yes
+- name: Z (Jump) is now added to your default shell
+  debug:
+    msg: "You will need to re-login for changes to take effect."
