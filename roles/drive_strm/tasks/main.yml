@@ -150,6 +150,15 @@
 
   when: not existing_token_json.stat.exists
 
+- name: Import 'drive_strm_rebuild.sh' script
+  copy:
+    src: "drive_strm_rebuild.sh"
+    dest: "/opt/scripts/drive_strm/drive_strm_rebuild.sh"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+
 - name: "Create and start container"
   docker_container:
     name: drive_strm
@@ -177,12 +186,3 @@
     purge_networks: yes
     restart_policy: unless-stopped
     state: started
-
-- name: Import 'rebuild_strms.sh' script
-  copy:
-    src: "rebuild_strms.sh"
-    dest: "/opt/scripts/drive_strm/rebuild_strms.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: no

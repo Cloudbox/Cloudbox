@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #########################################################################
-# Title:         Drive STRM: Rebuild STRMs                              #
+# Title:         Drive STRM Rebuild                                     #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Description:   Rebuilds STRMs while keeping config intact.            #
