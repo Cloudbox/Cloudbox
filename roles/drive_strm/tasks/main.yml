@@ -159,6 +159,16 @@
     mode: 0775
     force: no
 
+- name: Rebuild strms
+  shell: |
+    DOCKER_CONTAINER="drive_strm"
+    APP_PATH="/opt/drive_strm"
+    STRM_PATH="/mnt/strm"
+    rm -rf ${STRM_PATH}/*
+    rm ${APP_PATH}/*.db*
+    jq -c '.page_token = "1"' ${APP_PATH}/token.json >> ${APP_PATH}/tmp.$$.json && mv ${APP_PATH}/tmp.$$.json ${APP_PATH}/token.json
+  when: ('drive_strm_rebuild' in ansible_run_tags)
+
 - name: "Create and start container"
   docker_container:
     name: drive_strm
