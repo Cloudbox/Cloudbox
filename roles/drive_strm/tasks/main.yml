@@ -161,7 +161,6 @@
 
 - name: Rebuild strms
   shell: |
-    DOCKER_CONTAINER="drive_strm"
     APP_PATH="/opt/drive_strm"
     STRM_PATH="/mnt/strm"
     rm -rf ${STRM_PATH}/*
