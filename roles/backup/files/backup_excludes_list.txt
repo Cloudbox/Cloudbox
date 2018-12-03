@@ -14,7 +14,6 @@
 ./cloudplow/cloudplow.log.*
 ./cloudplow/locks/*
 
-./drive_strm/cache.db*
 ./drive_strm/*.log*
 
 ./lidarr/app/MediaCover/*
