@@ -59,6 +59,11 @@
       mode: 0775
       force: yes
 
+  - name: "Remove existing 'token.json'"
+    file:
+      path: "/opt/drive_strm/token.json"
+      state: absent
+
   when: not config_json.stat.exists
 
 - name: "Check if '/opt/drive_strm/token.json' exists"
