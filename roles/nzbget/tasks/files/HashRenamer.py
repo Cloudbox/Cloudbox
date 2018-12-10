@@ -107,7 +107,8 @@ def is_file_hash(file_name):
     hash_regexp = [
         r'^[a-fA-F0-9]{40}$',
         r'^[a-fA-F0-9]{32}$',
-        r'[a-f0-9]{128}$'
+        r'^[a-f0-9]{128}$',
+        r'^[a-zA-Z0-9]{42}$'
     ]
     for hash in hash_regexp:
         if re.match(hash, file_name):
