@@ -1,62 +1,44 @@
 #########################################################################
-# Title:            Cloudbox: Nextcloud Role                            #
+# Title:            Cloudbox: MariaDB Role                              #
 # Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  linuxserver/nextcloud                               #
+# Docker Image(s):  linuxserver/mariadb                                 #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: MariaDB Role
-  include_role:
-    name: mariadb
-
-- name: "Set DNS Record on CloudFlare"
-  include_role:
-    name: cloudflare
-  vars:
-    subdomain: nextcloud
-
 - name: Stop and remove any existing containers
   docker_container: "name={{item}} state=absent"
   with_items:
-    - nextcloud
+    - mariadb
 
 - name: Create required directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
-    - /opt/nextcloud
-    - /opt/nextcloud/conf
-    - /opt/nextcloud/data
+    - /opt/mariadb
 
-- name: Create and start nextcloud container
+- name: Create and start mariadb container
   docker_container:
-    name: nextcloud
-    image: "linuxserver/nextcloud"
+    name: mariadb
+    image: "linuxserver/mariadb"
     pull: yes
     published_ports:
-      - "127.0.0.1:4645:443"
+      - "127.0.0.1:3306:3306"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"
-      VIRTUAL_HOST: "nextcloud.{{domain}}"
-      VIRTUAL_PORT: 443
-      VIRTUAL_PROTO: https
-      LETSENCRYPT_HOST: "nextcloud.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      MYSQL_ROOT_PASSWORD: "password321"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/nextcloud/conf:/config"
-      - "/opt/nextcloud/data:/data"
-      - "/mnt:/mnt"
+      - "/opt/mariadb:/config"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
-          - nextcloud
+          - mariadb
     purge_networks: yes
     restart_policy: unless-stopped
     state: started
