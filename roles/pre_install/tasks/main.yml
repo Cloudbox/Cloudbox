@@ -8,9 +8,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Ensure kernel version is 4.10 or higher
-  fail: msg="You must be using kernel version 4.10 or higher!"
-  when: ansible_kernel is version_compare('4.10', '<')
+- name: Ensure system is running Linux kernel version 4.00 or higher
+  fail: msg="Your system must be running Linux kernel version 4.00 or higher."
+  when: ansible_kernel is version_compare('4.00', '<')
 
 - name: Create 'cloudbox_home_folder' variable
   set_fact:
