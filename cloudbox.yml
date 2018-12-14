@@ -46,6 +46,7 @@
     - { role: plexrequests, tags: ['plexrequests'] }
     - { role: resilio-sync, tags: ['resilio-sync'] }
     - { role: nextcloud, tags: ['nextcloud'] }
+    - { role: mariadb, tags: ['mariadb'] }
     - { role: emby, tags: ['emby'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: traktarr, tags: ['traktarr'] }
