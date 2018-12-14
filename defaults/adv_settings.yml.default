@@ -1,8 +1,4 @@
 ---
-install:
-  auto_restart: yes
-kernel:
-  version: default
 plex:
   open_port: no
   force_auto_adjust_quality: no

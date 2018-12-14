@@ -11,6 +11,8 @@
 - name: Kernel cron task
   include_tasks: "cron.yml"
 
-- name: Kernel updater task
-  include_tasks: "updater.yml"
-  when: not continuous_integration
+- name: Kernel script task
+  include_tasks: "script.yml"
+
+- name: Kernel update task
+  include_tasks: "update.yml"
