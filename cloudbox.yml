@@ -13,7 +13,7 @@
     - { role: restore, tags: ['restore'] }
     - { role: user, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'user'] }
     - { role: shell, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'], 'shell' }
-    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'kernel'], when: ['run_kernel'] }
+    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'kernel'] }
     - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
     - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'common'] }
