@@ -37,9 +37,9 @@ Links:
 - **Rclone:** Now checks to see if the version is available online before trying to install it. Will set to default (`latest`) version if not.
 - **Rclone:** Reorganized role.
 - **Git:** Added `*.pyc` files to gitignore.
-- **Emby:** Specify version tags in adv_settings.yml
-- **Docs:** Updated contributing guide.
-- **Docs:** Cleaner donation section in README.md.
+- **Emby:** Specify version tags in `adv_settings.yml`.
+- **Docs:** Updated `CONTRIBUTING.md` guide.
+- **Docs:** Cleaner donation section in `README.md`.
 - **System:** Renamed 'cpupower' task to 'remove_cpupower'.
 - **System:** Moved vnstat task to system role.
 - **System:** Added tso/tx disabling tweak for certain nics.
