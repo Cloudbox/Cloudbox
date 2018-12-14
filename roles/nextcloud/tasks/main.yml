@@ -1,14 +1,18 @@
 #########################################################################
-# Title:         Cloudbox: Nextcloud Role                               #
-# Author(s):     L3uddz                                                 #
-# URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  linuxserver/nextcloud                                  #
+# Title:            Cloudbox: Nextcloud Role                            #
+# Author(s):        l3uddz, desimaniac                                  #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# Docker Image(s):  linuxserver/nextcloud                               #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: MariaDB Role
+  include_role:
+    name: mariadb
+
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
@@ -19,7 +23,6 @@
   docker_container: "name={{item}} state=absent"
   with_items:
     - nextcloud
-    - mariadb
 
 - name: Create required directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
@@ -27,31 +30,6 @@
     - /opt/nextcloud
     - /opt/nextcloud/conf
     - /opt/nextcloud/data
-    - /opt/mariadb
-
-- name: Create and start mariadb container
-  docker_container:
-    name: mariadb
-    image: "linuxserver/mariadb"
-    pull: yes
-    published_ports:
-      - "127.0.0.1:3306:3306"
-    env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
-      MYSQL_ROOT_PASSWORD: "password321"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/mariadb:/config"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - mariadb
-    purge_networks: yes
-    restart_policy: always
-    state: started
 
 - name: Create and start nextcloud container
   docker_container:
@@ -80,5 +58,5 @@
         aliases:
           - nextcloud
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

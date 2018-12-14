@@ -5,6 +5,7 @@
       "CLIENT_SECRET":"",
       "ENABLED":false,
       "POLL_INTERVAL":60,
+      "IGNORE_PATHS": [],
       "SCAN_EXTENSIONS":[
         "webm","mkv","flv","vob","ogv","ogg","drc","gif",
         "gifv","mng","avi","mov","qt","wmv","yuv","rm",
@@ -12,7 +13,8 @@
         "mpeg","mpe","mpv","m2v","m4v","svi","3gp","3g2",
         "mxf","roq","nsv","f4v","f4p","f4a","f4b","mp3",
         "flac","ts"
-      ]
+        ],
+        "TEAMDRIVE": false
     },
    "PLEX_ANALYZE_DIRECTORY":true,
    "PLEX_ANALYZE_TYPE":"basic",
@@ -24,7 +26,7 @@
    "PLEX_EMPTY_TRASH_MAX_FILES":100,
    "PLEX_EMPTY_TRASH_ZERO_DELETED":false,
    "PLEX_LD_LIBRARY_PATH":"/usr/lib/plexmediaserver",
-   "PLEX_LOCAL_URL":"http://localhost:32400",
+   "PLEX_LOCAL_URL":"https://plex.{{domain}}",
    "PLEX_SCANNER":"/usr/lib/plexmediaserver/Plex\\ Media\\ Scanner",
    "PLEX_SECTION_PATH_MAPPINGS":{
       "1":[
@@ -43,11 +45,15 @@
    "PLEX_WAIT_FOR_EXTERNAL_SCANNERS":true,
    "RCLONE_RC_CACHE_EXPIRE":{
       "ENABLED":false,
+      "FILE_EXISTS_TO_REMOTE_MAPPINGS": {},
       "MOUNT_FOLDER":"/mnt/rclone",
       "RC_URL":"http://localhost:5572"
    },
    "RUN_COMMAND_BEFORE_SCAN":"",
+   "RUN_COMMAND_AFTER_SCAN": "",
    "SERVER_ALLOW_MANUAL_SCAN":false,
+   "SERVER_FILE_CHECK_DELAY":60,
+   "SERVER_MAX_FILE_CHECKS":10,
    "SERVER_FILE_EXIST_PATH_MAPPINGS":{
       "/mnt/unionfs/Media":[
          "/data"
@@ -59,7 +65,6 @@
       "Thumbs.db"
    ],
    "SERVER_IP":"0.0.0.0",
-   "SERVER_MAX_FILE_CHECKS":10,
    "SERVER_PASS":"{{plex_autoscan_pass.stdout}}",
    "SERVER_PATH_MAPPINGS":{
       "/data/Movies/":[

@@ -1,6 +1,6 @@
 ##########################################################################
 # Title:         Cloudbox: Plex - DB Cache Size Settings                 #
-# Author(s):     Desimaniac                                              #
+# Author(s):     desimaniac                                              #
 # URL:           https://github.com/cloudbox/cloudbox                    #
 # --                                                                     #
 #         Part of the Cloudbox project: https://cloudbox.works           #
@@ -23,7 +23,7 @@
   set_fact:
     default_db_cache_size: '2000'
 
-- name: Check if 'kernel.version' was specified
+- name: Check if 'plex.db_cache_size' was specified
   set_fact:
     db_cache_size_is_specified: "{{ true if not (
         (plex.db_cache_size is undefined)

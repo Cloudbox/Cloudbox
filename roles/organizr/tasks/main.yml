@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Organizr Role                                #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  lsiocommunity/organizr                                 #
 # --                                                                    #
@@ -85,7 +85,7 @@
         aliases:
           - organizr
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started
 
 - name: Wait for Organizr.css to be created

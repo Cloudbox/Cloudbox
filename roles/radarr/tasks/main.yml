@@ -1,6 +1,6 @@
 #########################################################################
 # Title:            Cloudbox: Radarr Role                               #
-# Author(s):        L3uddz, Desimaniac                                  #
+# Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
 # Docker Image(s):  hotio/suitarr,                                      #
 #                   andrewkhunn/suitarr_mp4_automator                   #
@@ -80,10 +80,11 @@
       - "127.0.0.1:7878:7878"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       UMASK: 002
-      BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "radarr.{{domain}}"
       VIRTUAL_PORT: 7878
@@ -97,5 +98,5 @@
         aliases:
           - radarr
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

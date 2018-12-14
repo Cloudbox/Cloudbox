@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         SMA: Update Docker Images Task                         #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -26,7 +26,7 @@
   - name: Set {{app}} variables
     set_fact:
       container_is_running: "{{ (container_facts.stdout | from_json)[0].State.Running }}"
-      container_image_updated: "{{ ((container_facts.stdout | from_json)[0].Config.Image) == ('andrewkhunn/suitarr_mp4_automator:' + (app |  regex_replace('4k$',''))) }}"
+      container_image_updated: "{{ ((container_facts.stdout | from_json)[0].Config.Image) == ('andrewkhunn/suitarr_mp4_automator:' + app ) }}"
 
   - name: Reinstall {{app}} to update image
     include_role:

@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Nginx-Proxy Role                             #
-# Author(s):     L3uddz                                                 #
+# Author(s):     l3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Images: jwilder/nginx-proxy                                    #
 #                jrcs/letsencrypt-nginx-proxy-companion                 #
@@ -53,14 +53,26 @@
     - /opt/nginx-proxy/htpasswd
     - /opt/nginx-proxy/vhost.d
 
-- name: Import proxy.conf
+- name: Check if 'proxy.conf' file exists
+  stat:
+    path: "/opt/nginx-proxy/proxy.conf"
+  register: proxy_conf
+
+- name: "Delete 'proxy.conf' if link or a folder"
+  file:
+    path: "/opt/nginx-proxy/proxy.conf"
+    state: absent
+  when:  (proxy_conf.stat.exists) and ((proxy_conf.stat.islnk) or (proxy_conf.stat.isdir))
+
+- name: Import 'proxy.conf'
   copy:
     src: "proxy.conf"
     dest: "/opt/nginx-proxy/proxy.conf"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
-    force: no
+    force: yes
+  when: (not proxy_conf.stat.exists) or ((proxy_conf.stat.exists) and ((proxy_conf.stat.islnk) or (proxy_conf.stat.isdir)))
 
 - name: Create and start container
   docker_container:
@@ -77,7 +89,7 @@
       - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "/usr/share/nginx/html"
-      - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf"
+      - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
     labels:
       "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
       "com.github.cloudbox.cloudbox_managed": "true"
@@ -86,7 +98,7 @@
         aliases:
           - nginx-proxy
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started
 
 - name: Create and start letsencrypt container
@@ -102,7 +114,8 @@
     volumes_from:
       - "nginx-proxy"
     env:
-      DEBUG: true
+      FILES_UID: "{{uid}}"
+      FILES_GID: "{{gid}}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
@@ -110,5 +123,5 @@
         aliases:
           - letsencrypt
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

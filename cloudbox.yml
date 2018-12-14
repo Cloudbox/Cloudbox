@@ -9,13 +9,15 @@
     - { role: sanity_check }
     - { role: settings, tags: ['always', 'settings'] }
     - { role: pre_tasks }
-    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'kernel'] }
-    - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
+    - { role: user, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'user'] }
+    - { role: shell, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'], 'shell' }
+    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'kernel'] }
+    - { role: pre_install, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
-    - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
     - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'common'] }
+    - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
     - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'docker'] }
     - { role: plexdrive, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
     - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox'] }
@@ -29,20 +31,22 @@
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
     - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
     - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow'] }
-    - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'], when: [ 'nzbs' ] }
-    - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'], when: [ 'torrents' ] }
-    - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'], when: [ 'torrents' ] }
-    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'] }
+    - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'], when: ['run_nzbs'] }
+    - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'], when: ['run_torrents'] }
+    - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'], when: ['run_torrents'] }
+    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'], when: ['run_nzbs or run_torrents'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
-    - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['sma_enabled'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
+    - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['sma_enabled'] }
     - { role: feeder-mount, tags: ['feeder-mount'] }
     - { role: feeder-dismount, tags: ['feeder-dismount'] }
+    - { role: plex_auth_token, tags: ['plex_auth_token'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: plexrequests, tags: ['plexrequests'] }
     - { role: resilio-sync, tags: ['resilio-sync'] }
     - { role: nextcloud, tags: ['nextcloud'] }
+    - { role: mariadb, tags: ['mariadb'] }
     - { role: emby, tags: ['emby'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: traktarr, tags: ['traktarr'] }
@@ -62,3 +66,4 @@
     - { role: sabnzbd, tags: ['sabnzbd'] }
     - { role: nginx, tags: ['nginx'] }
     - { role: organizrv1, tags: ['organizrv1'] }
+    - { role: nzbthrottle, tags: ['nzbthrottle'] }

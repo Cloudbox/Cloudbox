@@ -13,6 +13,10 @@
     },
     "notifications": {
     },
+    "nzbget": {
+        "enabled": false,
+        "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
+    },
     "plex": {
         "enabled": false,
         "url": "https://plex.{{domain}}",
@@ -57,6 +61,7 @@
                     "timeout": 3600
                 }
             },
+            "rclone_command": "move",
             "remove_empty_dir_depth": 2,
             "sync_remote": "google:/Media",
             "upload_folder": "/mnt/local/Media",

@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Netdata Role                                 #
-# Author(s):     L3uddz                                                 #
+# Author(s):     l3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  titpetric/netdata                                      #
 # --                                                                    #
@@ -57,5 +57,5 @@
         aliases:
           - netdata
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

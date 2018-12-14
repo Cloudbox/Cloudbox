@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Traktarr Role                                #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -119,4 +119,8 @@
   when: not traktarr_service.stat.exists
 
 - name: Load traktarr service
-  systemd: state=stopped name=traktarr daemon_reload=yes enabled=no
+  systemd:
+    name: traktarr
+    state: "{{ traktarr_config.stat.exists | ternary('started','stopped') }}"
+    enabled: "{{ traktarr_config.stat.exists | ternary('yes','no') }}"
+    daemon_reload: yes

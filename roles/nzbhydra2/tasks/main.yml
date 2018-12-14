@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: NZBHydra2 Role                               #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
@@ -89,6 +89,7 @@
       - "127.0.0.1:5076:5076"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -105,7 +106,7 @@
         aliases:
           - nzbhydra2
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started
 
 - name: Settings Tweaks

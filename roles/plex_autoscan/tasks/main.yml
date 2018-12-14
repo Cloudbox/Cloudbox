@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Plex Autoscan Role                           #
-# Author(s):     L3uddz                                                 #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,13 +8,27 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check service exists
+- name: Check if plex_autoscan.service exists
   stat:
     path: "/etc/systemd/system/plex_autoscan.service"
   register: plex_autoscan_service
 
-- name: Stop existing plex_autoscan service
-  systemd: state=stopped name=plex_autoscan
+- name: Service Tasks
+  block:
+
+  - name: Populate Service Facts
+    service_facts:
+
+  - name: Get plex_autoscan service state
+    set_fact:
+      plex_autoscan_service_running: "{{ (services['plex_autoscan.service'] is defined) and (services['plex_autoscan.service']['state'] == 'running') }}"
+
+  - name: Stop plex_autoscan service
+    systemd:
+      name: plex_autoscan
+      state: stopped
+    when: plex_autoscan_service_running
+
   when: plex_autoscan_service.stat.exists
 
 - name: Create plex_autoscan directories
@@ -36,31 +50,32 @@
     requirements: /opt/plex_autoscan/requirements.txt
     executable: pip2
 
-# No plex_autoscan_config.stat.exists conditional to allow for separate use
-- name: Import Plex Auth Token role
-  import_role:
-    name: plex_auth_token
-  when: plex_account_enabled
-  tags: plex_auth_token
-
 - name: Check config exists
   stat:
     path: "/opt/plex_autoscan/config/config.json"
   register: plex_autoscan_config
 
-- name: "Generate 32 character SERVER_PASS"
-  shell: "pwgen 32 1"
-  register: plex_autoscan_pass
-  when: not plex_autoscan_config.stat.exists
+- name: Do following tasks when config does not exist
+  block:
 
-- name: Import default config
-  template:
-    src: config.json.js2
-    dest: /opt/plex_autoscan/config/config.json
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
+  - name: Import Plex Auth Token role
+    import_role:
+      name: plex_auth_token
+    when: plex_account_enabled
+
+  - name: "Generate 32 character SERVER_PASS"
+    shell: "pwgen 32 1"
+    register: plex_autoscan_pass
+
+  - name: Import default config
+    template:
+      src: config.json.js2
+      dest: /opt/plex_autoscan/config/config.json
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+
   when: not plex_autoscan_config.stat.exists
 
 - name: Set scan.py as executable
@@ -78,7 +93,22 @@
   when: not plex_autoscan_service.stat.exists
 
 - name: Start plex_autoscan service
-  systemd: state=started name=plex_autoscan daemon_reload=yes enabled=yes
+  systemd:
+    state: started
+    name: plex_autoscan
+    daemon_reload: yes
+    enabled: yes
 
-- name: Set directory permissions
-  file: "path=/opt/plex_autoscan state=directory owner={{user}} group={{user}} recurse=yes"
+- name: Update config.json
+  command: "/opt/plex_autoscan/scan.py sections"
+  become: yes
+  become_user: "{{user}}"
+  ignore_errors: yes
+  tags: plex_autoscan_update_sections
+
+- name: Configure PLEX_SECTION_PATH_MAPPINGS
+  command: "/opt/plex_autoscan/scan.py update_sections"
+  become: yes
+  become_user: "{{user}}"
+  ignore_errors: yes
+  tags: plex_autoscan_update_sections

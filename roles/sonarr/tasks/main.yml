@@ -1,6 +1,6 @@
 #########################################################################
 # Title:            Cloudbox: Sonarr Role                               #
-# Author(s):        L3uddz, Desimaniac                                  #
+# Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
 # Docker Image(s):  hotio/suitarr,                                      #
 #                   andrewkhunn/suitarr_mp4_automator                   #
@@ -80,6 +80,7 @@
       - "127.0.0.1:8989:8989"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -97,5 +98,5 @@
         aliases:
           - sonarr
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

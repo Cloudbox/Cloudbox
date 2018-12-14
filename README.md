@@ -3,8 +3,8 @@
 <br /><br />
 [![Website](https://img.shields.io/badge/Website-https%3A%2F%2Fcloudbox.works-blue.svg?colorB=177DC1&label=Website)](https://cloudbox.works)
 [![Wiki](https://img.shields.io/badge/Wiki-http%3A%2F%2Fcloudbox.wiki-blue.svg?colorB=177DC1&label=Wiki)](http://cloudbox.wiki)
-[![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2Fcloudbox-blue.svg?colorB=177DC1&label=Reddit)](https://reddit.com/r/Cloudbox)
 [![Discord](https://img.shields.io/discord/381077432285003776.svg?colorB=177DC1&label=Discord)](https://discord.io/cloudbox)
+[![Reddit](https://img.shields.io/badge/Reddit-%2Fr%2Fcloudbox-blue.svg?colorB=177DC1&label=Reddit)](https://reddit.com/r/Cloudbox)
 [![Feature Requests](https://img.shields.io/badge/Requests-Feathub-blue.svg?colorB=177DC1&label=Requests)](https://feathub.com/Cloudbox/Cloudbox)
 [![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/badge.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
 [![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/make-wish.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
@@ -50,29 +50,10 @@ Featured Applications:
 
 ***
 
-If you find this project helpful, feel free to make a small donation to the developers:
+If you find this project helpful, feel free to make a small donation to the developers.
 
 
-- [l3uddz](https://github.com/l3uddz) (creator)
-
-  - [Monzo](https://monzo.me/jamesbayliss9): Credit Card, Apple Pay, Google Pay
-
-  - [Beerpay](https://beerpay.io/Cloudbox/Cloudbox): Credit Card, BTC
-
-  - [Paypal: l3uddz@gmail.com](https://www.paypal.me/l3uddz)
-
-  - BTC: 3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL
-
-- [desimaniac](https://github.com/Desimaniac) (developer)
-
-  - [Square Cash](https://cash.me/$desimaniac): Credit Card
-
-  - [Beerpay](https://beerpay.io/Cloudbox/Cloudbox): Credit Card, BTC
-
-  - [Paypal: desimaniac@outlook.com](https://www.paypal.me/desimaniac123)
-
-  - BTC: 3Jz922kDLQwjnFh986igeEmc72c8Hh5T3Y
-
-  - LTC: MD2gTjR3Mur2pHZxo1cku3i9U8SuDU8k2B
-
-  - ETH: 0xE50B388Aa66593153801e4ff99bA23737c888BF9
+|  Developers  | Roles | Donation Methods   |
+|:---|:---|:---|
+| [l3uddz](https://github.com/l3uddz) | creator, developer | [Beerpay](https://beerpay.io/Cloudbox/Cloudbox), [Paypal (l3uddz@gmail.com)](https://www.paypal.me/l3uddz), [Monzo](https://monzo.me/jamesbayliss9) (Apple Pay, Google Pay), [BTC](https://en.cryptobadges.io/donate/3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL)
+| [desimaniac](https://github.com/desimaniac) | developer | [Beerpay](https://beerpay.io/Cloudbox/Cloudbox), [Paypal (desimaniac@outlook.com)](https://www.paypal.me/desimaniac123), [Square Cash](https://cash.me/$desimaniac), [BTC](https://en.cryptobadges.io/donate/3Jz922kDLQwjnFh986igeEmc72c8Hh5T3Y), [ETH](https://en.cryptobadges.io/donate/0xE50B388Aa66593153801e4ff99bA23737c888BF9)|

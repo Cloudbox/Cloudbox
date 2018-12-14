@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: ZNC Role                                     #
-# Author(s):     L3uddz, Horjulf                                        #
+# Author(s):     l3uddz, horjulf                                        #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/docker-znc                                     #
 # --                                                                    #
@@ -50,5 +50,5 @@
         aliases:
           - znc
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

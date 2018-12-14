@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Sonarr4K Role                                #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
@@ -57,10 +57,6 @@
   with_items:
     - /opt/sonarr4k
 
-- name: Set 'suitarr_image' variable
-  set_fact:
-    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator','hotio/suitarr') }}"
-
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -73,12 +69,13 @@
 - name: Create and start container
   docker_container:
     name: sonarr4k
-    image: "{{suitarr_image}}:sonarr"
+    image: "hotio/suitarr:sonarr"
     pull: yes
     published_ports:
       - "127.0.0.1:8990:8989"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -96,5 +93,5 @@
         aliases:
           - sonarr4k
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

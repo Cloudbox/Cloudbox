@@ -1,0 +1,29 @@
+#########################################################################
+# Title:         System: Fix Timezone                                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Fetch stats on '/etc/timezone'
+  stat:
+    path: "/etc/localtime"
+  register: etc_timezone
+
+- name: Fix time zone when linked to '/usr/share/zoneinfo/'
+  block:
+
+  - name: Fetch time zone
+    uri:
+      url: http://ip-api.com/line?fields=timezone
+      return_content: yes
+    register: timezone_response
+
+  - name: Set correct time zone when linked to folder
+    timezone:
+      name: "{{ timezone_response.content | trim }}"
+
+  when: (etc_timezone.stat.islnk is defined) and (etc_timezone.stat.islnk) and (etc_timezone.stat.lnk_target == '/usr/share/zoneinfo/' )

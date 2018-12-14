@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Sickbeard MP4 Automator                      #
-# Author(s):     Desimaniac, AndrewKhunn                                #
+# Author(s):     desimaniac, andrewkhunn                                #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.rocks          #
@@ -49,8 +49,6 @@
   include_tasks: "update_docker_images.yml"
   loop:
     - "sonarr"
-    - "sonarr4k"
     - "radarr"
-    - "radarr4k"
   loop_control:
     loop_var: app

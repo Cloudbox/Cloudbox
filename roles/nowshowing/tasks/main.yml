@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: NowShowing Role                              #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  ninthwalker/nowshowing:v2                              #
 # --                                                                    #
@@ -49,5 +49,5 @@
         aliases:
           - nowshowing
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Ombi Role                                    #
-# Author(s):     RXWatcher1, L3uddz, Desimaniac                         #
+# Author(s):     RXWatcher1, l3uddz, desimaniac                         #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  linuxserver/ombi                                       #
 # --                                                                    #
@@ -49,5 +49,5 @@
         aliases:
           - ombi
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Radarr4K Role                                #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
@@ -57,10 +57,6 @@
   with_items:
     - /opt/radarr4k
 
-- name: Set 'suitarr_image' variable
-  set_fact:
-    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator','hotio/suitarr') }}"
-
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -73,16 +69,17 @@
 - name: Create and start container
   docker_container:
     name: radarr4k
-    image: "{{suitarr_image}}:radarr"
+    image: "hotio/suitarr:radarr"
     pull: yes
     published_ports:
       - "127.0.0.1:7879:7878"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       UMASK: 002
-      BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "radarr4k.{{domain}}"
       VIRTUAL_PORT: 7878
@@ -96,5 +93,5 @@
         aliases:
           - radarr4k
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

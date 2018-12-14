@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: ctop Role                                    #
-# Author(s):     L3uddz, Desimaniac                                     #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -28,7 +28,7 @@
   register: x
 
 - name: "Get ctop version"
-  shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/.$//'"
+  shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
   register: ctop_version
   ignore_errors: yes
   when: x is success

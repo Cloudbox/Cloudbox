@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: System Role                                  #
-# Author(s):     L3uddz, EnorMOZ, Desimaniac                            #
+# Author(s):     l3uddz, desimaniac, EnorMOZ                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,13 +8,16 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: System apt task
+- name: apt tasks
   include_tasks: "apt.yml"
 
-- name: System sysctl task
+- name: Network tasks
+  import_tasks: "network.yml"
+
+- name: sysctl tasks
   include_tasks: "systctl.yml"
 
-- name: System mounts task
+- name: Mounts tasks
   include_tasks: "mounts.yml"
 
 - name: Check if intel_pstate directory exists.
@@ -22,10 +25,13 @@
     path: /sys/devices/system/cpu/intel_pstate
   register: p
 
-- name: System CPU Frequency task
+- name: CPU Frequency tasks
   include_tasks: "cpufrequency.yml"
   when: p.stat.isdir is defined and p.stat.isdir
 
-- name: System CPU Power task
-  include_tasks: "cpupower.yml"
-  when: p.stat.isdir is defined and p.stat.isdir
+- name: Remove CPU Power task
+  include_tasks: "remove_cpupower.yml"
+
+- name: Fix timezone
+  import_tasks: "timezone.yml"
+  ignore_errors: yes

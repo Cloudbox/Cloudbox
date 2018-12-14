@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Backup Role                                  #
-# Author(s):     L3uddz, Desimaniac, RXWatcher1                         #
+# Author(s):     l3uddz, desimaniac, RXWatcher1                         #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -61,6 +61,7 @@
       - "/home/{{user}}/logs/backup"
       - "{{local.destination}}"
       - "{{local.destination}}/opt"
+      - "/opt/systemd-backup"
 
   - name: "Copy files to '{{local.destination}}'"
     copy:
@@ -100,16 +101,25 @@
     tags: vault-service
 
   - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
-    synchronize:
-      src: "/etc/systemd/system/"
-      dest: "/opt/systemd-backup"
-      mode: push
-      recursive: yes
+    shell: |
+      /usr/bin/rsync \
+        --delay-updates \
+        -F \
+        --compress \
+        --archive \
+        --no-recursive \
+        --no-links \
+        --no-perms \
+        --include='*.service' \
+        --include='*.mount' \
+        /etc/systemd/system/* /opt/systemd-backup/
+    args:
+      executable: /bin/bash
+      warn: no
     ignore_errors: yes
 
-  - name: "Make systemd-backup folder readable/writeable by '{{user}}'"
+  - name: "Reset permissions of '/opt/systemd-backup'"
     file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-    ignore_errors: yes
 
   - name: "Gather list of running Docker containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
@@ -256,7 +266,7 @@
     become_user: "{{user}}"
     register: rclone_timestamp
     ignore_errors: yes
-    when: rclone.enabled
+    when: rclone.enable
 
   # If rclone_timestamp is blank (would happen if settings.yml was not at destination), default the naming of files to '/archived/old/filename.ext', else /archived/date/filename.ext.
   - name: "Archive previous files in '{{rclone.destination}}'"
@@ -266,7 +276,7 @@
     register: rclone_move
     failed_when: rclone_move.rc > 3
     ignore_errors: yes
-    when: rclone.enabled
+    when: rclone.enable
     with_items:
      - "opt"
      - "ansible.cfg"
@@ -287,14 +297,14 @@
     command: "rclone copy '{{local.destination}}' '{{rclone.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone.log'"
     become: yes
     become_user: "{{user}}"
-    when: rclone.enabled
+    when: rclone.enable
 
   - name: "Pushover Message: Rclone uploaded backup to '{{rclone.destination}}'"
     include_role:
       name: pushover
     vars:
       message: "Rclone uploaded backup to '{{rclone.destination}}'."
-    when: rclone.enabled
+    when: rclone.enable
 
   - name: "Use rsync to upload backup to '{{rsync.destination}}'"
     synchronize:
@@ -304,14 +314,14 @@
         - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync.log'"
     become: yes
     become_user: "{{user}}"
-    when: rsync.enabled
+    when: rsync.enable
 
   - name: "Pushover Message: Rsync uploaded backup to '{{rsync.destination}}'"
     include_role:
       name: pushover
     vars:
       message: "Rsync uploaded backup to '{{rsync.destination}}'."
-    when: rsync.enabled
+    when: rsync.enable
 
   - name: "Get End Time"
     set_fact:
@@ -337,7 +347,7 @@
     file:
       path: "{{local.destination}}"
       state: absent
-    when: (dir_files2.matched|int != 0) and (not local.keep_local_copy)
+    when: (dir_files2.matched|int != 0) and (not local.enable)
 
   - debug:
       msg: "Backup Completed Successfully."

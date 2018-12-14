@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: OrganizrV1 Role                              #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  lsiocommunity/organizr                                 #
 # --                                                                    #
@@ -19,6 +19,30 @@
   docker_container:
     name: organizrv1
     state: absent
+
+# START - Migration Tasks
+- name: Check if previous organizr exists
+  stat:
+    path: "/opt/organizr/www/Dashboard/functions.php"
+  register: function_php
+
+- name: Get version of previous organizr
+  shell: cat /opt/organizr/www/Dashboard/functions.php | grep "define('INSTALLEDVERSION'" | awk '{ print $2 }' | sed -n "s/^.*'\(.*\)'.*$/\1/ p"
+  register: organizr_version
+  when: function_php.stat.exists
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: organizr
+    state: absent
+  when: (function_php.stat.exists) and (organizr_version.stdout is version('2.0', '<'))
+
+- name: Move older version 'organizr' to `organizrv1`
+  shell: |
+    mv /opt/organizr /opt/organizrv1
+    chown -R {{user}}:{{user}} /opt/organizrv1
+  when: (function_php.stat.exists) and (organizr_version.stdout is version('2.0', '<'))
+# END - Migration Tasks
 
 - name: Create organizrv1 directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
@@ -49,5 +73,5 @@
         aliases:
           - organizrv1
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

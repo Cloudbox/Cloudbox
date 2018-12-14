@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Nginx Role                                   #
-# Author(s):     Desimaniac                                             #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # Docker Image:  linuxserver/nginx                                      #
 # --                                                                    #
@@ -58,5 +58,5 @@
         aliases:
           - nginx
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

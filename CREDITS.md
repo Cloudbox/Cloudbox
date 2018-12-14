@@ -3,19 +3,21 @@
 ### Developers
 
 * [l3uddz](https://github.com/l3uddz) - Creator of Cloudbox, Plex Autoscan, Cloudplow, Traktarr, Plex Dupefinder, Plex Patrol, Arrpush, and others.
-* [Desimaniac](https://github.com/Desimaniac) - Cloudbox; Cloudbox Wiki; Documentation for Plex Autoscan, Cloudplow, and Traktarr.
+* [desimaniac](https://github.com/desimaniac) - Cloudbox; Cloudbox Wiki; Documentation for Plex Autoscan, Cloudplow, and Traktarr.
 
 ### Contributors
 
 * [EnorMOZ](https://github.com/EnorMOZ) - Cloudbox.
-* [Horjulf](https://github.com/horjulf) - ruTorrent + autodl Docker Image (creator); Plex Autoscan; Traktarr, Plex Patrol, Arrpush, and others.
-* [RXWatcher](https://github.com/RXWatcher1) - Cloudbox.
-* [Vuur](https://github.com/vuur) -  Web Design; Admin of GitHub, Discord, and Reddit.
+* [horjulf](https://github.com/horjulf) - Forked version of LSIO ruTorrent Docker image with autodl-irssi (creator); Plex Autoscan; Traktarr, Plex Patrol, Arrpush, and others.
+* [RXWatcher1](https://github.com/RXWatcher1) - Cloudbox.
+* [Vuur](https://github.com/vuur) -  Web Design.
 * [TheBradz](https://github.com/TheBradz) - Cloudbox; Cloudbox Wiki.
-* [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki.
+* [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki. Admin on Discord.
 * [Hotio](https://gitlab.com/hotio) - Suitarr Docker Image (creator).
 * [Mitchell Klijs](https://github.com/mitchellklijs) - Traktarr; Cloudplow.
+* [davemaster223](https://github.com/daghaian) - Traktarr; Cloudplow.
 * [MZA](https://github.com/mza921) - Plex Autoscan.
+* [andrewkhunn](https://github.com/andrewkhunn) - Forked version of Suitarr Docker image with Sickbeard MP4 Automator (creator).
 
 
 ### Dependencies

@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Heimdall Role                                #
-# Author(s):     Captain-NaCl, Desimaniac                               #
+# Author(s):     TheBradz, desimaniac                                   #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  linuxserver/heimdall                                   #
 # --                                                                    #
@@ -60,5 +60,5 @@
         aliases:
           - heimdall
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started
