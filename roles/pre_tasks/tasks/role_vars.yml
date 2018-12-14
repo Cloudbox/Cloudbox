@@ -25,25 +25,3 @@
         (old_rutorrent_downloads_path is defined|default(false,true))
       )
       else false }}"
-
-- name: "Set 'run_kernel'"
-  set_fact:
-    run_kernel: "{{ false if (
-        not (
-        (kernel is undefined)
-        or
-        (kernel is none)
-        or
-        (kernel | trim == '')
-        or
-        (kernel.version is undefined)
-        )
-        and (
-        (kernel.version is none)
-        or
-        (kernel.version | trim == '')
-        or
-        ('disable' in kernel.version)
-        )
-      )
-      else true }}"
