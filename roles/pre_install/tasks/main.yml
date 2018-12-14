@@ -12,6 +12,13 @@
   fail: msg="Your system must be running Linux kernel version 4.00 or higher."
   when: ansible_kernel is version_compare('4.00', '<')
 
+- name: Ensure system is running Linux kernel version 4.00 or higher
+  debug:
+    msg:
+      - "Cloudbox was designed for use on linux kernel version 4.10+."
+      - "Running Cloudbox on a lower kernel may lead to reduced performance."
+  when: (ansible_kernel is version('4.00', '>=')) and (ansible_kernel is version('4.10', '<'))
+
 - name: Create 'cloudbox_home_folder' variable
   set_fact:
     cloudbox_home_folder: "/home/{{user}}/cloudbox"
