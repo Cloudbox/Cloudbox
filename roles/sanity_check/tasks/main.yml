@@ -12,8 +12,8 @@
   debug:
     msg:
       - "Cloudbox was designed for use on Ubuntu servers running versions 16.04+."
-      - "Running on unsupported systems may cause unpredictable results."
-  when: (ansible_distribution != 'Ubuntu') or ((ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version_compare('16.04', '<')))
+      - "Running Cloudbox on unsupported systems may cause unpredictable results."
+  when: (ansible_distribution != 'Ubuntu') or ((ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('16.04', '<')))
   tags: always
 
 - name: "Display System Info"
