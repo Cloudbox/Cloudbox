@@ -148,6 +148,7 @@
       - "/opt/plex:/config"
       - "/opt/scripts:/scripts"
       - "{{plex.transcodes}}:/transcode"
+      - "{{plex.transcodes}}:/transcodes"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
       - "/tmp:/tmp"
