@@ -39,8 +39,8 @@
       mode: 0755
       force: no
 
-  - name: Get NIC info
-    shell: lspci | grep Ethernet
+  - name: Get nic info
+    shell: lspci
     register: nic
 
   - name: Disable TSO / TX
