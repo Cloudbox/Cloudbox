@@ -21,6 +21,12 @@
     name: radarr
     state: absent
 
+- name: Remove darkerr config
+  file:
+    path: "/opt/nginx-proxy/vhost.d/radarr.{{domain}}_location"
+    state: absent
+  when: not (darkerr.enable | default(false,true))
+
 # START - Suitarr Migration Tasks
 - name: Check folder exists
   stat:
@@ -57,6 +63,16 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/radarr
+
+- name: Add darkerr config
+  copy:
+    src: "darkerr-nginx-conf"
+    dest: "/opt/nginx-proxy/vhost.d/radarr.{{domain}}_location"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+    force: yes
+  when: (darkerr.enable | default(false,true))
 
 - name: Set 'suitarr_image' variable
   set_fact:

@@ -6,6 +6,8 @@ plex:
   db_cache_size: default
 suitarr:
   version: default
+darkerr:
+  enable: no
 emby:
   version: latest
 organizr:
