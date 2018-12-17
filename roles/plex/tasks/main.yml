@@ -24,7 +24,8 @@
     - "/opt/plex/Library/Application Support/Plex Media Server"
     - "/opt/plex/Library/Logs"
     - "/opt/plex/Library/Logs/Plex Media Server"
-    - "{{plex.transcodes}}"
+    - "{{plex.transcodes}}/1"
+    - "{{plex.transcodes}}/2"
 
 - name: "Stop and remove any existing container"
   docker_container:
