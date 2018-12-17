@@ -55,7 +55,8 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/emby:/config"
-      - "{{plex.transcodes}}:/transcode"
+      - "{{plex.transcodes}}/3:/transcode"
+      - "{{plex.transcodes}}/4:/transcodes"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
     devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
