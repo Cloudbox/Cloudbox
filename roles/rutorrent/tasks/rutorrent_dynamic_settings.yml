@@ -15,13 +15,13 @@
 - name: Set 'network.local_address.set'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.local_address.set\s?=.*'
+    regexp: '^network\.local_address\.set\s*=.*'
     line: 'network.local_address.set = {{ip}}'
     state: present
 
 - name: Add comment for 'network.local_address.set'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    insertbefore: '^network.local_address.set\s?=.*'
+    insertbefore: '^network\.local_address\.set\s*=.*'
     line: "# The ip address reported to the tracker"
     state: present
