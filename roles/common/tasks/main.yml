@@ -32,6 +32,7 @@
     - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
     - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
   register: apt_multiverse_repositories
+  when: ansible_distribution == 'Ubuntu'
 
 - name: Update APT packages list
   apt:
