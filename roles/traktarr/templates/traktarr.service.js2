@@ -10,8 +10,7 @@ Group={{user}}
 Type=simple
 WorkingDirectory=/opt/traktarr/
 TimeoutStartSec=900
-ExecStartPre=/bin/sleep 120
-ExecStart=/usr/bin/python3 /opt/traktarr/traktarr.py run
+ExecStart=/usr/bin/python3 /opt/traktarr/traktarr.py run --ignore-blacklist
 Restart=always
 RestartSec=10
 
