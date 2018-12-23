@@ -44,7 +44,7 @@ on_finish:
         write-host "gitCommits = $env:gitCommits"
         $env:gitVersion=git describe --tags --abbrev=0 $env:APPVEYOR_REPO_BRANCH
         write-host "gitVersion = $env:gitVersion"
-        $env:newVersion="$gitVersion-$env:gitCommits"
+        $env:newVersion="$env:gitVersion-$env:gitCommits"
         write-host "newVersion = $env:newVersion"
         $env:appveyor_info_version="$env:newVersion-$env:APPVEYOR_REPO_BRANCH"
         write-host "appveyor_info_version = $env:appveyor_info_version"
@@ -53,6 +53,7 @@ on_finish:
         write-host "appveyor_build_version = $env:appveyor_build_version"
         appveyor UpdateBuild -Version "$env:newVersion"
 
+        write-host "=========================================="
         write-host "Using hash for build version: $env:newhash"
         write-host "Update appveyor build version to: $env:appveyor_build_version"
         write-host "Update appveyor info version to: $env:appveyor_info_version"
