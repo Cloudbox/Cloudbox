@@ -1,0 +1,60 @@
+#########################################################################
+# Title:         Cloudbox: User Role                                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create common groups
+  group: "name={{item}} state=present"
+  with_items:
+    - docker
+    - "{{user}}"
+
+- name: "Create user: {{user}}"
+  user:
+    name: "{{user}}"
+    group: "{{user}}"
+    groups: "{{user}},docker,sudo"
+    password: "{{ passwd | string | password_hash('sha512') }}"
+    update_password: on_create
+    append: yes
+  register: user_info
+
+- name: "Set 'uid', 'gid', and 'vgid'"
+  set_fact:
+    uid: "{{ user_info.uid }}"
+    gid: "{{ user_info.group }}"
+    vgid: "{{ lookup('pipe','getent group video | cut -d: -f3') }}"
+
+- name: Check sudoers exists
+  stat:
+    path: "/etc/sudoers"
+  register: sudoers
+
+- name: Set sudo group to NOPASSWD
+  lineinfile:
+    path: "/etc/sudoers"
+    regexp: '^%sudo\s'
+    line: '%sudo   ALL=(ALL) NOPASSWD:ALL'
+    state: present
+  when: sudoers.stat.exists == True
+
+- name: User Account Sanity Check
+  block:
+
+  - name: "Check if user account exists"
+    shell: "id -un {{user}} >/dev/null 2>&1;"
+    register: user_check
+    failed_when: user_check.rc > 1
+
+  - name: "Fail when user account does not exist"
+    fail:
+      msg: "The user '{{user}}' does not exist!"
+    when: user_check.rc == 1
+
+- name: "Reset ownership of '/home/{{user}}/' path"
+  file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"

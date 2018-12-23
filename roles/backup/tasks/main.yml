@@ -266,7 +266,7 @@
     become_user: "{{user}}"
     register: rclone_timestamp
     ignore_errors: yes
-    when: rclone.enabled
+    when: rclone.enable
 
   # If rclone_timestamp is blank (would happen if settings.yml was not at destination), default the naming of files to '/archived/old/filename.ext', else /archived/date/filename.ext.
   - name: "Archive previous files in '{{rclone.destination}}'"
@@ -276,7 +276,7 @@
     register: rclone_move
     failed_when: rclone_move.rc > 3
     ignore_errors: yes
-    when: rclone.enabled
+    when: rclone.enable
     with_items:
      - "opt"
      - "ansible.cfg"
@@ -297,14 +297,14 @@
     command: "rclone copy '{{local.destination}}' '{{rclone.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone.log'"
     become: yes
     become_user: "{{user}}"
-    when: rclone.enabled
+    when: rclone.enable
 
   - name: "Pushover Message: Rclone uploaded backup to '{{rclone.destination}}'"
     include_role:
       name: pushover
     vars:
       message: "Rclone uploaded backup to '{{rclone.destination}}'."
-    when: rclone.enabled
+    when: rclone.enable
 
   - name: "Use rsync to upload backup to '{{rsync.destination}}'"
     synchronize:
@@ -314,14 +314,14 @@
         - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync.log'"
     become: yes
     become_user: "{{user}}"
-    when: rsync.enabled
+    when: rsync.enable
 
   - name: "Pushover Message: Rsync uploaded backup to '{{rsync.destination}}'"
     include_role:
       name: pushover
     vars:
       message: "Rsync uploaded backup to '{{rsync.destination}}'."
-    when: rsync.enabled
+    when: rsync.enable
 
   - name: "Get End Time"
     set_fact:
@@ -347,7 +347,7 @@
     file:
       path: "{{local.destination}}"
       state: absent
-    when: (dir_files2.matched|int != 0) and (not local.keep_local_copy)
+    when: (dir_files2.matched|int != 0) and (not local.enable)
 
   - debug:
       msg: "Backup Completed Successfully."

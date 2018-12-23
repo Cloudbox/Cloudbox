@@ -21,6 +21,12 @@
     name: radarr
     state: absent
 
+- name: Remove darkerr config
+  file:
+    path: "/opt/nginx-proxy/vhost.d/radarr.{{domain}}_location"
+    state: absent
+  when: not (darkerr.enable | default(false,true))
+
 # START - Suitarr Migration Tasks
 - name: Check folder exists
   stat:
@@ -58,6 +64,16 @@
   with_items:
     - /opt/radarr
 
+- name: Add darkerr config
+  copy:
+    src: "darkerr-nginx-conf"
+    dest: "/opt/nginx-proxy/vhost.d/radarr.{{domain}}_location"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+    force: yes
+  when: (darkerr.enable | default(false,true))
+
 - name: Set 'suitarr_image' variable
   set_fact:
     suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator','hotio/suitarr') }}"
@@ -80,10 +96,11 @@
       - "127.0.0.1:7878:7878"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       UMASK: 002
-      BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "radarr.{{domain}}"
       VIRTUAL_PORT: 7878
@@ -97,5 +114,5 @@
         aliases:
           - radarr
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

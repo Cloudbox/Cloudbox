@@ -98,7 +98,7 @@
         aliases:
           - nginx-proxy
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started
 
 - name: Create and start letsencrypt container
@@ -114,7 +114,8 @@
     volumes_from:
       - "nginx-proxy"
     env:
-      DEBUG: true
+      FILES_UID: "{{uid}}"
+      FILES_GID: "{{gid}}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
@@ -122,5 +123,5 @@
         aliases:
           - letsencrypt
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

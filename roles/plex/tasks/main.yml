@@ -24,7 +24,8 @@
     - "/opt/plex/Library/Application Support/Plex Media Server"
     - "/opt/plex/Library/Logs"
     - "/opt/plex/Library/Logs/Plex Media Server"
-    - "{{plex.transcodes}}"
+    - "{{plex.transcodes}}/1"
+    - "{{plex.transcodes}}/2"
 
 - name: "Stop and remove any existing container"
   docker_container:
@@ -147,7 +148,8 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
       - "/opt/scripts:/scripts"
-      - "{{plex.transcodes}}:/transcode"
+      - "{{plex.transcodes}}/1:/transcode"
+      - "{{plex.transcodes}}/2:/transcodes"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
       - "/tmp:/tmp"
@@ -160,7 +162,7 @@
         aliases:
           - plex
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started
 
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...

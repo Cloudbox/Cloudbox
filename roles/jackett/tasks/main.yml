@@ -66,6 +66,7 @@
       - "127.0.0.1:9117:9117"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -84,5 +85,5 @@
         aliases:
           - jackett
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

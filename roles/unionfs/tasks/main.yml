@@ -26,14 +26,8 @@
   systemd: state=stopped name=unionfs
   when: unionfs_service.stat.exists and unionfs_service_running
 
-- name: Check if mount path exists
-  stat:
-    path: "/mnt/unionfs"
-  register: mount_path
-
 - name: "Force unmount /mnt/unionfs"
-  shell: "/bin/umount -f /mnt/unionfs"
-  when: mount_path.stat.exists
+  shell: "/bin/umount -f /mnt/unionfs 2>/dev/null || :"
   ignore_errors: yes
 
 - name: Create unionfs directories

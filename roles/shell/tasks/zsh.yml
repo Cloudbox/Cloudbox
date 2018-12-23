@@ -74,6 +74,9 @@
     shell: /bin/zsh
   register: default_shell
 
-- debug:
-    msg: "zsh is now set as your default shell. You will need to re-login for changes to take effect."
+- name: Z Shell is now set as your default shell
+  debug:
+    msg:
+      - "Z Shell is now set as your default shell."
+      - "You will need to re-login for changes to take effect."
   when: default_shell is changed

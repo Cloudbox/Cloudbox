@@ -20,6 +20,12 @@
     name: radarr4k
     state: absent
 
+- name: Remove darkerr config
+  file:
+    path: "/opt/nginx-proxy/vhost.d/radarr4k.{{domain}}_location"
+    state: absent
+  when: not (darkerr.enable | default(false,true))
+
 # START - Suitarr Migration Tasks
 - name: Check folder exists
   stat:
@@ -57,6 +63,16 @@
   with_items:
     - /opt/radarr4k
 
+- name: Add darkerr config
+  copy:
+    src: "darkerr-nginx-conf"
+    dest: "/opt/nginx-proxy/vhost.d/radarr4k.{{domain}}_location"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+    force: yes
+  when: (darkerr.enable | default(false,true))
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -75,10 +91,11 @@
       - "127.0.0.1:7879:7878"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       UMASK: 002
-      BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "radarr4k.{{domain}}"
       VIRTUAL_PORT: 7878
@@ -92,5 +109,5 @@
         aliases:
           - radarr4k
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

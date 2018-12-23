@@ -1,0 +1,58 @@
+#########################################################################
+# Title:            Cloudbox: NZB Throttle                              #
+# Author(s):        desimaniac                                          #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# Docker Image(s):  daghaian/nzbthrottle                                #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: nzbthrottle
+    state: absent
+
+- name: Create nzbthrottle directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /opt/nzbthrottle
+
+- name: Check config exists
+  stat:
+    path: "/opt/nzbthrottle/config.json"
+  register: nzbthrottle_config
+
+- name: Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: (not nzbthrottle_config.stat.exists) and (plex_account_enabled)
+
+- name: Import default config
+  template:
+    src: "config.json.js2"
+    dest: "/opt/nzbthrottle/config.json"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+  when: (not nzbthrottle_config.stat.exists)
+
+- name: Create and start container
+  docker_container:
+    name: nzbthrottle
+    image: "daghaian/nzbthrottle"
+    pull: yes
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nzbthrottle/config.json:/nzbthrottle/config.json:ro"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - nzbthrottle
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started

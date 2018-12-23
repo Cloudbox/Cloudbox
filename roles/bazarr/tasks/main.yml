@@ -66,6 +66,7 @@
       - "127.0.0.1:6767:6767"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
@@ -89,5 +90,5 @@
         aliases:
           - bazarr
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

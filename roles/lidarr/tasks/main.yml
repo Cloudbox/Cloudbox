@@ -75,10 +75,11 @@
       - "127.0.0.1:8686:8686"
     env:
       VERSION: "{{suitarr.version}}"
+      FALLBACK: "yes"
+      BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
       UMASK: 002
-      BACKUP: "no"
       MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "lidarr.{{domain}}"
       VIRTUAL_PORT: 8686
@@ -92,5 +93,5 @@
         aliases:
           - lidarr
     purge_networks: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     state: started

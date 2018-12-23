@@ -8,56 +8,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Ensure kernel version is 4.10 or higher
-  fail: msg="You must be using kernel version 4.10 or higher!"
-  when: ansible_kernel is version_compare('4.10', '<')
+- name: Fail when linux kernel version is lower than 4.00
+  fail: msg="Your system must be running Linux kernel version 4.00 or higher."
+  when: ansible_kernel is version_compare('4.00', '<')
 
-- name: Create common groups
-  group: "name={{item}} state=present"
-  with_items:
-    - docker
-    - "{{user}}"
+- name: Warn when linux kernel version is lower than 4.10
+  debug:
+    msg:
+      - "Cloudbox was designed for use on linux kernel version 4.10+."
+      - "Running Cloudbox on a lower kernel may lead to reduced performance."
+  when: (ansible_kernel is version('4.00', '>=')) and (ansible_kernel is version('4.10', '<'))
 
-- name: "Create user {{user}}"
-  user:
-    name: "{{user}}"
-    group: "{{user}}"
-    groups: "{{user}},docker,sudo"
-    password: "{{ passwd | string | password_hash('sha512') }}"
-    update_password: on_create
-    append: yes
-  register: user_info
-
-# For CI Testing
-- name: "Set 'uid', 'gid', and 'vgid'"
-  set_fact:
-    uid: "{{ user_info.uid }}"
-    gid: "{{ user_info.group }}"
-    vgid: "{{ lookup('pipe','getent group video | cut -d: -f3') }}"
-  when: (uid is undefined) or (uid is none) or (uid | trim == '')
-
-- name: Set default shell
-  import_role:
-    name: shell
-  tags: shell
-
-- name: Check sudoers exists
-  stat:
-    path: "/etc/sudoers"
-  register: sudoers
-
-- name: Set sudo group to NOPASSWD
-  lineinfile:
-    path: "/etc/sudoers"
-    regexp: '^%sudo\s'
-    line: '%sudo   ALL=(ALL) NOPASSWD:ALL'
-    state: present
-  when: sudoers.stat.exists == True
-
-- name: "Create and/or set ownership of '/home/{{user}}/' path"
-  file: "path=/home/{{user}} state=directory owner={{user}} group={{user}} recurse=yes"
-
-- name: Create cloudbox_home_folder variable
+- name: Create 'cloudbox_home_folder' variable
   set_fact:
     cloudbox_home_folder: "/home/{{user}}/cloudbox"
 
@@ -95,20 +57,5 @@
 
 - name: "Quit playbook after creation of new cloudbox folder location"
   fail:
-    msg: "Please re-login with the '{{user}}' account (or 'sudo su {{user}}') and run the Cloudbox playbook from the '{{cloudbox_home_folder}}/' path."
+    msg: "Please re-login with the '{{user}}' account and run the Cloudbox installer from the '{{cloudbox_home_folder}}/' path."
   when: (playbook_dir != cloudbox_home_folder) and not (continuous_integration)
-
-- name: User Account Sanity Check
-  block:
-
-  - name: "Check if user account exists"
-    shell: "id -un {{user}} >/dev/null 2>&1;"
-    register: user_check
-    failed_when: user_check.rc > 1
-
-  - name: "Fail when user account does not exist"
-    fail:
-      msg: "The user '{{user}}' does not exist!"
-    when: user_check.rc == 1
-
-  when: not continuous_integration
