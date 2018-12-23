@@ -74,7 +74,7 @@
 - name: Set max_downloads_global to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle\.max_downloads\.global.set\s*=.*'
+    regexp: '^throttle\.max_downloads\.global\.set\s*=.*'
     line: 'throttle.max_downloads.global.set = 1024'
     state: present
 
@@ -120,7 +120,7 @@
 - name: Disable - Hash check.
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^pieces\.hash\.on_completion.set\s*=.*'
+    regexp: '^pieces\.hash\.on_completion\.set\s*=.*'
     line: 'pieces.hash.on_completion.set = no'
     state: present
 
