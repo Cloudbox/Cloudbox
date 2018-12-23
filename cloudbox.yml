@@ -46,12 +46,16 @@
     - { role: sub-zero-plugin, tags: ['sub-zero-plugin', 'reinstall-sub-zero-plugin'] }
     - { role: webtools-plugin, tags: ['webtools-plugin', 'reinstall-webtools-plugin'] }
     - { role: subliminal, tags: ['subliminal'] }
+    - { role: emby, tags: ['emby'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: plexrequests, tags: ['plexrequests'] }
     - { role: resilio-sync, tags: ['resilio-sync'] }
     - { role: nextcloud, tags: ['nextcloud'] }
     - { role: mariadb, tags: ['mariadb'] }
-    - { role: emby, tags: ['emby'] }
+    - { role: grafana, tags: ['grafana'] }
+    - { role: influxdb, tags: ['influxdb'] }
+    - { role: telegraf, tags: ['telegraf'] }
+    - { role: varken, tags: ['varken'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }

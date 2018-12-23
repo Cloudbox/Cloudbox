@@ -1,0 +1,62 @@
+#########################################################################
+# Title:            Cloudbox: Varken Role                               #
+# Author(s):        desimaniac                                          #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# Docker Image(s):  boerderij/varken                                    #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: InfluxDB Role
+  include_role:
+    name: influxdb
+
+- name: Telegraf Role
+  include_role:
+    name: telegraf
+
+- name: Grafana Role
+  include_role:
+    name: grafana
+
+- name: Stop and remove any existing containers
+  docker_container: "name={{item}} state=absent"
+  with_items:
+    - varken
+
+- name: Create required directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/varken
+
+- name: Check if varken config exists
+  stat:
+    path: "/opt/varken/config.json"
+  register: varken_config
+
+- name: Import config tasks
+  import_tasks: config.yml
+  when: not varken_config.stat.exists
+
+- name: Create and start varken container
+  docker_container:
+    name: varken
+    image: "boerderij/varken:nightly"
+    pull: yes
+    env:
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/varken:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - varken
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started

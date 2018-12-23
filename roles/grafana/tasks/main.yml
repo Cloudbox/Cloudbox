@@ -1,0 +1,55 @@
+#########################################################################
+# Title:            Cloudbox: Grafana Role                              #
+# Author(s):        desimaniac                                          #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# Docker Image(s):  grafana/grafana                                     #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: grafana
+
+- name: Stop and remove any existing containers
+  docker_container: "name={{item}} state=absent"
+  with_items:
+    - grafana
+
+- name: Create required directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/grafana
+
+- name: Create and start grafana container
+  docker_container:
+    name: grafana
+    image: "grafana/grafana"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:3001:3000"
+    user: "{{uid}}:{{gid}}"
+    env:
+      GF_SERVER_ROOT_URL: "https://grafana.{{domain}}"
+      GF_SECURITY_ADMIN_PASSWORD: "{{passwd}}"
+      GF_INSTALL_PLUGINS: "grafana-piechart-panel,grafana-worldmap-panel"
+      VIRTUAL_HOST: "grafana.{{domain}}"
+      VIRTUAL_PORT: 3000
+      LETSENCRYPT_HOST: "grafana.{{domain}}"
+      LETSENCRYPT_EMAIL: "{{email}}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/grafana:/var/lib/grafana"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - grafana
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started

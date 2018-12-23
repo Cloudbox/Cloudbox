@@ -1,0 +1,64 @@
+#########################################################################
+# Title:            Cloudbox: Telegraf Role                             #
+# Author(s):        desimaniac                                          #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# Docker Image(s):  telegraf                                            #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Stop and remove any existing containers
+  docker_container: "name={{item}} state=absent"
+  with_items:
+    - telegraf
+
+- name: Create required directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/telegraf
+
+- name: Check if telegraf config exists
+  stat:
+   path: "/opt/telegraf/telegraf.conf"
+  register: telegraf_conf
+
+- name: Import telegraf config if needed
+  copy:
+    src: "telegraf.conf"
+    dest: "/opt/telegraf/telegraf.conf"
+    owner: "{{uid}}"
+    group: "{{gid}}"
+    mode: 0775
+  when: not telegraf_conf.stat.exists
+
+- name: Create and start telegraf container
+  docker_container:
+    name: telegraf
+    image: "telegraf"
+    pull: yes
+    published_ports:
+      - "8125:8125"
+      - "8092:8092/udp"
+      - "8094:8094/tcp"
+    env:
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+    volumes:
+      - "/opt/telegraf:/etc/telegraf:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/run/utmp:/var/run/utmp"
+      - "/:/host:ro"
+      - "/sys:/host/sys:ro"
+      - "/proc:/host/proc:ro"
+      - "/etc:/host/etc:ro"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - telegraf
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
