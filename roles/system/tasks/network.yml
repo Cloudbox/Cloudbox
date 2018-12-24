@@ -12,6 +12,7 @@
   apt: "name={{item}} state=present"
   with_items:
     - vnstat
+    - pciutils
   ignore_errors: yes
 
 - block:
