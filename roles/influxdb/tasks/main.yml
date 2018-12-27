@@ -24,9 +24,6 @@
     name: influxdb
     image: "influxdb:latest"
     pull: yes
-    published_ports:
-      - "8086:8086"
-      - "8083:8083"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/influxdb:/var/lib/influxdb"
