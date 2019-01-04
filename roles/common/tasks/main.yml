@@ -33,11 +33,13 @@
     - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
   register: apt_multiverse_repositories
   when: ansible_distribution == 'Ubuntu'
+  ignore_errors: yes
 
 - name: Update APT packages list
   apt:
     update_cache: yes
   when: apt_multiverse_repositories.changed
+  ignore_errors: yes
 
 - name: Install common packages
   apt: "name={{item}} state=present"
