@@ -10,6 +10,7 @@
 ---
 - name: apt tasks
   include_tasks: "apt.yml"
+  ignore_errors: yes
 
 - name: Network tasks
   import_tasks: "network.yml"
