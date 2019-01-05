@@ -22,12 +22,13 @@ matrix:
 # environment variables
 environment:
   APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPilQsZGoqIXqg8kPPR2MlUlFi5Z7xLgNqtqFODPXl9Gibb8fOnrnTXZuas7yVLuf31U1wABD+xRY7mNlf7k+1OSAJT9np1790QaLjoQS27Upqiy/oG8S9yZSou9HaHmNjVL0o7ZBQJBrp45maXQpnd7AZbRyjuFik2uR+un0f2rbIeDtob88yXP2kxsmqy2op37rvEF6vJj5DGygyJIdt8Ik/Hio3TLKM6E07hUGCMyHTtjqH8RACoWBbkaqyJs+uwmviyJK5OLe1FgMBnP719tQ/ztmXflaX17EtERuTgPqR6TX2X/5go5A2Vu3mYoB+TaqnWdm31h4QTu2GepCl
-  APPVEYOR: true
+  # APPVEYOR: true
 
 # to disable automatic builds
 build: off
 
 init:
+  - sh: export APPVEYOR=true
   - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
   # - sh: sleep 60m
   - sh: curl -s https://raw.githubusercontent.com/Cloudbox/cloudbox.github.io/develop/scripts/deptest.sh | sudo -H sh
