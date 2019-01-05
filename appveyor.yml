@@ -2,8 +2,8 @@
 version: 1.0.0-{build}
 
 branches:
-  only:
-    - develop
+  except:
+    - master
 
 skip_tags: true
 
