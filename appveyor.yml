@@ -21,18 +21,16 @@ matrix:
 
 # environment variables
 environment:
-  APPVEYOR: true
+  APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPilQsZGoqIXqg8kPPR2MlUlFi5Z7xLgNqtqFODPXl9Gibb8fOnrnTXZuas7yVLuf31U1wABD+xRY7mNlf7k+1OSAJT9np1790QaLjoQS27Upqiy/oG8S9yZSou9HaHmNjVL0o7ZBQJBrp45maXQpnd7AZbRyjuFik2uR+un0f2rbIeDtob88yXP2kxsmqy2op37rvEF6vJj5DGygyJIdt8Ik/Hio3TLKM6E07hUGCMyHTtjqH8RACoWBbkaqyJs+uwmviyJK5OLe1FgMBnP719tQ/ztmXflaX17EtERuTgPqR6TX2X/5go5A2Vu3mYoB+TaqnWdm31h4QTu2GepCl
 
 # to disable automatic builds
 build: off
 
 init:
+  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
   - sh: curl -s https://raw.githubusercontent.com/Cloudbox/cloudbox.github.io/develop/scripts/deptest.sh | sudo -H sh
 
 install:
-    - sh: sudo apt-get update
-    - sh: sudo apt-get clean
-    - sh: sudo apt-get upgrade --quiet --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 #   - sh: git submodule update --init --recursive
 #   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
 #   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
