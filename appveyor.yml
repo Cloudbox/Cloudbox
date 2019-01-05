@@ -29,10 +29,11 @@ build: off
 
 init:
   - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+  - sh: sleep 60m
   # - sh: curl -s https://raw.githubusercontent.com/Cloudbox/cloudbox.github.io/develop/scripts/deptest.sh | sudo -H sh
 
-on_finish:
-  - sh: export APPVEYOR_SSH_BLOCK=true
+# on_finish:
+  # - sh: export APPVEYOR_SSH_BLOCK=true
   # - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
 # install:
