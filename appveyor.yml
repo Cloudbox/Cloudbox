@@ -23,7 +23,7 @@ matrix:
 build: off
 
 init:
-  - sh: curl -s https://raw.githubusercontent.com/Cloudbox/cloudbox.github.io/develop/scripts/deptest.sh | sudo -H sh
+  - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh
 
 install:
   - sh: git submodule update --init --recursive
