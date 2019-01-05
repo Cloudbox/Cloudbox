@@ -28,11 +28,14 @@ environment:
 build: off
 
 init:
-  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+  # - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
   - sh: curl -s https://raw.githubusercontent.com/Cloudbox/cloudbox.github.io/develop/scripts/deptest.sh | sudo -H sh
-  - sh: sleep 60m
 
-install:
+on_finish:
+  - sh: export APPVEYOR_SSH_BLOCK=true
+  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+
+# install:
 #   - sh: git submodule update --init --recursive
 #   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
 #   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
