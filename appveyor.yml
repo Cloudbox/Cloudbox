@@ -21,15 +21,15 @@ matrix:
 
 # environment variables
 environment:
-  APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPilQsZGoqIXqg8kPPR2MlUlFi5Z7xLgNqtqFODPXl9Gibb8fOnrnTXZuas7yVLuf31U1wABD+xRY7mNlf7k+1OSAJT9np1790QaLjoQS27Upqiy/oG8S9yZSou9HaHmNjVL0o7ZBQJBrp45maXQpnd7AZbRyjuFik2uR+un0f2rbIeDtob88yXP2kxsmqy2op37rvEF6vJj5DGygyJIdt8Ik/Hio3TLKM6E07hUGCMyHTtjqH8RACoWBbkaqyJs+uwmviyJK5OLe1FgMBnP719tQ/ztmXflaX17EtERuTgPqR6TX2X/5go5A2Vu3mYoB+TaqnWdm31h4QTu2GepCl
+  # APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPilQsZGoqIXqg8kPPR2MlUlFi5Z7xLgNqtqFODPXl9Gibb8fOnrnTXZuas7yVLuf31U1wABD+xRY7mNlf7k+1OSAJT9np1790QaLjoQS27Upqiy/oG8S9yZSou9HaHmNjVL0o7ZBQJBrp45maXQpnd7AZbRyjuFik2uR+un0f2rbIeDtob88yXP2kxsmqy2op37rvEF6vJj5DGygyJIdt8Ik/Hio3TLKM6E07hUGCMyHTtjqH8RACoWBbkaqyJs+uwmviyJK5OLe1FgMBnP719tQ/ztmXflaX17EtERuTgPqR6TX2X/5go5A2Vu3mYoB+TaqnWdm31h4QTu2GepCl
   # APPVEYOR: true
 
 # to disable automatic builds
 build: off
 
 init:
-  - sh: export APPVEYOR=true
-  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+  # - sh: export APPVEYOR=true
+  # - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
   # - sh: sleep 60m
   - sh: curl -s https://raw.githubusercontent.com/Cloudbox/cloudbox.github.io/develop/scripts/deptest.sh | sudo -H sh
 
@@ -37,38 +37,38 @@ init:
   # - sh: export APPVEYOR_SSH_BLOCK=true
   # - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
-# install:
-#   - sh: git submodule update --init --recursive
-#   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
-#   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
-#   - sh: sudo ansible-playbook cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
-#
-# # https://boblokerse.github.io/2015/11/03/GitVersion-versioning-made-easy-and-dry/
-# on_finish:
-#   - ps: |
-#       function gitVersion() {
-#         $env:newhash=git rev-parse HEAD
-#         write-host "newhash = $env:newhash"
-#         $env:shorthash=git rev-parse --short HEAD
-#         write-host "shorthash = $env:shorthash"
-#
-#         $env:gitCommits=git describe --tags $env:APPVEYOR_REPO_BRANCH | %{$_.split('-')[1]}
-#         write-host "gitCommits = $env:gitCommits"
-#         $env:gitVersion=git describe --tags --abbrev=0 $env:APPVEYOR_REPO_BRANCH
-#         write-host "gitVersion = $env:gitVersion"
-#         $env:newVersion="$env:gitVersion-$env:gitCommits"
-#         write-host "newVersion = $env:newVersion"
-#         $env:appveyor_info_version="$env:newVersion-$env:APPVEYOR_REPO_BRANCH"
-#         write-host "appveyor_info_version = $env:appveyor_info_version"
-#
-#         $env:appveyor_build_version="$env:newVersion"
-#         write-host "appveyor_build_version = $env:appveyor_build_version"
-#         appveyor UpdateBuild -Version "$env:newVersion"
-#
-#         write-host "=========================================="
-#         write-host "Using hash for build version: $env:newhash"
-#         write-host "Update appveyor build version to: $env:appveyor_build_version"
-#         write-host "Update appveyor info version to: $env:appveyor_info_version"
-#       }
-#
-#       gitVersion
+install:
+  - sh: git submodule update --init --recursive
+  - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
+  - sh: sudo ansible-playbook cloudbox.yml --syntax-check
+  - sh: sudo ansible-playbook cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
+
+# https://boblokerse.github.io/2015/11/03/GitVersion-versioning-made-easy-and-dry/
+on_finish:
+  - ps: |
+      function gitVersion() {
+        $env:newhash=git rev-parse HEAD
+        write-host "newhash = $env:newhash"
+        $env:shorthash=git rev-parse --short HEAD
+        write-host "shorthash = $env:shorthash"
+
+        $env:gitCommits=git describe --tags $env:APPVEYOR_REPO_BRANCH | %{$_.split('-')[1]}
+        write-host "gitCommits = $env:gitCommits"
+        $env:gitVersion=git describe --tags --abbrev=0 $env:APPVEYOR_REPO_BRANCH
+        write-host "gitVersion = $env:gitVersion"
+        $env:newVersion="$env:gitVersion-$env:gitCommits"
+        write-host "newVersion = $env:newVersion"
+        $env:appveyor_info_version="$env:newVersion-$env:APPVEYOR_REPO_BRANCH"
+        write-host "appveyor_info_version = $env:appveyor_info_version"
+
+        $env:appveyor_build_version="$env:newVersion"
+        write-host "appveyor_build_version = $env:appveyor_build_version"
+        appveyor UpdateBuild -Version "$env:newVersion"
+
+        write-host "=========================================="
+        write-host "Using hash for build version: $env:newhash"
+        write-host "Update appveyor build version to: $env:appveyor_build_version"
+        write-host "Update appveyor info version to: $env:appveyor_info_version"
+      }
+
+      gitVersion
