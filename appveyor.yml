@@ -2,8 +2,8 @@
 version: 1.0.0-{build}
 
 branches:
-  only:
-    - develop
+  except:
+    - master
 
 skip_tags: true
 
@@ -23,7 +23,7 @@ matrix:
 build: off
 
 init:
-  - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
+  - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh
 
 install:
   - sh: git submodule update --init --recursive
