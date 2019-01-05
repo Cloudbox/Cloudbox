@@ -28,7 +28,7 @@ init:
 install:
     - sh: sudo apt-get update
     - sh: sudo apt-get clean
-    - sh: sudo apt-get upgrade
+    - sh: sudo apt-get upgrade --quiet --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 #   - sh: git submodule update --init --recursive
 #   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
 #   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
