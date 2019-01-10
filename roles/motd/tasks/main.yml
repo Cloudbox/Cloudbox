@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: MOTD Role                                    #
-# Author(s):     l3uddz                                                 #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -13,11 +13,16 @@
   with_items:
     - lsb-release
     - figlet
-    - update-motd
-    - update-notifier-common
     - jq
     - toilet
     - boxes
+
+- name: Install required packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - update-motd
+    - update-notifier-common
+  when: ansible_distribution == 'Ubuntu'
 
 - name: Remove existing motd
   file: "path={{item}} state=absent"
