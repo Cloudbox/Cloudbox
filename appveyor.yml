@@ -59,4 +59,6 @@ on_finish:
         write-host "Update appveyor info version to: $env:appveyor_info_version"
       }
 
-      gitVersion
+      if($env:APPVEYOR_REPO_BRANCH –eq "develop"){
+        gitVersion
+      }
