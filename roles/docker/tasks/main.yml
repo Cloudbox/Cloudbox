@@ -53,7 +53,8 @@
 
 - name: Add official repository
   apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} edge"
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution|lower}} {{ ansible_distribution_release }} edge"
+    filename: docker
   register: apt_docker_repositories
 
 - name: Update APT packages list
@@ -68,7 +69,7 @@
 
 - name: Install docker-ce
   apt:
-    name: docker-ce=18.05.0~ce~3-0~ubuntu
+    name: "docker-ce=18.05.0~ce~3-0~{{ansible_distribution|lower}}"
     state: present
     update_cache: yes
     force: yes
