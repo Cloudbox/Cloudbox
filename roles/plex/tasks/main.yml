@@ -22,7 +22,6 @@
     - "/opt/plex/Library"
     - "/opt/plex/Library/Application Support"
     - "/opt/plex/Library/Application Support/Plex Media Server"
-    - "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
     - "/opt/plex/Library/Logs"
     - "/opt/plex/Library/Logs/Plex Media Server"
     - "{{plex.transcodes}}/1"
@@ -178,6 +177,11 @@
     group: "{{user}}"
     mode: 0775
     recurse: yes
+
+- name: "Wait for 'Plug-ins' folder to be created by Plex"
+  wait_for:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    state: present
 
 - name: "Install WebTools"
   import_role:
