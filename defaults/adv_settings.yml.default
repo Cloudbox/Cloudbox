@@ -19,8 +19,4 @@ ombi:
   subdomain: ombi
 plexrequests:
   subdomain: plexrequests
-telly:
-  playlist: "/opt/telly/file.m3u or URL2M3U"
-  streams: "1"
-  log_requests:
 sickbeard_mp4_automator: no
