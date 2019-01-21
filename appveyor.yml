@@ -57,8 +57,6 @@ on_finish:
         write-host "Using hash for build version: $env:newhash"
         write-host "Update appveyor build version to: $env:appveyor_build_version"
         write-host "Update appveyor info version to: $env:appveyor_info_version"
-
-        Exit 0
       }
 
-        gitVersion
+        gitVersion; exit 0
