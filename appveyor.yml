@@ -61,4 +61,6 @@ on_finish:
         write-host "Update appveyor info version to: $env:appveyor_info_version"
       }
 
+      if( -not ($env:APPVEYOR_PULL_REQUEST_NUMBER) -and ($env:APPVEYOR_REPO_BRANCH –eq "develop") ){
         gitVersion
+      }
