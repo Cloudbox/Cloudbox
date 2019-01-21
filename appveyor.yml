@@ -51,7 +51,9 @@ on_finish:
 
         $env:appveyor_build_version="$env:newVersion"
         write-host "appveyor_build_version = $env:appveyor_build_version"
+
         appveyor UpdateBuild -Version "$env:newVersion"
+        if ($LastExitCode -eq 0) { appveyor UpdateBuild -Version "$env:APPVEYOR_BUILD_VERSION" }
 
         write-host "=========================================="
         write-host "Using hash for build version: $env:newhash"
