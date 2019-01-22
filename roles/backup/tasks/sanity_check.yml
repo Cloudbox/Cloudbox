@@ -45,4 +45,4 @@
   
   - name: delete old btrfs snapshot
     command: "btrfs subvolume delete /btrfs/snapshots/root"
-    when: btrfs_snapshot_mounted.stat.islnk is defined and btrfs_snapshot_mounted.stat.isdir
+    when: btrfs_snapshot_mounted.stat.isdir is defined and btrfs_snapshot_mounted.stat.isdir
