@@ -6,6 +6,8 @@ plex:
   db_cache_size: default
 suitarr:
   version: default
+sonarr:
+  version: unstable
 darkerr:
   enable: no
 emby:
