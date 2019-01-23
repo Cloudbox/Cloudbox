@@ -132,7 +132,7 @@
       - "/opt/systemd-backup"
       - "/opt/crontab-backup"
 
-  - name: Stop containers and services
+  - name: Stop plexdrive and containers
     block:
 
     - name: "Gather list of running Docker containers"
@@ -171,23 +171,23 @@
         state: stopped
       when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
 
-    - name: Check if 'cloudplow.service' exists
-      stat:
-        path: "/etc/systemd/system/cloudplow.service"
-      register: cloudplow_service
-
-    - name: Get cloudplow service state
-      set_fact:
-        cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == \"running\") }}"
-      when: (cloudplow_service.stat.exists)
-
-    - name: Stop cloudplow service
-      systemd:
-        name: cloudplow
-        state: stopped
-      when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
-
     when: (not use_snapshot)
+
+  - name: Check if 'cloudplow.service' exists
+    stat:
+      path: "/etc/systemd/system/cloudplow.service"
+    register: cloudplow_service
+
+  - name: Get cloudplow service state
+    set_fact:
+      cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == \"running\") }}"
+    when: (cloudplow_service.stat.exists)
+
+  - name: Stop cloudplow service
+    systemd:
+      name: cloudplow
+      state: stopped
+    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
   - name: Create btrfs snapshot
     shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
@@ -239,7 +239,7 @@
       message: "Backup archive created (file size: {{backup_size}})."
     ignore_errors: yes
 
-  - name: Start containers and plexdrive
+  - name: Start plexdrive and containers
     block:
 
     - name: "Start plexdrive service"
@@ -365,7 +365,7 @@
     systemd:
       name: cloudplow
       state: started
-    when: (not use_snapshot) and (cloudplow_service.stat.exists) and (cloudplow_service_running)
+    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
   - name: "Remove {{local.destination}}"
     file:
@@ -377,7 +377,7 @@
       msg: "Backup Completed Successfully."
 
   rescue:
-  - name: Start containers and services
+  - name: Start plexdrive and containers
     block:
 
     - name: "Start plexdrive service"
@@ -395,13 +395,13 @@
       ignore_errors: yes
       when: (cloudbox_managed_containers.stdout | trim != '')
 
-    - name: "Start cloudplow service"
-      systemd:
-        name: cloudplow
-        state: started
-      when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
-
     when: (not use_snapshot)
+
+  - name: "Start cloudplow service"
+    systemd:
+      name: cloudplow
+      state: started
+    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
   - debug:
       msg: 'Backup terminated due to an error'
