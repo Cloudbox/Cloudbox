@@ -30,18 +30,3 @@
   fail:
     msg: "A Backup task is currently in progress. Please wait for it to complete."
   when: (backup_lock.stat.exists) and (backup_lock_age|int < 2)
-
-- name: "Determine / filesystem type"
-  set_fact:
-    root_fstype: "{{ item.fstype }}"
-  when: "(item.mount == '/')"
-  with_items:
-    - "{{ ansible_mounts }}"
-
-- stat:
-    path: "/btrfs/snapshots/root"
-  register: btrfs_snapshot_mounted
-
-- name: delete old btrfs snapshot
-  command: "btrfs subvolume delete /btrfs/snapshots/root"
-  when: btrfs_snapshot_mounted.stat.isdir is defined and btrfs_snapshot_mounted.stat.isdir
