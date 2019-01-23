@@ -60,20 +60,20 @@
     msg:
       - "The following config files were NOT encrypted successfully: '{{ unencrypted_files_list | trim }}'"
       - "Vault Service will now be skipped."
-  when: unencrypted_files_list | trim != ""
+  when: (unencrypted_files_list | trim != "")
 
 - name: "Pushover Message: Config files were not encrypted successfully encrypted"
   include_role:
     name: pushover
   vars:
     message: "The following config files were NOT encrypted successfully: '{{ unencrypted_files_list | trim }}'. Vault Service will now be skipped."
-  when: unencrypted_files_list | trim != ""
+  when: (unencrypted_files_list | trim != "")
 
 - name: Print error message when config files were encrypted successfully
   debug:
     msg:
       - "The following config files were encrypted successfully: '{{ encrypted_files_list | trim }}'"
-  when: encrypted_files_list | trim != ""
+  when: (encrypted_files_list | trim != "")
 
 - name: Vault Service Upload Tasks
   block:
@@ -93,14 +93,14 @@
   - name: Print error mesage when config files were too large to upload
     debug:
       msg: "The following encrypted config files were too large to upload to the Vault Service: '{{ files_too_large_to_upload_list | trim }}'"
-    when: files_too_large_to_upload_list | trim != ""
+    when: (files_too_large_to_upload_list | trim != "")
 
   - name: "Pushover Message: Config files were too large to upload to the Vault Service"
     include_role:
       name: pushover
     vars:
       message: "The following encrypted config files were too large to upload to the Vault Service: '{{ files_too_large_to_upload_list | trim }}'"
-    when: files_too_large_to_upload_list | trim != ""
+    when: (files_too_large_to_upload_list | trim != "")
 
   - name: Set 'files_uploaded_list' variable
     set_fact:
@@ -109,13 +109,13 @@
   - name: Print success message when config files were successfully uploaded
     debug:
       msg: "The following encrypted config files were successfully uploaded to the Vault Service: '{{ files_uploaded_list | trim }}'"
-    when: files_uploaded_list | trim != ""
+    when: (files_uploaded_list | trim != "")
 
   - name: "Pushover Message: Config files were successfully encrypted and uploaded to the Vault Service"
     include_role:
       name: pushover
     vars:
       message: "Config files were successfully encrypted and uploaded to the Vault Service."
-    when: files_uploaded_list | trim != ""
+    when: (files_uploaded_list | trim != "")
 
-  when: unencrypted_files_list | trim == ""
+  when: (unencrypted_files_list | trim == "")
