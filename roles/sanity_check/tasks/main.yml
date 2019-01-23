@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Cloudbox supports Ubuntu 16.04 or newer"
+- name: "Cloudbox supports Ubuntu 16.04 or higher"
   debug:
     msg:
       - "Cloudbox was designed for use on Ubuntu servers running versions 16.04+."
