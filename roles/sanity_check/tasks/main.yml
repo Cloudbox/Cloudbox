@@ -11,7 +11,7 @@
 - name: "Cloudbox supports Ubuntu 16.04 or higher"
   debug:
     msg:
-      - "Cloudbox was designed for use on Ubuntu servers running versions 16.04+."
+      - "Cloudbox was designed for use on Ubuntu servers running versions 16.04+. With basic support for non-Ubuntu Debian systems."
       - "Running Cloudbox on unsupported systems may cause unpredictable results."
   when: (ansible_distribution != 'Ubuntu') or ((ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('16.04', '<')))
   tags: always
