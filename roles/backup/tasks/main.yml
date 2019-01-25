@@ -27,14 +27,14 @@
     set_fact:
       start_time: "{{ lookup('pipe','date \"+%s\"') }}"
 
+  - name: Snapshot
+    import_tasks: "snapshot.yml"
+
   - name: "Pushover Message: Started Cloudbox backup task"
     include_role:
       name: pushover
     vars:
       message: "Started Cloudbox {{ backup_type }} backup task."
-
-  - name: Snapshot
-    import_tasks: "snapshot.yml"
 
   - name: "Create 'backup.lock'."
     file:
