@@ -16,3 +16,6 @@
 
 - name: Kernel update task
   include_tasks: "update.yml"
+
+- name: Kernel checks task
+  include_tasks: "checks.yml"
