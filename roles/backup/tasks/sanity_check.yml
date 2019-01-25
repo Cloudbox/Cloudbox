@@ -17,7 +17,7 @@
 - name: "Get age of 'backup.lock' file"
   set_fact:
     backup_lock_age: "{{ ( (((ansible_date_time.epoch|int) - (backup_lock.stat.ctime|int)) / (60*60) ) | int )  }}"
-  when: backup_lock.stat.exists
+  when: (backup_lock.stat.exists)
 
 # Delete if older than 2 hours.
 - name: "Delete stale 'backup.lock'"
