@@ -132,6 +132,9 @@
       - "/opt/systemd-backup"
       - "/opt/crontab-backup"
 
+  - name: Populate Service Facts
+    service_facts:
+
   - name: Stop plexdrive and containers
     block:
 
@@ -151,9 +154,6 @@
       vars:
         message: "Stopped Docker containers."
       when: (cloudbox_managed_containers.stdout | trim != '')
-
-    - name: Populate Service Facts
-      service_facts:
 
     - name: Check if 'plexdrive.service' exists
       stat:
