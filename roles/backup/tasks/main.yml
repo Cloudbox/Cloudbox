@@ -27,11 +27,14 @@
     set_fact:
       start_time: "{{ lookup('pipe','date \"+%s\"') }}"
 
+  - name: Snapshot
+    import_tasks: "snapshot.yml"
+
   - name: "Pushover Message: Started Cloudbox backup task"
     include_role:
       name: pushover
     vars:
-      message: "Started Cloudbox backup task."
+      message: "Started Cloudbox {{ backup_type }} backup task."
 
   - name: "Create 'backup.lock'."
     file:
@@ -62,6 +65,7 @@
       - "{{local.destination}}"
       - "{{local.destination}}/opt"
       - "/opt/systemd-backup"
+      - "/opt/crontab-backup"
 
   - name: "Copy files to '{{local.destination}}'"
     copy:
@@ -93,7 +97,7 @@
       group: "{{user}}"
       mode: 0775
       force: yes
-    when: backup_excludes_list.stat.exists
+    when: (backup_excludes_list.stat.exists)
 
   - name: vault_service
     import_tasks: "vault_service.yml"
@@ -118,44 +122,56 @@
       warn: no
     ignore_errors: yes
 
-  - name: "Reset permissions of '/opt/systemd-backup'"
-    file: "path=/opt/systemd-backup state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-
-  - name: "Gather list of running Docker containers"
-    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
-    register: cloudbox_managed_containers
+  - name: "Copying crontabs to '/opt/crontab-backup' for inclusion in backup"
+    shell: "cp -f /var/spool/cron/crontabs/* /opt/crontab-backup"
     ignore_errors: yes
 
-  - name: "Stop all running Docker containers"
-    shell: "docker stop {{cloudbox_managed_containers.stdout}}"
-    ignore_errors: yes
-    when: not (cloudbox_managed_containers.stdout | trim == '')
-
-  - name: "Pushover Message: Stopped Docker containers"
-    include_role:
-      name: pushover
-    vars:
-      message: "Stopped Docker containers."
-      when: not (cloudbox_managed_containers.stdout | trim == '')
+  - name: "Reset permissions of folders"
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+    with_items:
+      - "/opt/systemd-backup"
+      - "/opt/crontab-backup"
 
   - name: Populate Service Facts
     service_facts:
 
-  - name: Check if 'plexdrive.service' exists
-    stat:
-      path: "/etc/systemd/system/plexdrive.service"
-    register: plexdrive_service
+  - name: Stop plexdrive and containers
+    block:
 
-  - name: Get plexdrive service state
-    set_fact:
-      plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == \"running\") }}"
-    when: plexdrive_service.stat.exists
+    - name: "Gather list of running Docker containers"
+      shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
+      register: cloudbox_managed_containers
+      ignore_errors: yes
 
-  - name: Stop plexdrive service
-    systemd:
-      name: plexdrive
-      state: stopped
-    when: plexdrive_service.stat.exists and plexdrive_service_running
+    - name: "Stop all running Docker containers"
+      shell: "docker stop {{cloudbox_managed_containers.stdout}}"
+      ignore_errors: yes
+      when: (cloudbox_managed_containers.stdout | trim != '')
+
+    - name: "Pushover Message: Stopped Docker containers"
+      include_role:
+        name: pushover
+      vars:
+        message: "Stopped Docker containers."
+      when: (cloudbox_managed_containers.stdout | trim != '')
+
+    - name: Check if 'plexdrive.service' exists
+      stat:
+        path: "/etc/systemd/system/plexdrive.service"
+      register: plexdrive_service
+
+    - name: Get plexdrive service state
+      set_fact:
+        plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == \"running\") }}"
+      when: (plexdrive_service.stat.exists)
+
+    - name: Stop plexdrive service
+      systemd:
+        name: plexdrive
+        state: stopped
+      when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
+
+    when: (not use_snapshot)
 
   - name: Check if 'cloudplow.service' exists
     stat:
@@ -165,17 +181,21 @@
   - name: Get cloudplow service state
     set_fact:
       cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == \"running\") }}"
-    when: cloudplow_service.stat.exists
+    when: (cloudplow_service.stat.exists)
 
   - name: Stop cloudplow service
     systemd:
       name: cloudplow
       state: stopped
-    when: cloudplow_service.stat.exists and cloudplow_service_running
+    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
-  - name: "Archiving '/opt' to '{{local.destination}}/opt/'"
+  - name: Create btrfs snapshot
+    shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
+    when: (use_snapshot) and (root_fstype == 'btrfs')
+
+  - name: "Archiving '{{backup_root_path}}/opt' to '{{local.destination}}/opt/'"
     shell: |
-      find /opt/ -mindepth 1 -maxdepth 1 -type d -execdir \
+      find {{backup_root_path}}/opt/ -mindepth 1 -maxdepth 1 -type d -execdir \
       tar \
         --ignore-failed-read \
         --warning=no-file-changed \
@@ -196,13 +216,13 @@
 
   - name: Abort backup when tar creation fails
     fail: msg="There must have been an issue during the tar creation tasks as they are missing in '{{local.destination}}/opt/'"
-    when: dir_files2.matched|int == 0
+    when: (dir_files2.matched|int == 0)
 
   - name: "Remove '{{local.destination}}.old'"
     file:
       path: "{{local.destination}}.old"
       state: absent
-    when: dir_files2.matched|int != 0
+    when: (dir_files2.matched|int != 0)
 
   - name: "Get size of '{{local.destination}}'"
     shell: du -sh --apparent-size {{local.destination}} | /usr/bin/awk '{print $1}'
@@ -219,27 +239,32 @@
       message: "Backup archive created (file size: {{backup_size}})."
     ignore_errors: yes
 
-  - name: "Start plexdrive service"
-    systemd:
-      name: plexdrive
-      state: started
-    when: plexdrive_service.stat.exists and plexdrive_service_running
+  - name: Start plexdrive and containers
+    block:
 
-  - name: "Wait for 5 seconds before starting containers"
-    wait_for:
-      timeout: 5
+    - name: "Start plexdrive service"
+      systemd:
+        name: plexdrive
+        state: started
+      when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
 
-  - name: "Start all previously running Docker containers"
-    shell: 'docker start {{cloudbox_managed_containers.stdout}}'
-    ignore_errors: yes
-    when: not (cloudbox_managed_containers.stdout | trim == '')
+    - name: "Wait for 5 seconds before starting containers"
+      wait_for:
+        timeout: 5
 
-  - name: "Pushover Message: Started Docker containers"
-    include_role:
-      name: pushover
-    vars:
-      message: "Started Docker containers."
-    when: not (cloudbox_managed_containers.stdout | trim == '')
+    - name: "Start all previously running Docker containers"
+      shell: 'docker start {{cloudbox_managed_containers.stdout}}'
+      ignore_errors: yes
+      when: (cloudbox_managed_containers.stdout | trim != '')
+
+    - name: "Pushover Message: Started Docker containers"
+      include_role:
+        name: pushover
+      vars:
+        message: "Started Docker containers."
+      when: (cloudbox_managed_containers.stdout | trim != '')
+
+    when: (not use_snapshot)
 
   - name: "Wait for 10 seconds before uploads"
     wait_for:
@@ -266,7 +291,7 @@
     become_user: "{{user}}"
     register: rclone_timestamp
     ignore_errors: yes
-    when: rclone.enable
+    when: (rclone.enable)
 
   # If rclone_timestamp is blank (would happen if settings.yml was not at destination), default the naming of files to '/archived/old/filename.ext', else /archived/date/filename.ext.
   - name: "Archive previous files in '{{rclone.destination}}'"
@@ -276,7 +301,7 @@
     register: rclone_move
     failed_when: rclone_move.rc > 3
     ignore_errors: yes
-    when: rclone.enable
+    when: (rclone.enable)
     with_items:
      - "opt"
      - "ansible.cfg"
@@ -287,7 +312,6 @@
      - "rclone.conf"
      - "backup_excludes.txt"
      - "backup_excludes_list.txt"
-     - "cloudbox.tar"
 
   - name: "Wait for 5 seconds before uploading"
     wait_for:
@@ -297,14 +321,14 @@
     command: "rclone copy '{{local.destination}}' '{{rclone.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone.log'"
     become: yes
     become_user: "{{user}}"
-    when: rclone.enable
+    when: (rclone.enable)
 
   - name: "Pushover Message: Rclone uploaded backup to '{{rclone.destination}}'"
     include_role:
       name: pushover
     vars:
       message: "Rclone uploaded backup to '{{rclone.destination}}'."
-    when: rclone.enable
+    when: (rclone.enable)
 
   - name: "Use rsync to upload backup to '{{rsync.destination}}'"
     synchronize:
@@ -314,14 +338,14 @@
         - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync.log'"
     become: yes
     become_user: "{{user}}"
-    when: rsync.enable
+    when: (rsync.enable)
 
   - name: "Pushover Message: Rsync uploaded backup to '{{rsync.destination}}'"
     include_role:
       name: pushover
     vars:
       message: "Rsync uploaded backup to '{{rsync.destination}}'."
-    when: rsync.enable
+    when: (rsync.enable)
 
   - name: "Get End Time"
     set_fact:
@@ -335,13 +359,13 @@
     include_role:
       name: pushover
     vars:
-      message: "Finished Cloudbox backup task in {{ total_time }} minutes."
+      message: "Finished Cloudbox {{backup_type}} backup task in {{ total_time }} minutes."
 
   - name: "Start cloudplow service"
     systemd:
       name: cloudplow
       state: started
-    when: cloudplow_service.stat.exists and cloudplow_service_running
+    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
   - name: "Remove {{local.destination}}"
     file:
@@ -353,11 +377,14 @@
       msg: "Backup Completed Successfully."
 
   rescue:
+  - name: Start plexdrive and containers
+    block:
+
     - name: "Start plexdrive service"
       systemd:
         name: plexdrive
         state: started
-      when: plexdrive_service.stat.exists and plexdrive_service_running
+      when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
 
     - name: "Wait for 5 seconds before starting containers"
       wait_for:
@@ -366,27 +393,34 @@
     - name: "Start all previously running Docker containers"
       shell: 'docker start {{cloudbox_managed_containers.stdout}}'
       ignore_errors: yes
-      when: not (cloudbox_managed_containers.stdout | trim == '')
+      when: (cloudbox_managed_containers.stdout | trim != '')
 
-    - name: "Start cloudplow service"
-      systemd:
-        name: cloudplow
-        state: started
-      when: cloudplow_service.stat.exists and cloudplow_service_running
-    - debug:
-        msg: 'Backup terminated due to an error'
+    when: (not use_snapshot)
 
-    - name: "Pushover Message: Backup terminated due to an error"
-      include_role:
-        name: pushover
-      vars:
-        message: "Backup terminated due to an error."
+  - name: "Start cloudplow service"
+    systemd:
+      name: cloudplow
+      state: started
+    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
+
+  - debug:
+      msg: 'Backup terminated due to an error'
+
+  - name: "Pushover Message: Backup terminated due to an error"
+    include_role:
+      name: pushover
+    vars:
+      message: "Backup terminated due to an error."
 
   always:
   - name: "Remove 'backup.lock'"
     file:
       path: "{{playbook_dir}}/backup.lock"
       state: absent
+
+  - name: delete btrfs snapshot
+    command: "btrfs subvolume delete /btrfs/snapshots/root"
+    when: (use_snapshot) and (root_fstype == 'btrfs')
 
   - name: "Reset logs folder ownership."
     shell: "chown -R {{user}}:{{user}} /home/{{user}}/logs/"

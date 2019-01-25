@@ -1,0 +1,47 @@
+#########################################################################
+# Title:         Backup: Snapshot                                       #
+# Author(s):     desimaniac, RXWatcher1                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Set default variables
+  set_fact:
+    backup_type: ""
+    backup_root_path: ""
+    use_snapshot: false
+
+- name: "Determine '/' filesystem type"
+  set_fact:
+    root_fstype: "{{ item.fstype }}"
+  when: "(item.mount == '/')"
+  with_items:
+    - "{{ ansible_mounts }}"
+
+- name: Btrfs specific tasks
+  block:
+
+  - name: "Set btrfs variables"
+    set_fact:
+      backup_type: "snapshot-enabled"
+      backup_root_path: "/btrfs/snapshots/root"
+      use_snapshot: true
+
+  - name: Check if btrfs snapshot is mounted
+    stat:
+      path: "/btrfs/snapshots/root"
+    register: btrfs_snapshot_mounted
+
+  - name: Delete old btrfs snapshot
+    command: "btrfs subvolume delete /btrfs/snapshots/root"
+    when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
+
+  - name: Create brfs snapshot directory
+    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+    with_items:
+      - /btrfs/snapshots
+
+  when: (misc.snapshot) and (root_fstype == 'btrfs')
