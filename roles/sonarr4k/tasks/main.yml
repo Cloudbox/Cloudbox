@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Sonarr4K Role                                #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Docker Image:  hotio/sonarr                                           #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -85,7 +85,7 @@
 - name: Create and start container
   docker_container:
     name: sonarr4k
-    image: "hotio/suitarr:sonarr"
+    image: "hotio/sonarr"
     pull: yes
     published_ports:
       - "127.0.0.1:8990:8989"
