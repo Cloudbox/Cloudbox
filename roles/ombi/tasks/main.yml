@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Ombi Role                                    #
 # Author(s):     RXWatcher1, l3uddz, desimaniac                         #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  linuxserver/ombi                                       #
+# Docker Image:  hotio/ombi                                             #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -49,7 +49,7 @@
 - name: Create and start container
   docker_container:
     name: ombi
-    image: "hotio/suitarr:ombi"
+    image: "hotio/ombi"
     pull: yes
     published_ports:
       - "127.0.0.1:3579:5000"

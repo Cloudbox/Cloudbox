@@ -2,7 +2,7 @@
 # Title:            Cloudbox: Radarr Role                               #
 # Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  hotio/suitarr,                                      #
+# Docker Image(s):  hotio/radarr,                                       #
 #                   andrewkhunn/suitarr_mp4_automator                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -76,7 +76,7 @@
 
 - name: Set 'suitarr_image' variable
   set_fact:
-    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator','hotio/suitarr') }}"
+    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator:radarr','hotio/radarr') }}"
 
 - name: Set default_volumes variable
   set_fact:
@@ -90,7 +90,7 @@
 - name: Create and start container
   docker_container:
     name: radarr
-    image: "{{suitarr_image}}:radarr"
+    image: "{{suitarr_image}}"
     pull: yes
     published_ports:
       - "127.0.0.1:7878:7878"
