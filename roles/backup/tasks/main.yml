@@ -135,43 +135,45 @@
   - name: Populate Service Facts
     service_facts:
 
-  - name: Stop plexdrive and containers
-    block:
 
-    - name: "Gather list of running Docker containers"
-      shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
-      register: cloudbox_managed_containers
-      ignore_errors: yes
+  # Stop Containers
 
-    - name: "Stop all running Docker containers"
-      shell: "docker stop {{cloudbox_managed_containers.stdout}}"
-      ignore_errors: yes
-      when: (cloudbox_managed_containers.stdout | trim != '')
+  - name: "Gather list of running Docker containers"
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
+    register: cloudbox_managed_containers
+    ignore_errors: yes
 
-    - name: "Pushover Message: Stopped Docker containers"
-      include_role:
-        name: pushover
-      vars:
-        message: "Stopped Docker containers."
-      when: (cloudbox_managed_containers.stdout | trim != '')
+  - name: "Stop all running Docker containers"
+    shell: "docker stop {{cloudbox_managed_containers.stdout}}"
+    ignore_errors: yes
+    when: (cloudbox_managed_containers.stdout | trim != '')
 
-    - name: Check if 'plexdrive.service' exists
-      stat:
-        path: "/etc/systemd/system/plexdrive.service"
-      register: plexdrive_service
+  - name: "Pushover Message: Stopped Docker containers"
+    include_role:
+      name: pushover
+    vars:
+      message: "Stopped Docker containers."
+    when: (cloudbox_managed_containers.stdout | trim != '')
 
-    - name: Get plexdrive service state
-      set_fact:
-        plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == \"running\") }}"
-      when: (plexdrive_service.stat.exists)
+  # Stop Plexdrive
 
-    - name: Stop plexdrive service
-      systemd:
-        name: plexdrive
-        state: stopped
-      when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
+  - name: Check if 'plexdrive.service' exists
+    stat:
+      path: "/etc/systemd/system/plexdrive.service"
+    register: plexdrive_service
 
-    when: (not use_snapshot)
+  - name: Get plexdrive service state
+    set_fact:
+      plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == \"running\") }}"
+    when: (plexdrive_service.stat.exists)
+
+  - name: Stop plexdrive service
+    systemd:
+      name: plexdrive
+      state: stopped
+    when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
+
+  # Stop Cloudplow
 
   - name: Check if 'cloudplow.service' exists
     stat:
@@ -189,9 +191,37 @@
       state: stopped
     when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
+  # Create snapshot
+
+  - name: "Wait for 5 seconds before creating snapshot"
+    wait_for:
+      timeout: 5
+
   - name: Create btrfs snapshot
     shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
     when: (use_snapshot) and (root_fstype == 'btrfs')
+
+  # Start Plexdrive and containers when snapshot is enabled
+
+  - name: Start plexdrive and containers
+    block:
+
+    - name: "Start plexdrive service"
+      systemd:
+        name: plexdrive
+        state: started
+      when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
+
+    - name: "Wait for 5 seconds before starting containers"
+      wait_for:
+        timeout: 5
+
+    - name: "Start all previously running Docker containers"
+      shell: 'docker start {{cloudbox_managed_containers.stdout}}'
+      ignore_errors: yes
+      when: (cloudbox_managed_containers.stdout | trim != '')
+
+    when: (use_snapshot)
 
   - name: "Archiving '{{backup_root_path}}/opt' to '{{local.destination}}/opt/'"
     shell: |
@@ -238,6 +268,8 @@
     vars:
       message: "Backup archive created (file size: {{backup_size}})."
     ignore_errors: yes
+
+  # Start Plexdrive and containers when snapshot is not enabled
 
   - name: Start plexdrive and containers
     block:
