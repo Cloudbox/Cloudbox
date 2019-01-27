@@ -16,6 +16,10 @@
 - name: Tasks for previously installed WebTools
   block:
 
+  - name: Set default value for 'webtools_outdated' variable
+    set_fact:
+      webtools_outdated: false
+
   - name: Check version of previously installed WebTools
     shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
     register: webtools_previously_installed_version
@@ -77,4 +81,9 @@
       name: plex
       state: started
 
-  when: (not webtools_bundle.stat.exists) or (webtools_outdated|default(false,true)) or ('reinstall-webtools' in ansible_run_tags)
+  when: (not webtools_bundle.stat.exists) or ((webtools_bundle.stat.exists) and (webtools_outdated)) or ('reinstall-webtools' in ansible_run_tags)
+
+- name: WebTools was not updated
+  debug:
+    msg: "WebTools is already installed."
+  when: (webtools_bundle.stat.exists) and not (webtools_outdated)
