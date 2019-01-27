@@ -135,7 +135,6 @@
   - name: Populate Service Facts
     service_facts:
 
-
   # Stop Containers
 
   - name: "Gather list of running Docker containers"
@@ -219,6 +218,13 @@
     - name: "Start all previously running Docker containers"
       shell: 'docker start {{cloudbox_managed_containers.stdout}}'
       ignore_errors: yes
+      when: (cloudbox_managed_containers.stdout | trim != '')
+
+    - name: "Pushover Message: Started Docker containers"
+      include_role:
+        name: pushover
+      vars:
+        message: "Started Docker containers."
       when: (cloudbox_managed_containers.stdout | trim != '')
 
     when: (use_snapshot)
