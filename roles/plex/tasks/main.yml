@@ -187,6 +187,10 @@
   import_role:
     name: webtools
 
+- name: "Install Sub-Zero"
+  import_role:
+    name: sub-zero
+
 - name: "Forced Automatic Quality Settings"
   import_tasks: "forced_quality_settings.yml"
   tags: plex_forced_quality_settings
