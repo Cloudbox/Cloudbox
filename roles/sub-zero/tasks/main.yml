@@ -20,6 +20,7 @@
     set_fact:
       subzero_outdated: false
 
+  # https://stackoverflow.com/a/51109708/10975859
   - name: Check version of previously installed Sub-Zero
     xml:
       path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Sub-Zero.bundle/Contents/Info.plist"
