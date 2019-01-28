@@ -1,0 +1,47 @@
+#########################################################################
+# Title:         Remote: RcloneVFS Task                                 #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Import 'rclone_vfs.service'
+  template:
+    src: rclone_vfs.service.js2
+    dest: /etc/systemd/system/rclone_vfs.service
+    force: no
+
+- name: Systemd daemon-reload 'rclone_vfs.service'
+  systemd: name=rclone_vfs state=stopped enabled=no daemon_reload=yes
+
+- name: Import 'rclone_vfs_primer.service'
+  template:
+    src: rclone_vfs_primer.service.js2
+    dest: /etc/systemd/system/rclone_vfs_primer.service
+    force: no
+
+- name: Systemd daemon-reload 'rclone_vfs_primer.service'
+  systemd: name=rclone_vfs_primer state=stopped enabled=no daemon_reload=yes
+
+- name: Test rclone remote
+  shell: "rclone lsd {{rclone.remote}}:"
+  register: rclone_test
+  failed_when: (rclone_test.rc|int > 5)
+
+- name: Start up services when rclone remote is configured
+  block:
+
+  - name: Start 'rclone_vfs.service'
+    systemd: name=rclone_vfs state=started enabled=yes
+
+  - name: "Wait for 5 seconds"
+    wait_for:
+      timeout: 5
+
+  - name: Start 'rclone_vfs_primer.service'
+    systemd: name=rclone_vfs_primer state=started enabled=yes
+
+  when: (rclone_test.rc|int == 0)

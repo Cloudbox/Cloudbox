@@ -18,9 +18,9 @@
     - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'common'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
     - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'docker'] }
-    - { role: plexdrive, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts'] }
-    - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts'] }
     - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'rclone'] }
+    - { role: remote, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts'] }
+    - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
     - { role: nginx-proxy, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nginx-proxy'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
