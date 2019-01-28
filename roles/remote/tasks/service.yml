@@ -96,9 +96,9 @@
       regexp: "rc-addr=localhost:[0-9]*"
       replace: 'rc-addr=localhost:5572'
 
-  - name: Edit rclone remote in existing 'rclone_vfs_primer.service'
+  - name: Edit rclone remote in existing 'rclone_vfs.service'
     replace:
-      path: /etc/systemd/system/rclone_vfs_primer.service
+      path: /etc/systemd/system/rclone_vfs.service
       regexp: "([a-z].*):\\s?.*\\/mnt\\/remote"
       replace: '{{rclone.remote}}: /mnt/remote'
 
