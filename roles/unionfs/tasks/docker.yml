@@ -12,7 +12,7 @@
   file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
 
 - name: Import override file
-  copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
+  template: "src=override.conf.js2 dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
 
 - name: Systemd daemon-reload
   systemd: daemon_reload=yes
