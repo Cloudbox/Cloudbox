@@ -113,7 +113,7 @@
   - name: Stop and disable existing 'rclone.service'
     systemd: name=rclone state=stopped enabled=no
 
-  - name: "Rename 'rclone.service' to 'rclone5.service'"
+  - name: "Rename 'rclone.service' to 'rclone_vfs.service'"
     shell: "mv /etc/systemd/system/rclone.service /etc/systemd/system/rclone_vfs.service"
 
   - name: Edit title in new 'rclone_vfs.service'
