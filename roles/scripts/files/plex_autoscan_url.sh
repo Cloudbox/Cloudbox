@@ -36,16 +36,8 @@ readonly FALSE=0
 # Functions
 ################################
 
-# Print banner1
-function banner1() {
-    if [ -x "$(command -v toilet)" ]; then
-        echo ""
-        toilet 'Plex Autoscan URL' -f standard --filter metal --filter border:metal --width 86
-    fi
-}
-
-# Print banner1
-function banner2() {
+# Print banner
+function banner() {
 echo -e "
 ${GREEN}┌───────────────────────────────────────────────────────────────────────────────────┐
 ${GREEN}│ Title:             Plex Autoscan URL Script                                       │
@@ -183,8 +175,7 @@ done
 function main ()
 {
     if [[ ${SIMPLE} == ${FALSE} ]]; then
-        banner1
-        banner2
+        banner
     fi
         sanity_check
         build_url
