@@ -22,7 +22,7 @@
   with_items:
     - update-motd
     - update-notifier-common
-  when: ansible_distribution == 'Ubuntu'
+  when: (ansible_distribution|lower == 'ubuntu')
 
 - name: Remove existing motd
   file: "path={{item}} state=absent"
@@ -59,7 +59,7 @@
     src: config.json.js2
     dest: /opt/motd/config.json
     force: yes
-  when: motd_config.stat.exists == False
+  when: (not motd_config.stat.exists)
 
 - name: Touch log file
   file:
@@ -87,6 +87,17 @@
     state: link
     force: yes
     follow: no
+
+- name: Check if '/etc/ssh/sshd_config' exists
+  stat:
+    path: "/etc/ssh/sshd_config"
+  register: sshd_config
+
+- name: Install required packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - "openssh-server"
+  when: (not sshd_config.stat.exists)
 
 - name: Set PrintLastLog to no
   lineinfile:
