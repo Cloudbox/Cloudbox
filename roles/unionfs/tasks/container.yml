@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: Docker Tasks                                  #
+# Title:         UnionFS: Container Tasks                               #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,11 +8,14 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create override directory
-  file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
+- name: "Restart docker service"
+  systemd: name=docker state=restarted
 
-- name: Import override file
-  template: "src=override.conf.js2 dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
+- name: Wait for 10 seconds before commencing
+  wait_for:
+    timeout: 10
 
-- name: Systemd daemon-reload
-  systemd: name=docker state=reloaded daemon_reload=yes
+- name: "Start all previously running Docker containers"
+  shell: 'docker start {{cloudbox_managed_containers.stdout}}'
+  ignore_errors: yes
+  when: (cloudbox_managed_containers.stdout | trim != '')

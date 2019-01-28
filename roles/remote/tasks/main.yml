@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Container Tasks
+  import_tasks: "container.yml"
+  when: ('mounts' in ansible_run_tags)
+
 - name: Legacy Tasks
   import_tasks: "legacy.yml"
 
