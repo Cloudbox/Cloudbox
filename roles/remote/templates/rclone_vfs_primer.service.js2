@@ -14,7 +14,7 @@ ExecStart=/usr/bin/rclone \
   --config /home/{{user}}/.config/rclone/rclone.conf \
   --timeout=15m \
   -vvv \
-  rc --rc-addr=localhost:5572 vfs/refresh recursive=true
+  rc --rc-addr=localhost:5572 vfs/refresh dir=Media recursive=true
 RemainAfterExit=yes
 RemainAfterExit=yes
 
