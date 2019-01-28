@@ -11,4 +11,5 @@ plex:
   transcodes: /mnt/local/transcodes
 rclone:
   version: latest
+  remote: google
 shell: zsh
