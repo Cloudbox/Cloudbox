@@ -131,14 +131,8 @@
 - name: Import daemon.json
   copy: "src=daemon.json dest=/etc/docker/daemon.json force=yes mode=0775"
 
-- name: Create override directory
-  file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
-
-- name: Import override file
-  copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
-
 - name: Start docker
-  systemd: state=started name=docker enabled=yes
+  systemd: name=docker state=started enabled=yes daemon_reload=yes
 
 - name: Wait for 30 seconds before commencing
   wait_for:

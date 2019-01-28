@@ -1,4 +1,6 @@
 ---
+mounts:
+  unionfs: unionfs
 plex:
   open_port: no
   force_auto_adjust_quality: no

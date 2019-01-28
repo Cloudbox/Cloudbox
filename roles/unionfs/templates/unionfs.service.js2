@@ -2,7 +2,7 @@
 
 [Unit]
 Description=UnionFS Mount
-After=network-online.target plexdrive.service
+After=network-online.target
 
 [Service]
 Type=forking
@@ -10,7 +10,9 @@ GuessMainPID=no
 User={{user}}
 Group={{user}}
 ExecStartPre=/bin/sleep 30
-ExecStart=/usr/bin/unionfs-fuse -o cow,allow_other,nonempty /mnt/local=RW:/mnt/plexdrive=RO /mnt/unionfs
+ExecStart=/usr/bin/unionfs-fuse \
+  -o cow,allow_other,nonempty \
+  /mnt/local=RW:/mnt/remote=RO /mnt/unionfs
 ExecStop=/bin/fusermount -u /mnt/unionfs
 
 [Install]
