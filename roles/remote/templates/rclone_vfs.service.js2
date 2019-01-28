@@ -3,7 +3,6 @@
 [Unit]
 Description=Rclone VFS
 After=network-online.target
-Wants={{ 'mergerfs' if (mounts.unionfs|lower) == 'mergerfs' else 'unionfs' }}.service
 
 [Service]
 User={{user}}
