@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: UnionFS Role                                 #
+# Title:         UnionFS: Basic Tasks                                   #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,22 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Legacy Tasks
-  import_tasks: "legacy.yml"
+- name: Create unionfs directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /mnt/unionfs
 
-- name: Service Tasks
-  import_tasks: "service.yml"
+- name: Install fuse
+  apt:
+    name: fuse
+    state: present
 
-- name: Basic Tasks
-  import_tasks: "basic.yml"
-
-- name: MergerFS Tasks
-  import_tasks: "mergerfs.yml"
-  when: (mounts.unionfs|lower == "mergerfs")
-
-- name: UnionFS Tasks
-  import_tasks: "unionfs.yml"
-  when: (mounts.unionfs|lower == "unionfs")
-
-- name: Docker Tasks
-  import_tasks: "docker.yml"
+- name: Import fuse.conf
+  copy: src=fuse.conf dest=/etc/fuse.conf force=yes mode=0775
