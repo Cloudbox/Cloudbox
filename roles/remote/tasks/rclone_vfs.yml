@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Remote: RcloneVFS Task                                 #
+# Title:         Remote: Rclone VFS Task                                #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # --                                                                    #
@@ -8,6 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Reset permissions for 'rclone.conf'
+  file: "path={{item}} state=file mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - "/home/{{user}}/.config/rclone/rclone.conf"
+
 - name: Import 'rclone_vfs.service'
   template:
     src: rclone_vfs.service.js2
