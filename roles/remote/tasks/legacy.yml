@@ -33,7 +33,7 @@
   - name: Edit description in new 'plexdrive5.service'
     lineinfile:
       path: "/etc/systemd/system/plexdrive5.service"
-      regexp: '^Description\s?='
+      regexp: '^Description=.*'
       line: "Description=Plexdrive5"
       state: present
 
@@ -67,8 +67,6 @@
   stat:
     path: "/mnt/plexdrive"
   register: mnt_plexdrive
-
-- debug: var=mnt_plexdrive
 
 - name: Tasks for '/mnt/plexdrive' path
   block:
@@ -122,12 +120,36 @@
       regexp: "rclone\\.service"
       replace: 'rclone_vfs.service'
 
-  - name: Edit description in new 'rclone_vfs.service'
+  - name: Edit 'Description' in new 'rclone_vfs.service'
     lineinfile:
       path: "/etc/systemd/system/rclone_vfs.service"
-      regexp: '^Description\s?='
+      regexp: '^Description=.*'
       line: "Description=Rclone VFS"
       state: present
+
+  - name: Edit 'AssertPathIsDirectory' in new 'rclone_vfs.service'
+    lineinfile:
+      path: "/etc/systemd/system/rclone_vfs.service"
+      regexp: '^AssertPathIsDirectory=.*'
+      state: absent
+
+  - name: Edit 'Wants' in new 'rclone_vfs.service'
+    lineinfile:
+      path: "/etc/systemd/system/rclone_vfs.service"
+      regexp: '^Wants=.*'
+      state: absent
+
+  - name: Edit 'Requires' in new 'rclone_vfs.service'
+    lineinfile:
+      path: "/etc/systemd/system/rclone_vfs.service"
+      regexp: '^Requires=.*'
+      state: absent
+
+  - name: Replace '/mnt/rclone' with '/mnt/remote' in new 'rclone_vfs.service'
+    replace:
+      path: /etc/systemd/system/rclone_vfs.service
+      regexp: "\\/mnt\\/rclone"
+      replace: '/mnt/remote'
 
   - name: Systemd daemon-reload
     systemd: daemon_reload=yes
