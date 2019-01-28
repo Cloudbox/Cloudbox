@@ -1,0 +1,21 @@
+# /etc/systemd/system/mergerfs.service
+
+[Unit]
+Description=MergerFS Mount
+After=network-online.target
+
+[Service]
+Type=forking
+GuessMainPID=no
+User={{user}}
+Group={{user}}
+ExecStartPre=/bin/sleep 30
+ExecStart=/usr/bin/mergerfs \
+  -o defaults,category.create=ff,minfreespace=0,allow_other \
+  -o dropcacheonclose=true,security_capability=false,xattr=nosys \
+  -o statfs_ignore=ro,use_ino,hard_remove,auto_cache,umask=0002,noatime \
+  /mnt/local=RW:/mnt/remote=NC /mnt/unionfs
+ExecStop=/bin/fusermount -u /mnt/unionfs
+
+[Install]
+WantedBy=default.target
