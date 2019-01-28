@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: Docker Tasks                                  #
+# Title:         Remote: Container Tasks                                #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,11 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create override directory
-  file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
+- name: "Gather list of running Docker containers"
+  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
+  register: cloudbox_managed_containers
+  ignore_errors: yes
 
-- name: Import override file
-  template: "src=override.conf.js2 dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
-
-- name: Systemd daemon-reload
-  systemd: name=docker state=reloaded daemon_reload=yes
+- name: "Stop all running Docker containers"
+  shell: "docker stop {{cloudbox_managed_containers.stdout}}"
+  ignore_errors: yes
+  when: (cloudbox_managed_containers.stdout | trim != '')

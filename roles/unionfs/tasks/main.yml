@@ -27,3 +27,7 @@
 
 - name: Docker Tasks
   import_tasks: "docker.yml"
+
+- name: Container Tasks
+  import_tasks: "container.yml"
+  when: ('mounts' in ansible_run_tags)
