@@ -7,7 +7,7 @@
     "hidden": {
         "/mnt/local/.unionfs-fuse": {
             "hidden_remotes": [
-                "google"
+                "{{rclone.remote}}"
             ]
         }
     },
@@ -37,8 +37,8 @@
         }
     },
     "remotes": {
-        "google": {
-            "hidden_remote": "google:",
+        "{{rclone.remote}}": {
+            "hidden_remote": "{{rclone.remote}}:",
             "rclone_excludes": [
                 "**partial~",
                 "**_HIDDEN~",
@@ -68,15 +68,15 @@
             },
             "rclone_command": "move",
             "remove_empty_dir_depth": 2,
-            "sync_remote": "google:/Media",
+            "sync_remote": "{{rclone.remote}}:/Media",
             "upload_folder": "/mnt/local/Media",
-            "upload_remote": "google:/Media"
+            "upload_remote": "{{rclone.remote}}:/Media"
         }
     },
     "syncer": {
     },
     "uploader": {
-        "google": {
+        "{{rclone.remote}}": {
             "check_interval": 30,
             "exclude_open_files": false,
             "max_size_gb": 200,
