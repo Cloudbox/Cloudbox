@@ -38,7 +38,7 @@
     - /opt/scripts/torrents
     - /opt/scripts/rclone
 
-- name: Check arrpush.legacy.sh exists
+- name: Check 'arrpush.legacy.sh' exists
   stat:
     path: "/opt/scripts/torrents/arrpush.legacy.sh"
     get_attributes: false
@@ -47,7 +47,7 @@
     get_mime: false
   register: arrpush_legacy_script
 
-- name: Import arrpush.legacy.sh
+- name: Import 'arrpush.legacy.sh'
   copy:
     src: "arrpush.legacy.sh"
     dest: "/opt/scripts/torrents/arrpush.legacy.sh"
@@ -81,7 +81,7 @@
     - "plex_token.sh"
     - "plex_trash_fixer.py"
 
-- name: Import revoke_certs.sh
+- name: Import 'revoke_certs.sh'
   template:
     src: "revoke_certs.sh.js2"
     dest: "/opt/scripts/nginx-proxy/revoke_certs.sh"
@@ -90,7 +90,7 @@
     mode: 0775
     force: yes
 
-- name: Import plex_autoscan_url.sh
+- name: Import 'plex_autoscan_url.sh'
   copy:
     src: "plex_autoscan_url.sh"
     dest: "/opt/scripts/plex_autoscan/plex_autoscan_url.sh"
@@ -99,7 +99,7 @@
     mode: 0775
     force: yes
 
-- name: Check if restart_containers.sh exists
+- name: Check if 'restart_containers.sh' exists
   stat:
     path: "/opt/scripts/docker/restart_containers.sh"
     get_attributes: false
@@ -108,7 +108,7 @@
     get_mime: false
   register: restart_containers
 
-- name: Import restart_containers.sh
+- name: Import 'restart_containers.sh'
   copy:
     src: "restart_containers.sh"
     dest: "/opt/scripts/docker/restart_containers.sh"
@@ -118,7 +118,7 @@
     force: yes
   when: restart_containers.stat.exists == False
 
-- name: Check if frontail_custom_preset.json exists
+- name: Check if 'frontail_custom_preset.json' exists
   stat:
     path: "/opt/scripts/frontail/frontail_custom_preset.json"
     get_attributes: false
@@ -127,7 +127,7 @@
     get_mime: false
   register: frontail_preset
 
-- name: Import frontail_custom_preset.json
+- name: Import 'frontail_custom_preset.json'
   copy:
     src: "frontail_custom_preset.json"
     dest: "/opt/scripts/frontail/frontail_custom_preset.json"
@@ -137,40 +137,40 @@
     force: yes
   when: frontail_preset.stat.exists == False
 
-- name: Check if sync_torrents_to_google.sh exists
+- name: Check if 'sync_torrents_to_rclone_remote.sh' exists
   stat:
-    path: "/opt/scripts/rclone/sync_torrents_to_google.sh"
+    path: "/opt/scripts/rclone/sync_torrents_to_rclone_remote.sh"
     get_attributes: false
     get_checksum: false
     get_md5: false
     get_mime: false
-  register: sync_torrents_to_google
+  register: sync_torrents_to_rclone_remote
 
-- name: Import sync_torrents_to_google.sh
-  copy:
-    src: "sync_torrents_to_google.sh"
-    dest: "/opt/scripts/rclone/sync_torrents_to_google.sh"
+- name: Import 'sync_torrents_to_rclone_remote.sh'
+  template:
+    src: "sync_torrents_to_rclone_remote.sh.js2"
+    dest: "/opt/scripts/rclone/sync_torrents_to_rclone_remote.sh"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: sync_torrents_to_google.stat.exists == False
+  when: sync_torrents_to_rclone_remote.stat.exists == False
 
-- name: Check if download_torrents_from_google.sh exists
+- name: Check if 'download_torrents_from_rclone_remote.sh' exists
   stat:
-    path: "/opt/scripts/rclone/download_torrents_from_google.sh"
+    path: "/opt/scripts/rclone/download_torrents_from_rclone_remote.sh"
     get_attributes: false
     get_checksum: false
     get_md5: false
     get_mime: false
-  register: download_torrents_from_google
+  register: download_torrents_from_rclone_remote
 
-- name: Import download_torrents_from_google.sh
-  copy:
-    src: "download_torrents_from_google.sh"
-    dest: "/opt/scripts/rclone/download_torrents_from_google.sh"
+- name: Import 'download_torrents_from_rclone_remote.sh'
+  template:
+    src: "download_torrents_from_rclone_remote.sh.js2"
+    dest: "/opt/scripts/rclone/download_torrents_from_rclone_remote.sh"
     owner: "{{user}}"
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: download_torrents_from_google.stat.exists == False
+  when: download_torrents_from_rclone_remote.stat.exists == False
