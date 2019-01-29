@@ -15,7 +15,18 @@
     path: "/etc/systemd/system/mnt-unionfs.mount"
   register: mnt_unionfs_mount
 
-- name: Stop and disable existing 'mnt-unionfs.mount'
-  systemd: name=mnt-unionfs.mount state=stopped enabled=no
-  when: (mnt_unionfs_mount.stat.exists)
+- name: Tasks for 'mnt-unionfs.mount'
+  block:
 
+  - name: Stop and disable existing 'mnt-unionfs.mount'
+    systemd: name=mnt-unionfs.mount state=stopped enabled=no
+
+  - name: "Remove 'mnt-unionfs.mount'"
+    file:
+      path: "/etc/systemd/system/mnt-unionfs.mount"
+      state: absent
+
+  - name: Systemd daemon-reload
+    systemd: daemon_reload=yes
+
+  when: (mnt_unionfs_mount.stat.exists)
