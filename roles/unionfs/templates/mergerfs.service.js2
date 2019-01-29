@@ -11,9 +11,10 @@ User={{user}}
 Group={{user}}
 ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/mergerfs \
-  -o defaults,category.create=ff,minfreespace=0,allow_other \
+  -o category.create=ff,minfreespace=0,allow_other \
   -o dropcacheonclose=true,security_capability=false,xattr=nosys \
-  -o statfs_ignore=ro,use_ino,hard_remove,auto_cache,umask=0002,noatime \
+  -o statfs_ignore=ro,use_ino,auto_cache,umask=0002,noatime \
+  -o atomic_o_trunc,default_permissions,big_writes \
   /mnt/local=RW:/mnt/remote=NC /mnt/unionfs
 ExecStop=/bin/fusermount -u /mnt/unionfs
 
