@@ -35,6 +35,9 @@
       - { regexp: '^User\s?=', line: 'User={{user}}' }
       - { regexp: '^Group\s?=', line: 'Group={{user}}' }
 
+  - name: Systemd daemon-reload
+    systemd: daemon_reload=yes
+
   when: (unionfs_service.stat.exists)
 
 - name: Check if 'mergerfs.service' exists
@@ -63,6 +66,9 @@
     with_items:
       - { regexp: '^User\s?=', line: 'User={{user}}' }
       - { regexp: '^Group\s?=', line: 'Group={{user}}' }
+
+  - name: Systemd daemon-reload
+    systemd: daemon_reload=yes
 
   when: (mergerfs_service.stat.exists)
 
