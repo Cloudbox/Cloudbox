@@ -9,7 +9,9 @@ SERVER_TOKEN = {{ plex_auth_token | default('') }}
 SERVER_NAME = CloudBox
 # How often to check the active streams in seconds.
 CHECK_INTERVAL = 90
-# Instantly kick video transcodes?
+# instantly kick 4K transcodes?
+KICK_4K_TRANSCODE = true
+# instantly kick video transcodes?
 KICK_VIDEO_TRANSCODES = false
 # Instantly kick audio transcodes?
 KICK_AUDIO_TRANSCODES = false
@@ -26,6 +28,7 @@ KICK_PAUSED_DIRECTPLAY = true
 # When the options above are true, the user has this many minutes to resume, otherwise kick.
 KICK_PAUSED_GRACE_MINS = 15
 # Messages to be displayed for different kick types.
+KICK_4K_TRANSCODE_MESSAGE = You are not allowed to transcode 4K content, fix your settings!
 KICK_PAUSED_MESSAGE = You are not allowed to pause a stream for that long... cya!
 KICK_TRANSCODE_MESSAGE = You are not allowed to transcode streams, use a better client!
 KICK_PLAYER_MESSAGE = You are not allowed to use this trash player. Use the official software from www.plex.tv/downloads -> Get An App!!!
