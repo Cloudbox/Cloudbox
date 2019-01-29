@@ -169,7 +169,7 @@
 
   - name: "Remove 'prime-rclone.service'"
     file:
-      path: "prime-rclone.service"
+      path: "/etc/systemd/system/prime-rclone.service"
       state: absent
 
   - name: Systemd daemon-reload
