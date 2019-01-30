@@ -36,9 +36,15 @@
     - /opt/plexdrive
     - /mnt/plexdrive
 
+- name: Install mongodb
+  apt:
+    name: mongodb
+    state: present
+  when: plexdrive.version == '4.0.0'
+
 - name: Install plexdrive
   get_url:
-    url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
+    url:  https://github.com/dweidenfeld/plexdrive/releases/download/{{plexdrive.version}}/plexdrive-linux-amd64
     dest: /opt/plexdrive/plexdrive
     mode: 0775
     owner: "{{user}}"
@@ -51,7 +57,6 @@
     src: plexdrive.service.js2
     dest: /etc/systemd/system/plexdrive.service
     force: yes
-  when: not plexdrive_service.stat.exists
 
 - name: Systemd daemon-reload
   systemd: state=stopped name=plexdrive daemon_reload=yes enabled=no

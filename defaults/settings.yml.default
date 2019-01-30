@@ -12,3 +12,5 @@ plex:
 rclone:
   version: latest
 shell: zsh
+plexdrive:
+  version: 5.0.0
