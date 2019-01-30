@@ -7,14 +7,11 @@ After=network-online.target
 [Service]
 Type=forking
 GuessMainPID=no
-User={{user}}
-Group={{user}}
-ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/mergerfs \
   -o category.create=ff,minfreespace=0,allow_other \
   -o dropcacheonclose=true,security_capability=false,xattr=nosys \
   -o statfs_ignore=ro,use_ino,auto_cache,umask=0002,noatime \
-  -o atomic_o_trunc,default_permissions,big_writes \
+  -o rw,suid,dev,exec,async \
   /mnt/local=RW:/mnt/remote=NC /mnt/unionfs
 ExecStop=/bin/fusermount -u /mnt/unionfs
 
