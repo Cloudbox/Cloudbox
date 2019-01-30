@@ -9,7 +9,6 @@ Type=forking
 GuessMainPID=no
 User={{user}}
 Group={{user}}
-ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/unionfs-fuse \
   -o cow,allow_other,nonempty \
   /mnt/local=RW:/mnt/remote=RO /mnt/unionfs
