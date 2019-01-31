@@ -1,0 +1,49 @@
+#########################################################################
+# Title:         Remote: Mount Tasks                                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# /mnt/remote
+
+- name: Check if '/mnt/remote' exists
+  stat:
+    path: "/mnt/remote"
+  register: mnt_remote
+  ignore_errors: yes
+
+- name: Tasks for '/mnt/remote' path
+  block:
+
+  - name: "Force unmount '/mnt/remote'"
+    shell: "/bin/umount -f '/mnt/remote' 2>/dev/null || :"
+    ignore_errors: yes
+
+  - name: "Remove empty directories in '/mnt/remote'"
+    shell: "find '/mnt/remote' -type d -empty -delete"
+    ignore_errors: yes
+
+  - name: Recursively find '/mnt/remote' files
+    find:
+      paths: '/mnt/remote'
+      hidden: yes
+      recurse: yes
+    register: mnt_remote_files
+
+  - name: "Backup non-empty '/mnt/remote' path"
+    shell: "mv \\'/mnt/remote\\' \\'/mnt/remote_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}\\'"
+    become: yes
+    become_user: "{{user}}"
+    ignore_errors: yes
+    when: (mnt_remote_files.matched|int > 0)
+
+  - name: "Remove '/mnt/remote'"
+    file:
+      path: "/mnt/remote"
+      state: absent
+
+  when: (mnt_remote is failed) or (mnt_remote.stat.exists)
