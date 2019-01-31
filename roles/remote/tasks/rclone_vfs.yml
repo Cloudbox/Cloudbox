@@ -17,7 +17,7 @@
   template:
     src: rclone_vfs.service.js2
     dest: /etc/systemd/system/rclone_vfs.service
-    force: no
+    force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
 - name: Systemd daemon-reload 'rclone_vfs.service'
   systemd: name=rclone_vfs state=stopped enabled=no daemon_reload=yes
@@ -26,7 +26,7 @@
   template:
     src: rclone_vfs_primer.service.js2
     dest: /etc/systemd/system/rclone_vfs_primer.service
-    force: no
+    force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
 - name: Systemd daemon-reload 'rclone_vfs_primer.service'
   systemd: name=rclone_vfs_primer state=stopped enabled=no daemon_reload=yes

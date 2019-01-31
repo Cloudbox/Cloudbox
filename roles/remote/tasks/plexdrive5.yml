@@ -27,7 +27,7 @@
   template:
     src: plexdrive5.service.js2
     dest: /etc/systemd/system/plexdrive5.service
-    force: no
+    force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
 - name: Systemd daemon-reload 'plexdrive5.service'
   systemd: name=plexdrive5 state=stopped enabled=no daemon_reload=yes
