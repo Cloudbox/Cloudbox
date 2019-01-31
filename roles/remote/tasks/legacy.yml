@@ -93,6 +93,7 @@
   stat:
     path: "/mnt/plexdrive"
   register: mnt_plexdrive
+  ignore_errors: yes
 
 - name: Tasks for '/mnt/plexdrive' path
   block:
@@ -116,6 +117,7 @@
     shell: "mv /mnt/plexdrive /mnt/plexdrive_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
     become: yes
     become_user: "{{user}}"
+    ignore_errors: yes
     when: (mnt_plexdrive_files.matched|int > 0)
 
   - name: "Remove '/mnt/plexdrive'"
@@ -124,7 +126,7 @@
       state: absent
     when: (mnt_plexdrive_files.matched|int == 0)
 
-  when: (mnt_plexdrive.stat.exists)
+  when: (mnt_plexdrive is failed) or (mnt_plexdrive.stat.exists)
 
 # Community Rclone VFS
 
@@ -209,6 +211,7 @@
   stat:
     path: "/mnt/rclone"
   register: mnt_rclone
+  ignore_errors: yes
 
 - name: Tasks for '/mnt/rclone' path
   block:
@@ -232,12 +235,12 @@
     shell: "mv /mnt/rclone /mnt/rclone_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
     become: yes
     become_user: "{{user}}"
+    ignore_errors: yes
     when: (mnt_rclone_files.matched|int > 0)
 
   - name: "Remove '/mnt/rclone'"
     file:
       path: "/mnt/rclone"
       state: absent
-    when: (mnt_rclone_files.matched|int == 0)
 
-  when: (mnt_rclone.stat.exists)
+  when: (mnt_rclone is failed) or (mnt_rclone.stat.exists)

@@ -144,6 +144,7 @@
   stat:
     path: "/mnt/remote"
   register: mnt_remote
+  ignore_errors: yes
 
 - name: Tasks for '/mnt/remote' path
   block:
@@ -167,12 +168,12 @@
     shell: "mv \\'/mnt/remote\\' \\'/mnt/remote_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}\\'"
     become: yes
     become_user: "{{user}}"
+    ignore_errors: yes
     when: (mnt_remote_files.matched|int > 0)
 
   - name: "Remove '/mnt/remote'"
     file:
       path: "/mnt/remote"
       state: absent
-    when: (mnt_remote_files.matched|int == 0)
 
-  when: (mnt_remote.stat.exists)
+  when: (mnt_remote is failed) or (mnt_remote.stat.exists)
