@@ -74,11 +74,8 @@
 - name: Tasks for 'rclone_vfs.service'
   block:
 
-  - name: Stop and existing 'rclone_vfs.service'
+  - name: Stop and disable existing 'rclone_vfs.service'
     systemd: name=rclone_vfs state=stopped enabled=no
-
-  - name: Systemd daemon-reload
-    systemd: daemon_reload=yes
 
   - name: Reset ownership in existing 'rclone_vfs.service'
     lineinfile:
@@ -102,6 +99,9 @@
       regexp: "([a-z].*):\\s?.*\\/mnt\\/remote"
       replace: '{{rclone.remote}}: /mnt/remote'
 
+  - name: Systemd daemon-reload
+    systemd: daemon_reload=yes
+
   when: (rclone_vfs_service.stat.exists)
 
 # Rclone VFS Primer
@@ -114,11 +114,8 @@
 - name: Tasks for 'rclone_vfs_primer.service'
   block:
 
-  - name: Stop and existing 'rclone_vfs_primer.service'
+  - name: Stop and disable existing 'rclone_vfs_primer.service'
     systemd: name=rclone_vfs_primer state=stopped enabled=no
-
-  - name: Systemd daemon-reload
-    systemd: daemon_reload=yes
 
   - name: Reset ownership in existing 'rclone_vfs_primer.service'
     lineinfile:
@@ -135,6 +132,9 @@
       path: /etc/systemd/system/rclone_vfs_primer.service
       regexp: "rc-addr=localhost:[0-9]*"
       replace: 'rc-addr=localhost:5572'
+
+  - name: Systemd daemon-reload
+    systemd: daemon_reload=yes
 
   when: (rclone_vfs_primer_service.stat.exists)
 
