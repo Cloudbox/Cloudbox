@@ -59,8 +59,34 @@
     path: "/opt/plexdrive"
   register: opt_plexdrive
 
-- name: "Rename '/opt/plexdrive' to '/opt/plexdrive5'"
-  shell: "mv /opt/plexdrive /opt/plexdrive5"
+- name: Check if '/opt/plexdrive5' exists
+  stat:
+    path: "/opt/plexdrive5"
+  register: opt_plexdrive5
+
+- name: "Move '/opt/plexdrive' to '/opt/plexdrive5'"
+  block:
+
+  - name: Create '/opt/plexdrive5' directory
+    file:
+      path: "/opt/plexdrive5"
+      state: directory
+      mode: 0775
+      owner: "{{user}}"
+      group: "{{user}}"
+      recurse: yes"
+
+  - name: "Copy '/opt/plexdrive/.' to '/opt/plexdrive5/'"
+    shell: "cp -r -n /opt/plexdrive/. /opt/plexdrive5/"
+    become: yes
+    become_user: "{{user}}"
+
+  when: (opt_plexdrive.stat.exists) and (not opt_plexdrive5.stat.exists)
+
+- name: "Remove '/opt/plexdrive'"
+  file:
+    path: "/opt/plexdrive"
+    state: absent
   when: (opt_plexdrive.stat.exists)
 
 - name: Check if '/mnt/plexdrive' exists
