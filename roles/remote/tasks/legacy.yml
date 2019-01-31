@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# Plexdrive
+# Cloudbox - plexdrive.service
 
 - name: Check if 'plexdrive.service' exists
   stat:
@@ -54,6 +54,8 @@
 
   when: (plexdrive_service.stat.exists)
 
+# Cloudbox - /opt/plexdrive
+
 - name: Check if '/opt/plexdrive' exists
   stat:
     path: "/opt/plexdrive"
@@ -88,6 +90,8 @@
     path: "/opt/plexdrive"
     state: absent
   when: (opt_plexdrive.stat.exists)
+
+# Cloudbox - /mnt/plexdrive
 
 - name: Check if '/mnt/plexdrive' exists
   stat:
@@ -128,7 +132,7 @@
 
   when: (mnt_plexdrive is failed) or (mnt_plexdrive.stat.exists)
 
-# Community Rclone VFS
+# Community - rclone.service
 
 - name: Check if 'rclone.service' exists
   stat:
@@ -186,6 +190,8 @@
 
   when: (rclone_service.stat.exists)
 
+# Community - prime-rclone.service
+
 - name: Check if 'prime-rclone.service' exists
   stat:
     path: "/etc/systemd/system/prime-rclone.service"
@@ -206,6 +212,8 @@
     systemd: daemon_reload=yes
 
   when: (prime_rclone_service.stat.exists)
+
+# Community - /mnt/rclone
 
 - name: Check if '/mnt/rclone' exists
   stat:
