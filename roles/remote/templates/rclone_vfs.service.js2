@@ -14,7 +14,6 @@ ExecStart=/usr/bin/rclone mount \
   --allow-other \
   --rc \
   --rc-addr=localhost:5572 \
-  --fast-list \
   --drive-skip-gdocs \
   --vfs-read-chunk-size=64M \
   --vfs-read-chunk-size-limit=2048M \
