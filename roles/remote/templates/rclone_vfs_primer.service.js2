@@ -12,7 +12,7 @@ Type=oneshot
 ExecStartPre=/bin/sleep 10
 ExecStart=/usr/bin/rclone \
   --config /home/{{user}}/.config/rclone/rclone.conf \
-  --timeout=15m \
+  --timeout=1h \
   -vvv \
   --rc-addr=localhost:5572 \
   rc vfs/refresh dir=Media recursive=true
