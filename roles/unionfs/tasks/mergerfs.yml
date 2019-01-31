@@ -25,7 +25,7 @@
   template:
     src: mergerfs.service.js2
     dest: /etc/systemd/system/mergerfs.service
-    force: no
+    force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
 - name: Start 'mergerfs.service'
   systemd: name=mergerfs.service state=started enabled=yes daemon_reload=yes

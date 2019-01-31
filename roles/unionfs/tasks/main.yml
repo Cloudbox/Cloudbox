@@ -33,4 +33,4 @@
 
 - name: Container Tasks
   import_tasks: "container.yml"
-  when: ('mounts' in ansible_run_tags)
+  when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)
