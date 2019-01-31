@@ -76,7 +76,7 @@
       mode: 0775
       owner: "{{user}}"
       group: "{{user}}"
-      recurse: yes"
+      recurse: yes
 
   - name: "Copy '/opt/plexdrive/.' to '/opt/plexdrive5/'"
     shell: "cp -r -n /opt/plexdrive/. /opt/plexdrive5/"
