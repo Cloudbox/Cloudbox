@@ -14,6 +14,9 @@
 - name: Service Tasks
   import_tasks: "service.yml"
 
+- name: Mount Tasks
+  import_tasks: "mount.yml"
+
 - name: Basic Tasks
   import_tasks: "basic.yml"
 
