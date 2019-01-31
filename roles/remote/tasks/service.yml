@@ -165,6 +165,8 @@
 
   - name: "Backup non-empty '/mnt/remote' path"
     shell: "mv \\'/mnt/remote\\' \\'/mnt/remote_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}\\'"
+    become: yes
+    become_user: "{{user}}"
     when: (mnt_remote_files.matched|int > 0)
 
   - name: "Remove '/mnt/remote'"
