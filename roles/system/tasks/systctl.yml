@@ -170,3 +170,9 @@
     name: net.core.default_qdisc
     value: fq
     state: present
+    
+- name: Set max_user_watches for plex inotify
+  sysctl:
+    name: fs.inotify.max_user_watches
+    value: 65536
+    state: present
