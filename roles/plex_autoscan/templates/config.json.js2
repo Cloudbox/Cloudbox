@@ -58,8 +58,8 @@
    "SERVER_FILE_CHECK_DELAY":60,
    "SERVER_MAX_FILE_CHECKS":10,
    "SERVER_FILE_EXIST_PATH_MAPPINGS":{
-      "/mnt/unionfs/Media":[
-         "/data"
+      "/mnt/unionfs/Media/":[
+         "/data/"
       ]
    },
    "SERVER_IGNORE_LIST":[
