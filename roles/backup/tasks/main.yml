@@ -55,6 +55,8 @@
   # Use mv because Ansible copy & delete takes a lot longer.
   - name: "Moving '{{local.destination}}' to '{{local.destination}}.old'"
     shell: "mv '{{local.destination}}' '{{local.destination}}.old'"
+    become: yes
+    become_user: "{{user}}"
     when: dir_files.matched|int != 0
 
   - name: "Create backup folders."
@@ -258,6 +260,8 @@
     file:
       path: "{{local.destination}}.old"
       state: absent
+    become: yes
+    become_user: "{{user}}"
     when: (dir_files2.matched|int != 0)
 
   - name: "Get size of '{{local.destination}}'"
