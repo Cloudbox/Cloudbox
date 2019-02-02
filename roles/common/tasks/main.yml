@@ -22,6 +22,23 @@
     - /mnt/local/Media/TV
     - /opt
 
+- name: "Determine '/' filesystem type"
+  set_fact:
+    root_fstype: "{{ item.fstype }}"
+  when: "(item.mount == '/')"
+  with_items:
+    - "{{ ansible_mounts }}"
+
+- name: Set no-cow on '/opt' and '/mnt' if '/' is btrfs
+  file:
+    path: "{{item}}"
+    attributes: "+C"
+    recurse: yes
+  when: (root_fstype == 'btrfs')
+  with_items:
+    - /mnt
+    - /opt
+
 - name: Add multiverse repositories
   apt_repository:
     repo: "{{item}}"
