@@ -60,10 +60,10 @@
                     "sleep": 25,
                     "timeout": 3600
                 },
-                "0/s": {
-                    "count": 10,
+                " 0/s,": {
+                    "count": 15,
                     "sleep": 25,
-                    "timeout": 3600
+                    "timeout": 140
                 }
             },
             "rclone_command": "move",
