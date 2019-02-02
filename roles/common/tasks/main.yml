@@ -16,28 +16,18 @@
     - /home/{{user}}/.config
     - /home/{{user}}/.config/pip
     - /mnt/local
+    - /opt
+
+- name: Btrfs Task
+  import_tasks: "btrfs.yml"
+
+- name: Create '/mnt/local' sub-directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
     - /mnt/local/Media
     - /mnt/local/Media/Movies
     - /mnt/local/Media/Music
     - /mnt/local/Media/TV
-    - /opt
-
-- name: "Determine '/' filesystem type"
-  set_fact:
-    root_fstype: "{{ item.fstype }}"
-  when: "(item.mount == '/')"
-  with_items:
-    - "{{ ansible_mounts }}"
-
-- name: Set no-cow on '/opt' and '/mnt' if '/' is btrfs
-  file:
-    path: "{{item}}"
-    attributes: "+C"
-    recurse: yes
-  when: (root_fstype == 'btrfs')
-  with_items:
-    - /mnt
-    - /opt
 
 - name: Add multiverse repositories
   apt_repository:
@@ -178,7 +168,7 @@
   tags: subliminal
   ignore_errors: yes
 
-- name: Cloudflare Cache Purge
+- name: Cloudflare Cache Purge Task
   import_tasks: "cloudflare_cache_purge.yml"
   when: cloudflare_enabled
   tags: cloudflare-cache-purge
