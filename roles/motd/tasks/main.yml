@@ -99,6 +99,12 @@
     - "openssh-server"
   when: (not sshd_config.stat.exists)
 
+- name: Wait for '/etc/ssh/sshd_config' to be created
+  wait_for:
+    path: "/etc/ssh/sshd_config"
+    state: present
+  when: (not sshd_config.stat.exists)
+
 - name: Set PrintLastLog to no
   lineinfile:
     path: "/etc/ssh/sshd_config"
