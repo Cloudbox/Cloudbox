@@ -122,6 +122,9 @@
   with_items:
     - /opt
 
+- name: Btrfs Task
+  import_tasks: "btrfs.yml"
+
 - name: "Unarchive backup tars to /opt"
   shell: |
     mv /opt/{{ (item | basename | splitext)[0] }} /opt/{{ (item | basename | splitext)[0] }}_bak 2>/dev/null || :
