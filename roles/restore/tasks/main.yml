@@ -141,5 +141,5 @@
   when: not local.enable
 
 - debug:
-    msg: Finished restoring the backup. You are now ready to install Cloudbox.
+    msg: Finished restoring the backup. You are now ready to install Cloudbox!
   when: unarchive is success
