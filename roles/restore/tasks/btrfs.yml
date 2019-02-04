@@ -15,18 +15,6 @@
   with_items:
     - "{{ ansible_mounts }}"
 
-- name: Btrfs tasks
-  block:
-
-  - name: Recursively find files in '/opt'
-    find:
-      paths: '/opt'
-      hidden: yes
-      recurse: yes
-    register: opt_files
-
-  - name: Set no-cow on '/opt'
-    shell: "chattr -R +C /opt"
-    when: (opt_files.matched|int == 0)
-
+- name: Set no-cow on '/opt'
+  shell: "chattr +C /opt"
   when: (root_fstype == 'btrfs')
