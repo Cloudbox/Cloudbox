@@ -39,7 +39,7 @@
 
 - name: Clone cloudbox_motd
   git:
-    repo: https://github.com/cloudbox/cloudbox_motd
+    repo: https://github.com/cloudbox/motd.git
     dest: /opt/motd
     version: master
     force: yes
