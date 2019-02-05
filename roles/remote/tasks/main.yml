@@ -21,6 +21,9 @@
 - name: Mount Tasks
   import_tasks: "mount.yml"
 
+- name: Fuse Tasks
+  import_tasks: "fuse.yml"
+
 - name: Basic Tasks
   import_tasks: "basic.yml"
 
