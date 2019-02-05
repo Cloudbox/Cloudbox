@@ -15,7 +15,7 @@
   import_tasks: "network.yml"
 
 - name: sysctl tasks
-  include_tasks: "systctl.yml"
+  include_tasks: "sysctl.yml"
 
 - name: Mounts tasks
   include_tasks: "mounts.yml"
