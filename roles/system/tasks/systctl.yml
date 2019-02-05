@@ -176,12 +176,6 @@
     name: fs.inotify.max_user_watches
     value: 131072
     state: present
-
-- name: Set net.core.netdev_budget
-  sysctl:
-    name: net.core.netdev_max_backlog
-    value: 100000
-    state: present
   
 - name: Set net.core.netdev_budget
   sysctl:
