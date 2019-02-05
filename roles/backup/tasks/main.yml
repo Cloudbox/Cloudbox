@@ -15,8 +15,9 @@
   - name: Variables
     import_tasks: "variables.yml"
     tags:
-     - set-backup
-     - vault-service
+      - set-backup
+      - restore-service
+      - cloudbox-restore-service
 
   - name: Cron
     import_tasks: "cron.yml"
@@ -101,10 +102,12 @@
       force: yes
     when: (backup_excludes_list.stat.exists)
 
-  - name: vault_service
-    import_tasks: "vault_service.yml"
-    when: vault_service_enabled
-    tags: vault-service
+  - name: Cloudbox Restore Service
+    import_tasks: "restore_service.yml"
+    when: restore_service_enabled
+    tags:
+      - restore-service
+      - cloudbox-restore-service
 
   - name: "Synchronize '/etc/systemd/system' to '/opt/systemd-backup' for inclusion in backup"
     shell: |
