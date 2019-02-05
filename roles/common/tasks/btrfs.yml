@@ -15,9 +15,9 @@
   with_items:
     - "{{ ansible_mounts }}"
 
-- name: Set no-cow on '/opt' and '/mnt' if '/' is btrfs
+- name: Set no-cow on '/opt' and '/mnt/local' if '/' is btrfs
   shell: "chattr +C {{item}}"
   when: (root_fstype == 'btrfs')
   with_items:
-    - /mnt
     - /opt
+    - /mnt/local

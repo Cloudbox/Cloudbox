@@ -15,8 +15,8 @@
     - /home/{{user}}/logs
     - /home/{{user}}/.config
     - /home/{{user}}/.config/pip
-    - /mnt/local
     - /opt
+    - /mnt/local
 
 - name: Btrfs Task
   import_tasks: "btrfs.yml"
