@@ -8,6 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+# Existing Setup
+
 - name: Legacy Tasks
   import_tasks: "legacy.yml"
 
@@ -16,6 +18,8 @@
 
 - name: Mount Tasks
   import_tasks: "mount.yml"
+
+# New Setup
 
 - name: Basic Tasks
   import_tasks: "basic.yml"
@@ -30,6 +34,8 @@
 
 - name: Docker Tasks
   import_tasks: "docker.yml"
+
+# Start Containers
 
 - name: Container Tasks
   import_tasks: "container.yml"
