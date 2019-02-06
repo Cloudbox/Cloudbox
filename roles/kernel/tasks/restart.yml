@@ -19,15 +19,12 @@
   - name: Success message
     debug:
       msg: "Kernel updated. System will now reboot ..."
-    when: (r.changed)
 
   - name: Reboot
     shell: reboot
-    when: (r.changed)
 
   - name: Reboot message
     debug:
       msg: "Failed to reboot automatically. You will need to restart the server yourself for changes to take effect."
-    when: (r.changed)
 
   when: ('preinstall' not in ansible_run_tags)
