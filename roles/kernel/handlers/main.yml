@@ -1,0 +1,15 @@
+#########################################################################
+# Title:         Hetzner: Update GRUB Handler                           #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# https://github.com/debops/ansible-grub
+- name: Update GRUB
+  command: update-grub
+  register: grub_register_update
+  failed_when: ('error' in grub_register_update.stderr)

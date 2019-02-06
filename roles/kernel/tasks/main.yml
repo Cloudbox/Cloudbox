@@ -16,6 +16,9 @@
   include_tasks: "preinstall.yml"
   when: ('preinstall' in ansible_run_tags)
 
+- name: Hetzner tasks
+  include_tasks: "hetzner.yml"
+
 - name: "Kernel: Cron task"
   include_tasks: "cron.yml"
 

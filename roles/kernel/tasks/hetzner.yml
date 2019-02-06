@@ -1,0 +1,38 @@
+#########################################################################
+# Title:         Kernel: Hetzner Task                                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Check if 'blacklist-hetzner.conf' exists
+  stat:
+    path: "/etc/modprobe.d/blacklist-hetzner.conf"
+  register: blacklist_hetzner_conf
+
+- name: Check if 'hetzner.cfg' exists
+  stat:
+    path: "/etc/default/grub.d/hetzner.cfg"
+  register: hetzner_cfg
+
+- name: Comment out 'i915' blacklists in 'blacklist-hetzner.conf'
+  replace:
+    path: "/etc/modprobe.d/blacklist-hetzner.conf"
+    regexp: '(^blacklist\si915.*)'
+    replace: '#\1'
+  when: (blacklist_hetzner_conf.stat.exists)
+
+- name: Hetzner GRUB edits
+  include_tasks: "hetzner_grub_edits.yml"
+  with_items:
+    - "/etc/default/grub"
+  when: (blacklist_hetzner_conf.stat.exists) or (hetzner_cfg.stat.exists)
+
+- name: Hetzner GRUB edits
+  include_tasks: "hetzner_grub_edits.yml"
+  with_items:
+    - "/etc/default/grub.d/hetzner.cfg"
+  when: (hetzner_cfg.stat.exists)
