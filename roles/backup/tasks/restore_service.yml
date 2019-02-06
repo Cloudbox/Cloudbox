@@ -28,7 +28,7 @@
     warn: no
 
 - name: Encrypt config file(s)
-  shell: "openssl enc -aes-256-cbc -salt -in {{ item }} -out /tmp/restore_service/{{ item | basename }}.enc -k '{{ restore_service_password }}'"
+  shell: "openssl enc -aes-256-cbc -salt -md md5 -in {{ item }} -out /tmp/restore_service/{{ item | basename }}.enc -k '{{ restore_service_password }}'"
   args:
     warn: no
   become: yes
