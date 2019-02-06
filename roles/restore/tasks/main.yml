@@ -8,9 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Check if user '{{user}}' exists"
+  shell: "id -un {{user}} >/dev/null 2>&1;"
+  register: user_check
+  failed_when: (user_check.rc > 1)
+
 - name: User Role
   include_role:
     name: user
+  when: (user_check.rc == 1)
 
 - name: Variables
   import_tasks: "variables.yml"
