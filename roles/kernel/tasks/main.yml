@@ -8,18 +8,26 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Set default 'reboot_is_necessary' variable
+  set_fact:
+    reboot_is_necessary: false
+
 - name: Preinstall task
   include_tasks: "preinstall.yml"
   when: ('preinstall' in ansible_run_tags)
 
-- name: Kernel cron task
+- name: "Kernel: Cron task"
   include_tasks: "cron.yml"
 
-- name: Kernel script task
+- name: "Kernel: Script task"
   include_tasks: "script.yml"
 
-- name: Kernel update task
+- name: "Kernel: Update task"
   include_tasks: "update.yml"
 
-- name: Kernel checks task
+- name: "Kernel: Restart After Changes"
+  include_tasks: "restart.yml"
+  when: (reboot_is_necessary)
+
+- name: "Kernel: Checks task"
   include_tasks: "checks.yml"
