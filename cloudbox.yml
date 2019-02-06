@@ -11,9 +11,9 @@
     - { role: pre_tasks }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
+    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'kernel'] }
     - { role: user, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'user'] }
     - { role: shell, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'shell'] }
-    - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'kernel'] }
     - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
     - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'common'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }

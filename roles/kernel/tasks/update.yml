@@ -20,25 +20,30 @@
 
   - name: Fix apt
     shell: apt-get --fix-broken --yes install
-    when: r.changed
+    when: (r.changed)
 
   - name: Success message
     debug:
       msg: "Kernel updated. System will now reboot ..."
-    when: r.changed
+    when: (r.changed)
 
   - name: Reboot
     shell: reboot
-    when: r.changed
+    when: (r.changed) and ('preinstall' not in ansible_run_tags)
 
   - name: Reboot message
     debug:
-      msg: "You will need to restart for kernel update to take effect."
-    when: r.changed
+      msg: "Kernel was updated. You will need to restart the server for changes to take effect."
+    when: (r.changed) and ('preinstall' not in ansible_run_tags)
+
+  - name: "Set preinstall variables"
+    set_fact:
+      preinstall_kernel_restart: true
+    when: (r.changed) and ('preinstall' in ansible_run_tags)
 
   - name: No success message
     debug:
       msg: "Kernel was not updated."
-    when: not r.changed
+    when: (not r.changed)
 
   when: (ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('16.04', '==')) and (ansible_kernel is version('4.10', '<'))

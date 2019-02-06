@@ -24,6 +24,11 @@
     append: yes
   register: user_info
 
+- name: Set shell
+  include_role:
+    name: shell
+  when: ('restore' in ansible_run_tags)
+
 - name: "Set 'uid', 'gid', and 'vgid'"
   set_fact:
     uid: "{{ user_info.uid }}"
@@ -86,7 +91,13 @@
 
   - name: "Quit playbook after creation of new cloudbox folder location"
     fail:
-      msg: "Please re-login with the '{{user}}' account and run the Cloudbox installer from the '{{cloudbox_folder_path}}/' path."
+      msg: "Cloudbox folder was migrated to a home location. Please re-login with the '{{user}}' account and rerun the {{ ('restore' in ansible_run_tags) | ternary('restore tag','Cloudbox Installer') }} from the '{{cloudbox_folder_path}}/' path."
+    when: ('preinstall' not in ansible_run_tags)
+
+  - name: "Set preinstall variables"
+    set_fact:
+      preinstall_user_relogin: true
+    when: ('preinstall' in ansible_run_tags)
 
   when: (playbook_dir != cloudbox_folder_path) and not (continuous_integration)
 
