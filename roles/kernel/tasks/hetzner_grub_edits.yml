@@ -29,8 +29,10 @@
     path: "{{item}}"
     regexp: '(^GRUB_CMDLINE_LINUX_DEFAULT\s?=.*)'
     replace: "GRUB_CMDLINE_LINUX_DEFAULT=\"{{ grub_final_kernel_parameters | join(' ') }}\""
+  register: x
   notify: [ 'Update GRUB' ]
 
 - name: Set 'reboot_is_necessary' variable
   set_fact:
     reboot_is_necessary: true
+  when: x is changed
