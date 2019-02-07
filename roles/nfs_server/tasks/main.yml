@@ -8,18 +8,28 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: 'Retrieve {{user}} uid'
-  shell: 'id -u {{user}}'
-  register: user_uid
-
-- name: 'Retrieve {{user}} gid'
-  shell: 'id -g {{user}}'
-  register: user_gid
-
 - name: Create nfs server directories
   file: 'path={{item}} state=directory mode=0775 owner={{user}} group={{user}}'
   with_items:
     - /opt/nfs
+
+- name: Import hosts.deny file
+  template:
+    src: hosts.deny.jinja2
+    dest: /etc/hosts.deny
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0644
+    force: yes
+
+- name: Import hosts.allow file
+  template:
+    src: hosts.allow.jinja2
+    dest: /etc/hosts.allow
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0644
+    force: yes
 
 - name: Install nfs server
   apt: 'name={{item}} state=present'
