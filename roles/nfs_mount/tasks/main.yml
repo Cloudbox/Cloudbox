@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: NFS Server Role                              #
+# Title:         Cloudbox: NFS Mount Role                               #
 # Author(s):     l3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -12,6 +12,7 @@
   file: 'path={{item}} state=directory mode=0775 owner={{user}} group={{user}}'
   with_items:
     - /opt/nfs
+    - /mnt/feeder
 
 - name: Import hosts.deny file
   template:
@@ -31,26 +32,11 @@
     mode: 0644
     force: yes
 
-- name: Install nfs server
+- name: Install nfs requirements
   apt: 'name={{item}} state=present'
   with_items:
     - rpcbind
-    - nfs-kernel-server
-
-- name: Check /etc/exports exists
-  stat:
-    path: '/etc/exports'
-  register: nfs_exports_file
-
-- name: Import exports file
-  template:
-    src: exports.jinja2
-    dest: /etc/exports
-    owner: '{{user}}'
-    group: '{{user}}'
-    mode: 0644
-    force: yes
-  when: not nfs_exports_file.stat.exists
+    - nfs-common
 
 - name: Check init_vlan.sh exists
   stat:
@@ -88,3 +74,30 @@
     name: nfs_vlan
     daemon_reload: yes
     enabled: yes
+
+- name: Populate Service Facts
+  service_facts:
+  when: unionfs_service.stat.exists
+
+- name: Get unionfs service state
+  set_fact:
+    unionfs_service_running: '{{ (services[''unionfs.service''] is defined) and (services[''unionfs.service''][''state''] == "running") }}'
+  when: unionfs_service.stat.exists
+
+- name: Stop existing unionfs service
+  systemd: state=stopped name=unionfs
+  when: unionfs_service.stat.exists and unionfs_service_running
+
+- name: 'Force unmount /mnt/unionfs'
+  shell: '/bin/umount -f /mnt/unionfs 2>/dev/null || :'
+  ignore_errors: yes
+
+- name: Import unionfs.service
+  template:
+    src: unionfs.service.jinja2
+    dest: /etc/systemd/system/unionfs.service
+    force: yes
+  when: not unionfs_service.stat.exists
+
+- name: Start unionfs service
+  systemd: state=started name=unionfs daemon_reload=yes enabled=yes

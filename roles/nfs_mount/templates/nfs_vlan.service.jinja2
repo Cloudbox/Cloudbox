@@ -1,0 +1,10 @@
+Unit]
+Description=init nfs_vlan for feeder
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+ExecStart=/opt/nfs/init_vlan.sh
+
+[Install]
+WantedBy=multi-user.target
