@@ -214,7 +214,7 @@ Links:
 - **Ansible:** Enabled hash merge behavior (`hash_behavior`) in `ansible.cfg` (for new users).
 - **Backup:** Added a default `backup_excludes.txt` into the backup role.
   - If you want to have a custom excludes list, simply drop a `backup_excludes.txt` file in the cloudbox folder, and backup will use that one instead.
-- **Variables:** Created universally accessible `uid`, `guid`, and `vgid` variables.
+- **Variables:** Created universally accessible `uid`, `gid`, and `vgid` variables.
 - **Kernel:** Will quit now if kernel is already updated.
 - **Common:** Adds multiverse APT repositories.
 - **Common:** Added `common` tag to role.
