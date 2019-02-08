@@ -22,85 +22,10 @@
     patterns: '*.tar'
   register: dir_files
 
-- name: Fail when no backup method is enabled or when no local backup exists
-  fail: msg="You must enable either rclone or rsync, in the backup settings, to perform a restore."
-  when: not ((dir_files.matched|int != 0) or (rclone.enable) or (rsync.enable))
-
-- name: Fail when both backup methods are enabled
-  fail: msg="You can only have either rclone enabled or rsync enabled, but not both."
-  when: (dir_files.matched|int == 0) and (rclone.enable and rsync.enable)
-
-- name: Check if rclone is installed
-  stat:
-    path: "/usr/bin/rclone"
-  register: rclone_binary
-  when: (dir_files.matched|int == 0) and (rclone.enable)
-
-- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
-  stat:
-    path: "{{playbook_dir}}/rclone.conf"
-  register: rclone_conf_playbook_dir
-
-- name: Install rclone
-  include_role:
-    name: rclone
-  when: ((dir_files.matched|int == 0) and (rclone.enable) and (not rclone_binary.stat.exists)) or (rclone_conf_playbook_dir.stat.exists)
-
-- name: Test rclone remote
-  shell: "rclone lsd {{rclone.destination}}"
-  register: rclone_test
-  failed_when: rclone_test.rc > 5
-  when: (dir_files.matched|int == 0) and (rclone.enable)
-
-- name: "Fail when rclone is misconfigured."
-  fail: msg="The rclone remote is misconfigured - You must place a valid 'rclone.conf' file in '{{playbook_dir}}' (or setup Rclone via 'rclone config') and verify that the 'rclone.destination' in settings is valid."
-  when: (dir_files.matched|int == 0) and ((rclone.enable) and (rclone_test.rc > 0))
-
-- name: "Check if '{{local.destination}}' exists"
-  stat:
-    path: "{{local.destination}}"
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: backup_location
+# Restore from remote backup when local backup does not exist
+- name: Remote Restore
+  import_tasks: "remote_restore.yml"
   when: (dir_files.matched|int == 0)
-
-- name: "Create backup location '{{local.destination}}'"
-  file: path={{local.destination}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
-  when: (dir_files.matched|int == 0) and (not backup_location.stat.exists)
-
-- name: "Fetch backup from '{{rclone.destination}}'"
-  command: "rclone copy '{{rclone.destination}}/' '{{local.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --exclude 'archived/**' --log-file='{{playbook_dir}}/restore_rclone.log'"
-  become: yes
-  become_user: "{{user}}"
-  when: (dir_files.matched|int == 0) and (rclone.enable)
-
-- name: "Fetch backup from {{rsync.destination}}"
-  synchronize:
-    src: "{{rsync.destination}}/"
-    dest: "{{local.destination}}/"
-    rsync_opts:
-      - "--log-file='{{playbook_dir}}/restore_rsync.log'"
-  become: yes
-  become_user: "{{user}}"
-  when: (dir_files.matched|int == 0) and (rsync.enable)
-
-- name: "Check if tar files were retrieved"
-  find:
-    paths: "{{local.destination}}/opt"
-    file_type: file
-    patterns: '*.tar'
-  register: dir_files2
-  when: (dir_files.matched|int == 0)
-
-- name: "Fail if tar files are missing"
-  fail: msg="There must have been an issue retrieving the tar files as they are missing in '{{local.destination}}/opt/'"
-  when: (dir_files.matched|int == 0) and (dir_files2.matched|int == 0)
-
-- name: "Wait for 10 seconds before commencing"
-  wait_for:
-    timeout: 10
 
 - name: "Look for 'backup_excludes_list.txt' file in '{{local.destination}}'"
   stat:
@@ -115,7 +40,7 @@
     group: "{{user}}"
     mode: 0775
     force: yes
-  when: backup_excludes_list.stat.exists
+  when: (backup_excludes_list.stat.exists)
 
 - name: "Create '/opt' directory"
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
@@ -141,8 +66,8 @@
   file:
     path: "{{local.destination}}"
     state: absent
-  when: not local.enable
+  when: not (local.enable)
 
 - debug:
     msg: Finished restoring the backup. You are now ready to install Cloudbox!
-  when: unarchive is success
+  when: (unarchive is succeeded)
