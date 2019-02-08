@@ -37,11 +37,6 @@
     - rpcbind
     - nfs-kernel-server
 
-- name: Check /etc/exports exists
-  stat:
-    path: '/etc/exports'
-  register: nfs_exports_file
-
 - name: Import exports file
   template:
     src: exports.jinja2
@@ -50,7 +45,6 @@
     group: '{{user}}'
     mode: 0644
     force: yes
-  when: not nfs_exports_file.stat.exists
 
 - name: Check init_vlan.sh exists
   stat:
