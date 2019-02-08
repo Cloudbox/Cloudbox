@@ -75,6 +75,11 @@
     daemon_reload: yes
     enabled: yes
 
+- name: Check if unionfs service exists
+  stat:
+    path: "/etc/systemd/system/unionfs.service"
+  register: unionfs_service
+
 - name: Populate Service Facts
   service_facts:
   when: unionfs_service.stat.exists
