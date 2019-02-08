@@ -22,15 +22,6 @@
     mode: 0644
     force: yes
 
-- name: Import hosts.allow file
-  template:
-    src: hosts.allow.jinja2
-    dest: /etc/hosts.allow
-    owner: '{{user}}'
-    group: '{{user}}'
-    mode: 0644
-    force: yes
-
 - name: Install nfs server
   apt: 'name={{item}} state=present'
   with_items:
