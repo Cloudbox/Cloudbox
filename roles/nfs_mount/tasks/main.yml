@@ -102,7 +102,6 @@
     src: unionfs.service.jinja2
     dest: /etc/systemd/system/unionfs.service
     force: yes
-  when: not unionfs_service.stat.exists
 
 - name: Start unionfs service
   systemd: state=started name=unionfs daemon_reload=yes enabled=yes
