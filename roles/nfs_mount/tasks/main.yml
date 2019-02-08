@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Fail when invalid nfs.mount_client is specified
+  fail: msg="You must use a value larger than 2 and lower than 251 for the nfs mount_client advanced setting."
+  when: nfs.mount_client < 3 or nfs.mount_client > 250
+
 - name: Create nfs server directories
   file: 'path={{item}} state=directory mode=0775 owner={{user}} group={{user}}'
   with_items:
