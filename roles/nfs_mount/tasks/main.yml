@@ -42,11 +42,6 @@
     - rpcbind
     - nfs-common
 
-- name: Check init_vlan.sh exists
-  stat:
-    path: '/opt/nfs/init_vlan.sh'
-  register: init_vlan_script
-
 - name: Import init_vlan.sh file
   template:
     src: init_vlan.sh.jinja2
@@ -55,7 +50,6 @@
     group: '{{user}}'
     mode: 0775
     force: yes
-  when: not init_vlan_script.stat.exists
 
 - name: Check nfs_vlan.service exists
   stat:
