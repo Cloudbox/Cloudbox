@@ -75,7 +75,6 @@
     - mc
     - speedtest-cli
     - dnsutils
-    - glances
     - screen
     - tmux
     - apache2-utils
@@ -123,6 +122,10 @@
     - apprise
     - jmespath
   ignore_errors: yes
+
+- name: Install glances
+  shell: pip install glances[action,browser,cloud,cpuinfo,docker,export,folders,gpu,graph,ip,raid,snmp,web]
+  tags: glances
 
 - name: Install z
   import_role:
