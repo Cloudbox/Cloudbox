@@ -37,8 +37,8 @@
     mode: 0644
     force: yes
 
-- name: "Reload exports"
-  shell: "exportfs -ra"
+- name: Reload exports
+  shell: 'exportfs -ra'
 
 - name: Import init_vlan.sh file
   template:
