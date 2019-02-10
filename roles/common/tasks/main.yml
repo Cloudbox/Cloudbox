@@ -106,11 +106,11 @@
     dest: "/home/{{user}}/.config/pip/pip.conf"
     owner: "{{user}}"
     group: "{{user}}"
-    mode: 775
+    mode: 0775
     force: yes
 
 - name: Install common pip modules
-  pip: "name={{item}} state=latest"
+  pip: "name={{item}} state=present"
   with_items:
     - passlib
     - certbot
