@@ -123,7 +123,13 @@
     - jmespath
   ignore_errors: yes
 
-- name: Install glances
+- name: Uninstall apt glances
+  apt: "name={{item}} state=absent"
+  with_items:
+    - glances
+  ignore_errors: yes
+
+- name: Install pip glances
   shell: pip install glances[action,browser,cloud,cpuinfo,docker,export,folders,gpu,graph,ip,raid,snmp,web]
   tags: glances
 
