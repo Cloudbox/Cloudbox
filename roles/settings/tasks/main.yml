@@ -24,6 +24,11 @@
   with_items:
     - "ansible.cfg"
 
+- name: "Setting: Settings Migrator"
+  include_tasks: "settings_migrator.yml"
+  with_items:
+    - "backup_config.yml"
+
 - name: Initialize empty lists and vars
   set_fact:
     files_updated_successfully: []
