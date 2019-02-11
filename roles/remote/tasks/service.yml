@@ -96,7 +96,7 @@
   - name: Edit rclone remote in existing 'rclone_vfs.service'
     replace:
       path: /etc/systemd/system/rclone_vfs.service
-      regexp: "([a-z].*):\\s?.*\\/mnt\\/remote"
+      regexp: "([a-zA-Z].*):\\s?.*\\/mnt\\/remote"
       replace: '{{rclone.remote}}: /mnt/remote'
 
   - name: Systemd daemon-reload
