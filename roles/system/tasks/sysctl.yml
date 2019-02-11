@@ -78,7 +78,7 @@
 - name: Increase netdev_max_backlog
   sysctl:
     name: net.core.netdev_max_backlog
-    value: 50000
+    value: 100000
     state: present
 
 - name: Increase tcp_max_syn_backlog
@@ -170,3 +170,21 @@
     name: net.core.default_qdisc
     value: fq
     state: present
+    
+- name: Set max_user_watches for plex inotify
+  sysctl:
+    name: fs.inotify.max_user_watches
+    value: 131072
+    state: present
+  
+- name: Set net.core.netdev_budget
+  sysctl:
+    name: net.core.netdev_budget
+    value: 50000
+    state: present
+    
+- name: Set netdev_budget_usecs
+  sysctl:
+    name: net.core.netdev_budget_usecs
+    value: 5000
+    state: present    

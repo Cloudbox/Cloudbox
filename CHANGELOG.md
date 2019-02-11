@@ -24,6 +24,78 @@ Links:
 
 ## [Unreleased][]
 
+## [1.3.3][] - 2019-02-10
+
+- **Plex:** Added `/transcodes` to mount. Now either `/transcodes` or `/transcode` can be used in Plex.
+- **Darkerr:** Added support for [iFelix18's Darkerr](https://github.com/iFelix18/Darkerr) theme.
+- **Emby:** Added `/transcodes` to mount. Now either `/transcodes` or `/transcode` can be used in Plex.
+- **ruTorrent:** Adds entry in settings for `network.local_address.set`.
+- **ruTorrent:** Updated regex patterns for settings.
+- **Common:** Only add APT multiverse repo when running Ubuntu.
+- **AppVeyor:** Only build dev branch or PRs to dev branch.
+- **Drive STRM:** New role
+- **System:** Installs `pciutils` package (if missing).
+- **Drive STRM:** Run rebuild tasks as user.
+- **Plex Autoscan:** Default config updated to reflect recent updates.
+- **System:** Ignore errors during apt tasks.
+- **System:** Tweak to previous commit.
+- **Common:** Ignore errors during apt tasks.
+- **System:** Fixed names in timezone tasks.
+- **Netdata:** Prevent Netdata from spamming syslog.
+- **AppVeyor:** Only generate new build number when branch is develop.
+- **Plex:** Increased wait period for db file creation.
+- **Ombi:** Switched docker images to `hotio/suitarr`.
+- **Shell:** Fix for missing tag.
+- **MOTD:** Certain packages were not available in non-ubuntu debian installs.
+- **Docker:** Allows for non-ubuntu linux distros to install `docker-ce`.
+- **Docker:** Updated `docker-ce` to `18.09.1`.
+- **Docker:** Fix for incorrect apt version.
+- **Telly:** Moved to Community Repo (as version 1.0).
+- **AppVeyor:** Version builder function will not run during PRs.
+- **Scripts:** `CleanupTorrents.py` fix for sonarrv3.
+- **Sonarr:** Set docker image version in `adv_settings.yml`.
+- **Docker:** Added init into daemon.
+- **Backup:** Adds snapshot support for Btrfs file systems (thanks [RXWatcher1](https://github.com/RXWatcher1)).
+- **Suitarr:** Updated image names to new format.
+- **Backup:** Will now shutdown containers and Plexdrive when snapshot is enabled, but only for a short while.
+- **Backup:** Added missing pushover message tasks to for starting-of-containers task - for previous commit.
+- **Webtools:** Put tasks into a block [ansible][minor].
+- **Webtools:** Display message when Webtools was not updated.
+- **Webtools:** Moved tags from Plex role to `cloudbox.yml`.
+- **Webtools:** Suppress command warnings [ansible].
+- **Sub-Zero:** Added role to install the Sub-Zero plugin for Plex.
+- **Sub-Zero:** Added source for the XML xpath [minor].
+- **MOTD:** Added check for `/etc/ssh/sshd_config`.
+- **Plex Patrol:** Updated default `settings.ini`.
+- **System:** Set `max_user_watches` in systemctl.
+- **Plex Autoscan:** Added trailing slashes to config [minor].
+- **Backup:** Folder creation/deletion tasks are now down as user [minor].
+- **Cloudplow:** Added sleep for '0/s' [minor].
+- **Common:** If Btrfs is found, disable copy-on-write on `/mnt` and `/opt`.
+- **Cloudplow:** '0/s' sleep phrase tweaked. [minor]
+- **Cloudplow:** Set `exclude_open_files` to false in default config. [minor]
+- **Common:** Btrfs tasks only run when folders are empty.
+- **MOTD:** Wait for `/etc/ssh/sshd_config` to be created before proceeding.
+- **Restore:** [minor] Edit to task banners/titles.
+- **Restore:** If Btrfs is found, disable copy-on-write on `/opt `folder.
+- **Common:** Btrfs task now sets no-cow, non-recursively.
+- **Restore:** Btrfs task now sets no-cow, non-recursively.
+- **MOTD:** Updated git url [minor].
+- **Common:** Btrfs tasks sets no-cow on `/mnt/local` and not `/mnt` anymore [minor].
+- **Backup:** Renamed "Vault Service" to "Cloudbox Restore Service".
+- **System:** systctl updated tweaks.
+- **Backup:** Specify md5 for encryption for Restore Service.
+- **Changelog:** Correction [minor].
+- **Rclone:** Updated Headers [minor].
+- **Rclone:** Minor reworking of legacy uninstaller task file.
+- **Rclone:** Minor reworking of import config task file.
+- **Restore:** Reorganized role.
+- **Common:** Installs glances with modules.
+- **Common:** Uninstall apt glances before installing pip one.
+- **Settings:** Renamed task file [minor]
+- **Common:** Installs [yyq](https://github.com/mikefarah/yq).
+- **Settings:** Added Settings Migrator subtask. Currently only migrates over `vault_service` to `restore_service` in `backup_config.yml`.
+
 ## [1.3.2][] - 2018-12-14
 
 - **Backup:** Backup task of systemd files will not copy symlinks anymore.
@@ -214,7 +286,7 @@ Links:
 - **Ansible:** Enabled hash merge behavior (`hash_behavior`) in `ansible.cfg` (for new users).
 - **Backup:** Added a default `backup_excludes.txt` into the backup role.
   - If you want to have a custom excludes list, simply drop a `backup_excludes.txt` file in the cloudbox folder, and backup will use that one instead.
-- **Variables:** Created universally accessible `uid`, `guid`, and `vgid` variables.
+- **Variables:** Created universally accessible `uid`, `gid`, and `vgid` variables.
 - **Kernel:** Will quit now if kernel is already updated.
 - **Common:** Adds multiverse APT repositories.
 - **Common:** Added `common` tag to role.
@@ -589,6 +661,7 @@ Links:
 - **Initial**: First "GitHub release".
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.3.3]: https://github.com/cloudbox/cloudbox/compare/1.3.2...1.3.3
 [1.3.2]: https://github.com/cloudbox/cloudbox/compare/1.3.1...1.3.2
 [1.3.1]: https://github.com/cloudbox/cloudbox/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/cloudbox/cloudbox/compare/1.2.9...1.3.0

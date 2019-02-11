@@ -1,6 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Restore - Set '/opt' Ownership and           #
-#                Permissions                                            #
+# Title:         Restore: Set '/opt' Ownership and Permissions Task     #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #

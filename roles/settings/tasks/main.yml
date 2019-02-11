@@ -24,14 +24,19 @@
   with_items:
     - "ansible.cfg"
 
+- name: "Setting: Settings Migrator"
+  include_tasks: "settings_migrator.yml"
+  with_items:
+    - "backup_config.yml"
+
 - name: Initialize empty lists and vars
   set_fact:
     files_updated_successfully: []
     files_updated_unsuccessfully: []
     exit_is_necessary: false
 
-- name: "Settings: Cloudbox Settings"
-  include_tasks: "cloudbox_settings.yml"
+- name: "Setting: Settings Updater"
+  include_tasks: "settings_updater.yml"
   with_items:
     - "accounts.yml"
     - "settings.yml"

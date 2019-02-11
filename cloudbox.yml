@@ -42,6 +42,8 @@
     - { role: feeder-mount, tags: ['feeder-mount'] }
     - { role: feeder-dismount, tags: ['feeder-dismount'] }
     - { role: plex_auth_token, tags: ['plex_auth_token'] }
+    - { role: webtools, tags: ['webtools', 'reinstall-webtools'] }
+    - { role: sub-zero, tags: ['sub-zero', 'reinstall-sub-zero'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: plexrequests, tags: ['plexrequests'] }
     - { role: resilio-sync, tags: ['resilio-sync'] }
@@ -59,7 +61,6 @@
     - { role: znc, tags: ['znc'] }
     - { role: quassel, tags: ['quassel'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
-    - { role: telly, tags: ['telly'] }
     - { role: nowshowing, tags: ['nowshowing'] }
     - { role: bazarr, tags: ['bazarr'] }
     - { role: python-plexlibrary, tags: ['python-plexlibrary'] }
@@ -67,3 +68,4 @@
     - { role: nginx, tags: ['nginx'] }
     - { role: organizrv1, tags: ['organizrv1'] }
     - { role: nzbthrottle, tags: ['nzbthrottle'] }
+    - { role: drive_strm, tags: ['drive_strm', 'drive_strm_rebuild'] }

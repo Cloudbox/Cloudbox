@@ -15,12 +15,19 @@
     - /home/{{user}}/logs
     - /home/{{user}}/.config
     - /home/{{user}}/.config/pip
+    - /opt
     - /mnt/local
+
+- name: Btrfs Task
+  import_tasks: "btrfs.yml"
+
+- name: Create '/mnt/local' sub-directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
     - /mnt/local/Media
     - /mnt/local/Media/Movies
     - /mnt/local/Media/Music
     - /mnt/local/Media/TV
-    - /opt
 
 - name: Add multiverse repositories
   apt_repository:
@@ -32,11 +39,14 @@
     - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
     - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
   register: apt_multiverse_repositories
+  when: ansible_distribution == 'Ubuntu'
+  ignore_errors: yes
 
 - name: Update APT packages list
   apt:
     update_cache: yes
   when: apt_multiverse_repositories.changed
+  ignore_errors: yes
 
 - name: Install common packages
   apt: "name={{item}} state=present"
@@ -65,7 +75,6 @@
     - mc
     - speedtest-cli
     - dnsutils
-    - glances
     - screen
     - tmux
     - apache2-utils
@@ -97,11 +106,11 @@
     dest: "/home/{{user}}/.config/pip/pip.conf"
     owner: "{{user}}"
     group: "{{user}}"
-    mode: 775
+    mode: 0775
     force: yes
 
 - name: Install common pip modules
-  pip: "name={{item}} state=latest"
+  pip: "name={{item}} state=present"
   with_items:
     - passlib
     - certbot
@@ -112,6 +121,22 @@
     - lxml
     - apprise
     - jmespath
+  ignore_errors: yes
+
+- name: Uninstall apt glances
+  apt: "name={{item}} state=absent"
+  with_items:
+    - glances
+  ignore_errors: yes
+
+- name: Install pip glances
+  shell: pip install glances[action,browser,cloud,cpuinfo,docker,export,folders,gpu,graph,ip,raid,snmp,web]
+  tags: glances
+
+- name: Install yyq
+  import_role:
+    name: yyq
+  tags: yyq
   ignore_errors: yes
 
 - name: Install z
@@ -156,7 +181,7 @@
   tags: subliminal
   ignore_errors: yes
 
-- name: Cloudflare Cache Purge
+- name: Cloudflare Cache Purge Task
   import_tasks: "cloudflare_cache_purge.yml"
   when: cloudflare_enabled
   tags: cloudflare-cache-purge

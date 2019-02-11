@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Rclone - Uninstall Legacy Rclone             #
+# Title:         Rclone: Uninstall Legacy Rclone                        #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -19,26 +19,31 @@
     path: "/opt/rclone/rclone.conf"
   register: opt_rclone_conf
 
-- name: Check if '/home/{{user}}/.config/rclone/rclone.conf' exists
-  stat:
-    path: "/home/{{user}}/.config/rclone/rclone.conf"
-  register: home_rclone_conf
+- name: Import 'rclone.conf' to proper place.
+  block:
 
-- name: Delete '/home/{{user}}/.config/rclone/rclone.conf' if it is symlinked
-  file:
-    path: "/home/{{user}}/.config/rclone/rclone.conf"
-    state: absent
-  when: home_rclone_conf.stat.islnk is defined and home_rclone_conf.stat.islnk
+  - name: Check if '/home/{{user}}/.config/rclone/rclone.conf' exists
+    stat:
+      path: "/home/{{user}}/.config/rclone/rclone.conf"
+    register: home_rclone_conf
 
-- name: Copy '/opt/rclone/rclone.conf' to '/home/{{user}}/.config/rclone/rclone.conf'
-  copy:
-    src: "/opt/rclone/rclone.conf"
-    dest: "/home/{{user}}/.config/rclone/rclone.conf"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: no
-  when: opt_rclone_conf.stat.exists and ((not home_rclone_conf.stat.exists) or (home_rclone_conf.stat.islnk is defined and home_rclone_conf.stat.islnk))
+  - name: Delete '/home/{{user}}/.config/rclone/rclone.conf' if it is symlinked
+    file:
+      path: "/home/{{user}}/.config/rclone/rclone.conf"
+      state: absent
+    when: (home_rclone_conf.stat.islnk is defined) and (home_rclone_conf.stat.islnk)
+
+  - name: Copy '/opt/rclone/rclone.conf' to '/home/{{user}}/.config/rclone/rclone.conf'
+    copy:
+      src: "/opt/rclone/rclone.conf"
+      dest: "/home/{{user}}/.config/rclone/rclone.conf"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: no
+    when: (not home_rclone_conf.stat.exists) or ((home_rclone_conf.stat.islnk is defined) and (home_rclone_conf.stat.islnk)))
+
+  when: (opt_rclone_conf.stat.exists)
 
 - name: Delete '/opt/rclone' if it exists
   shell: rm -rf /opt/rclone

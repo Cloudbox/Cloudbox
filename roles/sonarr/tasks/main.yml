@@ -2,7 +2,7 @@
 # Title:            Cloudbox: Sonarr Role                               #
 # Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  hotio/suitarr,                                      #
+# Docker Image(s):  hotio/sonarr,                                       #
 #                   andrewkhunn/suitarr_mp4_automator                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -20,6 +20,12 @@
   docker_container:
     name: sonarr
     state: absent
+
+- name: Remove darkerr config
+  file:
+    path: "/opt/nginx-proxy/vhost.d/sonarr.{{domain}}_location"
+    state: absent
+  when: not (darkerr.enable | default(false,true))
 
 # START - Suitarr Migration Tasks
 - name: Check folder exists
@@ -58,9 +64,19 @@
   with_items:
     - /opt/sonarr
 
+- name: Add darkerr config
+  copy:
+    src: "darkerr-nginx-conf"
+    dest: "/opt/nginx-proxy/vhost.d/sonarr.{{domain}}_location"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+    force: yes
+  when: (darkerr.enable | default(false,true))
+
 - name: Set 'suitarr_image' variable
   set_fact:
-    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator','hotio/suitarr') }}"
+    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator:sonarr','hotio/sonarr') }}"
 
 - name: Set default_volumes variable
   set_fact:
@@ -74,12 +90,12 @@
 - name: Create and start container
   docker_container:
     name: sonarr
-    image: "{{suitarr_image}}:sonarr"
+    image: "{{suitarr_image}}"
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8989"
     env:
-      VERSION: "{{suitarr.version}}"
+      VERSION: "{{sonarr.version}}"
       FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"

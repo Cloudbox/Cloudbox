@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: MOTD Role                                    #
-# Author(s):     l3uddz                                                 #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -13,11 +13,16 @@
   with_items:
     - lsb-release
     - figlet
-    - update-motd
-    - update-notifier-common
     - jq
     - toilet
     - boxes
+
+- name: Install required packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - update-motd
+    - update-notifier-common
+  when: (ansible_distribution|lower == 'ubuntu')
 
 - name: Remove existing motd
   file: "path={{item}} state=absent"
@@ -34,7 +39,7 @@
 
 - name: Clone cloudbox_motd
   git:
-    repo: https://github.com/cloudbox/cloudbox_motd
+    repo: https://github.com/cloudbox/motd.git
     dest: /opt/motd
     version: master
     force: yes
@@ -54,7 +59,7 @@
     src: config.json.js2
     dest: /opt/motd/config.json
     force: yes
-  when: motd_config.stat.exists == False
+  when: (not motd_config.stat.exists)
 
 - name: Touch log file
   file:
@@ -82,6 +87,23 @@
     state: link
     force: yes
     follow: no
+
+- name: Check if '/etc/ssh/sshd_config' exists
+  stat:
+    path: "/etc/ssh/sshd_config"
+  register: sshd_config
+
+- name: Install required packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - "openssh-server"
+  when: (not sshd_config.stat.exists)
+
+- name: Wait for '/etc/ssh/sshd_config' to be created
+  wait_for:
+    path: "/etc/ssh/sshd_config"
+    state: present
+  when: (not sshd_config.stat.exists)
 
 - name: Set PrintLastLog to no
   lineinfile:

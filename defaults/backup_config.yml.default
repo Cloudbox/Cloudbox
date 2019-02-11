@@ -11,6 +11,8 @@ rsync:
 cron:
   cron_time: weekly
   cron_state: absent
-vault_service:
+restore_service:
   user:
   pass:
+misc:
+  snapshot: true

@@ -1,0 +1,23 @@
+#########################################################################
+# Title:         Common: Btrfs Task                                     #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Determine '/' filesystem type"
+  set_fact:
+    root_fstype: "{{ item.fstype }}"
+  when: "(item.mount == '/')"
+  with_items:
+    - "{{ ansible_mounts }}"
+
+- name: Set no-cow on '/opt' and '/mnt/local' if '/' is btrfs
+  shell: "chattr +C {{item}}"
+  when: (root_fstype == 'btrfs')
+  with_items:
+    - /opt
+    - /mnt/local

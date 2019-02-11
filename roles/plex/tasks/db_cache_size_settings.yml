@@ -12,7 +12,8 @@
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
     state: present
-
+    timeout: 600
+    
 - name: Get Current Plex DB Cache Size
   shell: sqlite3 "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" "PRAGMA default_cache_size;"
   args:

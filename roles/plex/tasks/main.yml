@@ -25,7 +25,8 @@
     - "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
     - "/opt/plex/Library/Logs"
     - "/opt/plex/Library/Logs/Plex Media Server"
-    - "{{plex.transcodes}}"
+    - "{{plex.transcodes}}/1"
+    - "{{plex.transcodes}}/2"
 
 - name: "Stop and remove any existing container"
   docker_container:
@@ -148,7 +149,8 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
       - "/opt/scripts:/scripts"
-      - "{{plex.transcodes}}:/transcode"
+      - "{{plex.transcodes}}/1:/transcode"
+      - "{{plex.transcodes}}/2:/transcodes"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
       - "/tmp:/tmp"
@@ -164,11 +166,11 @@
     restart_policy: unless-stopped
     state: started
 
-# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
-- name: "Wait 5 seconds, then ensure {{plex.transcodes}} has the correct permissions"
+- name: "Wait 15 seconds"
   wait_for:
-    timeout: 5
+    timeout: 15
 
+# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
 - name: "Ensure transcodes folder has the correct permissions"
   file:
     path: "{{plex.transcodes}}"
@@ -180,9 +182,10 @@
 - name: "Install WebTools"
   import_role:
     name: webtools
-  tags:
-    - webtools
-    - reinstall-webtools
+
+- name: "Install Sub-Zero"
+  import_role:
+    name: sub-zero
 
 - name: "Forced Automatic Quality Settings"
   import_tasks: "forced_quality_settings.yml"

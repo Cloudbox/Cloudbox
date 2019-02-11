@@ -1,6 +1,10 @@
 ---
 version: 1.0.0-{build}
 
+branches:
+  except:
+    - master
+
 skip_tags: true
 
 skip_commits:
@@ -19,7 +23,7 @@ matrix:
 build: off
 
 init:
-  - sh: curl -s https://cloudbox.works/dep.sh | sudo -H sh
+  - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh
 
 install:
   - sh: git submodule update --init --recursive
@@ -32,19 +36,31 @@ on_finish:
   - ps: |
       function gitVersion() {
         $env:newhash=git rev-parse HEAD
+        write-host "newhash = $env:newhash"
         $env:shorthash=git rev-parse --short HEAD
+        write-host "shorthash = $env:shorthash"
 
         $env:gitCommits=git describe --tags $env:APPVEYOR_REPO_BRANCH | %{$_.split('-')[1]}
-        $gitVersion=git describe --tags --abbrev=0 $env:APPVEYOR_REPO_BRANCH
-        $env:newVersion="$gitVersion-$env:gitCommits"
+        write-host "gitCommits = $env:gitCommits"
+        $env:gitVersion=git describe --tags --abbrev=0 $env:APPVEYOR_REPO_BRANCH
+        write-host "gitVersion = $env:gitVersion"
+        $env:newVersion="$env:gitVersion-$env:gitCommits"
+        write-host "newVersion = $env:newVersion"
         $env:appveyor_info_version="$env:newVersion-$env:APPVEYOR_REPO_BRANCH"
+        write-host "appveyor_info_version = $env:appveyor_info_version"
 
         $env:appveyor_build_version="$env:newVersion"
-        appveyor UpdateBuild -Version "$env:newVersion"
+        write-host "appveyor_build_version = $env:appveyor_build_version"
 
+        appveyor UpdateBuild -Version "$env:newVersion"
+        if ($LastExitCode -ne 0) { appveyor UpdateBuild -Version "$env:APPVEYOR_BUILD_VERSION" }
+
+        write-host "=========================================="
         write-host "Using hash for build version: $env:newhash"
         write-host "Update appveyor build version to: $env:appveyor_build_version"
         write-host "Update appveyor info version to: $env:appveyor_info_version"
       }
 
-      gitVersion
+      if( -not ($env:APPVEYOR_PULL_REQUEST_NUMBER) -and ($env:APPVEYOR_REPO_BRANCH –eq "develop") ){
+        gitVersion
+      }

@@ -12,7 +12,7 @@
 - name: Set incoming directory
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^directory.default.set\s?=.*'
+    regexp: '^directory\.default\.set\s*=.*'
     line: 'directory.default.set = /downloads/torrents/rutorrent/incoming'
     state: present
 

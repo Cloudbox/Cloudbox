@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Rclone - Import config                       #
+# Title:         Rclone: Import config                                  #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,47 +8,54 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
+# Import 'rclone.conf' from playbook dir
+
+- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}'"
   stat:
     path: "{{playbook_dir}}/rclone.conf"
   register: rclone_conf_playbook_dir
 
-- name: "Check if 'rclone.conf' exists in default location"
-  stat:
-    path: "/home/{{user}}/.config/rclone/rclone.conf"
-  register: rclone_conf_default_path
+- name: "Import 'rclone.conf' from '{{playbook_dir}}'"
+  block:
 
-- name: "Backup existing 'rclone.conf' at default location (if it exists) 1/2"
-  copy:
-    src: "/home/{{user}}/.config/rclone/rclone.conf"
-    dest: "/home/{{user}}/.config/rclone/rclone.conf.bak"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
-  when: rclone_conf_playbook_dir.stat.exists and rclone_conf_default_path.stat.exists
+  - name: "Check if a previous 'rclone.conf' exists"
+    stat:
+      path: "/home/{{user}}/.config/rclone/rclone.conf"
+    register: rclone_conf_default_path
 
-- name: "Backup existing 'rclone.conf' at default location (if it exists) 2/2"
-  file:
-    path: "/home/{{user}}/.config/rclone/rclone.conf"
-    state: absent
-  when: rclone_conf_playbook_dir.stat.exists and rclone_conf_default_path.stat.exists
+  - name: "Backup previous 'rclone.conf' (if it exists)"
+    copy:
+      src: "/home/{{user}}/.config/rclone/rclone.conf"
+      dest: "/home/{{user}}/.config/rclone/rclone.conf.bak"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+    when: (rclone_conf_default_path.stat.exists)
 
-- name: "Copy 'rclone.conf' from '{{playbook_dir}}' folder to default location"
-  copy:
-    src: "{{playbook_dir}}/rclone.conf"
-    dest: "/home/{{user}}/.config/rclone/rclone.conf"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
-  when: rclone_conf_playbook_dir.stat.exists
+  - name: "Remove previous 'rclone.conf' (if it exists)"
+    file:
+      path: "/home/{{user}}/.config/rclone/rclone.conf"
+      state: absent
+    when: (rclone_conf_default_path.stat.exists)
 
-- name: "Remove the 'rclone.conf' copy from the '{{playbook_dir}}' folder"
-  file: "path={{item}} state=absent"
-  with_items:
-    - "{{playbook_dir}}/rclone.conf"
-  when: rclone_conf_playbook_dir.stat.exists
+  - name: "Import 'rclone.conf' from '{{playbook_dir}}'"
+    copy:
+      src: "{{playbook_dir}}/rclone.conf"
+      dest: "/home/{{user}}/.config/rclone/rclone.conf"
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0775
+      force: yes
+
+  - name: "Remove imported 'rclone.conf' from '{{playbook_dir}}'"
+    file:
+      path: "{{playbook_dir}}/rclone.conf"
+      state: absent
+
+  when: (rclone_conf_playbook_dir.stat.exists)
+
+# Find and import 'rclone.conf' if located somewhere else
 
 - name: "Check if 'rclone.conf' exists at default location"
   stat:
@@ -70,13 +77,13 @@
       group: "{{user}}"
       mode: 0775
       force: yes
-    when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
+    when: (rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1)
 
   - name: "Remove that other 'rclone.conf' copy"
     file:
       path: "{{ rclone_conf_current_location.stdout_lines | last }}"
       state: absent
-    when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1
+    when: (rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1)
 
   - name: "Create blank 'rclone.conf' if not found elsewhere"
     file:
@@ -85,6 +92,6 @@
       mode: 0775
       owner: "{{user}}"
       group: "{{user}}"
-    when: rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') != -1
+    when: (rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') != -1)
 
-  when: not rclone_conf_default_path_2.stat.exists
+  when: not (rclone_conf_default_path_2.stat.exists)

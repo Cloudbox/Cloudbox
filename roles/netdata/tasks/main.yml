@@ -58,4 +58,6 @@
           - netdata
     purge_networks: yes
     restart_policy: unless-stopped
+    security_opts:    
+      - apparmor:unconfined    
     state: started

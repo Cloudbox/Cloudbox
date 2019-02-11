@@ -59,6 +59,11 @@
                     "count": 5,
                     "sleep": 25,
                     "timeout": 3600
+                },
+                " 0/s,": {
+                    "count": 15,
+                    "sleep": 25,
+                    "timeout": 140
                 }
             },
             "rclone_command": "move",
@@ -73,7 +78,7 @@
     "uploader": {
         "google": {
             "check_interval": 30,
-            "exclude_open_files": true,
+            "exclude_open_files": false,
             "max_size_gb": 200,
             "opened_excludes": [
                 "/downloads/"

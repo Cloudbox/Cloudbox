@@ -13,22 +13,30 @@
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
   register: webtools_bundle
 
-- name: Check version of previously installed WebTools
-  shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
-  register: webtools_previously_installed_version
-  ignore_errors: yes
-  when: webtools_bundle.stat.exists
+- name: Tasks for previously installed WebTools
+  block:
 
-- name: Check latest available version for WebTools
-  shell: curl -s https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest | jq -r .tag_name
-  register: webtools_latest_version
-  ignore_errors: yes
-  when: webtools_bundle.stat.exists
+  - name: Set default value for 'webtools_outdated' variable
+    set_fact:
+      webtools_outdated: false
 
-- name: Compare installed WebTools version with latest one
-  set_fact:
-    webtools_outdated: "{{ webtools_previously_installed_version.stdout is version(webtools_latest_version.stdout, '<', strict=True) }}"
-  ignore_errors: yes
+  - name: Check version of previously installed WebTools
+    shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
+    register: webtools_previously_installed_version
+    ignore_errors: yes
+
+  - name: Check latest available version for WebTools
+    shell: curl -s https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest | jq -r .tag_name
+    args:
+      warn: no
+    register: webtools_latest_version
+    ignore_errors: yes
+
+  - name: Compare installed WebTools version with latest one
+    set_fact:
+      webtools_outdated: "{{ webtools_previously_installed_version.stdout is version(webtools_latest_version.stdout, '<', strict=True) }}"
+    ignore_errors: yes
+
   when: webtools_bundle.stat.exists
 
 - name: Install Webtools
@@ -46,6 +54,8 @@
 
   - name: Get latest WebTools URL
     shell: curl -s https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest | jq -r ".assets[] | select(.name | test(\"WebTools.bundle.zip\")) | .browser_download_url"
+    args:
+      warn: no
     register: webtools_download_url
     ignore_errors: yes
 
@@ -67,7 +77,7 @@
 
   - name: Display WebTools version
     debug:
-      msg: "WebTools {{webtools_newly_installed_version.stdout}} installed."
+      msg: "WebTools version {{ webtools_newly_installed_version.stdout }} installed."
     ignore_errors: yes
 
   - name: Start container to apply changes
@@ -75,4 +85,9 @@
       name: plex
       state: started
 
-  when: (not webtools_bundle.stat.exists) or (webtools_outdated|default(false,true)) or ('reinstall-webtools' in ansible_run_tags)
+  when: (not webtools_bundle.stat.exists) or ((webtools_bundle.stat.exists) and (webtools_outdated)) or ('reinstall-webtools' in ansible_run_tags)
+
+- name: WebTools was not updated
+  debug:
+    msg: "WebTools is already installed."
+  when: (webtools_bundle.stat.exists) and not (webtools_outdated)

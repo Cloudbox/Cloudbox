@@ -122,6 +122,11 @@
         and
         ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading and subdirs_settings_exist))
 
+# Settings for new and old installs.
+- name: Dynamic Settings Tweaks
+  include_tasks: "rutorrent_dynamic_settings.yml"
+  when: (not continuous_integration)
+
 - name: Start container to apply changes
   docker_container:
     name: rutorrent

@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Radarr4K Role                                #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Docker Image:  hotio/radarr                                           #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -19,6 +19,12 @@
   docker_container:
     name: radarr4k
     state: absent
+
+- name: Remove darkerr config
+  file:
+    path: "/opt/nginx-proxy/vhost.d/radarr4k.{{domain}}_location"
+    state: absent
+  when: not (darkerr.enable | default(false,true))
 
 # START - Suitarr Migration Tasks
 - name: Check folder exists
@@ -57,6 +63,16 @@
   with_items:
     - /opt/radarr4k
 
+- name: Add darkerr config
+  copy:
+    src: "darkerr-nginx-conf"
+    dest: "/opt/nginx-proxy/vhost.d/radarr4k.{{domain}}_location"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+    force: yes
+  when: (darkerr.enable | default(false,true))
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -69,7 +85,7 @@
 - name: Create and start container
   docker_container:
     name: radarr4k
-    image: "hotio/suitarr:radarr"
+    image: "hotio/radarr"
     pull: yes
     published_ports:
       - "127.0.0.1:7879:7878"

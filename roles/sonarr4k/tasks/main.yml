@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Sonarr4K Role                                #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
+# Docker Image:  hotio/sonarr                                           #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -19,6 +19,12 @@
   docker_container:
     name: sonarr4k
     state: absent
+
+- name: Remove darkerr config
+  file:
+    path: "/opt/nginx-proxy/vhost.d/sonarr4k.{{domain}}_location"
+    state: absent
+  when: not (darkerr.enable | default(false,true))
 
 # START - Suitarr Migration Tasks
 - name: Check folder exists
@@ -57,6 +63,16 @@
   with_items:
     - /opt/sonarr4k
 
+- name: Add darkerr config
+  copy:
+    src: "darkerr-nginx-conf"
+    dest: "/opt/nginx-proxy/vhost.d/sonarr4k.{{domain}}_location"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0664
+    force: yes
+  when: (darkerr.enable | default(false,true))
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -69,12 +85,12 @@
 - name: Create and start container
   docker_container:
     name: sonarr4k
-    image: "hotio/suitarr:sonarr"
+    image: "hotio/sonarr"
     pull: yes
     published_ports:
       - "127.0.0.1:8990:8989"
     env:
-      VERSION: "{{suitarr.version}}"
+      VERSION: "{{sonarr.version}}"
       FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"

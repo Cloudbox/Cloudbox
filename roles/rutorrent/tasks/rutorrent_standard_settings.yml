@@ -42,7 +42,7 @@
 - name: Disable DHT
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^dht.mode.set\s?=.*'
+    regexp: '^dht\.mode\.set\s*=.*'
     line: 'dht.mode.set = disable'
     state: present
 
@@ -50,7 +50,7 @@
 - name: Disable PEX
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^protocol.pex.set\s?=.*'
+    regexp: '^protocol\.pex\.set\s*=.*'
     line: 'protocol.pex.set = no'
     state: present
 
@@ -58,7 +58,7 @@
 - name: Reduce min_peers
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle.min_peers.normal.set\s?=.*'
+    regexp: '^throttle\.min_peers\.normal\.set\s*=.*'
     line: 'throttle.min_peers.normal.set = 1'
     state: present
 
@@ -66,7 +66,7 @@
 - name: Increase max_uploads
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle.max_uploads.set\s?=.*'
+    regexp: '^throttle\.max_uploads\.set\s*=.*'
     line: 'throttle.max_uploads.set = 1024'
     state: present
 
@@ -74,7 +74,7 @@
 - name: Set max_downloads_global to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle.max_downloads.global.set\s?=.*'
+    regexp: '^throttle\.max_downloads\.global\.set\s*=.*'
     line: 'throttle.max_downloads.global.set = 1024'
     state: present
 
@@ -82,7 +82,7 @@
 - name: Set max_uploads_global to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle.max_uploads.global.set\s?=.*'
+    regexp: '^throttle\.max_uploads\.global\.set\s*=.*'
     line: 'throttle.max_uploads.global.set = 1024'
     state: present
 
@@ -90,7 +90,7 @@
 - name: Set global download_rate to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle.global_down.max_rate.set_kb\s?=.*'
+    regexp: '^throttle\.global_down\.max_rate.\set_kb\s*=.*'
     line: 'throttle.global_down.max_rate.set_kb = 0'
     state: present
 
@@ -98,7 +98,7 @@
 - name: Set global upload_rate to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle.global_up.max_rate.set_kb\s?.*=.*'
+    regexp: '^throttle\.global_up\.max_rate\.set_kb\s*=.*'
     line: 'throttle.global_up.max_rate.set_kb = 0'
     state: present
 
@@ -106,21 +106,21 @@
 - name: Set max_open_files to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^network.max_open_files.set\s?=.*'
+    regexp: '^network\.max_open_files\.set\s*=.*'
     line: 'network.max_open_files.set = 1024'
     state: present
 
 - name: Set encryption parameters
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^protocol.encryption.set\s?=*'
+    regexp: '^protocol\.encryption\.set\s*=.*'
     line: 'protocol.encryption.set = allow_incoming,try_outgoing,enable_retry,prefer_plaintext'
     state: present
 
 - name: Disable - Hash check.
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^pieces.hash.on_completion.set\s?=.*'
+    regexp: '^pieces\.hash\.on_completion\.set\s*=.*'
     line: 'pieces.hash.on_completion.set = no'
     state: present
 
@@ -128,21 +128,21 @@
 - name: Set file_allocate to no
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^system.file.allocate.set\s?=.*'
+    regexp: '^system\.file\.allocate\.set\s*=.*'
     line: 'system.file.allocate.set = 0'
     state: present
 
 - name: Set download directory
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^directory.default.set\s?=.*'
+    regexp: '^directory\.default\.set\s*=.*'
     line: 'directory.default.set = /downloads/rutorrent'
     state: present
 
 - name: Set upload_max_filesize to 8M
   lineinfile:
     path: "/opt/rutorrent/php/php.ini"
-    regexp: '^upload_max_filesize\s?=.*'
+    regexp: '^upload_max_filesize\s*=.*'
     line: 'upload_max_filesize = 8M'
     state: present
 
