@@ -176,7 +176,7 @@
     image: "cloudb0x/drive_strm:latest"
     pull: yes
     published_ports:
-      - "7294:7294/tcp"
+      - "{{ docker.local_ip }}:7294:7294/tcp"
     user: "{{uid}}:{{gid}}"
     env:
       VIRTUAL_HOST: "strm.{{domain}}"

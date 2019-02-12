@@ -24,8 +24,6 @@
     name: mariadb
     image: "linuxserver/mariadb"
     pull: yes
-    published_ports:
-      - "127.0.0.1:3306:3306"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"

@@ -54,8 +54,6 @@
     name: organizrv1
     image: "lsiocommunity/organizr"
     pull: yes
-    published_ports:
-      - "127.0.0.1:7422:80"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"

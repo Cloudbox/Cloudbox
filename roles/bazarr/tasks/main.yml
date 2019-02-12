@@ -62,8 +62,6 @@
     name: bazarr
     image: "hotio/bazarr"
     pull: yes
-    published_ports:
-      - "127.0.0.1:6767:6767"
     env:
       VERSION: "{{suitarr.version}}"
       FALLBACK: "yes"

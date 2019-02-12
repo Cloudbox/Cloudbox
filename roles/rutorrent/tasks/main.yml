@@ -86,9 +86,8 @@
     image: horjulf/rutorrent-autodl
     pull: yes
     published_ports:
-      - "127.0.0.1:3111:80"
-      - "51413:51413"
-      - "6881:6881/udp"
+      - "{{ docker.local_ip }}:51413:51413"
+      - "{{ docker.local_ip }}:6881:6881/udp"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"

@@ -63,7 +63,6 @@
     image: "resilio/sync"
     pull: yes
     published_ports:
-      - "127.0.0.1:8888:8888"
       - "55555:55555"
     user: "{{uid}}:{{gid}}"
     env:

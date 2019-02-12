@@ -66,8 +66,6 @@
     name: organizr
     image: "organizrtools/organizr-v2:plex"
     pull: yes
-    published_ports:
-      - "127.0.0.1:7421:80"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"

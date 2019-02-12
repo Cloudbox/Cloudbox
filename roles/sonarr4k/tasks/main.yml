@@ -87,8 +87,6 @@
     name: sonarr4k
     image: "hotio/sonarr"
     pull: yes
-    published_ports:
-      - "127.0.0.1:8990:8989"
     env:
       VERSION: "{{sonarr.version}}"
       FALLBACK: "yes"

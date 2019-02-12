@@ -85,8 +85,6 @@
     name: nzbhydra2
     image: hotio/nzbhydra2
     pull: yes
-    published_ports:
-      - "127.0.0.1:5076:5076"
     env:
       VERSION: "{{suitarr.version}}"
       FALLBACK: "yes"

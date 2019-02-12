@@ -62,8 +62,6 @@
     name: jackett
     image: hotio/jackett
     pull: yes
-    published_ports:
-      - "127.0.0.1:9117:9117"
     env:
       VERSION: "{{suitarr.version}}"
       FALLBACK: "yes"

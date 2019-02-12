@@ -31,8 +31,7 @@
     image: horjulf/docker-znc
     pull: yes
     published_ports:
-      - "127.0.0.1:6501:6501"
-      - "6502:6502"
+      - "{{ docker.local_ip }}:6502:6502"
     env:
       PUID: "{{uid}}"
       PGID: "{{gid}}"

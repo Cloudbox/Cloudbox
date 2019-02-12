@@ -80,8 +80,8 @@
     image: "jwilder/nginx-proxy"
     pull: yes
     published_ports:
-      - "80:80"
-      - "443:443"
+      - "{{ docker.local_ip }}:80:80"
+      - "{{ docker.local_ip }}:443:443"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy/certs:/etc/nginx/certs:ro"
