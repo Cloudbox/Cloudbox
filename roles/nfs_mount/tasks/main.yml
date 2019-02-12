@@ -12,10 +12,78 @@
   fail: msg="You must use a value larger than 2 and lower than 251 for the nfs mount_client advanced setting."
   when: nfs.mount_client < 3 or nfs.mount_client > 250
 
- # force unmount /mnt/feeder
+- name: Check to see if docker is installed
+  stat:
+    path: "/usr/bin/docker"
+  register: docker_binary
 
-- name: 'Force unmount /mnt/feeder'
-  shell: '/bin/umount -f /mnt/feeder 2>/dev/null || :'
+- name: Populate Service Facts
+  service_facts:
+  when: docker_binary.stat.exists
+
+- name: Get Docker service state
+  set_fact:
+    docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == \"running\") }}"
+  when: docker_binary.stat.exists
+
+- name: Gather list of running Docker containers
+  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+  register: docker_running_containers
+  ignore_errors: yes
+  when: (docker_binary.stat.exists) and (docker_service_running)
+
+- name: Stop all running Docker containers
+  shell: "docker stop {{docker_running_containers.stdout}}"
+  ignore_errors: yes
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
+
+- name: Wait for 10 seconds before commencing
+  wait_for:
+    timeout: 10
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
+
+- name: Check if unionfs service exists
+  stat:
+    path: "/etc/systemd/system/unionfs.service"
+  register: unionfs_service
+
+- name: Check if mergerfs service exists
+  stat:
+    path: "/etc/systemd/system/mergerfs.service"
+  register: mergerfs_service
+
+- name: Populate Service Facts
+  service_facts:
+  when: (unionfs_service.stat.exists) or (mergerfs_service.stat.exists)
+
+ # Stop unionfs
+- name: Get unionfs service state
+  set_fact:
+    unionfs_service_running: "{{ (services['unionfs.service'] is defined) and (services['unionfs.service']['state'] == \"running\") }}"
+  when: unionfs_service.stat.exists
+
+- name: Stop existing unionfs service
+  systemd: state=stopped name=unionfs
+  when: unionfs_service.stat.exists and unionfs_service_running
+
+ # stop mergerfs
+
+- name: Get mergerfs service state
+  set_fact:
+    mergerfs_service_running: "{{ (services['mergerfs.service'] is defined) and (services['mergerfs.service']['state'] == \"running\") }}"
+  when: mergerfs_service.stat.exists
+
+- name: Stop existing mergerfs service
+  systemd: state=stopped name=mergerfs
+  when: mergerfs_service.stat.exists and mergerfs_service_running
+
+ # force unmount remotes
+
+- name: 'Force unmount remotes'
+  shell: '/bin/umount -f {{item}} 2>/dev/null || :'
+  with_items:
+    - "/mnt/unionfs"
+    - "/mnt/feeder"
   ignore_errors: yes
 
 - name: Create nfs server directories
@@ -78,77 +146,6 @@
     name: nfs_vlan
     daemon_reload: yes
     enabled: yes
-
-- name: Check to see if docker is installed
-  stat:
-    path: "/usr/bin/docker"
-  register: docker_binary
-
-- name: Populate Service Facts
-  service_facts:
-  when: docker_binary.stat.exists
-
-- name: Get Docker service state
-  set_fact:
-    docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == \"running\") }}"
-  when: docker_binary.stat.exists
-
-- name: Gather list of running Docker containers
-  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
-  register: docker_running_containers
-  ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_service_running)
-
-- name: Stop all running Docker containers
-  shell: "docker stop {{docker_running_containers.stdout}}"
-  ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
-
-- name: Wait for 15 seconds before commencing
-  wait_for:
-    timeout: 15
-  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
-
-- name: Check if unionfs service exists
-  stat:
-    path: "/etc/systemd/system/unionfs.service"
-  register: unionfs_service
-
-- name: Check if mergerfs service exists
-  stat:
-    path: "/etc/systemd/system/mergerfs.service"
-  register: mergerfs_service
-
-- name: Populate Service Facts
-  service_facts:
-  when: (unionfs_service.stat.exists) or (mergerfs_service.stat.exists)
-
- # Stop unionfs
-- name: Get unionfs service state
-  set_fact:
-    unionfs_service_running: "{{ (services['unionfs.service'] is defined) and (services['unionfs.service']['state'] == \"running\") }}"
-  when: unionfs_service.stat.exists
-
-- name: Stop existing unionfs service
-  systemd: state=stopped name=unionfs
-  when: unionfs_service.stat.exists and unionfs_service_running
-
- # stop mergerfs
-
-- name: Get mergerfs service state
-  set_fact:
-    mergerfs_service_running: "{{ (services['mergerfs.service'] is defined) and (services['mergerfs.service']['state'] == \"running\") }}"
-  when: mergerfs_service.stat.exists
-
-- name: Stop existing mergerfs service
-  systemd: state=stopped name=mergerfs
-  when: mergerfs_service.stat.exists and mergerfs_service_running
-
- # force unmount /mnt/unionfs
-
-- name: 'Force unmount /mnt/unionfs'
-  shell: '/bin/umount -f /mnt/unionfs 2>/dev/null || :'
-  ignore_errors: yes
 
  # unionfs edits
 
