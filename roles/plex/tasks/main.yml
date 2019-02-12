@@ -34,7 +34,7 @@
 
 - name: "Pull Plex Docker image"
   docker_image:
-    name: "plexinc/pms-docker:{{plex.tag}}"
+    name: "cloudb0x/plex:{{plex.tag}}"
 
 - name: "Check if '/dev/dri' exists"
   stat:
@@ -119,7 +119,7 @@
 - name: "Create and start container"
   docker_container:
     name: plex
-    image: "plexinc/pms-docker:{{plex.tag}}"
+    image: "cloudb0x/plex:{{plex.tag}}"
     pull: yes
     published_ports:
       - "{{ (( plex.open_port | default(false,true)) | ternary('', '127.0.0.1:')) + '32400:32400/tcp' }}"
