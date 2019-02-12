@@ -40,7 +40,7 @@
 
   - name: Check status of GRUB files
     stat:
-      path: "{{ item} }"
+      path: "{{ item }}"
     loop: "{{ hetzner_grub_files }}"
     register: hetzner_grub_files_status
 
@@ -51,4 +51,4 @@
     loop_control:
       loop_var: outer_item
 
-  when: ('i915' in lscpi_resp.stdout) and (blacklist_hetzner_conf.stat.exist)
+  when: ('i915' in lscpi_resp.stdout) and (blacklist_hetzner_conf.stat.exists)

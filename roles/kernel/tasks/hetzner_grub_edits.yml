@@ -11,7 +11,7 @@
 - name: Create backup directory
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
-    - "/opt/cloudbox/backup/modified_files/"
+    - "/opt/cloudbox/backup/modified_files/{{ outer_item.item | dirname }}"
 
 - name: "Backup {{ outer_item.item }}"
   copy:
