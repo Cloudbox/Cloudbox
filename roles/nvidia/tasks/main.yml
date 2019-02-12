@@ -1,0 +1,75 @@
+#########################################################################
+# Title:         Cloudbox: Nvidia Role                                  #
+# Author(s):     desimaniac, l3uddz                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: list all PCI devices
+  shell: lspci
+  register: lspci_resp
+
+- name: Nvidia Setup block
+  block:
+
+  # no manual=true, do driver install...
+
+  - name: Install Ubuntu drivers
+    apt:
+      name: ubuntu-drivers-common
+      update_cache: yes
+      state: present
+
+  - name: Get list of devices
+    shell: ubuntu-drivers devices
+    register: ubuntu_devices
+
+  - name: Nvidia Kernel and Driver Tasks
+    block:
+
+    - name: Check if 'blacklist-nouveau.conf' exists
+      stat:
+        path: "/etc/modprobe.d/blacklist-nouveau.conf"
+      register: blacklist_nouveau_conf
+
+    - name: "Nvidia kernel tasks"
+      include_tasks: "nvidia_kernel.yml"
+      when: (not blacklist_nouveau_conf.stat.exists)
+
+    - name: "Nvidia driver tasks"
+      include_tasks: "nvidia_driver.yml"
+
+    when: '("manual_install: True" not in ubuntu_devices.stdout)'
+
+  # no patch file in opt, do patch install
+
+  - name: Check to see if patch backup files exist
+    find:
+      paths: "/opt/nvidia/libnvidia-encode-backup"
+      file_type: file
+      recurse: yes
+      patterns: '*.so*'
+    register: nvidia_patch_backup_files
+
+  - name: "Nvidia patch tasks"
+    include_tasks: "nvidia_patch.yml"
+    when: (nvidia_patch_backup_files.matched|int == 0)
+
+  # no nvidia runtime in daemon.json, do docker runtime install
+
+  - name: Get contents of 'daemon.json'
+    shell: cat /etc/docker/daemon.json
+    register: docker_daemon_json
+
+  - name: Set 'docker_default_runtime'
+    set_fact:
+      docker_default_runtime: "{{ docker_daemon_json.stdout | from_json | json_query('\"default-runtime\"') }}"
+
+  - name: "Nvidia docker tasks"
+    include_tasks: "nvidia_docker.yml"
+    when: (docker_default_runtime != 'nvidia')
+
+  when: (ansible_distribution == 'Ubuntu') and ('VGA compatible controller{{ ":" }} NVIDIA' in lspci_resp.stdout)
