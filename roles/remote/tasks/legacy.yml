@@ -119,8 +119,6 @@
 
   - name: "Backup non-empty '/mnt/plexdrive' path"
     shell: "mv /mnt/plexdrive /mnt/plexdrive_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
-    become: yes
-    become_user: "{{user}}"
     ignore_errors: yes
     when: (mnt_plexdrive_files.matched|int > 0)
 
@@ -241,8 +239,6 @@
 
   - name: "Backup non-empty '/mnt/rclone' path"
     shell: "mv /mnt/rclone /mnt/rclone_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
-    become: yes
-    become_user: "{{user}}"
     ignore_errors: yes
     when: (mnt_rclone_files.matched|int > 0)
 
