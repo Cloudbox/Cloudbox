@@ -144,6 +144,7 @@
       LETSENCRYPT_HOST: "plex.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       HTTPS_METHOD: noredirect
+      HEALTHCHECK_MOUNT: /mnt/unionfs
       NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia == True | default(false) else omit }}"
       NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia == True | default(false) else omit }}"
     volumes:
