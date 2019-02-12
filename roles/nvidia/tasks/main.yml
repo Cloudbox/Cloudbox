@@ -15,7 +15,7 @@
 - name: Nvidia Setup block
   block:
 
-  # no manual=true, do driver install...
+  # Install Nvidia driver
 
   - name: Install Ubuntu drivers
     apt:
@@ -44,7 +44,7 @@
 
     when: '("manual_install: True" not in ubuntu_devices.stdout)'
 
-  # no patch file in opt, do patch install
+  # Install Nvidia Driver Patch to remove transcode limit
 
   - name: Check to see if patch backup files exist
     find:
@@ -58,7 +58,7 @@
     include_tasks: "nvidia_patch.yml"
     when: (nvidia_patch_backup_files.matched|int == 0)
 
-  # no nvidia runtime in daemon.json, do docker runtime install
+  # Install Nvidia Runtime Container
 
   - name: Get contents of 'daemon.json'
     shell: cat /etc/docker/daemon.json
