@@ -10,6 +10,8 @@
 
 ./bazarr/app/log/*
 
+./cloudbox/backup/modified_files/*
+
 ./cloudplow/cloudplow.log
 ./cloudplow/cloudplow.log.*
 ./cloudplow/locks/*
