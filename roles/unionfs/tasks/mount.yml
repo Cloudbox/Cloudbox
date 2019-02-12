@@ -34,8 +34,6 @@
 
   - name: "Backup non-empty '/mnt/unionfs' path"
     shell: "mv /mnt/unionfs /mnt/unionfs_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
-    become: yes
-    become_user: "{{user}}"
     ignore_errors: yes
     when: (mnt_unionfs_files.matched|int > 0)
 

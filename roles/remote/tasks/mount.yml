@@ -35,9 +35,7 @@
     register: mnt_remote_files
 
   - name: "Backup non-empty '/mnt/remote' path"
-    shell: "mv \\'/mnt/remote\\' \\'/mnt/remote_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}\\'"
-    become: yes
-    become_user: "{{user}}"
+    shell: "mv /mnt/remote /mnt/remote_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
     ignore_errors: yes
     when: (mnt_remote_files.matched|int > 0)
 
