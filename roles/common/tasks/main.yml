@@ -80,6 +80,7 @@
     - apache2-utils
     - jq
     - lib32z1
+    - dkms
   ignore_errors: yes
 
 - name: Install unrar
