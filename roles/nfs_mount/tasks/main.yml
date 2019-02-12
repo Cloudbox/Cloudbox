@@ -12,6 +12,12 @@
   fail: msg="You must use a value larger than 2 and lower than 251 for the nfs mount_client advanced setting."
   when: nfs.mount_client < 3 or nfs.mount_client > 250
 
+ # force unmount /mnt/feeder
+
+- name: 'Force unmount /mnt/feeder'
+  shell: '/bin/umount -f /mnt/feeder 2>/dev/null || :'
+  ignore_errors: yes
+
 - name: Create nfs server directories
   file: 'path={{item}} state=directory mode=0775 owner={{user}} group={{user}}'
   with_items:
@@ -138,7 +144,7 @@
   systemd: state=stopped name=mergerfs
   when: mergerfs_service.stat.exists and mergerfs_service_running
 
- # force unmount
+ # force unmount /mnt/unionfs
 
 - name: 'Force unmount /mnt/unionfs'
   shell: '/bin/umount -f /mnt/unionfs 2>/dev/null || :'
