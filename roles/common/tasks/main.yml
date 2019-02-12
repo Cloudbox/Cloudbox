@@ -128,12 +128,10 @@
   with_items:
     - glances
   ignore_errors: yes
-  when: (not continuous_integration)
   tags: glances
 
 - name: Install pip glances
-  shell: pip install glances[action,browser,cloud,cpuinfo,docker,export,folders,gpu,graph,ip,raid,snmp,web]
-  when: (not continuous_integration)
+  shell: pip install glances[action,browser,cloud,cpuinfo,docker,folders,gpu,graph,ip,raid,snmp,web]
   tags: glances
 
 - name: Install yyq
