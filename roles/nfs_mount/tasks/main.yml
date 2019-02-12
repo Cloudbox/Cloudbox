@@ -108,10 +108,16 @@
     path: "/etc/systemd/system/unionfs.service"
   register: unionfs_service
 
+- name: Check if mergerfs service exists
+  stat:
+    path: "/etc/systemd/system/mergerfs.service"
+  register: mergerfs_service
+
 - name: Populate Service Facts
   service_facts:
-  when: unionfs_service.stat.exists
+  when: (unionfs_service.stat.exists) or (mergerfs_service.stat.exists)
 
+ # Stop unionfs
 - name: Get unionfs service state
   set_fact:
     unionfs_service_running: "{{ (services['unionfs.service'] is defined) and (services['unionfs.service']['state'] == \"running\") }}"
@@ -121,18 +127,66 @@
   systemd: state=stopped name=unionfs
   when: unionfs_service.stat.exists and unionfs_service_running
 
+ # stop mergerfs
+
+- name: Get mergerfs service state
+  set_fact:
+    mergerfs_service_running: "{{ (services['mergerfs.service'] is defined) and (services['mergerfs.service']['state'] == \"running\") }}"
+  when: mergerfs_service.stat.exists
+
+- name: Stop existing mergerfs service
+  systemd: state=stopped name=mergerfs
+  when: mergerfs_service.stat.exists and mergerfs_service_running
+
+ # force unmount
+
 - name: 'Force unmount /mnt/unionfs'
   shell: '/bin/umount -f /mnt/unionfs 2>/dev/null || :'
   ignore_errors: yes
 
-- name: Import unionfs.service
-  template:
-    src: unionfs.service.jinja2
-    dest: /etc/systemd/system/unionfs.service
-    force: yes
+ # unionfs edits
+
+- name: Add 'After=init_vlan.service' to 'unionfs.service'
+  lineinfile:
+    path: /etc/systemd/system/unionfs.service
+    regexp: '(^After\=network-online\.target).*'
+    line: '\1 init_vlan.service'
+    state: present
+    backrefs: yes
+  when: unionfs_service.stat.exists
+
+- name: Replace '/mnt/local' with '/mnt/feeder' in 'unionfs.service'
+  replace:
+    path: /etc/systemd/system/unionfs.service
+    regexp: "\\/mnt\\/local"
+    replace: '/mnt/feeder'
+  when: unionfs_service.stat.exists
+
+  # mergerfs edits
+
+- name: Add 'After=init_vlan.service' to 'mergerfs.service'
+  lineinfile:
+    path: /etc/systemd/system/mergerfs.service
+    regexp: '(^After\=network-online\.target).*'
+    line: '\1 init_vlan.service'
+    state: present
+    backrefs: yes
+  when: mergerfs_service.stat.exists
+
+- name: Replace '/mnt/local' with '/mnt/feeder' in 'mergerfs.service'
+  replace:
+    path: /etc/systemd/system/mergerfs.service
+    regexp: "\\/mnt\\/local"
+    replace: '/mnt/feeder'
+  when: mergerfs_service.stat.exists
 
 - name: Start unionfs service
   systemd: state=started name=unionfs daemon_reload=yes enabled=yes
+  when: unionfs_service.stat.exists and unionfs_service_running
+
+- name: Start mergerfs service
+  systemd: state=started name=mergerfs daemon_reload=yes enabled=yes
+  when: mergerfs_service.stat.exists and mergerfs_service_running
 
 - name: Wait for 30 seconds before commencing
   wait_for:
