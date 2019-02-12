@@ -144,6 +144,8 @@
       LETSENCRYPT_HOST: "plex.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       HTTPS_METHOD: noredirect
+      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia == True | default(false) else omit }}"
+      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia == True | default(false) else omit }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
@@ -153,7 +155,7 @@
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
       - "/tmp:/tmp"
-    devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True | default(false) else omit }}"
+    devices: "{{ '/dev/dri:/dev/dri' if ((dev_dri.stat.exists == True) and (gpu.intel == True)) | default(false) else omit }}"
     etc_hosts: "{{plex_default_hosts | combine(plex_custom_hosts|default([])) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
