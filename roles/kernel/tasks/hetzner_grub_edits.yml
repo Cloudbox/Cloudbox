@@ -8,20 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create backup directory
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - "/opt/cloudbox/backup/modified_files/{{ outer_item.item | dirname }}"
-
-- name: "Backup {{ outer_item.item }}"
-  copy:
-    src: "{{ outer_item.item }}"
-    dest: "/opt/cloudbox/backup/modified_files/{{ outer_item.item }}"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: no
-
 - name: Set parameters to remove
   set_fact:
     grub_item_to_remove: "nomodeset"
