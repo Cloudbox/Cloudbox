@@ -8,6 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Install common packages
+  apt: "name={{item}} state=present"
+  with_items:
+    - curl
+    - jq
+    
 - name: Get latest yyq URL
   shell: curl -s https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r ".assets[] | select(.name | test(\"yq_linux_amd64\")) | .browser_download_url"
   args:
