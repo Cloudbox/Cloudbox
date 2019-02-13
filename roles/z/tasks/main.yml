@@ -70,6 +70,6 @@
 
   when: dot_bashrc.stat.exists
 
-- name: Z (Jump) is now added to your default shell
+- name: "Z (jump) Installed"
   debug:
-    msg: "You will need to re-login for changes to take effect."
+    msg: "Z (jump) Installed"
