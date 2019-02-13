@@ -26,7 +26,7 @@
     state: present
 
 - name: Install Nvidia drivers
-  shell: /tmp/NVIDIA-Linux-x86_64-410.78.run --silent --dkms
+  shell: /tmp/NVIDIA-Linux-x86_64-410.78.run --silent
   register: driver_install
   ignore_errors: yes
 
