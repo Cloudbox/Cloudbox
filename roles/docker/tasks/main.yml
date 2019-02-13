@@ -134,6 +134,10 @@
 - name: Start docker
   systemd: name=docker state=started enabled=yes daemon_reload=yes
 
+- name: Wait for 15 seconds before commencing
+  wait_for:
+    timeout: 15
+
 - name: "Stop all Docker containers"
   shell: "docker stop $(docker ps -aq)"
   register: s
