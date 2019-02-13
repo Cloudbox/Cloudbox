@@ -23,8 +23,8 @@
   register: dir_files
 
 # Restore from remote backup when local backup does not exist
-- name: Remote Restore
-  import_tasks: "remote_restore.yml"
+- name: Restore Remote
+  import_tasks: "restore_remote.yml"
   when: (dir_files.matched|int == 0)
 
 - name: "Look for 'backup_excludes_list.txt' file in '{{local.destination}}'"
