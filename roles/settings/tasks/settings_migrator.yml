@@ -83,10 +83,14 @@
       shell: |
         yyq w -i {{ playbook_dir }}/backup_config.yml restore_service.user {{ vault_service.user }}
         yyq w -i {{ playbook_dir }}/backup_config.yml restore_service.pass {{ vault_service.pass }}
-        yyq d -i {{ playbook_dir }}/backup_config.yml vault_service
       become: yes
       become_user: "{{cloudbox_yml.stat.pw_name}}"
       when: (vault_service_defined) and not (restore_service_defined)
+
+    - name: Update file
+      shell: yyq d -i {{ playbook_dir }}/backup_config.yml vault_service
+      become: yes
+      become_user: "{{cloudbox_yml.stat.pw_name}}"
 
     when: (item == "backup_config.yml")
 
