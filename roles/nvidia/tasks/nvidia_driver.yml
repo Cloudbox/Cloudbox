@@ -32,11 +32,11 @@
 
 - name: Nvidia driver did not install
   debug:
-  when: '(driver_install is failed) or ("ERROR: Installation has failed." in driver_install.stdout)'
+  when: (driver_install is failed) or ('ERROR' in driver_install.stdout)
 
 - name: Nvidia driver did not install
   fail:
     msg:
       - "{{driver_install.stdout}}"
       - "Nvidia driver did not install"
-  when: '(driver_install is failed) or ("ERROR: Installation has failed." in driver_install.stdout)'
+  when: (driver_install is failed) or ('ERROR' in driver_install.stdout)
