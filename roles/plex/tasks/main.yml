@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Plex Role                                    #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  plexinc/pms-docker                                     #
+# Docker Image:  cloudb0x/plex                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
