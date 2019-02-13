@@ -8,14 +8,19 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: list all PCI devices
-  shell: lspci
+- name: Fetch Nvidia card info
+  shell: |
+      if [ `lspci | grep -c -E '.*VGA.*NVIDIA'` -eq 1 ]; then
+        lspci -s $(lspci | grep -E '.*VGA.*NVIDIA' | cut -d' ' -f 1)
+      else
+        echo ""
+      fi
   register: lspci_resp
 
 - name: Nvidia Setup block
   block:
 
-  # Install Nvidia driver
+  # Install Ubuntu drivers
 
   - name: Install Ubuntu drivers
     apt:
@@ -26,6 +31,8 @@
   - name: Get list of devices
     shell: ubuntu-drivers devices
     register: ubuntu_devices
+
+  # Install Nvidia Drivers
 
   - name: Nvidia Kernel and Driver Tasks
     block:
@@ -46,30 +53,39 @@
 
   # Install Nvidia Driver Patch to remove transcode limit
 
-  - name: Check to see if patch backup files exist
-    find:
-      paths: "/opt/nvidia/libnvidia-encode-backup"
-      file_type: file
-      recurse: yes
-      patterns: '*.so*'
-    register: nvidia_patch_backup_files
+  - name: Nvidia Driver Patch Tasks
+    block:
 
-  - name: "Nvidia patch tasks"
-    include_tasks: "nvidia_patch.yml"
-    when: (nvidia_patch_backup_files.matched|int == 0)
+    - name: Check to see if patch backup files exist
+      find:
+        paths: "/opt/nvidia/libnvidia-encode-backup"
+        file_type: file
+        recurse: yes
+        patterns: '*.so*'
+      register: nvidia_patch_backup_files
+
+    - name: "Nvidia patch tasks"
+      include_tasks: "nvidia_patch.yml"
+      when: (nvidia_patch_backup_files.matched|int == 0)
+
+    when: ('GeForce' in lspci_resp.stdout)
 
   # Install Nvidia Runtime Container
 
-  - name: Get contents of 'daemon.json'
-    shell: cat /etc/docker/daemon.json
-    register: docker_daemon_json
+  - name: Nvidia Runtime Container Tasks
+    block:
 
-  - name: Set 'docker_default_runtime'
-    set_fact:
-      docker_default_runtime: "{{ docker_daemon_json.stdout | from_json | json_query('\"default-runtime\"') }}"
+    - name: Get contents of 'daemon.json'
+      shell: cat /etc/docker/daemon.json
+      register: docker_daemon_json
 
-  - name: "Nvidia docker tasks"
-    include_tasks: "nvidia_docker.yml"
-    when: (docker_default_runtime != 'nvidia')
+    - name: Set 'docker_default_runtime'
+      set_fact:
+        docker_default_runtime: "{{ docker_daemon_json.stdout | from_json | json_query('\"default-runtime\"') }}"
 
-  when: (ansible_distribution == 'Ubuntu') and ('VGA compatible controller{{ ":" }} NVIDIA' in lspci_resp.stdout)
+    - name: "Nvidia docker tasks"
+      include_tasks: "nvidia_docker.yml"
+      when: (docker_default_runtime != 'nvidia')
+
+
+  when: (ansible_distribution == 'Ubuntu') and ('NVIDIA' in lspci_resp.stdout)
