@@ -20,18 +20,11 @@
 
 # Folder
 
-- name: "Check if '{{local.destination}}' exists"
-  stat:
-    path: "{{local.destination}}"
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: backup_location
+- name: Cleanup backup location
+  file: path={{local.destination}} state=absent
 
 - name: "Create backup location '{{local.destination}}'"
   file: path={{local.destination}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
-  when: (not backup_location.stat.exists)
 
 # Rclone
 
@@ -55,6 +48,8 @@
 
   - name: Test rclone remote destination
     shell: "rclone lsd {{rclone.destination}}"
+    become: yes
+    become_user: "{{user}}"
     register: rclone_test
     failed_when: (rclone_test.rc > 5)
 
