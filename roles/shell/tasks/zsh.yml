@@ -74,9 +74,14 @@
     shell: /bin/zsh
   register: default_shell
 
-- name: Z Shell is now set as your default shell
+- name: "Default shell set to: ZSH"
   debug:
     msg:
-      - "Z Shell is now set as your default shell."
-      - "You will need to re-login for changes to take effect."
-  when: default_shell is changed
+      - "Default shell set to: ZSH"
+  when: (default_shell is changed)
+
+- name: "Default shell set to: ZSH"
+  debug:
+    msg:
+      - "Changes will apply on session restart."
+  when: (default_shell is changed) and ('shell' in ansible_run_tags)

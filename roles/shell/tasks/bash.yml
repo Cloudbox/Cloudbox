@@ -36,9 +36,14 @@
     shell: /bin/bash
   register: default_shell
 
-- name: Bash is now set as your default shell
+- name: "Default shell set to: Bash"
   debug:
     msg:
-      - "Bash is now set as your default shell."
-      - "You will need to re-login for changes to take effect."
-  when: default_shell is changed
+      - "Default shell set to: Bash"
+  when: (default_shell is changed)
+
+- name: "Default shell set to: Bash"
+  debug:
+    msg:
+      - "Changes will apply on session restart."
+  when: (default_shell is changed) and ('shell' in ansible_run_tags)
