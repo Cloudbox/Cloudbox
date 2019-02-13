@@ -15,7 +15,7 @@
   ignore_errors: yes
 
 - name: Fetch pci info
-  shell: "lspci -v -s $(lspci | grep VGA | cut -d\" \" -f 1) 2>/dev/null || :"
+  shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
   register: lscpi_resp
 
 - name: Check if 'blacklist-hetzner.conf' exists
