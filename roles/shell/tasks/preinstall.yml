@@ -8,16 +8,33 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Display message when kernel has been updated"
-  debug:
-    msg: "Kernel was updated. Restart the server to apply changes."
-  when: (preinstall_kernel_restart)
-
-- name: "Display message when cloudbox folder location has been migrated"
-  debug:
-    msg: "Cloudbox folder was migrated to a new home location. Re-login with the '{{user}}' account and run the Cloudbox installer from the '{{cloudbox_folder_path}}/' path."
-  when: (preinstall_user_relogin)
-
 - name: "Cloudbox pre-install has completed!"
   debug:
     msg: "Cloudbox pre-install has completed!"
+
+- name: "Display message when cloudbox folder location has been migrated"
+  debug:
+    msg:
+      - "Cloudbox folder was migrated to a new home location."
+      - "Re-login with the '{{ user }}' account and run the Cloudbox installer from the '{{ cloudbox_folder_path }}/' path."
+  when: (preinstall_user_relogin)
+
+- name: Tasks for kernel restart
+  block:
+
+  - name: "Display message when kernel has been updated"
+    debug:
+      msg:
+        - "Kernel was updated."
+        - "Restarting the server to apply changes..."
+
+  - name: "Reboot"
+    shell: reboot
+
+  - name: "Reboot Manually"
+    debug:
+      msg:
+        - "Failed to reboot automatically."
+        - "You will need to restart the server yourself for changes to take effect."
+
+  when: (preinstall_kernel_restart)
