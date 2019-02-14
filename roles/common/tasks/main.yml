@@ -48,6 +48,10 @@
   when: apt_multiverse_repositories.changed
   ignore_errors: yes
 
+- name: Fetch pci info
+  shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
+  register: lscpi_resp
+
 - name: Install common packages
   apt: "name={{item}} state=present"
   with_items:
@@ -80,6 +84,7 @@
     - apache2-utils
     - jq
     - lib32z1
+    - "{{ 'intel-gpu-tools' if ('i915' in lscpi_resp.stdout) | default(false) else omit }}"
   ignore_errors: yes
 
 - name: Install unrar
