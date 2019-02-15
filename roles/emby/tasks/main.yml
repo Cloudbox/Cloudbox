@@ -53,8 +53,8 @@
       LETSENCRYPT_HOST: "emby.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       HTTPS_METHOD: noredirect
-      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia == True | default(false) else omit }}"
-      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia == True | default(false) else omit }}"
+      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia | default(false) else omit }}"
+      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia | default(false) else omit }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/emby:/config"
@@ -62,7 +62,7 @@
       - "{{plex.transcodes}}/4:/transcodes"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
-    devices: "{{ '/dev/dri:/dev/dri' if ((dev_dri.stat.exists == True) and (gpu.intel == True)) | default(false) else omit }}"
+    devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
