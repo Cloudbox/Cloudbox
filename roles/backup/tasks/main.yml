@@ -243,7 +243,7 @@
         --warning=no-file-removed \
         --exclude-from '{{ (backup_excludes_list is defined and backup_excludes_list.stat.exists) | ternary(playbook_dir + '/backup_excludes_list.txt', playbook_dir + '/roles/backup/files/backup_excludes_list.txt') }}' \
         -cf "{{local.destination}}/opt/"{}.tar {} \; \
-        2> /home/{{user}}/logs/cloudbox_backup_tar_stderr.log
+        2> /home/{{user}}/logs/backup/cloudbox_backup_tar_stderr.log
     args:
       executable: /bin/bash
       warn: no
@@ -363,7 +363,7 @@
       timeout: 5
 
   - name: "Use rclone to upload backup to '{{rclone.destination}}'"
-    command: "rclone copy '{{local.destination}}' '{{rclone.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --log-file='/home/{{user}}/logs/cloudbox_backup_rclone.log'"
+    command: "rclone copy '{{local.destination}}' '{{rclone.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --log-file='/home/{{user}}/logs/backup/cloudbox_backup_rclone.log'"
     become: yes
     become_user: "{{user}}"
     when: (rclone.enable)
@@ -381,8 +381,6 @@
       dest: "{{rsync.destination}}/"
       set_remote_user: yes
       compress: no
-      rsync_opts:
-        - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync.log'"
     become: yes
     become_user: "{{user}}"
     when: (rsync.enable)
