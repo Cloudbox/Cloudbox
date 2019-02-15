@@ -11,12 +11,8 @@
 # Checks
 
 - name: Fail when no backup method is enabled or when no local backup exists
-  fail: msg="You must enable either rclone or rsync, in the backup settings, to perform a restore."
-  when: not ((rclone.enable) or (rsync.enable))
-
-- name: Fail when both backup methods are enabled
-  fail: msg="You can only have either rclone enabled or rsync enabled, but not both."
-  when: (rclone.enable) and (rsync.enable)
+  fail: msg="You must enable either rclone in the backup settings, or provide backup tarballs in the locally, to perform a restore."
+  when: not (rclone.enable)
 
 # Folder
 
@@ -28,53 +24,36 @@
 
 # Rclone
 
-- name: Rclone Tasks
-  block:
+- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
+  stat:
+    path: "{{playbook_dir}}/rclone.conf"
+  register: rclone_conf_playbook_dir
 
-  - name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
-    stat:
-      path: "{{playbook_dir}}/rclone.conf"
-    register: rclone_conf_playbook_dir
+- name: Check if rclone is installed
+  stat:
+    path: "/usr/bin/rclone"
+  register: rclone_binary
 
-  - name: Check if rclone is installed
-    stat:
-      path: "/usr/bin/rclone"
-    register: rclone_binary
+- name: Run rclone role
+  include_role:
+    name: rclone
+  when: (rclone_conf_playbook_dir.stat.exists) or (not rclone_binary.stat.exists)
 
-  - name: Run rclone role
-    include_role:
-      name: rclone
-    when: (rclone_conf_playbook_dir.stat.exists) or (not rclone_binary.stat.exists)
-
-  - name: Test rclone remote destination
-    shell: "rclone lsd {{rclone.destination}}"
-    become: yes
-    become_user: "{{user}}"
-    register: rclone_test
-    failed_when: (rclone_test.rc > 5)
-
-  - name: "Fail when rclone is misconfigured."
-    fail: msg="The rclone remote is misconfigured - You must place a valid 'rclone.conf' file in '{{playbook_dir}}' (or setup Rclone via 'rclone config') and verify that the 'rclone.destination' in settings is valid."
-    when: (rclone_test.rc > 0)
-
-  - name: "Fetch backup from '{{rclone.destination}}'"
-    command: "rclone copy '{{rclone.destination}}/' '{{local.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --exclude 'archived/**' --log-file='{{playbook_dir}}/restore_rclone.log'"
-    become: yes
-    become_user: "{{user}}"
-
-  when: (rclone.enable)
-
-# Rsync
-
-- name: "Fetch backup from {{rsync.destination}}"
-  synchronize:
-    src: "{{rsync.destination}}/"
-    dest: "{{local.destination}}/"
-    rsync_opts:
-      - "--log-file='{{playbook_dir}}/restore_rsync.log'"
+- name: Test rclone remote destination
+  shell: "rclone lsd {{rclone.destination}}"
   become: yes
   become_user: "{{user}}"
-  when: (rsync.enable)
+  register: rclone_test
+  failed_when: (rclone_test.rc > 5)
+
+- name: "Fail when rclone is misconfigured."
+  fail: msg="The rclone remote is misconfigured - You must place a valid 'rclone.conf' file in '{{playbook_dir}}' (or setup Rclone via 'rclone config') and verify that the 'rclone.destination' in settings is valid."
+  when: (rclone_test.rc > 0)
+
+- name: "Fetch backup from '{{rclone.destination}}'"
+  command: "rclone copy '{{rclone.destination}}/' '{{local.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --exclude 'archived/**' --log-file='{{playbook_dir}}/restore_rclone.log'"
+  become: yes
+  become_user: "{{user}}"
 
 # Checks
 
