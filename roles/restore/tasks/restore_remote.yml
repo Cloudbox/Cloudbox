@@ -11,7 +11,10 @@
 # Checks
 
 - name: Fail when no backup method is enabled or when no local backup exists
-  fail: msg="You must enable either rclone in the backup settings, or provide backup tarballs in the locally, to perform a restore."
+  fail:
+    msg:
+      - "Rclone is not enabled and no local backup exists."
+      - "You must either enable rclone, in the backup settings, or provide backup tarball files locally, to perform a restore."
   when: not (rclone.enable)
 
 # Folder
