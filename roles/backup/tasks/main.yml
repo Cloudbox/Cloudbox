@@ -379,6 +379,8 @@
     synchronize:
       src: "{{local.destination}}/"
       dest: "{{rsync.destination}}/"
+      set_remote_user: yes
+      compress: no
       rsync_opts:
         - "--log-file='/home/{{user}}/logs/cloudbox_backup_rsync.log'"
     become: yes
