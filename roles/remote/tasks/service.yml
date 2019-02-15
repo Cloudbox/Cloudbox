@@ -8,132 +8,38 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# Plexdrive4
-
-- name: Check if 'plexdrive4.service' exists
+- name: "Check if '{{ outer_item }}' exists"
   stat:
-    path: "/etc/systemd/system/plexdrive4.service"
-  register: plexdrive4_service
+    path: "/etc/systemd/system/{{ outer_item }}"
+  register: service_file
 
-- name: Tasks for 'plexdrive4.service'
+- name: "Tasks for '{{ outer_item }}'"
   block:
 
-  - name: Stop and existing 'plexdrive4.service'
-    systemd: name=plexdrive4 state=stopped enabled=no
+  - name: "Stop and disable existing '{{ outer_item }}'"
+    systemd:
+      name: "{{ outer_item }}"
+      state: stopped
+      enabled: no
 
-  - name: Reset ownership in existing 'plexdrive4.service'
+  - name: "Update ownership in existing '{{ outer_item }}'"
     lineinfile:
-      path: "/etc/systemd/system/plexdrive4.service"
-      regexp: "{{item.regexp}}"
-      line: "{{item.line}}"
+      path: "/etc/systemd/system/{{ outer_item }}"
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
       state: present
     with_items:
-      - { regexp: '^User\s?=', line: 'User={{user}}' }
-      - { regexp: '^Group\s?=', line: 'Group={{user}}' }
+      - { regexp: '^User\s?=', line: 'User={{ user }}' }
+      - { regexp: '^Group\s?=', line: 'Group={{ user }}' }
 
-  - name: Systemd daemon-reload
-    systemd: daemon_reload=yes
-
-  when: (plexdrive4_service.stat.exists)
-
-# Plexdrive5
-
-- name: Check if 'plexdrive5.service' exists
-  stat:
-    path: "/etc/systemd/system/plexdrive5.service"
-  register: plexdrive5_service
-
-- name: Tasks for 'plexdrive5.service'
-  block:
-
-  - name: Stop and existing 'plexdrive5.service'
-    systemd: name=plexdrive5 state=stopped enabled=no
-
-  - name: Reset ownership in existing 'plexdrive5.service'
-    lineinfile:
-      path: "/etc/systemd/system/plexdrive5.service"
-      regexp: "{{item.regexp}}"
-      line: "{{item.line}}"
-      state: present
-    with_items:
-      - { regexp: '^User\s?=', line: 'User={{user}}' }
-      - { regexp: '^Group\s?=', line: 'Group={{user}}' }
-
-  - name: Systemd daemon-reload
-    systemd: daemon_reload=yes
-
-  when: (plexdrive5_service.stat.exists)
-
-# Rclone VFS
-
-- name: Check if 'rclone_vfs.service' exists
-  stat:
-    path: "/etc/systemd/system/rclone_vfs.service"
-  register: rclone_vfs_service
-
-- name: Tasks for 'rclone_vfs.service'
-  block:
-
-  - name: Stop and disable existing 'rclone_vfs.service'
-    systemd: name=rclone_vfs state=stopped enabled=no
-
-  - name: Reset ownership in existing 'rclone_vfs.service'
-    lineinfile:
-      path: "/etc/systemd/system/rclone_vfs.service"
-      regexp: "{{item.regexp}}"
-      line: "{{item.line}}"
-      state: present
-    with_items:
-      - { regexp: '^User\s?=', line: 'User={{user}}' }
-      - { regexp: '^Group\s?=', line: 'Group={{user}}' }
-
-  - name: Edit 'rc-addr' in existing 'rclone_vfs.service'
+  # if applicable
+  - name: "Update 'rc-addr' in existing '{{ outer_item }}'"
     replace:
-      path: /etc/systemd/system/rclone_vfs.service
-      regexp: "rc-addr=localhost:[0-9]*"
-      replace: 'rc-addr=localhost:5572'
-
-  - name: Edit rclone remote in existing 'rclone_vfs.service'
-    replace:
-      path: /etc/systemd/system/rclone_vfs.service
-      regexp: "([a-zA-Z].*):\\s?.*\\/mnt\\/remote"
-      replace: '{{rclone.remote}}: /mnt/remote'
-
-  - name: Systemd daemon-reload
-    systemd: daemon_reload=yes
-
-  when: (rclone_vfs_service.stat.exists)
-
-# Rclone VFS Primer
-
-- name: Check if 'rclone_vfs_primer.service' exists
-  stat:
-    path: "/etc/systemd/system/rclone_vfs_primer.service"
-  register: rclone_vfs_primer_service
-
-- name: Tasks for 'rclone_vfs_primer.service'
-  block:
-
-  - name: Stop and disable existing 'rclone_vfs_primer.service'
-    systemd: name=rclone_vfs_primer state=stopped enabled=no
-
-  - name: Reset ownership in existing 'rclone_vfs_primer.service'
-    lineinfile:
-      path: "/etc/systemd/system/rclone_vfs_primer.service"
-      regexp: "{{item.regexp}}"
-      line: "{{item.line}}"
-      state: present
-    with_items:
-      - { regexp: '^User\s?=', line: 'User={{user}}' }
-      - { regexp: '^Group\s?=', line: 'Group={{user}}' }
-
-  - name: Edit 'rc-addr' in existing 'rclone_vfs_primer.service'
-    replace:
-      path: /etc/systemd/system/rclone_vfs_primer.service
+      path: "/etc/systemd/system/{{ outer_item }}"
       regexp: "rc-addr=localhost:[0-9]*"
       replace: 'rc-addr=localhost:5572'
 
   - name: Systemd daemon-reload
     systemd: daemon_reload=yes
 
-  when: (rclone_vfs_primer_service.stat.exists)
+  when: (service_file.stat.exists)
