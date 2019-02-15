@@ -8,56 +8,38 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check if 'unionfs.service' exists
+- name: "Check if '{{ outer_item }}' exists"
   stat:
-    path: "/etc/systemd/system/unionfs.service"
-  register: unionfs_service
+    path: "/etc/systemd/system/{{ outer_item }}"
+  register: service_file
 
-- name: Tasks for 'unionfs.service'
+- name: "Tasks for '{{ outer_item }}'"
   block:
 
-  - name: Stop and disable existing 'unionfs.service'
-    systemd: name=unionfs state=stopped enabled=no
+  - name: "Stop and disable existing '{{ outer_item }}'"
+    systemd:
+      name: "{{ outer_item }}"
+      state: stopped
+      enabled: no
 
-  - name: Replace '/mnt/plexdrive' with '/mnt/remote' in 'unionfs.service'
-    replace:
-      path: /etc/systemd/system/unionfs.service
-      regexp: "\\/mnt\\/plexdrive"
-      replace: '/mnt/remote'
-
-  - name: Reset ownership in existing 'unionfs.service'
+  - name: "Update ownership in existing '{{ outer_item }}'"
     lineinfile:
-      path: "/etc/systemd/system/unionfs.service"
-      regexp: "{{item.regexp}}"
-      line: "{{item.line}}"
+      path: "/etc/systemd/system/{{ outer_item }}"
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
       state: present
     with_items:
-      - { regexp: '^User\s?=', line: 'User={{user}}' }
-      - { regexp: '^Group\s?=', line: 'Group={{user}}' }
+      - { regexp: '^User\s?=', line: 'User={{ user }}' }
+      - { regexp: '^Group\s?=', line: 'Group={{ user }}' }
 
-  - name: Systemd daemon-reload
-    systemd: daemon_reload=yes
-
-  when: (unionfs_service.stat.exists)
-
-- name: Check if 'mergerfs.service' exists
-  stat:
-    path: "/etc/systemd/system/mergerfs.service"
-  register: mergerfs_service
-
-- name: Tasks for 'mergerfs.service'
-  block:
-
-  - name: Stop and disable existing 'mergerfs.service'
-    systemd: name=mergerfs state=stopped enabled=no
-
-  - name: Replace '/mnt/plexdrive' with '/mnt/remote' in 'mergerfs.service'
+  # if applicable
+  - name: "Replace '/mnt/plexdrive' with '/mnt/remote' in '{{ outer_item }}'"
     replace:
-      path: /etc/systemd/system/mergerfs.service
+      path: "/etc/systemd/system/{{ outer_item }}"
       regexp: "\\/mnt\\/plexdrive"
       replace: '/mnt/remote'
 
   - name: Systemd daemon-reload
     systemd: daemon_reload=yes
 
-  when: (mergerfs_service.stat.exists)
+  when: (service_file.stat.exists)

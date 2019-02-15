@@ -14,7 +14,12 @@
   import_tasks: "legacy.yml"
 
 - name: Service Tasks
-  import_tasks: "service.yml"
+  include_tasks: "service.yml"
+  loop_control:
+    loop_var: outer_item
+  loop:
+    - "unionfs.service"
+    - "mergerfs.service"
 
 - name: Mount Tasks
   import_tasks: "mount.yml"
