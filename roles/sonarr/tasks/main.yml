@@ -112,7 +112,7 @@
       LETSENCRYPT_HOST: "sonarr.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) + old_nzbget_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
-    devices: "{{ '/dev/dri:/dev/dri' if dev_dri.stat.exists == True and sickbeard_mp4_automator == True | default(false) else omit }}"
+    devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and sickbeard_mp4_automator and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
