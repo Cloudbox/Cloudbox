@@ -68,10 +68,10 @@
   import_tasks: "permissions.yml"
   tags: opt-permissions-reset
 
-- name: "Remove '{{local.destination}}'"
-  file:
-    path: "{{local.destination}}"
-    state: absent
+- name: Cleanup backup location
+  shell: "rm -rf {{local.destination}}/*"
+  become: yes
+  become_user: "{{user}}"
   when: not (local.enable)
 
 - debug:
