@@ -48,38 +48,44 @@
   when: apt_multiverse_repositories.changed
   ignore_errors: yes
 
+- name: Fetch pci info
+  shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
+  register: lscpi_resp
+
 - name: Install common packages
-  apt: "name={{item}} state=present"
+  apt: "name={{item.package}} state=present"
   with_items:
-    - nano
-    - zip
-    - unzip
-    - p7zip
-    - curl
-    - httpie
-    - sqlite3
-    - tree
-    - lsof
-    - man-db
-    - ksmtuned
-    - git
-    - pwgen
-    - rsync
-    - logrotate
-    - htop
-    - iotop
-    - nload
-    - fail2ban
-    - ufw
-    - ncdu
-    - mc
-    - speedtest-cli
-    - dnsutils
-    - screen
-    - tmux
-    - apache2-utils
-    - jq
-    - lib32z1
+    - { package: "nano" }
+    - { package: "zip" }
+    - { package: "unzip" }
+    - { package: "p7zip" }
+    - { package: "curl" }
+    - { package: "httpie" }
+    - { package: "sqlite3" }
+    - { package: "tree" }
+    - { package: "lsof" }
+    - { package: "man-db" }
+    - { package: "ksmtuned" }
+    - { package: "git" }
+    - { package: "pwgen" }
+    - { package: "rsync" }
+    - { package: "logrotate" }
+    - { package: "htop" }
+    - { package: "iotop" }
+    - { package: "nload" }
+    - { package: "fail2ban" }
+    - { package: "ufw" }
+    - { package: "ncdu" }
+    - { package: "mc" }
+    - { package: "speedtest-cli" }
+    - { package: "dnsutils" }
+    - { package: "screen" }
+    - { package: "tmux" }
+    - { package: "apache2-utils" }
+    - { package: "jq" }
+    - { package: "lib32z1" }
+    - { package: "intel-gpu-tools", skip: "{{ 'i915' not in lscpi_resp.stdout }}" }
+  when: not item.skip | default(False) | bool
   ignore_errors: yes
 
 - name: Install unrar
