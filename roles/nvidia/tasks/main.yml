@@ -87,5 +87,19 @@
       include_tasks: "nvidia_docker.yml"
       when: (docker_default_runtime != 'nvidia')
 
+  # Install Nvidia Nvtop Tool
+  
+  - name: Nvidia Nvtop Tasks
+    block:
+
+    - name: Check nvtop exists
+      stat:
+        path: "/usr/local/bin/nvtop"
+      register: nvtop_binary
+
+    - name: "Nvidia Nvtop Task"
+      include_tasks: "nvidia_nvtop.yml"
+      when: not nvtop_binary.stat.exists
+      
 
   when: (ansible_distribution == 'Ubuntu') and ('NVIDIA' in lspci_resp.stdout)
