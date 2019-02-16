@@ -1,0 +1,39 @@
+#########################################################################
+# Title:         Nvidia: Nvidia Nvtop Task                              #
+# Author(s):     desimaniac, l3uddz                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Install nvtop dependencies
+  apt: name="{{item}}" state=present update_cache=yes
+  become: true
+  with_items:
+      - cmake
+      - libncurses5-dev
+      - libncursesw5-dev
+
+- name: Pull nvtop repo from github
+  git: clone=yes repo=https://github.com/Syllo/nvtop dest=/tmp/nvtop/
+  register: diff
+
+- name: Build and install nvtop
+  shell: "cd /tmp/nvtop && \
+          mkdir build && \
+          cd build && \
+          cmake .. -DNVML_RETRIEVE_HEADER_ONLINE=True && \
+          make && \
+          make install"
+  when: diff.changed
+
+- name: "Get nvtop version"
+  shell: "/usr/local/bin/nvtop --version | head -n 1 | awk '{print $3}' | cut -f1,2 -d'-'"
+  register: nvtop_version
+  ignore_errors: yes
+
+- name: "Display nvtop version"
+  debug:
+    msg: "nvtop {{nvtop_version.stdout}} installed."
