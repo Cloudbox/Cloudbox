@@ -19,23 +19,23 @@ new_library:
   name: 'Movies - IMDB Top 250'
   # [Cloudbox] 'folder' = Path on host where symlinks are stored (i.e. '/mnt/local/Media/...').
   folder: '/mnt/local/Media/Movies/Movies-IMDB_Top_250/'
-  sort: yes
+  sort: true
   sort_title:
     format: '{number}. {title}'
-    visible: yes
-    absolute: yes  # Skips numbers for missing items
+    visible: true
+    absolute: true  # Skips numbers for missing items
   # Limit the age (in years) of items to be considered
   # * 0 for no limit
   max_age: 0
   # Maximum number of items to keep in the library
   max_count: 250
   # Remove items that no longer exist in the source lists
-  remove_from_library: yes
+  remove_from_library: true
 
 # Weighted sorting (requires TMDb API)
 weighted_sorting:
-  enabled: no
-  better_release_date: no
+  enabled: false
+  better_release_date: false
   weights:
     # Think of these as percentages,
     # but they don't have to add up to 1.0

@@ -24,23 +24,23 @@ new_library:
   name: 'TV - Trending'
   # [Cloudbox] 'folder' = Path on host where symlinks are stored (i.e. '/mnt/local/Media/...').
   folder: '/mnt/local/Media/TV/TV-Trending/'
-  sort: yes
+  sort: true
   sort_title:
     format: '{number}. {title}'
-    visible: no
-    absolute: no  # Skips numbers for missing items
+    visible: false
+    absolute: false  # Skips numbers for missing items
   # Limit the age (in years) of items to be considered
   # * 0 for no limit
   max_age: 0
   # Maximum number of items to keep in the library
   max_count: 250
   # Remove items that no longer exist in the source lists
-  remove_from_library: no
+  remove_from_library: false
 
 # Weighted sorting (requires TMDb API)
 weighted_sorting:
-  enabled: yes
-  better_release_date: no
+  enabled: true
+  better_release_date: false
   weights:
     # Think of these as percentages,
     # but they don't have to add up to 1.0
