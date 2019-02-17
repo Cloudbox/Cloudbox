@@ -147,6 +147,12 @@
     daemon_reload: yes
     enabled: yes
 
+- name: "Add nfs vlan interface to vnstat"
+  shell: "vnstat -i {{ansible_default_ipv4.interface}}.{{nfs.vlan_id}} -u"
+  become: yes
+  become_user: "vnstat"
+  ignore_errors: yes
+
  # unionfs edits
 
 - name: Add 'After=init_vlan.service' to 'unionfs.service'
