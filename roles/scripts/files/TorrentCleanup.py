@@ -104,7 +104,7 @@ log = logging.getLogger("TorrentCleanup")
 if len(sys.argv) <= 1:
     log.error("You must specify an argument of either sonarr/radarr/lidarr.")
     sys.exit(0)
-elif 'Sonarr_EvenType_Test':
+elif os.environ.get('sonarr_eventtype') == "Test":
     sys.exit(0)
 elif 'sonarr' in sys.argv[1].lower():
     sourceFile = os.environ.get('sonarr_episodefile_sourcepath')
