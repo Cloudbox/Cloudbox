@@ -21,6 +21,18 @@
 - name: Variables
   import_tasks: "variables.yml"
 
+- name: Create common directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt
+    - /mnt/local
+
+- name: Btrfs Task
+  import_tasks: "btrfs.yml"
+
+- name: "Create backup location '{{local.destination}}'"
+  file: path={{local.destination}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
+
 - name: Check if previous backup exists locally
   find:
     paths: "{{local.destination}}/opt"
@@ -47,14 +59,6 @@
     mode: 0775
     force: yes
   when: (backup_excludes_list.stat.exists)
-
-- name: "Create '/opt' directory"
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt
-
-- name: Btrfs Task
-  import_tasks: "btrfs.yml"
 
 - name: "Unarchive backup tars to /opt"
   shell: |
