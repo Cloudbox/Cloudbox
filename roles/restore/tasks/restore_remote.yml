@@ -19,9 +19,6 @@
 
 # Folder
 
-- name: "Create backup location '{{local.destination}}'"
-  file: path={{local.destination}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes
-
 - name: Cleanup backup location
   shell: "rm -rf {{local.destination}}/*"
   become: yes
