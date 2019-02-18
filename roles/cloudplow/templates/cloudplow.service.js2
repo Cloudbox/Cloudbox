@@ -1,8 +1,8 @@
 # /etc/systemd/system/cloudplow.service
 
 [Unit]
-Description=cloudplow
-After=network-online.target unionfs.service
+Description=Cloudplow
+After=network-online.target
 
 [Service]
 User={{user}}
