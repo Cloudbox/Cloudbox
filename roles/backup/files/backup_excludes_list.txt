@@ -20,7 +20,7 @@
 
 ./lidarr/app/logs/*
 
- ./nvidia/*
+./nvidia/*
 
 ./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*
 ./plex/Library/Application Support/Plex Media Server/Cache/Transcode/*
