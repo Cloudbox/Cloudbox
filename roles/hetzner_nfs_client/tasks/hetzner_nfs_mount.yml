@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Hetzner NFS Client Role                      #
-# Author(s):     l3uddz                                                 #
+# Title:         Hetzner NFS Client: Hetzner NFS Mount Task             #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
