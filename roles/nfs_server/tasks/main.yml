@@ -15,7 +15,7 @@
 
 - name: Import hosts.deny file
   template:
-    src: hosts.deny.jinja2
+    src: hosts.deny.j2
     dest: /etc/hosts.deny
     owner: '{{user}}'
     group: '{{user}}'
@@ -30,7 +30,7 @@
 
 - name: Import exports file
   template:
-    src: exports.jinja2
+    src: exports.j2
     dest: /etc/exports
     owner: '{{user}}'
     group: '{{user}}'
@@ -42,7 +42,7 @@
 
 - name: Import init_vlan.sh file
   template:
-    src: init_vlan.sh.jinja2
+    src: init_vlan.sh.j2
     dest: /opt/nfs/init_vlan.sh
     owner: '{{user}}'
     group: '{{user}}'
@@ -56,7 +56,7 @@
 
 - name: Import nfs_vlan.service file
   template:
-    src: nfs_vlan.service.jinja2
+    src: nfs_vlan.service.j2
     dest: /etc/systemd/system/nfs_vlan.service
     owner: '{{user}}'
     group: '{{user}}'
