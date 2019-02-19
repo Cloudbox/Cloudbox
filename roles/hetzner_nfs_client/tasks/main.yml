@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: NFS Mount Role                               #
+# Title:         Cloudbox: Hetzner NFS Client Role                      #
 # Author(s):     l3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,9 +8,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Fail when invalid nfs.mount_client is specified
-  fail: msg="You must use a value larger than 2 and lower than 251 for the nfs mount_client advanced setting."
-  when: nfs.mount_client < 3 or nfs.mount_client > 250
+- name: Fail when invalid hetzner_nfs.mount_client is specified
+  fail: msg="You must use a value larger than 2 and lower than 251 for the Hetzner NFS mount_client advanced setting."
+  when: hetzner_nfs.mount_client < 3 or hetzner_nfs.mount_client > 250
 
 - name: Check to see if docker is installed
   stat:
@@ -148,7 +148,7 @@
     enabled: yes
 
 - name: "Add nfs vlan interface to vnstat"
-  shell: "vnstat -i {{ansible_default_ipv4.interface}}.{{nfs.vlan_id}} -u"
+  shell: "vnstat -i {{ansible_default_ipv4.interface}}.{{hetzner_nfs.vlan_id}} -u"
   become: yes
   become_user: "vnstat"
   ignore_errors: yes

@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: NFS Server Role                              #
+# Title:         Cloudbox: Hetzner NFS Server Role                      #
 # Author(s):     l3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -72,7 +72,7 @@
     enabled: yes
 
 - name: "Add nfs vlan interface to vnstat"
-  shell: "vnstat -i {{ansible_default_ipv4.interface}}.{{nfs.vlan_id}} -u"
+  shell: "vnstat -i {{ansible_default_ipv4.interface}}.{{hetzner_nfs.vlan_id}} -u"
   become: yes
   become_user: "vnstat"
   ignore_errors: yes
