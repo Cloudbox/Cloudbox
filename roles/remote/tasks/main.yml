@@ -28,6 +28,7 @@
     - "plexdrive5.service"
     - "rclone_vfs.service"
     - "rclone_vfs_primer.service"
+    - "rclone_vfs_primer.timer"
 
 - name: Mount Tasks
   import_tasks: "mount.yml"

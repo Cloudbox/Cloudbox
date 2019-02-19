@@ -1,0 +1,10 @@
+# /etc/systemd/system/rclone_vfs_primer.timer
+
+[Unit]
+Description=Rclone VFS Primer Timer
+
+[Timer]
+OnUnitInactiveSec=167h
+
+[Install]
+WantedBy=timers.target
