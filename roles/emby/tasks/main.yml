@@ -24,6 +24,15 @@
     - "{{plex.transcodes}}/3"
     - "{{plex.transcodes}}/4"
 
+- name: "Import 'dlna.xml' config"
+  copy:
+    src: "dlna.xml"
+    dest: "/opt/emby/config/dlna.xml"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+
 - name: "Check if 'system.xml' exists"
   stat:
     path: "/opt/emby/config/system.xml"
@@ -38,15 +47,6 @@
   stat:
     path: "/dev/dri"
   register: dev_dri
-
-- name: "Import 'dlna.xml' config"
-  copy:
-    src: "dlna.xml"
-    dest: "/opt/emby/config/dlna.xml"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
     
 - name: Create and start container
   docker_container:
