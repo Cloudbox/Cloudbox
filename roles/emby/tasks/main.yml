@@ -39,6 +39,15 @@
     path: "/dev/dri"
   register: dev_dri
 
+- name: "Import 'dlna.xml' config"
+  copy:
+    src: "dlna.xml"
+    dest: "/opt/emby/config/dlna.xml"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: yes
+    
 - name: Create and start container
   docker_container:
     name: emby
