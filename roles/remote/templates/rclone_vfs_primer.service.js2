@@ -16,8 +16,6 @@ ExecStart=/usr/bin/rclone \
   -vvv \
   --rc-addr=localhost:5572 \
   rc vfs/refresh dir=Media recursive=true
-RemainAfterExit=yes
-RemainAfterExit=yes
 
 [Install]
 WantedBy=default.target

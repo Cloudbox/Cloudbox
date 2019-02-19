@@ -29,7 +29,16 @@
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
 - name: Systemd daemon-reload 'rclone_vfs_primer.service'
-  systemd: name=rclone_vfs_primer state=stopped enabled=no daemon_reload=yes
+  systemd: name=rclone_vfs_primer.service state=stopped enabled=no daemon_reload=yes
+
+- name: Import 'rclone_vfs_primer.timer'
+  template:
+    src: rclone_vfs_primer.timer.js2
+    dest: /etc/systemd/system/rclone_vfs_primer.timer
+    force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
+
+- name: Systemd daemon-reload 'rclone_vfs_primer.timer'
+  systemd: name=rclone_vfs_primer.timer state=stopped enabled=no daemon_reload=yes
 
 - name: Test rclone remote
   shell: "rclone lsd {{rclone.remote}}:"
@@ -47,6 +56,9 @@
       timeout: 5
 
   - name: Start 'rclone_vfs_primer.service'
-    systemd: name=rclone_vfs_primer state=started enabled=yes
+    systemd: name=rclone_vfs_primer.service state=started enabled=yes
+
+  - name: Start 'rclone_vfs_primer.timer'
+    systemd: name=rclone_vfs_primer.timer state=started enabled=yes
 
   when: (rclone_test.rc|int == 0)
