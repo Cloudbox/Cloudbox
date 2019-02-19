@@ -39,6 +39,12 @@
       regexp: "rc-addr=localhost:[0-9]*"
       replace: 'rc-addr=localhost:5572'
 
+  - name: "Remove 'RemainAfterExit=yes' '{{ outer_item }}'"
+    lineinfile:
+      path: "/etc/systemd/system/{{ outer_item }}"
+      regexp: '^RemainAfterExit\=yes'
+      state: absent
+
   - name: Systemd daemon-reload
     systemd: daemon_reload=yes
 
