@@ -19,6 +19,8 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/emby
+    - /opt/emby/config
+    - /opt/emby/config/users
     - "{{plex.transcodes}}/3"
     - "{{plex.transcodes}}/4"
 
