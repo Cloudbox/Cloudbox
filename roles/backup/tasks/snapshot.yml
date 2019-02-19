@@ -8,38 +8,38 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set default variables
+- name: Snapshot | Set default variables
   set_fact:
     backup_type: ""
     backup_root_path: ""
     use_snapshot: false
 
-- name: "Determine '/' filesystem type"
+- name: "Snapshot | Determine '/' filesystem type"
   set_fact:
     root_fstype: "{{ item.fstype }}"
   when: "(item.mount == '/')"
   with_items:
     - "{{ ansible_mounts }}"
 
-- name: Btrfs specific tasks
+- name: Snapshot | Btrfs specific tasks
   block:
 
-  - name: "Set btrfs variables"
+  - name: "Snapshot | Set btrfs variables"
     set_fact:
       backup_type: "snapshot-enabled"
       backup_root_path: "/btrfs/snapshots/root"
       use_snapshot: true
 
-  - name: Check if btrfs snapshot is mounted
+  - name: Snapshot | Check if btrfs snapshot is mounted
     stat:
       path: "/btrfs/snapshots/root"
     register: btrfs_snapshot_mounted
 
-  - name: Delete old btrfs snapshot
+  - name: Snapshot | Delete old btrfs snapshot
     command: "btrfs subvolume delete /btrfs/snapshots/root"
     when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
 
-  - name: Create brfs snapshot directory
+  - name: Snapshot | Create brfs snapshot directory
     file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
     with_items:
       - /btrfs/snapshots

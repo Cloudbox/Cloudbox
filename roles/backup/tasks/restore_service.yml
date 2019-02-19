@@ -8,24 +8,24 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install common packages
+- name: Restore Service | Install common packages
   apt: "name={{item}} state=present"
   with_items:
     - curl
   ignore_errors: yes
 
-- name: Set variables
+- name: Restore Service | Set variables
   set_fact:
     restore_service_username: "{{ restore_service.user | hash('sha1') }}"
     restore_service_password: "{{ restore_service.pass }}"
 
-- name: Cleanup '/tmp/restore_service' path
+- name: Restore Service | Cleanup '/tmp/restore_service' path
   file: "path='/tmp/restore_service' state=absent"
 
-- name: Create '/tmp/restore_service' path
+- name: Restore Service | Create '/tmp/restore_service' path
   file: "path='/tmp/restore_service' state=directory mode=0775 owner={{user}} group={{user}}"
 
-- name: Encrypt config file(s)
+- name: Restore Service | Encrypt config file(s)
   shell: "openssl enc -aes-256-cbc -salt -md md5 -in {{ item }} -out /tmp/restore_service/{{ item | basename }}.enc -k '{{ restore_service_password }}'"
   args:
     warn: no
@@ -40,7 +40,7 @@
    - "{{playbook_dir}}/backup_config.yml"
    - "/home/{{user}}/.config/rclone/rclone.conf"
 
-- name: "Validate config file(s) for encryption."
+- name: "Restore Service | Validate config file(s) for encryption."
   shell: "head -c 10 {{item}} | grep -q Salted"
   register: encryption_check
   ignore_errors: yes
@@ -48,35 +48,35 @@
   with_fileglob:
     - "/tmp/restore_service/*"
 
-- name: Set variables
+- name: Restore Service | Set variables
   set_fact:
     unencrypted_files_list: "{{ encryption_check.results | selectattr('rc', 'equalto', 1) | map(attribute='item') | map('regex_replace', '^/tmp/restore_service/|.enc$','') | list | sort(case_sensitive=False) | join(', ') }} "
     encrypted_files_list: "{{ encryption_check.results | selectattr('rc', 'equalto', 0) | map(attribute='item') | map('regex_replace', '^/tmp/restore_service/|.enc$','') | list | sort(case_sensitive=False) | join(', ') }} "
 
-- name: Print error message when config file(s) were not encrypted successfully
+- name: Restore Service | Print error message when config file(s) were not encrypted successfully
   debug:
     msg:
       - "The following config file(s) were NOT encrypted successfully: '{{ unencrypted_files_list | trim }}'"
       - "Cloudbox Restore Service will now be skipped."
   when: (unencrypted_files_list | trim != "")
 
-- name: "Pushover Message: Config files were not encrypted successfully encrypted"
+- name: "Restore Service | Pushover Message: Config files were not encrypted successfully encrypted"
   include_role:
     name: pushover
   vars:
     message: "The following config file(s) were NOT encrypted successfully: '{{ unencrypted_files_list | trim }}'. Restore Service will now be skipped."
   when: (unencrypted_files_list | trim != "")
 
-- name: Print error message when config file(s) were encrypted successfully
+- name: Restore Service | Print error message when config file(s) were encrypted successfully
   debug:
     msg:
       - "The following config file(s) were encrypted successfully: '{{ encrypted_files_list | trim }}'"
   when: (encrypted_files_list | trim != "")
 
-- name: Restore Service Upload Tasks
+- name: Restore Service | Restore Service Upload Tasks
   block:
 
-  - name: Upload encrypted config file(s)
+  - name: Restore Service | Upload encrypted config file(s)
     shell: "curl -F 'file=@{{ item }}' http://restore.cloudbox.works/save/{{ restore_service_username }}/{{ (item | basename | splitext)[0] }}"
     args:
       warn: no
@@ -84,32 +84,32 @@
       - "/tmp/restore_service/*"
     register: files_upload
 
-  - name: Set 'files_too_large_to_upload_list' variable
+  - name: Restore Service | Set 'files_too_large_to_upload_list' variable
     set_fact:
       files_too_large_to_upload_list: "{{ files_upload.results | selectattr('stdout', 'search', 'too large') | map(attribute='item') | map('regex_replace', '^/tmp/restore_service/|.enc$','') | list | sort(case_sensitive=False) | join(', ') }} "
 
-  - name: Print error mesage when config file(s) were too large to upload
+  - name: Restore Service | Print error mesage when config file(s) were too large to upload
     debug:
       msg: "The following encrypted config file(s) were too large to upload to the Cloudbox Restore Service: '{{ files_too_large_to_upload_list | trim }}'"
     when: (files_too_large_to_upload_list | trim != "")
 
-  - name: "Pushover Message: Config files were too large to upload to the Cloudbox Restore Service"
+  - name: "Restore Service | Pushover Message: Config files were too large to upload to the Cloudbox Restore Service"
     include_role:
       name: pushover
     vars:
       message: "The following encrypted config file(s) were too large to upload to the Cloudbox Restore Service: '{{ files_too_large_to_upload_list | trim }}'"
     when: (files_too_large_to_upload_list | trim != "")
 
-  - name: Set 'files_uploaded_list' variable
+  - name: Restore Service | Set 'files_uploaded_list' variable
     set_fact:
       files_uploaded_list: "{{ files_upload.results | selectattr('stdout', 'search', 'Successfull') | map(attribute='item') | map('regex_replace', '^/tmp/restore_service/|.enc$','') | list | sort(case_sensitive=False) | join(', ') }} "
 
-  - name: Print success message when config file(s) were successfully uploaded
+  - name: Restore Service | Print success message when config file(s) were successfully uploaded
     debug:
       msg: "The following encrypted config file(s) were successfully uploaded to the Cloudbox Restore Service: '{{ files_uploaded_list | trim }}'"
     when: (files_uploaded_list | trim != "")
 
-  - name: "Pushover Message: Config files were successfully encrypted and uploaded to the Cloudbox Restore Service"
+  - name: "Restore Service | Pushover Message: Config files were successfully encrypted and uploaded to the Cloudbox Restore Service"
     include_role:
       name: pushover
     vars:

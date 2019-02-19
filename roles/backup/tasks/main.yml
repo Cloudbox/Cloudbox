@@ -197,35 +197,36 @@
 
   # Create snapshot
 
-  - name: "Wait for 5 seconds before creating snapshot"
+  - name: "Snapshot | Wait for 5 seconds before creating snapshot"
     wait_for:
       timeout: 5
+    when: (use_snapshot)
 
-  - name: Create btrfs snapshot
+  - name: Snapshot | Create btrfs snapshot
     shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
     when: (use_snapshot) and (root_fstype == 'btrfs')
 
   # Start Plexdrive and containers when snapshot is enabled
 
-  - name: Start plexdrive and containers
+  - name: Snapshot | Start plexdrive and containers
     block:
 
-    - name: "Start plexdrive service"
+    - name: "Snapshot | Start plexdrive service"
       systemd:
         name: plexdrive
         state: started
       when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
 
-    - name: "Wait for 5 seconds before starting containers"
+    - name: "Snapshot | Wait for 5 seconds before starting containers"
       wait_for:
         timeout: 5
 
-    - name: "Start all previously running Docker containers"
+    - name: "Snapshot | Start all previously running Docker containers"
       shell: 'docker start {{cloudbox_managed_containers.stdout}}'
       ignore_errors: yes
       when: (cloudbox_managed_containers.stdout | trim != '')
 
-    - name: "Pushover Message: Started Docker containers"
+    - name: "Snapshot | Pushover Message: Started Docker containers"
       include_role:
         name: pushover
       vars:
@@ -463,7 +464,7 @@
       path: "{{playbook_dir}}/backup.lock"
       state: absent
 
-  - name: delete btrfs snapshot
+  - name: Snapshot | Delete btrfs snapshot
     command: "btrfs subvolume delete /btrfs/snapshots/root"
     when: (use_snapshot) and (root_fstype == 'btrfs')
 
