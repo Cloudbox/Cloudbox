@@ -19,13 +19,11 @@
     restore_service_username: "{{ restore_service.user | hash('sha1') }}"
     restore_service_password: "{{ restore_service.pass }}"
 
+- name: Cleanup '/tmp/restore_service' path
+  file: "path='/tmp/restore_service' state=absent"
+
 - name: Create '/tmp/restore_service' path
   file: "path='/tmp/restore_service' state=directory mode=0775 owner={{user}} group={{user}}"
-
-- name: Cleanup '/tmp/restore_service' path
-  shell: rm -rf /tmp/restore_service/*
-  args:
-    warn: no
 
 - name: Encrypt config file(s)
   shell: "openssl enc -aes-256-cbc -salt -md md5 -in {{ item }} -out /tmp/restore_service/{{ item | basename }}.enc -k '{{ restore_service_password }}'"
