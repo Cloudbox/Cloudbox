@@ -2,4 +2,4 @@
 After={{ 'mergerfs' if (mounts.unionfs|lower) == 'mergerfs' else 'unionfs' }}.service
 
 [Service]
-ExecStartPre=/bin/sleep 30
+ExecStartPre=/bin/sleep 120
