@@ -10,6 +10,10 @@
 ---
 # /mnt/remote
 
+- name: "Force unmount '/mnt/remote'"
+  shell: "/bin/umount -f '/mnt/remote' 2>/dev/null || :"
+  ignore_errors: yes
+
 - name: Check if '/mnt/remote' exists
   stat:
     path: "/mnt/remote"
@@ -18,10 +22,6 @@
 
 - name: Tasks for '/mnt/remote' path
   block:
-
-  - name: "Force unmount '/mnt/remote'"
-    shell: "/bin/umount -f '/mnt/remote' 2>/dev/null || :"
-    ignore_errors: yes
 
   - name: "Remove empty directories in '/mnt/remote'"
     shell: "find '/mnt/remote' -type d -empty -delete"
