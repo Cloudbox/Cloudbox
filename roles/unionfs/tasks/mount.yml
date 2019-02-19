@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Force unmount '/mnt/unionfs'"
+  shell: "/bin/umount -f '/mnt/unionfs' 2>/dev/null || :"
+  ignore_errors: yes
+
 - name: Check if '/mnt/unionfs' exists
   stat:
     path: "/mnt/unionfs"
@@ -16,10 +20,6 @@
 
 - name: Tasks for '/mnt/unionfs' path
   block:
-
-  - name: "Force unmount '/mnt/unionfs'"
-    shell: "/bin/umount -f '/mnt/unionfs' 2>/dev/null || :"
-    ignore_errors: yes
 
   - name: "Remove empty directories in '/mnt/unionfs'"
     shell: "find '/mnt/unionfs' -type d -empty -delete"
