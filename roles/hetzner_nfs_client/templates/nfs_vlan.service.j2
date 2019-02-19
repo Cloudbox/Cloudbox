@@ -6,7 +6,7 @@ Wants=network-online.target
 After=network.target network-online.target
 
 [Service]
-ExecStart=/opt/nfs/init_vlan.sh
+ExecStart=/opt/hetzner_nfs/init_vlan.sh
 
 [Install]
 WantedBy=multi-user.target
