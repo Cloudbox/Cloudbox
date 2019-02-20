@@ -8,13 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get IP Address
-  shell: "curl -s http://checkip.amazonaws.com | tail -n 1"
+- name: Get public IP Address
+  uri:
+    url: http://checkip.amazonaws.com
+    return_content: yes
   register: public_ip_lookup
 
 - name: Set 'public_ip'
   set_fact:
-    public_ip: "{{ public_ip_lookup.stdout }}"
+    public_ip: "{{ public_ip_lookup.content | replace('\n', '') }}"
 
 - name: Set 'record'
   set_fact:
