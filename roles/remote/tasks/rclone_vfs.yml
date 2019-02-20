@@ -42,6 +42,8 @@
 
 - name: Test rclone remote
   shell: "rclone lsd {{rclone.remote}}:"
+  become: yes
+  become_user: "{{user}}"
   register: rclone_test
   failed_when: (rclone_test.rc|int > 5)
 
