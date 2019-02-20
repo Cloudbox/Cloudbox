@@ -16,7 +16,7 @@
 
 - name: Set 'public_ip'
   set_fact:
-    public_ip: "{{ public_ip_lookup.content | replace('\n', '') }}"
+    public_ip: "{{ public_ip_lookup.content | trim }}"
 
 - name: Set 'record'
   set_fact:
