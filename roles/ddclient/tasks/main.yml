@@ -1,0 +1,66 @@
+#########################################################################
+# Title:         Cloudbox: DDClient Role                                #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  linuxserver/ddclient                                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Stop and remove any existing container
+  docker_container:
+    name: ddclient
+    state: absent
+
+- name: Create ddclient directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  with_items:
+    - /opt/ddclient
+
+- name:
+  set_fact:
+    subdomains:
+      - plex
+      - plexpy
+      - "{{ ombi.subdomain|default('ombi',true) }}"
+      - portainer
+      - organizr
+      - nzbget
+      - rutorrent
+      - jackett
+      - nzbhydra2
+      - sonarr
+      - radarr
+      - lidarr
+
+- name: Import 'ddclient.conf'
+  template:
+    src: "ddclient.conf.js2"
+    dest: "/opt/ddclient/ddclient.conf"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0775
+    force: no
+  when: cloudflare_enabled
+
+- name: Create and start container
+  docker_container:
+    name: ddclient
+    image: "linuxserver/ddclient:latest"
+    pull: yes
+    env:
+      PUID: "{{uid}}"
+      PGID: "{{gid}}"
+    volumes:
+      - "/opt/ddclient:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - ddclient
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
