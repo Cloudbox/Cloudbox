@@ -100,7 +100,7 @@
       VIRTUAL_PORT: 7878
       LETSENCRYPT_HOST: "radarr4k.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
-    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) + old_nzbget_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
