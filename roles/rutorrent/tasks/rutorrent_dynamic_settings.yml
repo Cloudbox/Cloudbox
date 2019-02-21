@@ -9,14 +9,21 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get IP Address
-  ipinfoio_facts:
+- name: Get public IP Address
+  uri:
+    url: http://checkip.amazonaws.com
+    return_content: yes
+  register: public_ip_lookup
+
+- name: Set 'public_ip'
+  set_fact:
+    public_ip: "{{ public_ip_lookup.content | trim }}"
 
 - name: Set 'network.local_address.set'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^network\.local_address\.set\s*=.*'
-    line: 'network.local_address.set = {{ip}}'
+    line: 'network.local_address.set = {{ public_ip }}'
     state: present
 
 - name: Add comment for 'network.local_address.set'
