@@ -56,19 +56,8 @@
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
   with_items:
     - /opt/nzbget
-
-- name: Create new downloads directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
     - "{{downloads.nzbs}}"
     - "{{downloads.nzbs}}/nzbget"
-  when: (nzbs_downloads_path is defined)|default(false)
-
-- name: Create old downloads directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - "{{nzbget.downloads}}"
-  when: (old_nzbget_downloads_path is defined)|default(false)
 
 - name: Check nzbget.conf exists
   stat:
@@ -102,7 +91,7 @@
       LETSENCRYPT_HOST: "nzbget.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       LC_ALL: "C"
-    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + old_nzbget_downloads_path|default([]) }}"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
