@@ -1,0 +1,78 @@
+#########################################################################
+# Title:         Hetzner NFS: Hetzner NFS Server Task                   #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create nfs server directories
+  file: 'path={{item}} state=directory mode=0775 owner={{user}} group={{user}}'
+  with_items:
+    - /opt/hetzner_nfs
+
+- name: Import 'hosts.deny' file
+  template:
+    src: server/hosts.deny.j2
+    dest: /etc/hosts.deny
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0644
+    force: yes
+
+- name: Install nfs server
+  apt: 'name={{item}} state=present'
+  with_items:
+    - rpcbind
+    - nfs-kernel-server
+
+- name: Import exports file
+  template:
+    src: server/exports.j2
+    dest: /etc/exports
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0644
+    force: yes
+
+- name: Reload exports
+  shell: 'exportfs -ra'
+
+- name: Import 'init_vlan.sh' file
+  template:
+    src: server/init_vlan.sh.j2
+    dest: /opt/hetzner_nfs/init_vlan.sh
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0775
+    force: yes
+
+- name: Check 'nfs_vlan.service' exists
+  stat:
+    path: '/etc/systemd/system/nfs_vlan.service'
+  register: nfs_vlan_service
+
+- name: Import 'nfs_vlan.service' file
+  template:
+    src: server/nfs_vlan.service.j2
+    dest: /etc/systemd/system/nfs_vlan.service
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0775
+    force: yes
+  when: not nfs_vlan_service.stat.exists
+
+- name: Start 'nfs_vlan.service'
+  systemd:
+    state: started
+    name: nfs_vlan
+    daemon_reload: yes
+    enabled: yes
+
+- name: "Add nfs vlan interface to vnstat"
+  shell: "vnstat -i {{ansible_default_ipv4.interface}}.{{hetzner_nfs.vlan_id}} -u"
+  become: yes
+  become_user: "vnstat"
+  ignore_errors: yes

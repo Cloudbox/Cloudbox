@@ -1,0 +1,112 @@
+#########################################################################
+# Title:         Hetzner NFS: Hetzner NFS Mount Task                    #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create nfs server directories
+  file: 'path={{item}} state=directory mode=0775 owner={{user}} group={{user}}'
+  with_items:
+    - /opt/hetzner_nfs
+    - /mnt/feeder
+
+- name: Import 'hosts.deny' file
+  template:
+    src: client/hosts.deny.j2
+    dest: /etc/hosts.deny
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0644
+    force: yes
+
+- name: Import 'hosts.allow' file
+  template:
+    src: client/hosts.allow.j2
+    dest: /etc/hosts.allow
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0644
+    force: yes
+
+- name: Install nfs requirements
+  apt: 'name={{item}} state=present'
+  with_items:
+    - rpcbind
+    - nfs-common
+
+- name: Import 'init_vlan.sh' file
+  template:
+    src: client/init_vlan.sh.j2
+    dest: /opt/hetzner_nfs/init_vlan.sh
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0775
+    force: yes
+
+- name: Check 'nfs_vlan.service' exists
+  stat:
+    path: '/etc/systemd/system/nfs_vlan.service'
+  register: nfs_vlan_service
+
+- name: Import 'nfs_vlan.service' file
+  template:
+    src: client/nfs_vlan.service.j2
+    dest: /etc/systemd/system/nfs_vlan.service
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0775
+    force: yes
+  when: not nfs_vlan_service.stat.exists
+
+- name: Start 'nfs_vlan.service'
+  systemd:
+    state: started
+    name: nfs_vlan
+    daemon_reload: yes
+    enabled: yes
+
+- name: "Add nfs vlan interface to vnstat"
+  shell: "vnstat -i {{ansible_default_ipv4.interface}}.{{hetzner_nfs.vlan_id}} -u"
+  become: yes
+  become_user: "vnstat"
+  ignore_errors: yes
+
+ # unionfs edits
+
+- name: Add 'After=init_vlan.service' to 'unionfs.service'
+  lineinfile:
+    path: /etc/systemd/system/unionfs.service
+    regexp: '(^After\=network-online\.target).*'
+    line: '\1 init_vlan.service'
+    state: present
+    backrefs: yes
+  when: unionfs_service.stat.exists
+
+- name: Replace '/mnt/local' with '/mnt/feeder' in 'unionfs.service'
+  replace:
+    path: /etc/systemd/system/unionfs.service
+    regexp: "\\/mnt\\/local"
+    replace: '/mnt/feeder'
+  when: unionfs_service.stat.exists
+
+  # mergerfs edits
+
+- name: Add 'After=init_vlan.service' to 'mergerfs.service'
+  lineinfile:
+    path: /etc/systemd/system/mergerfs.service
+    regexp: '(^After\=network-online\.target).*'
+    line: '\1 init_vlan.service'
+    state: present
+    backrefs: yes
+  when: mergerfs_service.stat.exists
+
+- name: Replace '/mnt/local' with '/mnt/feeder' in 'mergerfs.service'
+  replace:
+    path: /etc/systemd/system/mergerfs.service
+    regexp: "\\/mnt\\/local"
+    replace: '/mnt/feeder'
+  when: mergerfs_service.stat.exists

@@ -1,0 +1,47 @@
+#########################################################################
+# Title:         Cloudbox: Hetzner NFS Role                             #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Server Tasks
+  block:
+
+  - name: "Hetzner NFS Server Tasks"
+    include_tasks: "hetzner_nfs_server.yml"
+    when: ('hetzner_nfs_server' in ansible_run_tags)
+
+  - name: "Hetzner NFS Server Uninstall Tasks"
+    include_tasks: "hetzner_nfs_server_uninstall.yml"
+    when: ('hetzner_nfs_server_uninstall' in ansible_run_tags)
+
+  when: ('hetzner_nfs_server' in ansible_run_tags) or ('hetzner_nfs_server_uninstall' in ansible_run_tags)
+
+
+- name: Client Tasks
+  block:
+
+  - name: Fail when invalid hetzner_nfs.mount_client is specified
+    fail: msg="You must use a value larger than 2 and lower than 251 for the Hetzner NFS mount_client advanced setting."
+    when: hetzner_nfs.mount_client < 3 or hetzner_nfs.mount_client > 250
+
+  - name: "Services Stop Tasks"
+    include_tasks: "services_stop.yml"
+
+  - name: "Hetzner NFS Mount Tasks"
+    include_tasks: "hetzner_nfs_mount.yml"
+    when: ('hetzner_nfs_client_mount' in ansible_run_tags)
+
+  - name: "Hetzner NFS UNmount Tasks"
+    include_tasks: "hetzner_nfs_unmount.yml"
+    when: ('hetzner_nfs_client_unmount' in ansible_run_tags)
+
+  - name: "Services Start Tasks"
+    include_tasks: "services_start.yml"
+
+  when: ('hetzner_nfs_client_mount' in ansible_run_tags) or ('hetzner_nfs_client_unmount' in ansible_run_tags)
+

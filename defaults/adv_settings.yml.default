@@ -28,3 +28,6 @@ sickbeard_mp4_automator: no
 gpu:
   intel: yes
   nvidia: no
+hetzner_nfs:
+  vlan_id: 4000
+  mount_client: 3
