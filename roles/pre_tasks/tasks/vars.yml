@@ -87,41 +87,6 @@
         (downloads.torrents | trim == '')
       )
 
-- name: "Set 'old_nzbget_downloads_path' variable"
-  set_fact:
-    old_nzbget_downloads_path:
-      - "{{nzbget.downloads}}:/downloads/nzbget"
-  when: not (
-        (nzbget is undefined)
-        or
-        (nzbget is none)
-        or
-        (nzbget | trim == '')
-        or
-        (nzbget.downloads is undefined)
-        or
-        (nzbget.downloads is none)
-        or
-        (nzbget.downloads | trim == '')
-      )
-
-- name: "Set 'old_rutorrent_downloads_path' variable"
-  set_fact:
-    old_rutorrent_downloads_path:
-      - "{{rutorrent.downloads}}:/downloads/rutorrent"
-  when: not (
-        (rutorrent is undefined)
-        or
-        (rutorrent is none)
-        or
-        (rutorrent | trim == '')
-        or
-        (rutorrent.downloads is undefined)
-        or
-        (rutorrent.downloads is none)
-        or
-        (rutorrent.downloads | trim == '')
-      )
 
 - name: Set `suitarr_default_version` variable
   set_fact:
