@@ -1,0 +1,35 @@
+#########################################################################
+# Title:         Sanity Check - Tag Checks                              #
+# Author(s):     desimaniac, EnorMOZ                                    #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set 'continuous_integration' variable"
+  set_fact:
+    continuous_integration: "{{ continuous_integration | default(false,true) }}"
+
+# Source: http://blog.leifmadsen.com/blog/2017/01/04/finding-available-ansible-tags-in-playbooks-and-roles/
+- name: "Get all available tags"
+  shell: |
+    ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" \
+      | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
+  register: t
+  when:
+   - not continuous_integration
+   - "'cloudbox_mod' not in playbook_dir"
+   - "'community' not in playbook_dir"
+
+- name: "Ensure valid tag(s) were provided."
+  assert:
+    that:
+      - '"{{ item }}" in t.stdout_lines'
+    msg: "You must supply valid tag(s) via '--tags TAG' (get a list of valid tags by running 'ansible-playbook cloudbox.yml --list-tags')"
+  with_items: "{{ ansible_run_tags }}"
+  when:
+   - not continuous_integration
+   - "'cloudbox_' not in playbook_dir"
+   - "'community' not in playbook_dir"

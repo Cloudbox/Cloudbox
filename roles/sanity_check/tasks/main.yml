@@ -8,69 +8,14 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Cloudbox supports Ubuntu 16.04 or higher"
-  debug:
-    msg:
-      - "Cloudbox was designed for use on Ubuntu servers running versions 16.04+. With basic support for non-Ubuntu Debian systems."
-      - "Running Cloudbox on unsupported systems may cause unpredictable results."
-  when: (ansible_distribution != 'Ubuntu') or ((ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('16.04', '<')))
+- name: "Sanity Check: System Checks"
+  include_tasks: "sanity_check_system.yml"
   tags: always
 
-- name: "Display System Info"
-  debug:
-    msg: "System is running {{ ansible_lsb.description if ansible_lsb is defined else (ansible_distribution + ' ' + ansible_distribution_version) }}."
+- name: "Sanity Check: Tag Checks"
+  include_tasks: "sanity_check_tags.yml"
   tags: always
 
-- name: "Set 'continuous_integration' variable"
-  set_fact:
-    continuous_integration: "{{ continuous_integration | default(false,true) }}"
-  tags: always
-
-# Source: http://blog.leifmadsen.com/blog/2017/01/04/finding-available-ansible-tags-in-playbooks-and-roles/
-- name: "Get all available tags"
-  shell: ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
-  register: t
-  when:
-   - not continuous_integration
-   - "'cloudbox_' not in playbook_dir"
-   - "'community' not in playbook_dir"
-  tags: always
-
-- name: "Ensure valid tag(s) were provided."
-  assert:
-    that:
-      - '"{{item}}" in t.stdout_lines'
-    msg: "You must supply valid tag(s) via '--tags TAG' (get a list of valid tags by running 'ansible-playbook cloudbox.yml --list-tags')"
-  with_items: "{{ansible_run_tags}}"
-  when:
-   - not continuous_integration
-   - "'cloudbox_' not in playbook_dir"
-   - "'community' not in playbook_dir"
-  tags: always
-
-- name: "Check if 'backup.lock' is present"
-  stat:
-    path: "{{playbook_dir}}/backup.lock"
-  register: backup_lock
-  tags: always
-
-# Age in hours
-- name: "Get age of 'backup.lock' file"
-  set_fact:
-    backup_lock_age: "{{ ( (((ansible_date_time.epoch|int) - (backup_lock.stat.ctime|int)) / (60*60) ) | int )  }}"
-  when: backup_lock.stat.exists
-  tags: always
-
-# Delete if older than 2 hours.
-- name: "Delete stale 'backup.lock'"
-  file:
-    path: "{{playbook_dir}}/backup.lock"
-    state: absent
-  when: (backup_lock.stat.exists) and (backup_lock_age|int >= 2)
-  tags: always
-
-- name: "Fail when 'backup.lock' exists."
-  fail:
-    msg: "A Backup task is currently in progress. Please wait for it to complete."
-  when: (backup_lock.stat.exists) and (backup_lock_age|int < 1)
+- name: "Sanity Check: Backup Checks"
+  include_tasks: "sanity_check_backup.yml"
   tags: always

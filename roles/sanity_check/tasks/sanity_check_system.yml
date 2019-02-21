@@ -1,0 +1,20 @@
+#########################################################################
+# Title:         Sanity Check - System Tasks                            #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Cloudbox supports Ubuntu 16.04 or higher"
+  debug:
+    msg:
+      - "Cloudbox was designed for use on Ubuntu servers running versions 16.04+. With basic support for other Debian systems."
+      - "Running Cloudbox on unsupported systems may cause unpredictable results."
+  when: (ansible_distribution != 'Ubuntu') or ((ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('16.04', '<')))
+
+- name: "Display System Info"
+  debug:
+    msg: "System is running {{ ansible_lsb.description if ansible_lsb is defined else (ansible_distribution + ' ' + ansible_distribution_version) }}."
