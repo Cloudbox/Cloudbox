@@ -10,18 +10,8 @@
 ---
 - name: "Set 'run_nzbs'"
   set_fact:
-    run_nzbs: "{{ true if (
-        (nzbs_downloads_path is defined|default(false,true))
-        or
-        (old_nzbget_downloads_path is defined|default(false,true))
-      )
-      else false }}"
+    run_nzbs: "{{ true if (nzbs_downloads_path is defined|default(false,true)) else false }}"
 
 - name: "Set 'run_torrents'"
   set_fact:
-    run_torrents: "{{ true if (
-        (torrents_downloads_path is defined|default(false,true))
-        or
-        (old_rutorrent_downloads_path is defined|default(false,true))
-      )
-      else false }}"
+    run_torrents: "{{ true if (torrents_downloads_path is defined|default(false,true)) else false }}"
