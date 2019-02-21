@@ -9,11 +9,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Sanity Check
-  fail:
-    msg: "The new 'nzbs download path' setting is required."
-  when: (nzbs_downloads_path is not defined)|default(true)
-
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
