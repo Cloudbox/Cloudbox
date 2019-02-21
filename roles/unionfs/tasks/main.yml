@@ -31,11 +31,11 @@
 
 - name: MergerFS Tasks
   import_tasks: "mergerfs.yml"
-  when: (mounts.unionfs|lower == "mergerfs")
+  when: (mounts.unionfs | lower == "mergerfs")
 
 - name: UnionFS Tasks
   import_tasks: "unionfs.yml"
-  when: (mounts.unionfs|lower == "unionfs")
+  when: (mounts.unionfs | lower == "unionfs")
 
 - name: Docker Tasks
   import_tasks: "docker.yml"

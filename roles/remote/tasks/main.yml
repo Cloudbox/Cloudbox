@@ -52,16 +52,16 @@
     import_tasks: "plexdrive5.yml"
     when: ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int >= 8)
 
-  when: (mounts.remote == 'plexdrive')
+  when: (mounts.remote | lower == 'plexdrive')
 
 - name: Plexdrive4 Tasks
   import_tasks: "plexdrive4.yml"
-  when: (mounts.remote == 'plexdrive4')
+  when: (mounts.remote | lower == 'plexdrive4')
 
 - name: Plexdrive5 Tasks
   import_tasks: "plexdrive5.yml"
-  when: (mounts.remote == 'plexdrive5')
+  when: (mounts.remote | lower == 'plexdrive5')
 
 - name: Rclone VFS Tasks
   import_tasks: "rclone_vfs.yml"
-  when: (mounts.remote == 'rclone_vfs')
+  when: (mounts.remote | lower == 'rclone_vfs')
