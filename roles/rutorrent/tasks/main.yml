@@ -20,57 +20,19 @@
     name: rutorrent
     state: absent
 
-- name: Create rutorrent directory
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+- name: Create rutorrent directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/rutorrent
-
-- name: Create new downloads directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - "{{downloads.torrents}}"
-    - "{{downloads.torrents}}/rutorrent"
-    - "{{downloads.torrents}}/rutorrent/completed"
-    - "{{downloads.torrents}}/rutorrent/incoming"
-    - "{{downloads.torrents}}/rutorrent/watched"
-  when: (torrents_downloads_path is defined)|default(false)
-
-- name: Create old downloads directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - "{{rutorrent.downloads}}"
-  when: (old_rutorrent_downloads_path is defined)|default(false)
+    - "{{ downloads.torrents }}"
+    - "{{ downloads.torrents }}/rutorrent"
+    - "{{ downloads.torrents }}/rutorrent/completed"
+    - "{{ downloads.torrents }}/rutorrent/watched"
 
 - name: Check if rtorrent.rc exists
   stat:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
   register: rtorrent_rc
-
-- name: Check if rtorrent.rc requires upgrading
-  set_fact:
-    standard_settings_needs_upgrading: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('peer_exchange') }}"
-    subdir_settings_exist: "{{ (lookup('file', '/opt/rutorrent/rtorrent/rtorrent.rc')) is search('/downloads/torrents/rutorrent/completed/') }}"
-  when: rtorrent_rc.stat.exists
-
-- name: Backup previous rtorrent.rc file
-  shell: mv '/opt/rutorrent/rtorrent/rtorrent.rc' '/opt/rutorrent/rtorrent/rtorrent.rc.bak'
-  ignore_errors: yes
-  when: (rtorrent_rc.stat.exists) and (standard_settings_needs_upgrading|default(false,true))
-
-- name: Check if plugins.ini exists
-  stat:
-    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
-  register: plugins_ini
-
-- name: Replace plugins.ini with customized one
-  copy:
-    src: plugins.ini
-    dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
-    owner: "{{user}}"
-    group: "{{user}}"
-    mode: 0775
-    force: yes
-  when: plugins_ini.stat.exists
 
 - name: Set default_volumes variable
   set_fact:
@@ -90,13 +52,13 @@
       - "51413:51413"
       - "6881:6881/udp"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
-      VIRTUAL_HOST: "rutorrent.{{domain}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "rutorrent.{{ domain }}"
       VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "rutorrent.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
-    volumes: "{{ default_volumes + torrents_downloads_path|default([]) + old_rutorrent_downloads_path|default([]) }}"
+      LETSENCRYPT_HOST: "rutorrent.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
+    volumes: "{{ default_volumes + torrents_downloads_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
@@ -108,29 +70,7 @@
     stop_timeout: 300
     state: started
 
-# Done for new setups (or setups requiring updating for updated rtorrent version).
-- name: Standard Settings Tweaks
-  include_tasks: "rutorrent_standard_settings.yml"
-  when: (not continuous_integration)
-        and
-        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
-
-# Done for new setups (or setups requiring updating for updated rtorrent version).
-- name: Subdir Settings Tweaks
-  include_tasks: "rutorrent_subdir_settings.yml"
-  when: (not continuous_integration)
-        and
-        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading and subdirs_settings_exist))
-
-# Settings for new and old installs.
-- name: Dynamic Settings Tweaks
-  include_tasks: "rutorrent_dynamic_settings.yml"
+- name: ruTorrent Settings Tasks
+  include_tasks: "rutorrent_settings.yml"
   when: (not continuous_integration)
 
-- name: Start container to apply changes
-  docker_container:
-    name: rutorrent
-    state: started
-  when: (not continuous_integration)
-        and
-        ((not rtorrent_rc.stat.exists) or (standard_settings_needs_upgrading))
