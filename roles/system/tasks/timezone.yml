@@ -11,19 +11,29 @@
 - name: Fetch stats on '/etc/localtime'
   stat:
     path: "/etc/localtime"
-  register: etc_localtime
+  register: localtime
 
-- name: Fix time zone when linked to '/usr/share/zoneinfo/'
+- name: Fix time zone link when target is a folder
   block:
 
-  - name: Fetch time zone
-    uri:
-      url: http://ip-api.com/line?fields=timezone
-      return_content: yes
-    register: timezone_response
+  - name: Fetch stats on link target
+    stat:
+      path: "{{ localtime.stat.lnk_target }}"
+    register: target
 
-  - name: Set correct time zone when linked to folder
-    timezone:
-      name: "{{ timezone_response.content | trim }}"
+  - name: Set time zone
+    block:
 
-  when: (etc_localtime.stat.islnk is defined) and (etc_localtime.stat.islnk) and (etc_localtime.stat.lnk_target == '/usr/share/zoneinfo/' )
+    - name: Fetch time zone
+      uri:
+        url: http://ip-api.com/line?fields=timezone
+        return_content: yes
+      register: timezone_response
+
+    - name: Set time zone
+      timezone:
+        name: "{{ timezone_response.content | trim }}"
+
+    when: (target.stat.isdir is defined) and (target.stat.isdir)
+
+  when: (localtime.stat.islnk is defined) and (localtime.stat.islnk)
