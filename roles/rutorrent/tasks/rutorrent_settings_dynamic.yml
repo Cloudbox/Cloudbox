@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: ruTorrent Role -  Settings Tasks             #
+# Title:         ruTorrent -  Dynamic Settings Tasks                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/rutorrent-autodl                               #
@@ -9,6 +9,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+## rtorrent.rc
+
 - name: Get public IP Address
   uri:
     url: http://checkip.amazonaws.com

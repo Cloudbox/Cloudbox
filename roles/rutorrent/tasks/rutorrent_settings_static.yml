@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: ruTorrent Role -  Settings Tasks             #
+# Title:         ruTorrent -  Static Settings Tasks                     #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  horjulf/rutorrent-autodl                               #
@@ -9,34 +9,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Wait for rtorrent.rc to be created
-  wait_for:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    state: present
-
-- name: Wait for php.ini to be created
-  wait_for:
-    path: "/opt/rutorrent/php/php.ini"
-    state: present
-
-- name: Wait for nginx.conf to be created
-  wait_for:
-    path: "/opt/rutorrent/nginx/nginx.conf"
-    state: present
-
-- name: Wait for plugins.ini to be created
-  wait_for:
-    path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
-    state: present
-
-- name: "Wait for 10 seconds before stopping rutorrent container"
-  wait_for:
-    timeout: 10
-
-- name: Stop container to customize rtorrent.rc
-  docker_container:
-    name: rutorrent
-    state: stopped
+## rtorrent.rc
 
 # Disable DHT - i.e. disables trackerless torrents.
 - name: Disable DHT
@@ -55,7 +28,7 @@
     state: present
 
 # Minimum number of peers to connect to per torrent
-- name: Reduce min_peers
+- name: Reduce 'min_peers'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.min_peers\.normal\.set\s*=.*'
@@ -63,7 +36,7 @@
     state: present
 
 # Maximum number of simultaneous upload slots per torrent.
-- name: Increase max_uploads
+- name: Increase 'max_uploads'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.max_uploads\.set\s*=.*'
@@ -71,7 +44,7 @@
     state: present
 
 # Maximum number of simultaneous downloads slots globally
-- name: Set max_downloads_global to 1024
+- name: Set 'max_downloads_global' to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.max_downloads\.global\.set\s*=.*'
@@ -79,7 +52,7 @@
     state: present
 
 # Maximum number of simultaneous downloads and uploads slots globally
-- name: Set max_uploads_global to 1024
+- name: Set 'max_uploads_global' to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.max_uploads\.global\.set\s*=.*'
@@ -87,7 +60,7 @@
     state: present
 
 # Global download rate in KiB
-- name: Set global download_rate to unlimited
+- name: Set 'global_download_rate' to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.global_down\.max_rate.\set_kb\s*=.*'
@@ -95,7 +68,7 @@
     state: present
 
 # Global upload rate in KiB
-- name: Set global upload_rate to unlimited
+- name: Set 'global_upload_rate' to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.global_up\.max_rate\.set_kb\s*=.*'
@@ -103,7 +76,7 @@
     state: present
 
 # Maximum number of open files rtorrent can keep open.
-- name: Set max_open_files to 1024
+- name: Set 'max_open_files' to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^network\.max_open_files\.set\s*=.*'
@@ -125,7 +98,7 @@
     state: present
 
 # Allocate disk space
-- name: Set file_allocate to no
+- name: Disable 'file_allocate'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^system\.file\.allocate\.set\s*=.*'
@@ -136,39 +109,52 @@
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^directory\.default\.set\s*=.*'
-    line: 'directory.default.set = /downloads/rutorrent'
+    line: 'directory.default.set = /downloads/torrents/rutorrent/completed'
     state: present
 
-- name: Set upload_max_filesize to 8M
+- name: Set watched directory
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^.*#.*schedule.*=.*watch_directory.*'
+    line: 'schedule = watch_directory,5,5,"load.start=/downloads/torrents/rutorrent/watched/*.torrent,d.delete_tied="'
+    state: present
+
+- name: Set 'upload_max_filesize' to 8M
   lineinfile:
     path: "/opt/rutorrent/php/php.ini"
     regexp: '^upload_max_filesize\s*=.*'
     line: 'upload_max_filesize = 8M'
     state: present
 
-- name: Copy across custom nginx.conf with htpasswd support
+## nginx.conf
+
+- name: Import custom 'nginx.conf' with htpasswd support
   copy:
     src: nginx.conf
     dest: /opt/rutorrent/nginx/nginx.conf
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
 
-- name: Create htpasswd
+## .htpasswd
+
+- name: Create '.htpasswd'
   htpasswd:
     path: /opt/rutorrent/nginx/.htpasswd
-    name: "{{user}}"
-    password: "{{passwd}}"
-    owner: "{{user}}"
-    group: "{{user}}"
+    name: "{{ user }}"
+    password: "{{ passwd }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
 
-- name: Copy across custom plugins.ini
+## plugins.ini
+
+- name: Import custon 'plugins.ini'
   copy:
     src: plugins.ini
     dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
