@@ -1,0 +1,27 @@
+#########################################################################
+# Title:         Hetzner NFS: Start Services Task                       #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Start 'unionfs.service'
+  systemd: state=started name=unionfs daemon_reload=yes enabled=yes
+  when: unionfs_service.stat.exists and unionfs_service_running
+
+- name: Start 'mergerfs.service'
+  systemd: state=started name=mergerfs daemon_reload=yes enabled=yes
+  when: mergerfs_service.stat.exists and mergerfs_service_running
+
+- name: Wait for 30 seconds before commencing
+  wait_for:
+    timeout: 30
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
+
+- name: "Re-start all previously running Docker containers"
+  shell: 'docker start {{docker_running_containers.stdout}}'
+  ignore_errors: yes
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
