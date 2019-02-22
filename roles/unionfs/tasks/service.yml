@@ -29,8 +29,8 @@
       line: "{{ item.line }}"
       state: present
     with_items:
-      - { regexp: '^User\s?=', line: 'User={{ user }}' }
-      - { regexp: '^Group\s?=', line: 'Group={{ user }}' }
+      - { regexp: '^User=.*', line: 'User={{ user }}' }
+      - { regexp: '^Group=.*', line: 'Group={{ user }}' }
 
   # if applicable
   - name: "Replace '/mnt/plexdrive' with '/mnt/remote' in '{{ outer_item }}'"
