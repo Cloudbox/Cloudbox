@@ -31,7 +31,18 @@
     with_items:
       - { regexp: '^User=.*', line: 'User={{ user }}' }
       - { regexp: '^Group=.*', line: 'Group={{ user }}' }
+    when: outer_item != "mergerfs.service"
 
+  - name: "Remove ownership in existing '{{ outer_item }}'"
+    lineinfile:
+      path: "/etc/systemd/system/{{ outer_item }}"
+      regexp: "{{ item.regexp }}"
+      state: absent
+    with_items:
+      - { regexp: '^User=.*' }
+      - { regexp: '^Group=.*' }
+    when: outer_item == "mergerfs.service"
+  
   # if applicable
   - name: "Replace '/mnt/plexdrive' with '/mnt/remote' in '{{ outer_item }}'"
     replace:
