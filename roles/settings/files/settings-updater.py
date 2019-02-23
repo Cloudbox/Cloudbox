@@ -97,9 +97,9 @@ def _inner_upgrade(settings1, settings2, key=None, overwrite=False):
                 merged[k] = v
                 sub_upgraded = True
                 if not key:
-                    log.info("Added %r config option: %s", str(k), str(v))
+                    log.info("Added %r setting: %s", str(k), str(v))
                 else:
-                    log.info("Added %r to config option %r: %s", str(k), str(key), str(v))
+                    log.info("Added %r to setting %r: %s", str(k), str(key), str(v))
                 continue
 
             # iterate children
@@ -115,7 +115,7 @@ def _inner_upgrade(settings1, settings2, key=None, overwrite=False):
             if v not in settings2:
                 merged.append(v)
                 sub_upgraded = True
-                log.info("Added to config option %r: %s", str(key), str(v))
+                log.info("Added to setting %r: %s", str(key), str(v))
                 continue
 
     return merged, sub_upgraded
