@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Kernel: Update Task                                    #
+# Title:         Kernel: Headers Task                                   #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,33 +8,38 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Update the linux kernel when required
+- name: Update the linux kernel headers if required
   block:
 
-  - name: Update kernel
+  - name: Update kernel headers
     apt:
-      name: linux-generic-hwe-16.04
+      name: linux-headers-generic
       update_cache: yes
       state: latest
-    register: r
+    register: s
+    ignore_errors: yes
+
+  - name: "Install linux-headers-{{ ansible_kernel }}"
+    shell: "apt-get install -qq $(apt-cache search -n linux-headers-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
+    register: t
+    ignore_errors: yes
 
   - name: Fix apt
     shell: apt-get --fix-broken --yes install
-    when: (r.changed)
+    when: (s.changed) or (t.changed)
+    ignore_errors: yes
 
   - name: Set 'reboot_is_necessary' variable
     set_fact:
       reboot_is_necessary: true
-    when: (r.changed)
+    when: (s.changed) or (t.changed)
 
-  - name: Kernel was updated
+  - name: Kernel headers were updated
     debug:
-      msg: "Kernel was updated."
-    when: (r.changed)
+      msg: "Kernel headers were updated."
+    when: (s.changed) or (t.changed)
 
-  - name: Kernel was not updated
+  - name: Kernel headers were not updated
     debug:
-      msg: "Kernel was not updated."
-    when: (not r.changed)
-
-  when: (ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('16.04', '==')) and (ansible_kernel is version('4.10', '<'))
+      msg: "Kernel headers were not updated."
+    when: not (s.changed or t.changed)

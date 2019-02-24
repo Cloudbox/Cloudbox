@@ -28,6 +28,9 @@
 - name: "Kernel: Update task"
   include_tasks: "update.yml"
 
+- name: "Kernel: Headers task"
+  include_tasks: "headers.yml"
+
 - name: "Kernel: Restart After Changes"
   include_tasks: "restart.yml"
   when: (reboot_is_necessary)
