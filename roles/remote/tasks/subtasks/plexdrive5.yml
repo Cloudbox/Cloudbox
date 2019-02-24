@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Remote: Plexdrive5 Task                                #
+# Title:         Remote: Plexdrive 5 Task                               #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # --                                                                    #
@@ -8,12 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create plexdrive5 directories
+- name: Plexdrive 5 | Create directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /opt/plexdrive5
 
-- name: Install plexdrive5
+- name: Plexdrive 5 | Install Plexdrive 5
   get_url:
     url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
     dest: /opt/plexdrive5/plexdrive
@@ -23,20 +23,20 @@
     force: yes
     validate_certs: no
 
-- name: Import 'plexdrive5.service'
+- name: Plexdrive 5 | Import 'plexdrive5.service'
   template:
     src: plexdrive5.service.js2
     dest: /etc/systemd/system/plexdrive5.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
-- name: Systemd daemon-reload 'plexdrive5.service'
+- name: Plexdrive 5 | Systemd daemon-reload 'plexdrive5.service'
   systemd: name=plexdrive5 state=stopped enabled=no daemon_reload=yes
 
-- name: Check if config exists
+- name: Plexdrive 5 | Check if config exists
   stat:
     path: "/opt/plexdrive5/config.json"
   register: plexdrive5_config
 
-- name: Start 'plexdrive5.service' if config exists
+- name: Plexdrive 5 | Start 'plexdrive5.service' if config exists
   systemd: name=plexdrive5 state=started enabled=yes
   when: (plexdrive5_config.stat.exists)

@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Remote: Fuse Tasks                                     #
+# Title:         Remote: Basic Tasks                                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,10 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install fuse
-  apt:
-    name: fuse
-    state: present
-
-- name: Import fuse.conf
-  copy: src=fuse.conf dest=/etc/fuse.conf force=yes mode=0775
+- name: Basic | Create remote directories
+  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  with_items:
+    - /mnt/remote
