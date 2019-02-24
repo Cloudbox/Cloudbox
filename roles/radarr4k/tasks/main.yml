@@ -91,7 +91,6 @@
       - "127.0.0.1:7879:7878"
     env:
       VERSION: "{{suitarr.version}}"
-      FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"

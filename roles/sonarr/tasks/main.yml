@@ -101,7 +101,6 @@
       - "127.0.0.1:8989:8989"
     env:
       VERSION: "{{sonarr.version}}"
-      FALLBACK: "yes"
       BACKUP: "no"
       PUID: "{{uid}}"
       PGID: "{{gid}}"
