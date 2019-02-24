@@ -65,7 +65,7 @@
   failed_when: validate_script.rc > 1
   when: new_local_script.stat.exists
 
-- name: Import script copy when '/usr/local/bin/ubuntu-mainline-kernel.sh' is missing or invalid
+- name: Import script if validation failed
   copy:
     src: "ubuntu-mainline-kernel.sh"
     dest: "/usr/local/bin/ubuntu-mainline-kernel.sh"
