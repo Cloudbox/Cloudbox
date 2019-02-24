@@ -13,33 +13,27 @@
 
   - name: Update kernel headers
     apt:
-      name: linux-headers-generic
-      update_cache: yes
+      name: linux-generic
       state: latest
     register: s
     ignore_errors: yes
 
-  - name: "Install linux-headers-{{ ansible_kernel }}"
-    shell: "apt-get install -qq $(apt-cache search -n linux-headers-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
-    register: t
-    ignore_errors: yes
-
   - name: Fix apt
     shell: apt-get --fix-broken --yes install
-    when: (s.changed) or (t.changed)
+    when: (s.changed)
     ignore_errors: yes
 
   - name: Set 'reboot_is_necessary' variable
     set_fact:
       reboot_is_necessary: true
-    when: (s.changed) or (t.changed)
+    when: (s.changed)
 
   - name: Kernel headers were updated
     debug:
       msg: "Kernel headers were updated."
-    when: (s.changed) or (t.changed)
+    when: (s.changed)
 
   - name: Kernel headers were not updated
     debug:
       msg: "Kernel headers were not updated."
-    when: not (s.changed or t.changed)
+    when: not (s.changed)
