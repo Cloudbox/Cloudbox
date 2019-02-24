@@ -9,14 +9,19 @@
 #########################################################################
 ---
 - name: Install required packages
-  apt: "name={{item}} state=latest"
+  apt: "name={{ item }} state=latest"
   with_items:
     - cpufrequtils
     - linux-tools-common
     - linux-tools-generic
+    - linux-headers-generic
 
 - name: "Install linux-tools-{{ ansible_kernel }}"
   shell: "apt-get install -qq $(apt-cache search -n linux-tools-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
+  ignore_errors: yes
+
+- name: "Install linux-headers-{{ ansible_kernel }}"
+  shell: "apt-get install -qq $(apt-cache search -n linux-headers-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
   ignore_errors: yes
 
 - name: Check /etc/default/cpufrequtils exists
@@ -28,7 +33,7 @@
   file:
     path: /etc/default/cpufrequtils
     state: touch
-  when: cpufrequtils_file.stat.exists == False
+  when: not cpufrequtils_file.stat.exists
 
 - name: Set CPU frequency scaling governor to performance
   lineinfile:
