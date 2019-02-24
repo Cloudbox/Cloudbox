@@ -11,10 +11,10 @@
 # Existing Setup
 
 - name: Legacy Tasks
-  import_tasks: "legacy.yml"
+  import_tasks: "subtasks/legacy.yml"
 
 - name: Service Tasks
-  include_tasks: "service.yml"
+  include_tasks: "subtasks/service.yml"
   loop_control:
     loop_var: outer_item
   loop:
@@ -22,26 +22,26 @@
     - "mergerfs.service"
 
 - name: Mount Tasks
-  import_tasks: "mount.yml"
+  import_tasks: "subtasks/mount.yml"
 
 # New Setup
 
 - name: Basic Tasks
-  import_tasks: "basic.yml"
+  import_tasks: "subtasks/basic.yml"
 
 - name: MergerFS Tasks
-  import_tasks: "mergerfs.yml"
+  import_tasks: "subtasks/mergerfs.yml"
   when: (mounts.unionfs | lower == "mergerfs")
 
 - name: UnionFS Tasks
-  import_tasks: "unionfs.yml"
+  import_tasks: "subtasks/unionfs.yml"
   when: (mounts.unionfs | lower == "unionfs")
 
 - name: Docker Tasks
-  import_tasks: "docker.yml"
+  import_tasks: "subtasks/docker.yml"
 
 # Start Containers
 
 - name: Container Tasks
-  import_tasks: "container.yml"
+  import_tasks: "subtasks/container.yml"
   when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)
