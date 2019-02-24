@@ -33,7 +33,8 @@
 
 - name: "Kernel: Restart After Changes"
   include_tasks: "restart.yml"
-  when: (reboot_is_necessary)
+  when: (reboot_is_necessary) and
+    (not continuous_integration)
 
 - name: "Kernel: Checks task"
   include_tasks: "checks.yml"
