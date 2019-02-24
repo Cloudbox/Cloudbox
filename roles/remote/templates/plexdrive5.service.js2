@@ -1,7 +1,7 @@
 # /etc/systemd/system/plexdrive5.service
 
 [Unit]
-Description=Plexdrive5
+Description=Plexdrive 5
 After=network-online.target
 
 [Service]

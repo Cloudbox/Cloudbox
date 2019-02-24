@@ -8,59 +8,59 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Reset permissions for 'rclone.conf'
+- name: Rclone VFS | Reset permissions for 'rclone.conf'
   file: "path={{item}} state=file mode=0775 owner={{user}} group={{user}}"
   with_items:
     - "/home/{{user}}/.config/rclone/rclone.conf"
 
-- name: Import 'rclone_vfs.service'
+- name: Rclone VFS | Import 'rclone_vfs.service'
   template:
     src: rclone_vfs.service.js2
     dest: /etc/systemd/system/rclone_vfs.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
-- name: Systemd daemon-reload 'rclone_vfs.service'
+- name: Rclone VFS | Systemd daemon-reload 'rclone_vfs.service'
   systemd: name=rclone_vfs.service state=stopped enabled=no daemon_reload=yes
 
-- name: Import 'rclone_vfs_primer.timer'
+- name: Rclone VFS | Import 'rclone_vfs_primer.timer'
   template:
     src: rclone_vfs_primer.timer.js2
     dest: /etc/systemd/system/rclone_vfs_primer.timer
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
-- name: Systemd daemon-reload 'rclone_vfs_primer.timer'
+- name: Rclone VFS | Systemd daemon-reload 'rclone_vfs_primer.timer'
   systemd: name=rclone_vfs_primer.timer state=stopped enabled=no daemon_reload=yes
 
-- name: Import 'rclone_vfs_primer.service'
+- name: Rclone VFS | Import 'rclone_vfs_primer.service'
   template:
     src: rclone_vfs_primer.service.js2
     dest: /etc/systemd/system/rclone_vfs_primer.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
-- name: Systemd daemon-reload 'rclone_vfs_primer.service'
+- name: Rclone VFS | Systemd daemon-reload 'rclone_vfs_primer.service'
   systemd: name=rclone_vfs_primer.service state=stopped enabled=no daemon_reload=yes
 
-- name: Test rclone remote
+- name: Rclone VFS | Test rclone remote
   shell: "rclone lsd {{rclone.remote}}:"
   become: yes
   become_user: "{{user}}"
   register: rclone_test
   failed_when: (rclone_test.rc|int > 5)
 
-- name: Start up services when rclone remote is configured
+- name: Rclone VFS | Start up services when rclone remote is configured
   block:
 
-  - name: Start 'rclone_vfs.service'
+  - name: Rclone VFS | Start 'rclone_vfs.service'
     systemd: name=rclone_vfs.service state=started enabled=yes
 
-  - name: "Wait for 5 seconds"
+  - name: Rclone VFS | "Wait for 5 seconds"
     wait_for:
       timeout: 5
 
-  - name: Start 'rclone_vfs_primer.timer'
+  - name: Rclone VFS | Start 'rclone_vfs_primer.timer'
     systemd: name=rclone_vfs_primer.timer state=started enabled=yes
 
-  - name: Start 'rclone_vfs_primer.service'
+  - name: Rclone VFS | Start 'rclone_vfs_primer.service'
     systemd: name=rclone_vfs_primer.service state=started enabled=yes
 
   when: (rclone_test.rc|int == 0)

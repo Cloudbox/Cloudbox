@@ -8,12 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Gather list of running Docker containers"
+- name: "Container | Gather list of running Docker containers"
   shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
   register: cloudbox_managed_containers
   ignore_errors: yes
 
-- name: "Stop all running Docker containers"
+- name: "Container | Stop all running Docker containers"
   shell: "docker stop {{cloudbox_managed_containers.stdout}}"
   ignore_errors: yes
   when: (cloudbox_managed_containers.stdout | trim != '')
