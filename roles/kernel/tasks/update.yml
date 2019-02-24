@@ -38,36 +38,3 @@
     when: (not r.changed)
 
   when: (ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('16.04', '==')) and (ansible_kernel is version('4.10', '<'))
-
-- name: Update the linux kernel headers if required
-  block:
-
-  - name: Update kernel headers
-    apt:
-      name: linux-headers-{{ ansible_kernel }}
-      update_cache: yes
-      state: present
-    register: s
-    ignore_errors: yes
-
-  - name: Fix apt
-    shell: apt-get --fix-broken --yes install
-    when: (s.changed)
-    ignore_errors: yes
-
-  - name: Set 'reboot_is_necessary' variable
-    set_fact:
-      reboot_is_necessary: true
-    when: (s.changed)
-
-  - name: Kernel headers were updated
-    debug:
-      msg: "Kernel headers were updated."
-    when: (s.changed)
-
-  - name: Kernel headers were not updated
-    debug:
-      msg: "Kernel headers were not updated."
-    when: (not s.changed)
-
-  when: (ansible_distribution == 'Ubuntu')
