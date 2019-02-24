@@ -8,6 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+
+# Sanity Check
+- name: Sanity Check Tasks
+  import_tasks: "subtasks/sanity_check.yml"
+
 # Stop Containers
 
 - name: Container Tasks
