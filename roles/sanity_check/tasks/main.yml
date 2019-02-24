@@ -19,7 +19,3 @@
 - name: "Sanity Check: Backup Checks"
   import_tasks: "sanity_check_backup.yml"
   tags: always
-
-- name: "Sanity Check: Mount Checks"
-  import_tasks: "sanity_check_mounts.yml"
-  tags: always
