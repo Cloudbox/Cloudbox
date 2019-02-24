@@ -8,21 +8,21 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create unionfs directories
+- name: UnionFS | Create unionfs directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
   with_items:
     - /mnt/local/.unionfs-fuse
 
-- name: Install unionfs
+- name: UnionFS | Install unionfs
   apt:
     name: unionfs-fuse
     state: present
 
-- name: Import 'unionfs.service'
+- name: UnionFS | Import 'unionfs.service'
   template:
     src: unionfs.service.js2
     dest: /etc/systemd/system/unionfs.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
-- name: Start 'unionfs.service'
+- name: UnionFS | Start 'unionfs.service'
   systemd: name=unionfs state=started enabled=yes daemon_reload=yes
