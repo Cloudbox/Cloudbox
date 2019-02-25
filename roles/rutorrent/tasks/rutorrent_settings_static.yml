@@ -63,7 +63,7 @@
 - name: Set 'global_download_rate' to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-    regexp: '^throttle\.global_down\.max_rate.\set_kb\s*=.*'
+    regexp: '^throttle\.global_down\.max_rate\.set_kb\s*=.*'
     line: 'throttle.global_down.max_rate.set_kb = 0'
     state: present
 
