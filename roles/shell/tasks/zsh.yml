@@ -43,9 +43,10 @@
     line: "export EDITOR=nano"
     state: present
 
-- name: Set default editor to nano in .zshrc
+- name: Set update prompt to always default true
   lineinfile:
     dest: "/home/{{user}}/.zshrc"
+    insertbefore: ^source $ZSH/oh-my-zsh.sh
     line: "DISABLE_UPDATE_PROMPT=true"
     state: present
 
