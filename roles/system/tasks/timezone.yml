@@ -13,7 +13,27 @@
     path: "/etc/localtime"
   register: localtime
 
-- name: Fix time zone link when target is a folder
+- name: Set time zone when '/etc/localtime' is a folder
+  block:
+
+  - name: Delete '/etc/localtime'
+    file:
+      path: "/etc/localtime"
+      state: absent
+
+  - name: Fetch time zone
+    uri:
+      url: http://ip-api.com/line?fields=timezone
+      return_content: yes
+    register: timezone_response
+
+  - name: Set time zone
+    timezone:
+      name: "{{ timezone_response.content | trim }}"
+
+  when: (localtime.stat.isdir is defined) and (localtime.stat.isdir)
+
+- name: Set time zone when '/etc/localtime' is a symlink pointing to a folder
   block:
 
   - name: Fetch stats on link target
