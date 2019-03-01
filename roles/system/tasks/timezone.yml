@@ -31,7 +31,7 @@
     timezone:
       name: "{{ timezone_response.content | trim }}"
 
-  when: (localtime.stat.isdir is defined) and (localtime.stat.isdir)
+  when: (not localtime.stat.exists) or ((localtime.stat.isdir is defined) and (localtime.stat.isdir))
 
 - name: Set time zone when '/etc/localtime' is a symlink pointing to a folder
   block:
