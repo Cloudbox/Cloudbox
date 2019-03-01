@@ -3,7 +3,7 @@
 
     #########################################################################
     # Title:         SMA: Plex Autoscan Post-Processing Script              #
-    # Author(s):     Andrew Khunn                                           #
+    # Author(s):     andrewkhunn                                            #
     # URL:           https://github.com/cloudbox/cloudbox                   #
     # Description:   Sends scan request to Plex Autoscan.                   #
     # --                                                                    #
