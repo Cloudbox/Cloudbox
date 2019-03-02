@@ -1,4 +1,6 @@
 ---
+system:
+  timezone: auto
 mounts:
   unionfs: unionfs
   remote: plexdrive

@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: Fix Timezone Link                                   #
+# Title:         System: Set Time Zone                                  #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,52 +8,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Fetch stats on '/etc/localtime'
-  stat:
+- name: Remove '/etc/localtime'
+  file:
     path: "/etc/localtime"
-  register: localtime
+    state: absent
 
-- name: Set time zone when '/etc/localtime' is a folder
-  block:
+- name: Fetch time zone
+  uri:
+    url: http://ip-api.com/line?fields=timezone
+    return_content: yes
+  register: timezone_response
+  when: (system.timezone|lower == 'auto') or (not system.timezone)
 
-  - name: Delete '/etc/localtime'
-    file:
-      path: "/etc/localtime"
-      state: absent
-
-  - name: Fetch time zone
-    uri:
-      url: http://ip-api.com/line?fields=timezone
-      return_content: yes
-    register: timezone_response
-
-  - name: Set time zone
-    timezone:
-      name: "{{ timezone_response.content | trim }}"
-
-  when: (not localtime.stat.exists) or ((localtime.stat.isdir is defined) and (localtime.stat.isdir))
-
-- name: Set time zone when '/etc/localtime' is a symlink pointing to a folder
-  block:
-
-  - name: Fetch stats on link target
-    stat:
-      path: "{{ localtime.stat.lnk_target }}"
-    register: target
-
-  - name: Set time zone
-    block:
-
-    - name: Fetch time zone
-      uri:
-        url: http://ip-api.com/line?fields=timezone
-        return_content: yes
-      register: timezone_response
-
-    - name: Set time zone
-      timezone:
-        name: "{{ timezone_response.content | trim }}"
-
-    when: (target.stat.isdir is defined) and (target.stat.isdir)
-
-  when: (localtime.stat.islnk is defined) and (localtime.stat.islnk)
+- name: Set time zone
+  timezone:
+    name: "{{ (timezone_response.content | trim) if ((system.timezone|lower == 'auto') or (not system.timezone)) else (system.timezone) }}"
