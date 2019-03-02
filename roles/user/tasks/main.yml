@@ -29,11 +29,15 @@
     name: shell
   when: ('restore' in ansible_run_tags)
 
+- name: Get vgid
+  shell: "getent group video | cut -d: -f3"
+  register: vgid_lookup
+
 - name: "Set 'uid', 'gid', and 'vgid'"
   set_fact:
     uid: "{{ user_info.uid }}"
     gid: "{{ user_info.group }}"
-    vgid: "{{ lookup('pipe','getent group video | cut -d: -f3') }}"
+    vgid: "{{ vgid_lookup.stdout }}"
 
 - name: Check sudoers exists
   stat:
