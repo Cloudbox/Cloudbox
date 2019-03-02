@@ -104,7 +104,7 @@ function build_url() {
 
     # If SERVER_IP is 0.0.0.0, assign public IP address to REAL_IP.
     if [[ ${SERVER_IP} = 0.0.0.0 ]]; then
-        REAL_IP="$(curl -s http://checkip.amazonaws.com)"
+        REAL_IP="$(dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}')"
     else
         REAL_IP=${SERVER_IP}
     fi
@@ -127,7 +127,7 @@ function build_url() {
     # Determine which subdomain points to the actual host IP address (vs a CDN one, for example)
     while [[ ((${REAL_IP} != ${SUBDOMAIN_IP}) && (${COUNT} < ${SUBDOMAIN_LEN})) ]]; do
         SUBDOMAIN=${SUBDOMAINS[$COUNT]}
-        SUBDOMAIN_IP=$(dig +short ${SUBDOMAIN})
+        SUBDOMAIN_IP=$(dig -4 +short ${SUBDOMAIN} @8.8.8.8)
         COUNT+=1
     done
 }
