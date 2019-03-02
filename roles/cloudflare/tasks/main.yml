@@ -8,15 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get public IP Address
-  uri:
-    url: http://checkip.amazonaws.com
-    return_content: yes
+- name: Get Public IP Address
+  shell: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
   register: public_ip_lookup
 
-- name: Set 'public_ip'
+- name: Set 'public_ip' variable
   set_fact:
-    public_ip: "{{ public_ip_lookup.content | trim }}"
+    public_ip: "{{ public_ip_lookup.stdout }}"
 
 - name: Set 'record'
   set_fact:
