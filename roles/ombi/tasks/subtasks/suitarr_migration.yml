@@ -1,0 +1,28 @@
+#########################################################################
+# Title:         Ombi: Suitarr Migration Tasks                          #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Suitarr Migration | Check folder exists
+  stat:
+    path: /opt/ombi
+  register: folder
+
+- name: Suitarr Migration | Check subfolder exists
+  stat:
+    path: /opt/ombi/app
+  register: subfolder
+
+- name: Suitarr Migration | Move 'ombi' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/ombi /tmp/app
+    mkdir /opt/ombi
+    mv /tmp/app /opt/ombi/
+    find /opt/ombi/* -type d -empty -delete
+    chown -R {{ user }}:{{ user }} /opt/ombi
+  when: (folder.stat.exists) and not (subfolder.stat.exists)
