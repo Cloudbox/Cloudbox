@@ -21,26 +21,15 @@
     state: absent
 
 - name: Create sabnzbd directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/sabnzbd
-
-- name: Create new downloads directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - "{{downloads.nzbs}}"
-    - "{{downloads.nzbs}}/sabnzbd"
-    - "{{downloads.nzbs}}/sabnzbd/complete"
-    - "{{downloads.nzbs}}/sabnzbd/incomplete"
-    - "{{downloads.nzbs}}/sabnzbd/watched"
-    - "{{downloads.nzbs}}/sabnzbd/logs"
-
-# This is still needed as sometimes it will remain in root.
-- name: "Set {{downloads.nzbs}} permissions"
-  shell: "chmod -R 775 {{downloads.nzbs}}"
-
-- name: "Set {{downloads.nzbs}} owner"
-  shell: "chown -R {{user}}:{{user}} {{downloads.nzbs}}"
+    - "{{ downloads.nzbs }}"
+    - "{{ downloads.nzbs }}/sabnzbd"
+    - "{{ downloads.nzbs }}/sabnzbd/complete"
+    - "{{ downloads.nzbs }}/sabnzbd/incomplete"
+    - "{{ downloads.nzbs }}/sabnzbd/watched"
+    - "{{ downloads.nzbs }}/sabnzbd/logs"
 
 - name: Check sabnzbd.ini exists
   stat:
@@ -63,15 +52,15 @@
     published_ports:
       - "127.0.0.1:8081:8080"
     env:
-      VERSION: "{{suitarr.version}}"
+      VERSION: "{{ suitarr.version }}"
       BACKUP: "no"
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "sabnzbd.{{domain}}"
+      VIRTUAL_HOST: "sabnzbd.{{ domain }}"
       VIRTUAL_PORT: 8080
-      LETSENCRYPT_HOST: "sabnzbd.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "sabnzbd.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
       LC_ALL: "C"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
     labels:
@@ -85,7 +74,7 @@
     state: started
 
 - name: Settings Tweaks
-  include_tasks: "sabnzbd_settings.yml"
+  include_tasks: "subtasks/sabnzbd_settings.yml"
   when: not (
         (sabnzbd_ini.stat.exists)
         or
