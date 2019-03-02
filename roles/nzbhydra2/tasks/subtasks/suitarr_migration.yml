@@ -1,0 +1,39 @@
+#########################################################################
+# Title:         NZBHydra2: Suitarr Migration Tasks                     #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Suitarr Migration | Check folder exists
+  stat:
+    path: /opt/nzbhydra2
+  register: folder
+
+- name: Suitarr Migration | Check subfolder1 exists
+  stat:
+    path: /opt/nzbhydra2/NZBHydra2
+  register: subfolder1
+
+- name: Suitarr Migration | Check subfolder2 exists
+  stat:
+    path: /opt/nzbhydra2/app
+  register: subfolder2
+
+- name: Suitarr Migration | Move 'nzbhydra2' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/nzbhydra2 /tmp/app
+    mkdir /opt/nzbhydra2
+    mv /tmp/app /opt/nzbhydra2/
+    find /opt/nzbhydra2/* -type d -empty -delete
+    chown -R {{ user }}:{{ user }} /opt/nzbhydra2
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Suitarr Migration | Move 'NZBHydra2' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/nzbhydra2/NZBHydra2 /opt/nzbhydra2/app
+    chown -R {{ user }}:{{ user }} /opt/nzbhydra2
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)

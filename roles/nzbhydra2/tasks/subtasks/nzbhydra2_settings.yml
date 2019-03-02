@@ -1,8 +1,7 @@
 #########################################################################
-# Title:         Cloudbox: NZBHydra2 Settings Sub Tasks                 #
+# Title:         NZBHydra2: Settings Tasks                              #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -14,10 +13,6 @@
     path: "/opt/nzbhydra2/app/nzbhydra.yml"
     state: present
     delay: 30
-
-- name: "Wait for 10 seconds before stopping nzbhydra2 container"
-  wait_for:
-    timeout: 10
 
 - name: Stop container to customize nzbhydra.yml
   docker_container:
@@ -57,8 +52,8 @@
     line: "{{ item.line }}"
     state: present
   with_items:
-    - {line: '    password: "{noop}{{passwd}}"'}
-    - {line: '    username: "{{user}}"'}
+    - {line: '    password: "{noop}{{ passwd }}"'}
+    - {line: '    username: "{{ user }}"'}
     - {line: '    showIndexerSelection: true'}
     - {line: '    maySeeStats: true'}
     - {line: '    maySeeDetailsDl: true'}
@@ -92,8 +87,8 @@
     line: "{{ item.line }}"
     state: present
   with_items:
-    - {line: '    password: "{{passwd}}"'}
-    - {line: '    username: "{{user}}"'}
+    - {line: '    password: "{{ passwd }}"'}
+    - {line: '    username: "{{ user }}"'}
     - {line: '    url: "http://nzbget:6789"'}
     - {line: '    downloaderType: "NZBGET"'}
     - {line: '    nzbAddingType: "UPLOAD"'}
