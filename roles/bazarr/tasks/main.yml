@@ -46,8 +46,8 @@
       VIRTUAL_PORT: 6767
       LETSENCRYPT_HOST: "bazarr.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/bazarr:/config"
       - "/mnt/unionfs/Media/TV:/tv"
       - "/mnt/unionfs/Media/Movies:/movies"

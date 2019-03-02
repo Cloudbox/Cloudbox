@@ -46,8 +46,8 @@
       LETSENCRYPT_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
       LC_ALL: "en_US.UTF-8"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/ombi:/config"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

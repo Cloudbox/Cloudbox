@@ -31,7 +31,6 @@
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/lidarr:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
@@ -55,6 +54,7 @@
       VIRTUAL_PORT: 8686
       LETSENCRYPT_HOST: "lidarr.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
+      TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

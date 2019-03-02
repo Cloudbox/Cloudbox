@@ -47,7 +47,6 @@
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sonarr4k:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
@@ -71,6 +70,7 @@
       VIRTUAL_PORT: 8989
       LETSENCRYPT_HOST: "sonarr4k.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
+      TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

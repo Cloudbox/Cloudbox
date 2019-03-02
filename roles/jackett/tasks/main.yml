@@ -45,8 +45,8 @@
       VIRTUAL_PORT: 9117
       LETSENCRYPT_HOST: "jackett.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/jackett:/config"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
