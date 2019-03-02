@@ -24,9 +24,13 @@
     when: ('set-backup' in ansible_run_tags) and not ('backup' in ansible_run_tags)
     tags: set-backup
 
-  - name: "Get Start Time"
+  - name: Get Current Time
+    shell: "date \"+%s\""
+    register: start_time_lookup
+
+  - name: "Set 'start_time' variable"
     set_fact:
-      start_time: "{{ lookup('pipe','date \"+%s\"') }}"
+      start_time: "{{ start_time_lookup.stdout }}"
 
   - name: Snapshot
     import_tasks: "snapshot.yml"
@@ -393,9 +397,13 @@
       message: "Rsync uploaded backup to '{{rsync.destination}}'."
     when: (rsync.enable)
 
-  - name: "Get End Time"
+  - name: Get Current Time
+    shell: "date \"+%s\""
+    register: end_time_lookup
+
+  - name: "Set 'end_time' variable"
     set_fact:
-      end_time: "{{ lookup('pipe','date \"+%s\"') }}"
+      end_time: "{{ end_time_lookup.stdout }}"
 
   - name: "Calculate Total Time"
     set_fact:
