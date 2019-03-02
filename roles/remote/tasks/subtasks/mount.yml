@@ -35,7 +35,7 @@
     register: mnt_remote_files
 
   - name: "Backup non-empty '/mnt/remote' path"
-    shell: "mv /mnt/remote /mnt/remote_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
+    shell: "mv /mnt/remote /mnt/remote_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
     when: (mnt_remote_files.matched|int > 0)
 
