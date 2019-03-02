@@ -36,7 +36,6 @@
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra2:/config"
       - "/mnt:/mnt"
 
@@ -68,6 +67,7 @@
       VIRTUAL_PORT: 5076
       LETSENCRYPT_HOST: "nzbhydra2.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
+      TZ: "{{ tz }}"
     volumes: "{{ default_volumes + migration_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

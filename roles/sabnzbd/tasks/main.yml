@@ -39,7 +39,6 @@
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/sabnzbd:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
@@ -62,6 +61,7 @@
       LETSENCRYPT_HOST: "sabnzbd.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
       LC_ALL: "C"
+      TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

@@ -53,11 +53,10 @@
   stat:
     path: "/dev/dri"
   register: dev_dri
-    
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/radarr:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
@@ -81,6 +80,7 @@
       VIRTUAL_PORT: 7878
       LETSENCRYPT_HOST: "radarr.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
+      TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and sickbeard_mp4_automator and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
