@@ -30,7 +30,7 @@
   import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create nzbget directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/nzbget
     - "{{ downloads.nzbs }}"
