@@ -1,8 +1,7 @@
 #########################################################################
-# Title:         Cloudbox: SABnzbd Role - Settings Tasks                #
+# Title:         SABnzbd - Settings Tasks                               #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/suitarr                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -29,7 +28,7 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
     regexp: '(^host_whitelist\s?=.*,)'
     backrefs: yes
-    line: '\1 sabnzbd.{{domain}}'
+    line: '\1 sabnzbd.{{ domain }}'
     state: present
 
 - name: Remove url_base
@@ -45,7 +44,7 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
     insertafter: '^warn_dupl_jobs\s?=.*'
     regexp: '^username\s?=.*'
-    line: "username = {{user}}"
+    line: "username = {{ user }}"
     state: present
 
 - name: Set Password
@@ -53,7 +52,7 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
     insertafter: '^rss_filenames\s?=.*'
     regexp: '^password\s?=.*'
-    line: "password = {{passwd}}"
+    line: "password = {{ passwd }}"
     state: present
 
 - name: Set Form Auth
