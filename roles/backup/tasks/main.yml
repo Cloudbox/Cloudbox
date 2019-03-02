@@ -273,12 +273,12 @@
     when: (dir_files2.matched|int != 0)
 
   - name: "Get size of '{{local.destination}}'"
-    shell: du -sh --apparent-size {{local.destination}} | /usr/bin/awk '{print $1}'
+    shell: du -s -B1 --apparent-size {{local.destination}} | awk '{print $1}'
     register: backup_new
 
   - name: "Set backup_size"
     set_fact:
-      backup_size: "{{backup_new.stdout}}B"
+      backup_size: "{{ (backup_new.stdout|int) | filesizeformat }}"
 
   - name: "Pushover Message: Backup archive created (file size: {{backup_size}})"
     include_role:
