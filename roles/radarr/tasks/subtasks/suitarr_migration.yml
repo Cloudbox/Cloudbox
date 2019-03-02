@@ -1,0 +1,39 @@
+#########################################################################
+# Title:         Radarr: Suitarr Migration Tasks                        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Suitarr Migration | Check folder exists
+  stat:
+    path: /opt/radarr
+  register: folder
+
+- name: Suitarr Migration | Check subfolder1 exists
+  stat:
+    path: /opt/radarr/Radarr
+  register: subfolder1
+
+- name: Suitarr Migration | Check subfolder2 exists
+  stat:
+    path: /opt/radarr/app
+  register: subfolder2
+
+- name: Suitarr Migration | Move 'radarr' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/radarr /tmp/app
+    mkdir /opt/radarr
+    mv /tmp/app /opt/radarr/
+    find /opt/radarr/* -type d -empty -delete
+    chown -R {{ user }}:{{ user }} /opt/radarr
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Suitarr Migration | Move 'Radarr' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/radarr/Radarr /opt/radarr/app
+    chown -R {{ user }}:{{ user }} /opt/radarr
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
