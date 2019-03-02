@@ -9,18 +9,18 @@
 #########################################################################
 ---
 - name: Create nzbget script directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/scripts/nzbget
     - /opt/scripts/nzbget/nzbgetpp
 
 - name: Download various scripts
   get_url:
-    url:  "{{item}}"
+    url:  "{{ item }}"
     dest: "/opt/scripts/nzbget/"
     mode: 0775
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     force: yes
     validate_certs: no
   with_items:
@@ -35,7 +35,7 @@
     dest: "/opt/scripts/nzbget/nzbgetpp/"
     force: yes
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
   register: unzip_py
   ignore_errors: yes
 
@@ -51,7 +51,7 @@
   copy:
     src: "HashRenamer.py"
     dest: "/opt/scripts/nzbget/HashRenamer.py"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes

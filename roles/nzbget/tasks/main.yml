@@ -20,44 +20,15 @@
     name: nzbget
     state: absent
 
-# START - Suitarr Migration Tasks
-- name: Check folder exists
-  stat:
-    path: /opt/nzbget
-  register: folder
-
-- name: Check subfolder1 exists
-  stat:
-    path: /opt/nzbget/NZBGet
-  register: subfolder1
-
-- name: Check subfolder2 exists
-  stat:
-    path: /opt/nzbget/app
-  register: subfolder2
-
-- name: Move 'nzbget' folder contents to 'app' subfolder
-  shell: |
-    mv /opt/nzbget /tmp/app
-    mkdir /opt/nzbget
-    mv /tmp/app /opt/nzbget/
-    find /opt/nzbget/* -type d -empty -delete
-    chown -R {{user}}:{{user}} /opt/nzbget
-  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
-
-- name: Move 'NZBGet' subfolder to 'app' subfolder
-  shell: |
-    mv /opt/nzbget/NZBGet /opt/nzbget/app
-    chown -R {{user}}:{{user}} /opt/nzbget
-  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
-# END - Suitarr Migration Tasks
+- name: Suitarr Migration Tasks
+  import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create nzbget directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/nzbget
-    - "{{downloads.nzbs}}"
-    - "{{downloads.nzbs}}/nzbget"
+    - "{{ downloads.nzbs }}"
+    - "{{ downloads.nzbs }}/nzbget"
 
 - name: Check nzbget.conf exists
   stat:
@@ -80,15 +51,15 @@
     published_ports:
       - "127.0.0.1:6789:6789"
     env:
-      VERSION: "{{suitarr.version}}"
+      VERSION: "{{ suitarr.version }}"
       BACKUP: "no"
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "nzbget.{{domain}}"
+      VIRTUAL_HOST: "nzbget.{{ domain }}"
       VIRTUAL_PORT: 6789
-      LETSENCRYPT_HOST: "nzbget.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "nzbget.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
       LC_ALL: "C"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
     labels:
@@ -102,12 +73,12 @@
     state: started
 
 - name: Scripts Task
-  import_tasks: "nzbget_scripts.yml"
+  import_tasks: "subtasks/nzbget_scripts.yml"
   when: not continuous_integration
   tags: nzbget-scripts
 
 - name: Settings Task
-  include_tasks: "nzbget_settings.yml"
+  include_tasks: "subtasks/nzbget_settings.yml"
   when: not (
         (nzbget_conf.stat.exists)
         or

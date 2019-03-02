@@ -24,14 +24,14 @@
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^ControlUsername\s?='
-    line: "ControlUsername={{user}}"
+    line: "ControlUsername={{ user }}"
     state: present
 
 - name: Set Password
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^ControlPassword\s?=.*'
-    line: "ControlPassword={{passwd}}"
+    line: "ControlPassword={{ passwd }}"
     state: present
 
 - name: Set FormAuth

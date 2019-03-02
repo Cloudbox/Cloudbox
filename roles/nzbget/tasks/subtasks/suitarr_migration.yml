@@ -1,0 +1,39 @@
+#########################################################################
+# Title:         NZBGet: Suitarr Migration Tasks                        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Suitarr Migration | Check folder exists
+  stat:
+    path: /opt/nzbget
+  register: folder
+
+- name: Suitarr Migration | Check subfolder1 exists
+  stat:
+    path: /opt/nzbget/NZBGet
+  register: subfolder1
+
+- name: Suitarr Migration | Check subfolder2 exists
+  stat:
+    path: /opt/nzbget/app
+  register: subfolder2
+
+- name: Suitarr Migration | Move 'nzbget' folder contents to 'app' subfolder
+  shell: |
+    mv /opt/nzbget /tmp/app
+    mkdir /opt/nzbget
+    mv /tmp/app /opt/nzbget/
+    find /opt/nzbget/* -type d -empty -delete
+    chown -R {{ user }}:{{ user }} /opt/nzbget
+  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
+
+- name: Suitarr Migration | Move 'NZBGet' subfolder to 'app' subfolder
+  shell: |
+    mv /opt/nzbget/NZBGet /opt/nzbget/app
+    chown -R {{ user }}:{{ user }} /opt/nzbget
+  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
