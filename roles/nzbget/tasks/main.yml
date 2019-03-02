@@ -20,6 +20,12 @@
     name: nzbget
     state: absent
 
+- name: Remove darkerr config
+  file:
+    path: "/opt/nginx-proxy/vhost.d/nzbget.{{ domain }}_location"
+    state: absent
+  when: not (darkerr.enable | default(false,true))
+
 - name: Suitarr Migration Tasks
   import_tasks: "subtasks/suitarr_migration.yml"
 
@@ -29,6 +35,16 @@
     - /opt/nzbget
     - "{{ downloads.nzbs }}"
     - "{{ downloads.nzbs }}/nzbget"
+
+- name: Add darkernzbget config
+  copy:
+    src: "darkernzbget-nginx-conf"
+    dest: "/opt/nginx-proxy/vhost.d/nzbget.{{ domain }}_location"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0664
+    force: yes
+  when: (darkerr.enable | default(false,true))
 
 - name: Check nzbget.conf exists
   stat:
