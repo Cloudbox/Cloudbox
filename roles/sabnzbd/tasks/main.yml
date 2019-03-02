@@ -21,7 +21,7 @@
     state: absent
 
 - name: Create sabnzbd directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/sabnzbd
     - "{{ downloads.nzbs }}"
