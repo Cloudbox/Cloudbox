@@ -280,11 +280,11 @@
     set_fact:
       backup_size: "{{ (backup_new.stdout|int) | filesizeformat }}"
 
-  - name: "Pushover Message: Backup archive created (file size: {{backup_size}})"
+  - name: "Pushover Message: Backup created. Total size = {{backup_size}}."
     include_role:
       name: pushover
     vars:
-      message: "Backup archive created (file size: {{backup_size}})."
+      message: "Backup created. Total size = {{backup_size}}."
     ignore_errors: yes
 
   # Start Plexdrive and containers when snapshot is not enabled
