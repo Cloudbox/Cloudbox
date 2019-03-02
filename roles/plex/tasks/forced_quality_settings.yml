@@ -12,7 +12,7 @@
 
 ---
 - name: Install lxml pip module
-  pip: "name={{item}} state=latest"
+  pip: "name={{item}} state=present"
   with_items:
     - lxml
   ignore_errors: yes
