@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Pre-Tasks Role - User Task                   #
+# Title:         Pre-Tasks Role - User Task                             #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,22 +8,26 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check if user '{{user}}' exists"
-  shell: "id -un {{user}} >/dev/null 2>&1;"
+- name: "Check if user '{{ user }}' exists"
+  shell: "id -un {{ user }} >/dev/null 2>&1;"
   register: user_check
   failed_when: user_check.rc > 1
 
 - block:
 
-  - name: "Get '{{user}}' info"
+  - name: "Get '{{ user }}' info"
     user:
-      name: "{{user}}"
+      name: "{{ user }}"
     register: user_info
+
+  - name: Get vgid
+    shell: "getent group video | cut -d: -f3"
+    register: vgid_lookup
 
   - name: "Set 'uid', 'gid', and 'vgid'"
     set_fact:
       uid: "{{ user_info.uid }}"
       gid: "{{ user_info.group }}"
-      vgid: "{{ lookup('pipe','getent group video | cut -d: -f3') }}"
+      vgid: "{{ vgid_lookup.stdout }}"
 
   when: user_check.rc == 0
