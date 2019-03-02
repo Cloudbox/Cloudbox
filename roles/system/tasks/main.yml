@@ -32,6 +32,7 @@
 - name: Remove CPU Power task
   include_tasks: "remove_cpupower.yml"
 
-- name: Fix timezone
+- name: Set Time Zone task
   import_tasks: "timezone.yml"
   ignore_errors: yes
+  tags: timezone
