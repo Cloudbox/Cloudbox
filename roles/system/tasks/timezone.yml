@@ -13,13 +13,6 @@
     path: "/etc/localtime"
     state: absent
 
-- name: Fetch time zone
-  uri:
-    url: http://ip-api.com/line?fields=timezone
-    return_content: yes
-  register: timezone_response
-  when: (system.timezone|lower == 'auto') or (not system.timezone)
-
 - name: Set time zone
   timezone:
-    name: "{{ (timezone_response.content | trim) if ((system.timezone|lower == 'auto') or (not system.timezone)) else (system.timezone) }}"
+    name: "{{ tz }}"
