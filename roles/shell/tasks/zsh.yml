@@ -46,7 +46,7 @@
 - name: Set update prompt to always default true
   lineinfile:
     dest: "/home/{{user}}/.zshrc"
-    insertbefore: ^source $ZSH/oh-my-zsh.sh
+    insertbefore: ^source\s\$ZSH\/oh-my-zsh\.sh
     line: "DISABLE_UPDATE_PROMPT=true"
     state: present
 
