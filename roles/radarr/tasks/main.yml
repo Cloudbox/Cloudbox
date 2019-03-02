@@ -23,53 +23,24 @@
 
 - name: Remove darkerr config
   file:
-    path: "/opt/nginx-proxy/vhost.d/radarr.{{domain}}_location"
+    path: "/opt/nginx-proxy/vhost.d/radarr.{{ domain }}_location"
     state: absent
   when: not (darkerr.enable | default(false,true))
 
-# START - Suitarr Migration Tasks
-- name: Check folder exists
-  stat:
-    path: /opt/radarr
-  register: folder
-
-- name: Check subfolder1 exists
-  stat:
-    path: /opt/radarr/Radarr
-  register: subfolder1
-
-- name: Check subfolder2 exists
-  stat:
-    path: /opt/radarr/app
-  register: subfolder2
-
-- name: Move 'radarr' folder contents to 'app' subfolder
-  shell: |
-    mv /opt/radarr /tmp/app
-    mkdir /opt/radarr
-    mv /tmp/app /opt/radarr/
-    find /opt/radarr/* -type d -empty -delete
-    chown -R {{user}}:{{user}} /opt/radarr
-  when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
-
-- name: Move 'Radarr' subfolder to 'app' subfolder
-  shell: |
-    mv /opt/radarr/Radarr /opt/radarr/app
-    chown -R {{user}}:{{user}} /opt/radarr
-  when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)
-# END - Suitarr Migration Tasks
+- name: Suitarr Migration Tasks
+  import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create radarr directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/radarr
 
 - name: Add darkerr config
   copy:
     src: "darkerr-nginx-conf"
-    dest: "/opt/nginx-proxy/vhost.d/radarr.{{domain}}_location"
-    owner: "{{user}}"
-    group: "{{user}}"
+    dest: "/opt/nginx-proxy/vhost.d/radarr.{{ domain }}_location"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0664
     force: yes
   when: (darkerr.enable | default(false,true))
@@ -95,20 +66,21 @@
 - name: Create and start container
   docker_container:
     name: radarr
-    image: "{{suitarr_image}}"
+    image: "{{ suitarr_image }}"
     pull: yes
     published_ports:
       - "127.0.0.1:7878:7878"
     env:
-      VERSION: "{{suitarr.version}}"
+      VERSION: "{{ suitarr.version }}"
       BACKUP: "no"
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "radarr.{{domain}}"
+      MONO_TLS_PROVIDER: legacy
+      VIRTUAL_HOST: "radarr.{{ domain }}"
       VIRTUAL_PORT: 7878
-      LETSENCRYPT_HOST: "radarr.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "radarr.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and sickbeard_mp4_automator and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
