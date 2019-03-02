@@ -20,29 +20,11 @@
     name: ombi
     state: absent
 
-# START - Suitarr Migration Tasks
-- name: Check folder exists
-  stat:
-    path: /opt/ombi
-  register: folder
-
-- name: Check subfolder exists
-  stat:
-    path: /opt/ombi/app
-  register: subfolder
-
-- name: Move 'ombi' folder contents to 'app' subfolder
-  shell: |
-    mv /opt/ombi /tmp/app
-    mkdir /opt/ombi
-    mv /tmp/app /opt/ombi/
-    find /opt/ombi/* -type d -empty -delete
-    chown -R {{user}}:{{user}} /opt/ombi
-  when: (folder.stat.exists) and not (subfolder.stat.exists)
-# END - Suitarr Migration Tasks
+- name: Suitarr Migration Tasks
+  import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create ombi directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/ombi
 
@@ -54,15 +36,15 @@
     published_ports:
       - "127.0.0.1:3579:5000"
     env:
-      VERSION: "{{suitarr.version}}"
+      VERSION: "{{ suitarr.version }}"
       BACKUP: "no"
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{domain}}"
+      VIRTUAL_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ domain }}"
       VIRTUAL_PORT: 5000
-      LETSENCRYPT_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
       LC_ALL: "en_US.UTF-8"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
