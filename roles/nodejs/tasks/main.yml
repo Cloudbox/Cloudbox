@@ -47,7 +47,7 @@
     msg: "npm {{npm_version.stdout}} installed."
 
 - name: Install frontail npm module
-  npm: "name={{item}} global=yes state=latest"
+  npm: "name={{item}} global=yes state=present"
   with_items:
     - frontail
 

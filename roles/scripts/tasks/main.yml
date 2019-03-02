@@ -18,7 +18,7 @@
   ignore_errors: yes
 
 - name: Install common pip modules
-  pip: "name={{item}} state=latest"
+  pip: "name={{item}} state=present"
   with_items:
     - yq
   ignore_errors: yes
