@@ -14,6 +14,7 @@
     name: cloudflare
   vars:
     subdomain: rutorrent
+  when: cloudflare_enabled
 
 - name: Stop and remove any existing container
   docker_container:
@@ -73,4 +74,3 @@
 - name: ruTorrent Settings Tasks
   include_tasks: "rutorrent_settings.yml"
   when: (not continuous_integration)
-

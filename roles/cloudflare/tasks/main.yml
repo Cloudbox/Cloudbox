@@ -16,11 +16,11 @@
   set_fact:
     public_ip: "{{ public_ip_lookup.stdout }}"
 
-- name: Set 'record'
+- name: Set 'record' variable
   set_fact:
     record: "{{ (subdomain == domain) | ternary(domain,subdomain + '.' + domain) }}"
 
-- name: "Set DNS Record for {{ record }} to {{ public_ip }}"
+- name: Set DNS Record
   cloudflare_dns:
     account_api_token: "{{ cloudflare_api_token }}"
     account_email: "{{ email }}"
@@ -31,4 +31,7 @@
     type: A
     value: "{{ public_ip }}"
     record: "{{ subdomain }}"
-  when: cloudflare_enabled
+
+- name: Display DNS Record
+  debug:
+    msg: "DNS Record for '{{ record }}' set to '{{ public_ip }}'."

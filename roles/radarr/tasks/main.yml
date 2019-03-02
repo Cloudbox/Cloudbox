@@ -15,6 +15,7 @@
     name: cloudflare
   vars:
     subdomain: radarr
+  when: cloudflare_enabled
 
 - name: Stop and remove any existing container
   docker_container:

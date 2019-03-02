@@ -14,7 +14,7 @@
     name: cloudflare
   vars:
     subdomain: organizr
-  when: not (organizr.direct_domain|default(false,true))
+  when: (cloudflare_enabled) and not (organizr.direct_domain|default(false,true))
 
 - name: "Set DNS Record on CloudFlare"
   include_role:
@@ -24,7 +24,7 @@
   with_items:
     - "{{domain}}"
     - "www"
-  when: organizr.direct_domain|default(false,true)
+  when: (cloudflare_enabled) and (organizr.direct_domain|default(false,true))
 
 - name: Stop and remove any existing container
   docker_container:

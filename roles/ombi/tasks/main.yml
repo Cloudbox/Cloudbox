@@ -14,6 +14,7 @@
     name: cloudflare
   vars:
     subdomain: "{{ ombi.subdomain|default('ombi',true) }}"
+  when: cloudflare_enabled
 
 - name: Stop and remove any existing container
   docker_container:

@@ -14,7 +14,7 @@
     name: cloudflare
   vars:
     subdomain: "{{ nginx.subdomain|default('web',true) }}"
-  when: not (nginx.direct_domain|default(false,true))
+  when: (cloudflare_enabled) and not (nginx.direct_domain|default(false,true))
 
 - name: "Set DNS Record on CloudFlare"
   include_role:
@@ -24,7 +24,7 @@
   with_items:
     - "{{domain}}"
     - "www"
-  when: nginx.direct_domain|default(false,true)
+  when: (cloudflare_enabled) and (nginx.direct_domain|default(false,true))
 
 - name: Create nginx directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"

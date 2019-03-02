@@ -18,6 +18,7 @@
     name: cloudflare
   vars:
     subdomain: nextcloud
+  when: cloudflare_enabled
 
 - name: Stop and remove any existing containers
   docker_container: "name={{item}} state=absent"

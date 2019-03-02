@@ -13,6 +13,7 @@
     name: cloudflare
   vars:
     subdomain: strm
+  when: cloudflare_enabled
 
 - name: "Create drive_strm directories"
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
