@@ -118,7 +118,7 @@
     register: mnt_plexdrive_files
 
   - name: "Backup non-empty '/mnt/plexdrive' path"
-    shell: "mv /mnt/plexdrive /mnt/plexdrive_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
+    shell: "mv /mnt/plexdrive /mnt/plexdrive_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
     when: (mnt_plexdrive_files.matched|int > 0)
 
@@ -238,7 +238,7 @@
     register: mnt_rclone_files
 
   - name: "Backup non-empty '/mnt/rclone' path"
-    shell: "mv /mnt/rclone /mnt/rclone_{{ lookup('pipe','date +%Y-%m-%d_%H.%M.%S') }}"
+    shell: "mv /mnt/rclone /mnt/rclone_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
     when: (mnt_rclone_files.matched|int > 0)
 
