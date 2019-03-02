@@ -13,6 +13,11 @@
     path: "/etc/localtime"
     state: absent
 
+- name: Install tzdata
+  apt:
+    name: tzdata
+    state: present
+
 - name: Set time zone
   timezone:
     name: "{{ tz }}"
