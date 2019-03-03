@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: apt Task                                       #
+# Title:         System: APT Tasks                                      #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -27,7 +27,7 @@
   ignore_errors: yes
 
 - name: Install required packages
-  apt: "name={{item}} state=present"
+  apt: "name={{ item }} state=present"
   with_items:
     - apt-utils
     - byobu

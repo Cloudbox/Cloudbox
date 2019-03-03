@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: sysctl Task                                    #
+# Title:         System: SYSCTL Tasks                                   #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -170,21 +170,21 @@
     name: net.core.default_qdisc
     value: fq
     state: present
-    
+
 - name: Set max_user_watches for plex inotify
   sysctl:
     name: fs.inotify.max_user_watches
     value: 131072
     state: present
-  
+
 - name: Set net.core.netdev_budget
   sysctl:
     name: net.core.netdev_budget
     value: 50000
     state: present
-    
+
 - name: Set netdev_budget_usecs
   sysctl:
     name: net.core.netdev_budget_usecs
     value: 5000
-    state: present    
+    state: present

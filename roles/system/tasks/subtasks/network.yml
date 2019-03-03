@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Install common packages
-  apt: "name={{item}} state=present"
+  apt: "name={{ item }} state=present"
   with_items:
     - vnstat
     - pciutils
@@ -26,7 +26,7 @@
     lineinfile:
       path: "/etc/vnstat.conf"
       regexp: '(Interface)\s?.*'
-      line: '\1 "{{ansible_default_ipv4.interface}}"'
+      line: '\1 "{{ ansible_default_ipv4.interface }}"'
       state: present
       backrefs: yes
     when: (vnstat_conf.stat.exists)
@@ -51,9 +51,9 @@
       create: no
       marker: "### {mark} CLOUDBOX MANAGED BLOCK ###"
       block: |
-        /sbin/ifconfig {{ansible_default_ipv4.interface}} txqueuelen 10000
-        ethtool -G {{ansible_default_ipv4.interface}} rx 4096 tx 4096
-        ethtool -K {{ansible_default_ipv4.interface}} tso off tx off
+        /sbin/ifconfig {{ ansible_default_ipv4.interface }} txqueuelen 10000
+        ethtool -G {{ ansible_default_ipv4.interface }} rx 4096 tx 4096
+        ethtool -K {{ ansible_default_ipv4.interface }} tso off tx off
       insertbefore: "^exit 0"
       owner: "root"
       group: "root"

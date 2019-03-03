@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: CPU Frequency Task                             #
+# Title:         System: CPU Frequency Tasks                            #
 # Author(s):     l3uddz, EnorMOZ, desimaniac                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Install required packages
-  apt: "name={{item}} state=latest"
+  apt: "name={{ item }} state=present"
   with_items:
     - cpufrequtils
     - linux-tools-common
@@ -28,7 +28,7 @@
   file:
     path: /etc/default/cpufrequtils
     state: touch
-  when: cpufrequtils_file.stat.exists == False
+  when: not cpufrequtils_file.stat.exists
 
 - name: Set CPU frequency scaling governor to performance
   lineinfile:

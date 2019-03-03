@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         System: Mounts Task                                    #
-# Author(s):     l3uddz, desimaniac                                     #
+# Title:         System: Time Zone Tasks                                #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,16 +8,16 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- debug:
-    msg: "System mounts: are {{ ansible_mounts }}"
+- name: Remove '/etc/localtime'
+  file:
+    path: "/etc/localtime"
+    state: absent
 
-- name: Set noatime,nobarrier opts for / mount
-  mount:
-    path: /
-    opts: defaults,noatime,nobarrier
+- name: Install tzdata
+  apt:
+    name: tzdata
     state: present
-    fstype: ext4
-    src: "{{ item.device }}"
-  with_items:
-    - "{{ ansible_mounts }}"
-  when: (item.mount == '/') and (item.fstype == 'ext4')
+
+- name: Set time zone
+  timezone:
+    name: "{{ tz }}"
