@@ -12,7 +12,7 @@
   locale_gen:
     name: "en_US.UTF-8"
     state: present
-  notify: Update Locales
+  notify: update locales
 
 - name: "Uncomment 'LANG='"
   replace:
@@ -28,4 +28,4 @@
     value: "en_US.UTF-8"
     state: present
     no_extra_spaces: yes
-  notify: Update Locales
+  notify: update locales
