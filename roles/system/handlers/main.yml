@@ -8,5 +8,5 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Update Locales
-  shell: dpkg-reconfigure --frontend noninteractive locales
+- name: update locales
+  command: dpkg-reconfigure --frontend noninteractive locales
