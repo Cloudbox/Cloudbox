@@ -21,3 +21,12 @@
 - name: Set time zone
   timezone:
     name: "{{ tz }}"
+  notify: update tzdata
+
+- name: Import '/etc/timezone'
+  template:
+    src: "etc/timezone.js2"
+    dest: "/etc/timezone"
+    mode: 0644
+    force: yes
+  notify: update tzdata
