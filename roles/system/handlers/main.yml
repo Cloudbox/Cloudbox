@@ -10,3 +10,6 @@
 ---
 - name: update locales
   command: dpkg-reconfigure --frontend noninteractive locales
+
+- name: update tzdata
+  command: dpkg-reconfigure --frontend noninteractive tzdata
