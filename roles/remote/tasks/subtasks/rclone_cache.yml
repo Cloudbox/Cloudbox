@@ -1,0 +1,53 @@
+#########################################################################
+# Title:         Remote: Rclone Cache Tasks                             #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Rclone Cache | Reset permissions for 'rclone.conf'
+  file: "path={{ item }} state=file mode=0775 owner={{ user }} group={{ user }}"
+  with_items:
+    - "/home/{{ user }}/.config/rclone/rclone.conf"
+
+- name: Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled
+
+- name: Rclone Cache | Import 'rclone_cache.service'
+  template:
+    src: rclone_cache.service.js2
+    dest: /etc/systemd/system/rclone_cache.service
+    force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
+
+- name: Rclone Cache | Systemd daemon-reload 'rclone_cache.service'
+  systemd: name=rclone_cache.service state=stopped enabled=no daemon_reload=yes
+
+- name: Rclone Cache | Enable cache in 'rclone.conf'
+  blockinfile:
+    path: "/home/{{ user }}/.config/rclone/rclone.conf"
+    state: present
+    create: no
+    marker: "### {mark} CLOUDBOX - RCLONE CACHE MOUNT ###"
+    block: |
+      [cache]
+      type = cache
+    insertbefore: '^\[{{ rclone.remote }}\]'
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0755
+
+- name: Rclone Cache | Test rclone remote
+  shell: "rclone lsd {{ rclone.remote }}:"
+  become: yes
+  become_user: "{{ user }}"
+  register: rclone_test
+  failed_when: (rclone_test.rc|int > 5)
+
+- name: Rclone Cache | Start 'rclone_cache.service'
+  systemd: name=rclone_cache.service state=started enabled=yes
+  when: (rclone_test.rc|int == 0)
