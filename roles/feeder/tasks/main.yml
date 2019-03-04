@@ -1,0 +1,23 @@
+#########################################################################
+# Title:         Cloudbox: Feeder Mounts Role                           #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Services Stop Tasks"
+  include_tasks: "subtasks/services_stop.yml"
+
+- name: "Feeder Mount Tasks"
+  include_tasks: "subtasks/feeder_mount.yml"
+  when: ('feeder_mount' in ansible_run_tags) or ('feeder_mount_override' in ansible_run_tags)
+
+- name: "Feeder Unmount Tasks"
+  include_tasks: "subtasks/feeder_unmount.yml"
+  when: ('feeder_unmount' in ansible_run_tags)
+
+- name: "Services Start Tasks"
+  include_tasks: "subtasks/services_start.yml"

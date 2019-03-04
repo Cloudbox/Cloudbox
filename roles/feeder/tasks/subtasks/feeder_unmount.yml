@@ -1,0 +1,65 @@
+#########################################################################
+# Title:         Feeder: Feeder Unmount Tasks                           #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Check 'feeder.service' exists
+  stat:
+    path: '/etc/systemd/system/feeder.service'
+  register: feeder_service
+
+- name: Stop 'feeder.service'
+  systemd:
+    name: feeder
+    state: stopped
+    enabled: no
+    daemon_reload: yes
+  when: feeder_service.stat.exists
+
+- name: Remove paths
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/mnt/feeder"
+
+# UnionFS Edits
+
+- name: Remove 'After=feeder.service' in 'unionfs.service'
+  lineinfile:
+    path: /etc/systemd/system/unionfs.service
+    regexp: '(^After\=.*)\sfeeder\.service\s(.*)'
+    line: '\1 \2'
+    state: present
+    backrefs: yes
+  when: unionfs_service.stat.exists
+
+- name: Replace '/mnt/feeder' with '/mnt/local' in 'unionfs.service'
+  replace:
+    path: /etc/systemd/system/unionfs.service
+    regexp: "\\/mnt\\/feeder"
+    replace: '/mnt/local'
+  when: unionfs_service.stat.exists
+
+# MergerFS Edits
+
+- name: Remove 'After=feeder.service' in 'mergerfs.service'
+  lineinfile:
+    path: /etc/systemd/system/mergerfs.service
+    regexp: '(^After\=.*)\sfeeder\.service\s(.*)'
+    line: '\1 \2'
+    state: present
+    backrefs: yes
+  when: mergerfs_service.stat.exists
+
+- name: Replace '/mnt/feeder' with '/mnt/local' in 'mergerfs.service'
+  replace:
+    path: /etc/systemd/system/mergerfs.service
+    regexp: "\\/mnt\\/feeder"
+    replace: '/mnt/local'
+  when: mergerfs_service.stat.exists

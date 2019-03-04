@@ -1,0 +1,75 @@
+#########################################################################
+# Title:         Feeder: Feeder Mount Tasks                             #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create feeder directories
+  file: 'path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}'
+  with_items:
+    - /mnt/feeder
+
+- name: Import 'feeder.service' file if missing
+  template:
+    src: feeder.service.js2
+    dest: /etc/systemd/system/feeder.service
+    force: "{{ 'yes' if ('feeder_mount_override' in ansible_run_tags) else 'no' }}"
+
+- name: Change ownership in 'feeder.service'
+  ini_file:
+    path: "/etc/systemd/system/feeder.service"
+    section: Service
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    state: present
+    no_extra_spaces: yes
+  loop:
+    - { option: 'User', value: "{{ user }}" }
+    - { option: 'Group', value: "{{ user }}" }
+
+- name: Start 'feeder.service'
+  systemd:
+    name: feeder
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
+# UnionFS Edits
+
+- name: Add 'After=feeder.service' to 'unionfs.service'
+  lineinfile:
+    path: /etc/systemd/system/unionfs.service
+    regexp: '(^After\=network-online\.target).*'
+    line: '\1 feeder.service'
+    state: present
+    backrefs: yes
+  when: unionfs_service.stat.exists
+
+- name: Replace '/mnt/local' with '/mnt/feeder' in 'unionfs.service'
+  replace:
+    path: /etc/systemd/system/unionfs.service
+    regexp: "\\/mnt\\/local"
+    replace: '/mnt/feeder'
+  when: unionfs_service.stat.exists
+
+# MergerFS Edits
+
+- name: Add 'After=feeder.service' to 'mergerfs.service'
+  lineinfile:
+    path: /etc/systemd/system/mergerfs.service
+    regexp: '(^After\=network-online\.target).*'
+    line: '\1 feeder.service'
+    state: present
+    backrefs: yes
+  when: mergerfs_service.stat.exists
+
+- name: Replace '/mnt/local' with '/mnt/feeder' in 'mergerfs.service'
+  replace:
+    path: /etc/systemd/system/mergerfs.service
+    regexp: "\\/mnt\\/local"
+    replace: '/mnt/feeder'
+  when: mergerfs_service.stat.exists
