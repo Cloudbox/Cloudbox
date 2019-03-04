@@ -39,3 +39,5 @@
 - name: Set Locale task
   import_tasks: "subtasks/locale.yml"
   tags: set-locale
+
+- meta: flush_handlers
