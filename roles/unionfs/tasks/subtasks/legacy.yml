@@ -10,23 +10,23 @@
 ---
 # mnt-unionfs.mount
 
-- name: Check if 'mnt-unionfs.mount' exists
+- name: "Legacy | Check if 'mnt-unionfs.mount' exists"
   stat:
     path: "/etc/systemd/system/mnt-unionfs.mount"
   register: mnt_unionfs_mount
 
-- name: Tasks for 'mnt-unionfs.mount'
+- name: "Legacy | Tasks for 'mnt-unionfs.mount'"
   block:
 
-  - name: Stop and disable existing 'mnt-unionfs.mount'
+  - name: "Legacy | Stop and disable existing 'mnt-unionfs.mount'"
     systemd: name=mnt-unionfs.mount state=stopped enabled=no
 
-  - name: "Remove 'mnt-unionfs.mount'"
+  - name: "Legacy | Remove 'mnt-unionfs.mount'"
     file:
       path: "/etc/systemd/system/mnt-unionfs.mount"
       state: absent
 
-  - name: Systemd daemon-reload
+  - name: "Legacy | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
   when: (mnt_unionfs_mount.stat.exists)

@@ -8,24 +8,32 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: MergerFS | Get URL for latest mergerfs release
-  shell: curl -s https://api.github.com/repos/trapexit/mergerfs/releases/latest | jq -r ".assets[] | select(.name | test(\"{{ansible_distribution|lower}}-{{ansible_distribution_release|lower}}_amd64\")) | .browser_download_url"
+- name: "MergerFS | Get URL for latest mergerfs release"
+  shell: |
+    curl -s https://api.github.com/repos/trapexit/mergerfs/releases/latest \
+      | jq -r ".assets[] | select(.name | test(\"{{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }}_amd64\")) \
+      | .browser_download_url"
   args:
     executable: /bin/bash
     warn: no
   register: mergerfs_download_url
   ignore_errors: yes
 
-- name: MergerFS | Install mergerfs
+- name: "MergerFS | Set 'mergerfs_default_download_url'"
+  set_fact:
+    mergerfs_default_download_url: https://github.com/trapexit/mergerfs/releases/download/2.25.1/mergerfs_2.25.1.{{ ansible_distribution|lower
+     }}-{{ ansible_distribution_release|lower }}_amd64.deb
+
+- name: "MergerFS | Install mergerfs"
   apt:
-    deb: "{{ mergerfs_download_url.stdout | default('https://github.com/trapexit/mergerfs/releases/download/2.25.1/mergerfs_2.25.1.{{ansible_distribution|lower}}-{{ansible_distribution_release|lower}}_amd64.deb')}}"
+    deb: "{{ mergerfs_download_url.stdout | default('{{ mergerfs_default_download_url }}') }}"
     state: present
 
-- name: MergerFS | Import 'mergerfs.service'
+- name: "MergerFS | Import 'mergerfs.service'"
   template:
     src: mergerfs.service.js2
     dest: /etc/systemd/system/mergerfs.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
-- name: MergerFS | Start 'mergerfs.service'
+- name: "MergerFS | Start 'mergerfs.service'"
   systemd: name=mergerfs.service state=started enabled=yes daemon_reload=yes

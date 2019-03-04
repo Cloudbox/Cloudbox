@@ -8,36 +8,36 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Force unmount '/mnt/unionfs'"
+- name: "Mounts | Force unmount '/mnt/unionfs'"
   shell: "/bin/umount -f '/mnt/unionfs' 2>/dev/null || :"
   ignore_errors: yes
 
-- name: Check if '/mnt/unionfs' exists
+- name: "Mounts | Check if '/mnt/unionfs' exists"
   stat:
     path: "/mnt/unionfs"
   register: mnt_unionfs
   ignore_errors: yes
 
-- name: Tasks for '/mnt/unionfs' path
+- name: "Mounts | Tasks for '/mnt/unionfs' path"
   block:
 
-  - name: "Remove empty directories in '/mnt/unionfs'"
+  - name: "Mounts | Remove empty directories in '/mnt/unionfs'"
     shell: "find '/mnt/unionfs' -type d -empty -delete"
     ignore_errors: yes
 
-  - name: Recursively find '/mnt/unionfs' files
+  - name: "Mounts | Recursively find '/mnt/unionfs' files"
     find:
       paths: '/mnt/unionfs'
       hidden: yes
       recurse: yes
     register: mnt_unionfs_files
 
-  - name: "Backup non-empty '/mnt/unionfs' path"
+  - name: "Mounts | Backup non-empty '/mnt/unionfs' path"
     shell: "mv /mnt/unionfs /mnt/unionfs_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
     when: (mnt_unionfs_files.matched|int > 0)
 
-  - name: "Remove '/mnt/unionfs'"
+  - name: "Mounts | Remove '/mnt/unionfs'"
     file:
       path: "/mnt/unionfs"
       state: absent

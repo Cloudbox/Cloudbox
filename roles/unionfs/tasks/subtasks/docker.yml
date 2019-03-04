@@ -8,11 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create override directory
+- name: "Docker | Create override directory"
   file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
 
-- name: Import override file
+- name: "Docker | Import override file"
   template: "src=override.conf.js2 dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
 
-- name: Systemd daemon-reload
+- name: "Docker | Systemd daemon-reload"
   systemd: name=docker state=reloaded daemon_reload=yes
