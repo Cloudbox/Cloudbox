@@ -47,9 +47,8 @@
       LETSENCRYPT_HOST: "plexpy.{{domain}}"
       LETSENCRYPT_EMAIL: "{{email}}"
       ADVANCED_GIT_BRANCH: nightly
+      TZ: "{{tz}}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
       - "/opt/scripts:/scripts"
