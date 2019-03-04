@@ -34,5 +34,8 @@
 
 - name: Set Time Zone task
   import_tasks: "subtasks/timezone.yml"
-  ignore_errors: yes
-  tags: timezone
+  tags: set-timezone
+
+- name: Set Locale task
+  import_tasks: "subtasks/locale.yml"
+  tags: set-locale
