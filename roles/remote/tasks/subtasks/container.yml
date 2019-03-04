@@ -14,6 +14,6 @@
   ignore_errors: yes
 
 - name: "Container | Stop all running Docker containers"
-  shell: "docker stop {{cloudbox_managed_containers.stdout}}"
+  shell: "docker stop {{ cloudbox_managed_containers.stdout }}"
   ignore_errors: yes
-  when: (cloudbox_managed_containers.stdout | trim != '')
+  when: (cloudbox_managed_containers.stdout | trim | length > 0)

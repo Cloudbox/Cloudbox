@@ -8,7 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-
 # Sanity Check
 - name: Sanity Check Tasks
   import_tasks: "subtasks/sanity_check.yml"
@@ -59,13 +58,13 @@
 
   when: (mounts.remote | lower == 'plexdrive')
 
-- name: Plexdrive4  Tasks
+- name: Plexdrive 4 Tasks
   import_tasks: "subtasks/plexdrive4.yml"
-  when: (mounts.remote | lower == 'plexdrive4')
+  when: (mounts.remote | lower == 'plexdrive4') or (mounts.remote | lower == 'plexdrive_4')
 
 - name: Plexdrive 5 Tasks
   import_tasks: "subtasks/plexdrive5.yml"
-  when: (mounts.remote | lower == 'plexdrive5')
+  when: (mounts.remote | lower == 'plexdrive5') or (mounts.remote | lower == 'plexdrive_5')
 
 - name: Rclone VFS Tasks
   import_tasks: "subtasks/rclone_vfs.yml"

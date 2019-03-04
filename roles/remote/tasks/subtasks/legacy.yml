@@ -10,82 +10,82 @@
 ---
 # Cloudbox - plexdrive.service
 
-- name: Check if 'plexdrive.service' exists
+- name: "Legacy | Check if 'plexdrive.service' exists"
   stat:
     path: "/etc/systemd/system/plexdrive.service"
   register: plexdrive_service
 
-- name: Tasks for 'plexdrive.service'
+- name: "Legacy | Tasks for 'plexdrive.service'"
   block:
 
-  - name: Stop and disable existing 'plexdrive.service'
+  - name: Legacy | Stop and disable existing 'plexdrive.service'
     systemd: name=plexdrive state=stopped enabled=no
 
-  - name: "Rename 'plexdrive.service' to 'plexdrive5.service'"
+  - name: "Legacy | Rename 'plexdrive.service' to 'plexdrive5.service'"
     shell: "mv /etc/systemd/system/plexdrive.service /etc/systemd/system/plexdrive5.service"
 
-  - name: Edit title in new 'plexdrive5.service'
+  - name: "Legacy | Edit title in new 'plexdrive5.service'"
     replace:
       path: /etc/systemd/system/plexdrive5.service
       regexp: "plexdrive\\.service"
       replace: 'plexdrive5.service'
 
-  - name: Edit description in new 'plexdrive5.service'
+  - name: "Legacy | Edit description in new 'plexdrive5.service'"
     lineinfile:
       path: "/etc/systemd/system/plexdrive5.service"
       regexp: '^Description=.*'
       line: "Description=Plexdrive5"
       state: present
 
-  - name: Edit binary path in new 'plexdrive5.service'
+  - name: "Legacy | Edit binary path in new 'plexdrive5.service'"
     replace:
       path: /etc/systemd/system/plexdrive5.service
       regexp: "\\/opt\\/plexdrive"
       replace: '/opt/plexdrive5'
 
-  - name: Replace '/mnt/plexdrive' with '/mnt/remote' in new 'plexdrive5.service'
+  - name: "Legacy | Replace '/mnt/plexdrive' with '/mnt/remote' in new 'plexdrive5.service'"
     replace:
       path: /etc/systemd/system/plexdrive5.service
       regexp: "\\/mnt\\/plexdrive"
       replace: '/mnt/remote'
 
-  - name: Systemd daemon-reload
+  - name: "Legacy | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
   when: (plexdrive_service.stat.exists)
 
 # Cloudbox - /opt/plexdrive
 
-- name: Check if '/opt/plexdrive' exists
+- name: "Legacy | Check if '/opt/plexdrive' exists"
   stat:
     path: "/opt/plexdrive"
   register: opt_plexdrive
 
-- name: Check if '/opt/plexdrive5' exists
+- name: "Legacy | Check if '/opt/plexdrive5' exists"
   stat:
     path: "/opt/plexdrive5"
   register: opt_plexdrive5
 
-- name: "Move '/opt/plexdrive' to '/opt/plexdrive5'"
+- name: "Legacy | Move '/opt/plexdrive' to '/opt/plexdrive5'"
   block:
 
-  - name: Create '/opt/plexdrive5' directory
+  - name: "Legacy | Create '/opt/plexdrive5' directory"
     file:
       path: "/opt/plexdrive5"
       state: directory
       mode: 0775
-      owner: "{{user}}"
-      group: "{{user}}"
+      owner: "{{ user }}"
+      group: "{{ user }}"
       recurse: yes
 
-  - name: "Copy '/opt/plexdrive/.' to '/opt/plexdrive5/'"
+  - name: "Legacy | Copy '/opt/plexdrive/.' to '/opt/plexdrive5/'"
     shell: "cp -r -n /opt/plexdrive/. /opt/plexdrive5/"
     become: yes
-    become_user: "{{user}}"
+    become_user: "{{ user }}"
 
   when: (opt_plexdrive.stat.exists) and (not opt_plexdrive5.stat.exists)
 
-- name: "Remove '/opt/plexdrive'"
+- name: "Legacy | Remove '/opt/plexdrive'"
   file:
     path: "/opt/plexdrive"
     state: absent
@@ -93,36 +93,36 @@
 
 # Cloudbox - /mnt/plexdrive
 
-- name: Check if '/mnt/plexdrive' exists
+- name: "Legacy | Check if '/mnt/plexdrive' exists"
   stat:
     path: "/mnt/plexdrive"
   register: mnt_plexdrive
   ignore_errors: yes
 
-- name: Tasks for '/mnt/plexdrive' path
+- name: "Legacy | Tasks for '/mnt/plexdrive' path"
   block:
 
-  - name: "Force unmount '/mnt/plexdrive'"
+  - name: "Legacy | Force unmount '/mnt/plexdrive'"
     shell: "/bin/umount -f '/mnt/plexdrive' 2>/dev/null || :"
     ignore_errors: yes
 
-  - name: "Remove empty directories in '/mnt/plexdrive'"
+  - name: "Legacy | Remove empty directories in '/mnt/plexdrive'"
     shell: "find '/mnt/plexdrive' -type d -empty -delete"
     ignore_errors: yes
 
-  - name: Recursively find '/mnt/plexdrive' files
+  - name: "Legacy | Recursively find '/mnt/plexdrive' files"
     find:
       paths: '/mnt/plexdrive'
       hidden: yes
       recurse: yes
     register: mnt_plexdrive_files
 
-  - name: "Backup non-empty '/mnt/plexdrive' path"
+  - name: "Legacy | Backup non-empty '/mnt/plexdrive' path"
     shell: "mv /mnt/plexdrive /mnt/plexdrive_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
     when: (mnt_plexdrive_files.matched|int > 0)
 
-  - name: "Remove '/mnt/plexdrive'"
+  - name: "Legacy | Remove '/mnt/plexdrive'"
     file:
       path: "/mnt/plexdrive"
       state: absent
@@ -132,117 +132,117 @@
 
 # Community - rclone.service
 
-- name: Check if 'rclone.service' exists
+- name: "Legacy | Check if 'rclone.service' exists"
   stat:
     path: "/etc/systemd/system/rclone.service"
   register: rclone_service
 
-- name: Tasks for 'rclone.service'
+- name: "Legacy | Tasks for 'rclone.service'"
   block:
 
-  - name: Stop and disable existing 'rclone.service'
+  - name: "Legacy | Stop and disable existing 'rclone.service'"
     systemd: name=rclone state=stopped enabled=no
 
-  - name: "Rename 'rclone.service' to 'rclone_vfs.service'"
+  - name: "Legacy | Rename 'rclone.service' to 'rclone_vfs.service'"
     shell: "mv /etc/systemd/system/rclone.service /etc/systemd/system/rclone_vfs.service"
 
-  - name: Edit title in new 'rclone_vfs.service'
+  - name: "Legacy | Edit title in new 'rclone_vfs.service'"
     replace:
       path: /etc/systemd/system/rclone_vfs.service
       regexp: "rclone\\.service"
       replace: 'rclone_vfs.service'
 
-  - name: Edit 'Description' in new 'rclone_vfs.service'
+  - name: "Legacy | Edit 'Description' in new 'rclone_vfs.service'"
     lineinfile:
       path: "/etc/systemd/system/rclone_vfs.service"
       regexp: '^Description=.*'
       line: "Description=Rclone VFS"
       state: present
 
-  - name: Edit 'AssertPathIsDirectory' in new 'rclone_vfs.service'
+  - name: "Legacy | Edit 'AssertPathIsDirectory' in new 'rclone_vfs.service'"
     lineinfile:
       path: "/etc/systemd/system/rclone_vfs.service"
       regexp: '^AssertPathIsDirectory=.*'
       state: absent
 
-  - name: Edit 'Wants' in new 'rclone_vfs.service'
+  - name: "Legacy | Edit 'Wants' in new 'rclone_vfs.service'"
     lineinfile:
       path: "/etc/systemd/system/rclone_vfs.service"
       regexp: '^Wants=.*'
       state: absent
 
-  - name: Edit 'Requires' in new 'rclone_vfs.service'
+  - name: "Legacy | Edit 'Requires' in new 'rclone_vfs.service'"
     lineinfile:
       path: "/etc/systemd/system/rclone_vfs.service"
       regexp: '^Requires=.*'
       state: absent
 
-  - name: Replace '/mnt/rclone' with '/mnt/remote' in new 'rclone_vfs.service'
+  - name: "Legacy | Replace '/mnt/rclone' with '/mnt/remote' in new 'rclone_vfs.service'"
     replace:
       path: /etc/systemd/system/rclone_vfs.service
       regexp: "\\/mnt\\/rclone"
       replace: '/mnt/remote'
 
-  - name: Systemd daemon-reload
+  - name: "Legacy | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
   when: (rclone_service.stat.exists)
 
 # Community - prime-rclone.service
 
-- name: Check if 'prime-rclone.service' exists
+- name: "Legacy | Check if 'prime-rclone.service' exists"
   stat:
     path: "/etc/systemd/system/prime-rclone.service"
   register: prime_rclone_service
 
-- name: Tasks for 'prime-rclone.service'
+- name: "Legacy | Tasks for 'prime-rclone.service'"
   block:
 
-  - name: Stop and disable existing 'prime-rclone.service'
+  - name: "Legacy | Stop and disable existing 'prime-rclone.service'"
     systemd: name=prime-rclone state=stopped enabled=no
 
-  - name: "Remove 'prime-rclone.service'"
+  - name: "Legacy | Remove 'prime-rclone.service'"
     file:
       path: "/etc/systemd/system/prime-rclone.service"
       state: absent
 
-  - name: Systemd daemon-reload
+  - name: "Legacy | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
   when: (prime_rclone_service.stat.exists)
 
 # Community - /mnt/rclone
 
-- name: Check if '/mnt/rclone' exists
+- name: "Legacy | Check if '/mnt/rclone' exists"
   stat:
     path: "/mnt/rclone"
   register: mnt_rclone
   ignore_errors: yes
 
-- name: Tasks for '/mnt/rclone' path
+- name: "Legacy | Tasks for '/mnt/rclone' path"
   block:
 
-  - name: "Force unmount '/mnt/rclone'"
+  - name: "Legacy | Force unmount '/mnt/rclone'"
     shell: "/bin/umount -f '/mnt/rclone' 2>/dev/null || :"
     ignore_errors: yes
 
-  - name: "Remove empty directories in '/mnt/rclone'"
+  - name: "Legacy | Remove empty directories in '/mnt/rclone'"
     shell: "find '/mnt/rclone' -type d -empty -delete"
     ignore_errors: yes
 
-  - name: Recursively find '/mnt/rclone' files
+  - name: "Legacy | Recursively find '/mnt/rclone' files"
     find:
       paths: '/mnt/rclone'
       hidden: yes
       recurse: yes
     register: mnt_rclone_files
 
-  - name: "Backup non-empty '/mnt/rclone' path"
+  - name: "Legacy | Backup non-empty '/mnt/rclone' path"
     shell: "mv /mnt/rclone /mnt/rclone_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
     when: (mnt_rclone_files.matched|int > 0)
 
-  - name: "Remove '/mnt/rclone'"
+  - name: "Legacy | Remove '/mnt/rclone'"
     file:
       path: "/mnt/rclone"
       state: absent

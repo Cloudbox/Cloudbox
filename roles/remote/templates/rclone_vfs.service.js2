@@ -1,16 +1,25 @@
-# /etc/systemd/system/rclone_vfs.service
+#########################################################################
+# Title:         Cloudbox: Rclone VFS Mount                             #
+# Location:      /etc/systemd/system/rclone_vfs.service                 #
+# Author(s):     EnorMOZ                                                #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 
 [Unit]
-Description=Rclone VFS
+Description=Rclone VFS Mount
 After=network-online.target
 
 [Service]
-User={{user}}
-Group={{user}}
+User={{ user }}
+Group={{ user }}
 Type=notify
 ExecStartPre=/bin/sleep 10
 ExecStart=/usr/bin/rclone mount \
-  --config=/home/{{user}}/.config/rclone/rclone.conf \
+  --config=/home/{{ user }}/.config/rclone/rclone.conf \
   --allow-other \
   --rc \
   --rc-addr=localhost:5572 \
@@ -31,7 +40,7 @@ ExecStart=/usr/bin/rclone mount \
   --umask=002 \
   --syslog \
   -v \
-  {{rclone.remote}}: /mnt/remote
+  {{ rclone.remote }}: /mnt/remote
 ExecStop=/bin/fusermount -uz /mnt/remote
 Restart=on-abort
 RestartSec=5

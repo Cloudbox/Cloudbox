@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Fail when both plexdrive and mergerfs are enabled."
+- name: "Sanity Check | Fail when both plexdrive and mergerfs are enabled."
   fail:
     msg: "Running Plexdrive with MergerFS is not allowed."
   when: (mounts.unionfs | lower == 'mergerfs') and ('plexdrive' in mounts.remote | lower)
