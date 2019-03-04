@@ -10,36 +10,36 @@
 ---
 # /mnt/remote
 
-- name: "Mount | Force unmount '/mnt/remote'"
+- name: "Mounts | Force unmount '/mnt/remote'"
   shell: "/bin/umount -f '/mnt/remote' 2>/dev/null || :"
   ignore_errors: yes
 
-- name: Mount | Check if '/mnt/remote' exists
+- name: "Mounts | Check if '/mnt/remote' exists"
   stat:
     path: "/mnt/remote"
   register: mnt_remote
   ignore_errors: yes
 
-- name: Mount | Tasks for '/mnt/remote' path
+- name: "Mounts | Tasks for '/mnt/remote' path"
   block:
 
-  - name: "Mount | Remove empty directories in '/mnt/remote'"
+  - name: "Mounts | Remove empty directories in '/mnt/remote'"
     shell: "find '/mnt/remote' -type d -empty -delete"
     ignore_errors: yes
 
-  - name: Mount | Recursively find '/mnt/remote' files
+  - name: "Mounts | Recursively find '/mnt/remote' files"
     find:
       paths: '/mnt/remote'
       hidden: yes
       recurse: yes
     register: mnt_remote_files
 
-  - name: "Mount | Backup non-empty '/mnt/remote' path"
+  - name: "Mounts | Backup non-empty '/mnt/remote' path"
     shell: "mv /mnt/remote /mnt/remote_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
     when: (mnt_remote_files.matched|int > 0)
 
-  - name: "Mount | Remove '/mnt/remote'"
+  - name: "Mounts | Remove '/mnt/remote'"
     file:
       path: "/mnt/remote"
       state: absent

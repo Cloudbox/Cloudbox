@@ -8,21 +8,21 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Service | Check if '{{ outer_item }}' exists"
+- name: "Services | Check if '{{ outer_item }}' exists"
   stat:
     path: "/etc/systemd/system/{{ outer_item }}"
   register: service_file
 
-- name: "Service | Tasks for '{{ outer_item }}'"
+- name: "Services | Tasks for '{{ outer_item }}'"
   block:
 
-  - name: "Service | Stop and disable existing '{{ outer_item }}'"
+  - name: "Services | Stop and disable existing '{{ outer_item }}'"
     systemd:
       name: "{{ outer_item }}"
       state: stopped
       enabled: no
 
-  - name: "Service | Update ownership in existing '{{ outer_item }}'"
+  - name: "Services | Update ownership in existing '{{ outer_item }}'"
     ini_file:
       path: "/etc/systemd/system/{{ outer_item }}"
       section: Service
@@ -34,7 +34,7 @@
       - { option: 'User', value: "{{ user }}" }
       - { option: 'Group', value: "{{ user }}" }
 
-  - name: Rclone Cache | Enable cache in 'rclone.conf'
+  - name: "Services | Enable cache in 'rclone.conf'"
     blockinfile:
       path: "/home/{{ user }}/.config/rclone/rclone.conf"
       state: absent
@@ -45,19 +45,19 @@
     when: outer_item == "rclone_cache.service"
 
   # if applicable
-  - name: "Service | Update 'rc-addr' in existing '{{ outer_item }}'"
+  - name: "Services | Update 'rc-addr' in existing '{{ outer_item }}'"
     replace:
       path: "/etc/systemd/system/{{ outer_item }}"
       regexp: "rc-addr=localhost:[0-9]*"
       replace: 'rc-addr=localhost:5572'
 
-  - name: "Service | Remove 'RemainAfterExit=yes' '{{ outer_item }}'"
+  - name: "Services | Remove 'RemainAfterExit=yes' '{{ outer_item }}'"
     lineinfile:
       path: "/etc/systemd/system/{{ outer_item }}"
       regexp: '^RemainAfterExit\=yes'
       state: absent
 
-  - name: "Service | Systemd daemon-reload"
+  - name: "Services | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
   when: (service_file.stat.exists)
