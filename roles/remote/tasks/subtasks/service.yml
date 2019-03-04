@@ -8,44 +8,46 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check if '{{ outer_item }}' exists"
+- name: "Service | Check if '{{ outer_item }}' exists"
   stat:
     path: "/etc/systemd/system/{{ outer_item }}"
   register: service_file
 
-- name: "Tasks for '{{ outer_item }}'"
+- name: "Service | Tasks for '{{ outer_item }}'"
   block:
 
-  - name: "Stop and disable existing '{{ outer_item }}'"
+  - name: "Service | Stop and disable existing '{{ outer_item }}'"
     systemd:
       name: "{{ outer_item }}"
       state: stopped
       enabled: no
 
-  - name: "Update ownership in existing '{{ outer_item }}'"
-    lineinfile:
+  - name: "Service | Update ownership in existing '{{ outer_item }}'"
+    ini_file:
       path: "/etc/systemd/system/{{ outer_item }}"
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
+      section: Service
+      option: "{{ item.option }}"
+      value: "{{ item.value }}"
       state: present
-    with_items:
-      - { regexp: '^User=.*', line: 'User={{ user }}' }
-      - { regexp: '^Group=.*', line: 'Group={{ user }}' }
+      no_extra_spaces: yes
+    loop:
+      - { option: 'User', value: "{{ user }}" }
+      - { option: 'Group', value: "{{ user }}" }
 
   # if applicable
-  - name: "Update 'rc-addr' in existing '{{ outer_item }}'"
+  - name: "Service | Update 'rc-addr' in existing '{{ outer_item }}'"
     replace:
       path: "/etc/systemd/system/{{ outer_item }}"
       regexp: "rc-addr=localhost:[0-9]*"
       replace: 'rc-addr=localhost:5572'
 
-  - name: "Remove 'RemainAfterExit=yes' '{{ outer_item }}'"
+  - name: "Service | Remove 'RemainAfterExit=yes' '{{ outer_item }}'"
     lineinfile:
       path: "/etc/systemd/system/{{ outer_item }}"
       regexp: '^RemainAfterExit\=yes'
       state: absent
 
-  - name: Systemd daemon-reload
+  - name: "Service | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
   when: (service_file.stat.exists)

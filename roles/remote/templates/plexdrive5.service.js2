@@ -1,7 +1,16 @@
-# /etc/systemd/system/plexdrive5.service
+#########################################################################
+# Title:         Cloudbox: Plexdrive 5 Mount                            #
+# Location:      /etc/systemd/system/plexdrive5.service                 #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 
 [Unit]
-Description=Plexdrive 5
+Description=Plexdrive 5 Mount
 After=network-online.target
 
 [Service]
