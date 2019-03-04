@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: Container Tasks                               #
+# Title:         UnionFS: Basic Tasks                                   #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,14 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Restart docker service"
-  systemd: name=docker state=restarted
-
-- name: Wait for 10 seconds before commencing
-  wait_for:
-    timeout: 10
-
-- name: "Start all previously running Docker containers"
-  shell: 'docker start {{cloudbox_managed_containers.stdout}}'
-  ignore_errors: yes
-  when: (cloudbox_managed_containers.stdout | trim != '')
+- name: "Basics | Create unionfs directories"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  with_items:
+    - /mnt/unionfs

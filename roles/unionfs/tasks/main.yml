@@ -14,7 +14,7 @@
   import_tasks: "subtasks/legacy.yml"
 
 - name: Service Tasks
-  include_tasks: "subtasks/service.yml"
+  include_tasks: "subtasks/services.yml"
   loop_control:
     loop_var: outer_item
   loop:
@@ -22,12 +22,12 @@
     - "mergerfs.service"
 
 - name: Mount Tasks
-  import_tasks: "subtasks/mount.yml"
+  import_tasks: "subtasks/mounts.yml"
 
 # New Setup
 
 - name: Basic Tasks
-  import_tasks: "subtasks/basic.yml"
+  import_tasks: "subtasks/basics.yml"
 
 - name: MergerFS Tasks
   import_tasks: "subtasks/mergerfs.yml"
@@ -43,5 +43,5 @@
 # Start Containers
 
 - name: Container Tasks
-  import_tasks: "subtasks/container.yml"
+  import_tasks: "subtasks/containers.yml"
   when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)
