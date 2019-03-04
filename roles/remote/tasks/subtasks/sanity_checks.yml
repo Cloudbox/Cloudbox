@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Remote: Container Tasks                                #
+# Title:         Remote: Sanity Check Tasks                             #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,12 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Container | Gather list of running Docker containers"
-  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
-  register: cloudbox_managed_containers
-  ignore_errors: yes
-
-- name: "Container | Stop all running Docker containers"
-  shell: "docker stop {{ cloudbox_managed_containers.stdout }}"
-  ignore_errors: yes
-  when: (cloudbox_managed_containers.stdout | trim | length > 0)
+- name: "Sanity Checks | Fail when both plexdrive and mergerfs are enabled."
+  fail:
+    msg: "Running Plexdrive with MergerFS is not allowed."
+  when: (mounts.unionfs | lower == 'mergerfs') and ('plexdrive' in mounts.remote | lower)

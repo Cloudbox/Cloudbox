@@ -10,12 +10,12 @@
 ---
 # Sanity Check
 - name: Sanity Check Tasks
-  import_tasks: "subtasks/sanity_check.yml"
+  import_tasks: "subtasks/sanity_checks.yml"
 
 # Stop Containers
 
 - name: Container Tasks
-  import_tasks: "subtasks/container.yml"
+  import_tasks: "subtasks/containers.yml"
   when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)
 
 # Existing Setup
@@ -24,7 +24,7 @@
   import_tasks: "subtasks/legacy.yml"
 
 - name: Service Tasks
-  include_tasks: "subtasks/service.yml"
+  include_tasks: "subtasks/services.yml"
   loop_control:
     loop_var: outer_item
   loop:
@@ -36,7 +36,7 @@
     - "rclone_vfs_primer.timer"
 
 - name: Mount Tasks
-  import_tasks: "subtasks/mount.yml"
+  import_tasks: "subtasks/mounts.yml"
 
 # New Setup
 
@@ -44,7 +44,7 @@
   import_tasks: "subtasks/fuse.yml"
 
 - name: Basic Tasks
-  import_tasks: "subtasks/basic.yml"
+  import_tasks: "subtasks/basics.yml"
 
 - name: Plexdrive Tasks
   block:
