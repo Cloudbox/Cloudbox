@@ -1,0 +1,48 @@
+#########################################################################
+# Title:         Cloudbox: Rclone Cache Mount                           #
+# Location:      /etc/systemd/system/rclone_cache.service               #
+# Author(s):     JoseP                                                  #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
+[Unit]
+Description=Rclone Cache Mount
+After=network-online.target
+
+[Service]
+User={{user}}
+Group={{user}}
+Type=notify
+ExecStartPre=/bin/sleep 10
+ExecStart=/usr/bin/rclone mount \
+  --config=/home/{{ user }}/.config/rclone/rclone.conf \
+  --allow-other \
+  --cache-db-purge \
+  --rc \
+  --rc-addr=localhost:5572 \
+  --fast-list \
+  --drive-skip-gdocs \
+  --poll-interval=1m \
+  --timeout=10m \
+  --umask=002 \
+  --syslog \
+  --cache-remote "{{ rclone.remote }}:" \
+  --cache-plex-url "https://plex.{{ domain }}" \
+  --cache-chunk-size 10M \
+  --cache-info-age 24h \
+  --cache-chunk-total-size 10G \
+  --cache-plex-token "{{ plex_auth_token | default('') }}" \
+  -v \
+  cache: /mnt/remote
+ExecStop=/bin/fusermount -uz /mnt/remote
+Restart=on-abort
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+
+[Install]
+WantedBy=default.target

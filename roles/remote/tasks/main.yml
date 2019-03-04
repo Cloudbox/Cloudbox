@@ -31,6 +31,7 @@
     - "plexdrive4.service"
     - "plexdrive5.service"
     - "rclone_vfs.service"
+    - "rclone_cache.service"
     - "rclone_vfs_primer.service"
     - "rclone_vfs_primer.timer"
 
@@ -65,6 +66,10 @@
 - name: Plexdrive 5 Tasks
   import_tasks: "subtasks/plexdrive5.yml"
   when: (mounts.remote | lower == 'plexdrive5') or (mounts.remote | lower == 'plexdrive_5')
+
+- name: Rclone Cache Tasks
+  import_tasks: "subtasks/rclone_cache.yml"
+  when: (mounts.remote | lower == 'rclone_cache')
 
 - name: Rclone VFS Tasks
   import_tasks: "subtasks/rclone_vfs.yml"
