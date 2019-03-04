@@ -71,7 +71,7 @@
     published_ports:
       - "127.0.0.1:8989:8989"
     env:
-      VERSION: "{{ suitarr.version }}"
+      VERSION: "{{ sonarr.version }}"
       BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
