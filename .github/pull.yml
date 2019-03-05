@@ -1,0 +1,8 @@
+version: "1"
+rules:
+  - base: master
+    upstream: cloudbox:master
+    mergeMethod: hardreset
+  - base: develop
+    upstream: cloudbox:develop
+    mergeMethod: rebase
