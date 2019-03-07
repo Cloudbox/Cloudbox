@@ -48,7 +48,7 @@
 
 - name: Set 'suitarr_image' variable
   set_fact:
-    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator:radarr','hotio/radarr') }}"
+    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/radarr','hotio/radarr') }}"
 
 - name: "Check if '/dev/dri' exists"
   stat:
