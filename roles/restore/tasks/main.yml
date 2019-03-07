@@ -18,6 +18,11 @@
     name: user
   when: (user_check.rc == 1)
 
+- name: Set shell
+  include_role:
+    name: shell
+  when: (user_check.rc == 1)
+
 - name: Variables
   import_tasks: "variables.yml"
 
