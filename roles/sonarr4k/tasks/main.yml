@@ -53,9 +53,17 @@
       - "/mnt:/mnt"
       - "/mnt/unionfs/Media/TV:/tv"
 
-- name: Set 'suitarr_image' variable
+- name: Set 'suitarr_image' variable for v2
   set_fact:
-    suitarr_image: "{{ (('v3' not in sonarr.version | lower) | default(false,true)) | ternary('hotio/sonarr','hotio/sonarr3') }}"
+    suitarr_image: "hotio/sonarr"
+    suitarr_version: "{{ sonarr.version }}"
+  when: ("v3" not in sonarr.version | lower)
+
+- name: Set 'suitarr_image' variable for v3
+  set_fact:
+    suitarr_image: "hotio/sonarr3"
+    suitarr_version: "{{ ('tar.gz' in sonarr.version) | ternary(sonarr.version,'unstable') }}"
+  when: ("v3" in sonarr.version | lower)
 
 - name: Create and start container
   docker_container:
@@ -65,7 +73,7 @@
     published_ports:
       - "127.0.0.1:8990:8989"
     env:
-      VERSION: "{{ sonarr.version }}"
+      VERSION: "{{ suitarr_version }}"
       BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
