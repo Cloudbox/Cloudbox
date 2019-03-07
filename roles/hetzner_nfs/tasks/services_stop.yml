@@ -19,7 +19,7 @@
 
 - name: Get 'docker.service' state
   set_fact:
-    docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == \"running\") }}"
+    docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == 'running') }}"
   when: docker_binary.stat.exists
 
 - name: Gather list of running Docker containers
@@ -56,7 +56,7 @@
 
 - name: Get 'unionfs.service' state
   set_fact:
-    unionfs_service_running: "{{ (services['unionfs.service'] is defined) and (services['unionfs.service']['state'] == \"running\") }}"
+    unionfs_service_running: "{{ (services['unionfs.service'] is defined) and (services['unionfs.service']['state'] == 'running') }}"
   when: unionfs_service.stat.exists
 
 - name: Stop existing 'unionfs.service'
@@ -67,7 +67,7 @@
 
 - name: Get 'mergerfs.service' state
   set_fact:
-    mergerfs_service_running: "{{ (services['mergerfs.service'] is defined) and (services['mergerfs.service']['state'] == \"running\") }}"
+    mergerfs_service_running: "{{ (services['mergerfs.service'] is defined) and (services['mergerfs.service']['state'] == 'running') }}"
   when: mergerfs_service.stat.exists
 
 - name: Stop existing 'mergerfs.service'

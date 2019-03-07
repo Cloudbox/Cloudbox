@@ -172,7 +172,7 @@
 
   - name: Get plexdrive service state
     set_fact:
-      plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == \"running\") }}"
+      plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == 'running') }}"
     when: (plexdrive_service.stat.exists)
 
   - name: Stop plexdrive service
@@ -190,7 +190,7 @@
 
   - name: Get cloudplow service state
     set_fact:
-      cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == \"running\") }}"
+      cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == 'running') }}"
     when: (cloudplow_service.stat.exists)
 
   - name: Stop cloudplow service
