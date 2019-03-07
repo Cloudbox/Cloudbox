@@ -49,11 +49,13 @@
 - name: Set 'suitarr_image' variable for v2
   set_fact:
     suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/sonarr','hotio/sonarr') }}"
+    suitarr_version: "{{ sonarr.version }}"
   when: ("v3" not in sonarr.version | lower)
 
 - name: Set 'suitarr_image' variable for v3
   set_fact:
     suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/sonarr3','hotio/sonarr3') }}"
+    suitarr_version: "{{ ('tar.gz' in sonarr.version | lower) | ternary(sonarr.version,'unstable') }}"
   when: ("v3" in sonarr.version | lower)
 
 - name: "Check if '/dev/dri' exists"
@@ -77,7 +79,7 @@
     published_ports:
       - "127.0.0.1:8989:8989"
     env:
-      VERSION: "{{ sonarr.version }}"
+      VERSION: "{{ suitarr_version }}"
       BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
