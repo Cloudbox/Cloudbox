@@ -39,8 +39,8 @@
   copy:
     src: "darkerr-nginx-conf"
     dest: "/opt/nginx-proxy/vhost.d/sonarr4k.{{ domain }}_location"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0664
     force: yes
   when: (darkerr.enable | default(false,true))
@@ -53,10 +53,14 @@
       - "/mnt:/mnt"
       - "/mnt/unionfs/Media/TV:/tv"
 
+- name: Set 'suitarr_image' variable
+  set_fact:
+    suitarr_image: "{{ (('v3' not in sonarr.version | lower) | default(false,true)) | ternary('hotio/sonarr','hotio/sonarr3') }}"
+
 - name: Create and start container
   docker_container:
     name: sonarr4k
-    image: "hotio/sonarr"
+    image: "{{ suitarr_image }}"
     pull: yes
     published_ports:
       - "127.0.0.1:8990:8989"
