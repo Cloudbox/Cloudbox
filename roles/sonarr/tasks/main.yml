@@ -46,9 +46,15 @@
     force: yes
   when: (darkerr.enable | default(false,true))
 
-- name: Set 'suitarr_image' variable
+- name: Set 'suitarr_image' variable for v2
   set_fact:
-    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/suitarr_mp4_automator:sonarr','hotio/sonarr') }}"
+    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/sonarr','hotio/sonarr') }}"
+  when: ("v3" not in sonarr.version | lower)
+
+- name: Set 'suitarr_image' variable for v3
+  set_fact:
+    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/sonarr3','hotio/sonarr3') }}"
+  when: ("v3" in sonarr.version | lower)
 
 - name: "Check if '/dev/dri' exists"
   stat:
