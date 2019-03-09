@@ -15,3 +15,20 @@
 - name: "Set 'use_torrents'"
   set_fact:
     use_torrents: "{{ true if (torrents_downloads_path is defined|default(false,true)) else false }}"
+
+- name: "Set 'use_remote'"
+  set_fact:
+    use_remote: "{{ true if not(
+        (rclone is undefined)
+        or
+        (rclone is none)
+        or
+        (rclone | trim | length == 0)
+        or
+        (rclone.remote is undefined)
+        or
+        (rclone.remote is none)
+        or
+        (rclone.remote | trim | length == 0)
+      )
+      else false }}"
