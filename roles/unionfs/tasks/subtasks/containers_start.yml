@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: Basic Tasks                                   #
+# Title:         UnionFS: Container Start Tasks                         #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,12 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Basics | Create remote directory"
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=no"
-  with_items:
-    - /mnt/remote
-
-- name: "Basics | Create unionfs directory"
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
-  with_items:
-    - /mnt/unionfs
+- name: "Containers | Start all previously running Docker containers"
+  shell: "docker start {{ cloudbox_managed_containers.stdout }}"
+  ignore_errors: yes
+  when: (cloudbox_managed_containers.stdout | trim | length > 0)

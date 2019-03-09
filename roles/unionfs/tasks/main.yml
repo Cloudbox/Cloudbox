@@ -8,6 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+# Stop Containers
+
+- name: Container Stop Tasks
+  import_tasks: "subtasks/containers_stop.yml"
+  when: (('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)) and (not use_remote)
+
 # Existing Setup
 
 - name: Legacy Tasks
@@ -42,6 +48,6 @@
 
 # Start Containers
 
-- name: Container Tasks
-  import_tasks: "subtasks/containers.yml"
-  when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)
+- name: Container Start Tasks
+  import_tasks: "subtasks/containers_start.yml"
+  when: (('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags))

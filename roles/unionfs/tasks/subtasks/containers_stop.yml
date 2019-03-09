@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: Container Tasks                               #
+# Title:         UnionFS: Container Stop Tasks                          #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,7 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Containers | Start all previously running Docker containers"
-  shell: "docker start {{ cloudbox_managed_containers.stdout }}"
+- name: "Containers | Gather list of running Docker containers"
+  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
+  register: cloudbox_managed_containers
+  ignore_errors: yes
+
+- name: "Containers | Stop all running Docker containers"
+  shell: "docker stop {{ cloudbox_managed_containers.stdout }}"
   ignore_errors: yes
   when: (cloudbox_managed_containers.stdout | trim | length > 0)
