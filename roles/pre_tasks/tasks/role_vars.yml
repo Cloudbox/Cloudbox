@@ -8,10 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set 'run_nzbs'"
+- name: "Set 'use_nzbs'"
   set_fact:
-    run_nzbs: "{{ true if (nzbs_downloads_path is defined|default(false,true)) else false }}"
+    use_nzbs: "{{ true if (nzbs_downloads_path is defined|default(false,true)) else false }}"
 
-- name: "Set 'run_torrents'"
+- name: "Set 'use_torrents'"
   set_fact:
-    run_torrents: "{{ true if (torrents_downloads_path is defined|default(false,true)) else false }}"
+    use_torrents: "{{ true if (torrents_downloads_path is defined|default(false,true)) else false }}"

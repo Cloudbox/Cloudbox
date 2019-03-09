@@ -32,10 +32,10 @@
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
     - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
     - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow'] }
-    - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'], when: ['run_nzbs'] }
-    - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'], when: ['run_torrents'] }
-    - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'], when: ['run_torrents'] }
-    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'], when: ['run_nzbs or run_torrents'] }
+    - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'], when: ['use_nzbs'] }
+    - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'], when: ['use_torrents'] }
+    - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'], when: ['use_torrents'] }
+    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'], when: ['use_nzbs or use_torrents'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
