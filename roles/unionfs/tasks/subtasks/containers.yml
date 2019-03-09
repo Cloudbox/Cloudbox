@@ -8,13 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Containers | Restart docker service"
-  systemd: name=docker state=restarted
-
-- name: "Containers | Wait for 10 seconds before commencing"
-  wait_for:
-    timeout: 10
-
 - name: "Containers | Start all previously running Docker containers"
   shell: "docker start {{ cloudbox_managed_containers.stdout }}"
   ignore_errors: yes
