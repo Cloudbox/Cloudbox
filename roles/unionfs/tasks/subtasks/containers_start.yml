@@ -9,6 +9,6 @@
 #########################################################################
 ---
 - name: "Containers | Start all previously running Docker containers"
-  shell: "docker start {{ cloudbox_managed_containers.stdout }}"
+  shell: "docker start {{ containers_list }}"
   ignore_errors: yes
-  when: (cloudbox_managed_containers.stdout | trim | length > 0)
+  when: (containers_list | trim | length > 0)

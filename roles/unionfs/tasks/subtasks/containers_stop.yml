@@ -13,7 +13,12 @@
   register: cloudbox_managed_containers
   ignore_errors: yes
 
+# This is needed to not conflict with the other role
+- name: "Containers | Set 'containers_list' variable"
+  set_fact:
+    containers_list: "{{ cloudbox_managed_containers.stdout }}"
+
 - name: "Containers | Stop all running Docker containers"
-  shell: "docker stop {{ cloudbox_managed_containers.stdout }}"
+  shell: "docker stop {{ containers_list }}"
   ignore_errors: yes
-  when: (cloudbox_managed_containers.stdout | trim | length > 0)
+  when: (containers_list | trim | length > 0)

@@ -50,4 +50,4 @@
 
 - name: Container Start Tasks
   import_tasks: "subtasks/containers_start.yml"
-  when: (('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags))
+  when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)
