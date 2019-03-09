@@ -16,3 +16,10 @@
 
 - name: "Docker | Systemd daemon-reload"
   systemd: name=docker state=reloaded daemon_reload=yes
+
+- name: "Docker | Restart docker service"
+  systemd: name=docker state=restarted
+
+- name: "Docker | Wait for 30 seconds before commencing"
+  wait_for:
+    timeout: 30
