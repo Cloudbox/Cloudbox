@@ -9,17 +9,40 @@
 #########################################################################
 ---
 - name: "Docker | Create override directory"
-  file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: 0775
 
 - name: "Docker | Import override file"
-  template: "src=override.conf.js2 dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
+  template:
+    src: override.conf.js2
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    mode: 0775
+    force: no
+  register: import
 
-- name: "Docker | Systemd daemon-reload"
-  systemd: name=docker state=reloaded daemon_reload=yes
+- name: "Docker | Edit override file"
+  ini_file:
+    path: /etc/systemd/system/docker.service.d/override.conf
+    section: Unit
+    option: "After"
+    value: "{{ 'mergerfs' if (mounts.unionfs|lower) == 'mergerfs' else 'unionfs' }}.service"
+    state: present
+    no_extra_spaces: yes
+  register: edit
 
-- name: "Docker | Restart docker service"
-  systemd: name=docker state=restarted
+- name: Restart Docker Service
+  block:
 
-- name: "Docker | Wait for 30 seconds before commencing"
-  wait_for:
-    timeout: 30
+  - name: "Docker | Systemd daemon-reload"
+    systemd: name=docker state=reloaded daemon_reload=yes
+
+  - name: "Docker | Restart docker service"
+    systemd: name=docker state=restarted
+
+  - name: "Docker | Wait for 30 seconds before commencing"
+    wait_for:
+      timeout: 30
+
+  when: import.changed or edit.changed
