@@ -31,7 +31,7 @@
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }
     - { role: portainer, tags: ['cloudbox', 'feederbox', 'portainer'] }
     - { role: organizr, tags: ['cloudbox', 'feederbox', 'organizr'] }
-    - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow'] }
+    - { role: cloudplow, tags: ['cloudbox', 'feederbox', 'cloudplow'], when: ['use_remote'] }
     - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'], when: ['use_nzbs'] }
     - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'], when: ['use_torrents'] }
     - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'], when: ['use_torrents'] }
