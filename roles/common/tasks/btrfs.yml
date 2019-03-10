@@ -17,7 +17,7 @@
 
 - name: Set no-cow on '/opt' and '/mnt/local' if '/' is btrfs
   shell: "chattr +C {{item}}"
-  when: (root_fstype == 'btrfs')
+  when: (root_fstype is defined) and (root_fstype == 'btrfs')
   with_items:
     - /opt
     - /mnt/local

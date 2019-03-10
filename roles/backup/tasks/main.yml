@@ -208,7 +208,7 @@
 
   - name: Snapshot | Create btrfs snapshot
     shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
-    when: (use_snapshot) and (root_fstype == 'btrfs')
+    when: (misc.snapshot) and ((root_fstype is defined) and (root_fstype == 'btrfs'))
 
   # Start Plexdrive and containers when snapshot is enabled
 
@@ -474,7 +474,7 @@
 
   - name: Snapshot | Delete btrfs snapshot
     command: "btrfs subvolume delete /btrfs/snapshots/root"
-    when: (use_snapshot) and (root_fstype == 'btrfs')
+    when: (misc.snapshot) and ((root_fstype is defined) and (root_fstype == 'btrfs'))
 
   - name: "Reset logs folder ownership."
     shell: "chown -R {{user}}:{{user}} /home/{{user}}/logs/"
