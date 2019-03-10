@@ -15,7 +15,7 @@
 
 - name: Rclone VFS | Import 'rclone_vfs.service'
   template:
-    src: rclone_vfs.service.js2
+    src: rclone_vfs.service.j2
     dest: /etc/systemd/system/rclone_vfs.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
@@ -24,7 +24,7 @@
 
 - name: Rclone VFS | Import 'rclone_vfs_primer.timer'
   template:
-    src: rclone_vfs_primer.timer.js2
+    src: rclone_vfs_primer.timer.j2
     dest: /etc/systemd/system/rclone_vfs_primer.timer
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
@@ -33,7 +33,7 @@
 
 - name: Rclone VFS | Import 'rclone_vfs_primer.service'
   template:
-    src: rclone_vfs_primer.service.js2
+    src: rclone_vfs_primer.service.j2
     dest: /etc/systemd/system/rclone_vfs_primer.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 

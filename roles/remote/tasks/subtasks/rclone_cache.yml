@@ -20,7 +20,7 @@
 
 - name: Rclone Cache | Import 'rclone_cache.service'
   template:
-    src: rclone_cache.service.js2
+    src: rclone_cache.service.j2
     dest: /etc/systemd/system/rclone_cache.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 

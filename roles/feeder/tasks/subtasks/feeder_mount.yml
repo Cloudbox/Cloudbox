@@ -15,7 +15,7 @@
 
 - name: Import 'feeder.service' file if missing
   template:
-    src: feeder.service.js2
+    src: feeder.service.j2
     dest: /etc/systemd/system/feeder.service
     force: "{{ 'yes' if ('feeder_mount_override' in ansible_run_tags) else 'no' }}"
 

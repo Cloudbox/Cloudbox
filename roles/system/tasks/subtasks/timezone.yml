@@ -25,7 +25,7 @@
 
 - name: Import '/etc/timezone'
   template:
-    src: "etc/timezone.js2"
+    src: "etc/timezone.j2"
     dest: "/etc/timezone"
     mode: 0644
     force: yes
