@@ -11,12 +11,11 @@
 - name: Update the linux kernel headers if required
   block:
 
-  - name: Update kernel headers
+  - name: Install 'linux-headers'
     apt:
-      name: linux-generic
-      state: latest
+      name: "linux-headers-{{ ansible_kernel }}"
+      state: present
     register: s
-    ignore_errors: yes
 
   - name: Fix apt
     shell: apt-get --fix-broken --yes install
