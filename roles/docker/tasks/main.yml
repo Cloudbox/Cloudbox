@@ -39,13 +39,6 @@
     state: stopped
   when: (docker_binary.stat.exists) and (docker_service_running)
 
-- name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - software-properties-common
-
 - name: Add official gpg signing key
   apt_key:
     id: 0EBFCD88
