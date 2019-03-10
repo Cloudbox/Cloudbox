@@ -9,19 +9,19 @@
 #########################################################################
 ---
 - name: Set User Variables
-  import_tasks: "user.yml"
+  import_tasks: "subtasks/user.yml"
   tags: always
 
 - name: Clean Paths
-  import_tasks: "clean_paths.yml"
+  import_tasks: "subtasks/clean_paths.yml"
   tags: always
 
 - name: Set Cloudbox vars
-  import_tasks: "vars.yml"
+  import_tasks: "subtasks/vars.yml"
   tags: always
 
 - name: Set Cloudbox role vars
-  import_tasks: "role_vars.yml"
+  import_tasks: "subtasks/role_vars.yml"
   tags: always
 
 # Sub-Domain Tasks
@@ -42,7 +42,7 @@
 
 ## Add cloudbox_type subdomain
 - name: "Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ domain }}'"
-  import_tasks: "add_subdomain.yml"
+  import_tasks: "subtasks/add_subdomain.yml"
   when: cloudflare_enabled
   tags:
     - cloudbox
@@ -51,12 +51,12 @@
 
 ## Remove cloudbox subdomain for Mediabox/Feederbox setups.
 - name: "Cloudflare: Remove 'cloudbox' subdomain from '{{ domain }}'"
-  import_tasks: "remove_subdomain.yml"
+  import_tasks: "subtasks/remove_subdomain.yml"
   when: cloudflare_enabled
   tags:
     - mediabox
     - feederbox
 
 - name: APT Tasks
-  import_tasks: "apt.yml"
+  import_tasks: "subtasks/apt.yml"
   tags: always
