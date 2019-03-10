@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: SYSCTL Tasks                                   #
+# Title:         System: Sysctl Tasks                                   #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,183 +8,70 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Enable tcp_window_scaling
+- name: Sysctl Tuning
+  ignore_errors: yes
   sysctl:
-    name: net.ipv4.tcp_window_scaling
-    value: 1
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
     state: present
-
-- name: Increase rmem_max test buffer limit to 64 MB
-  sysctl:
-    name: net.core.rmem_max
-    value: 67108864
-    state: present
-
-- name: Increase wmem_max test buffer limit to 64 MB
-  sysctl:
-    name: net.core.wmem_max
-    value: 67108864
-    state: present
-
-- name: Increase tcp_rmem autotune buffer limit to 32 MB
-  sysctl:
-    name: net.ipv4.tcp_rmem
-    value: "4096 87380 33554432"
-    state: present
-
-- name: Increase tcp_wmem autotune buffer limit to 32 MB
-  sysctl:
-    name: net.ipv4.tcp_wmem
-    value: "4096 87380 33554432"
-    state: present
-
-- name: Set tcp_congestion_control to bbr
-  sysctl:
-    name: net.ipv4.tcp_congestion_control
-    value: bbr
-    state: present
-    reload: no
-
-- name: Increase system file descriptor limit
-  sysctl:
-    name: fs.file-max
-    value: 100000
-    state: present
-
-- name: Reduce swappiness
-  sysctl:
-    name: vm.swappiness
-    value: 10
-    state: present
-
-- name: Set dirty_background_ratio
-  sysctl:
-    name: vm.dirty_background_ratio
-    value: 10
-    state: present
-
-- name: Set dirty_ratio
-  sysctl:
-    name: vm.dirty_ratio
-    value: 15
-    state: present
-
-- name: Set somaxconn to 1024
-  sysctl:
-    name: net.core.somaxconn
-    value: 1024
-    state: present
-
-- name: Increase netdev_max_backlog
-  sysctl:
-    name: net.core.netdev_max_backlog
-    value: 100000
-    state: present
-
-- name: Increase tcp_max_syn_backlog
-  sysctl:
-    name: net.ipv4.tcp_max_syn_backlog
-    value: 30000
-    state: present
-
-- name: Increase tcp_max_tw_buckets
-  sysctl:
-    name: net.ipv4.tcp_max_tw_buckets
-    value: 2000000
-    state: present
-
-- name: Enable tcp_tw_reuse
-  sysctl:
-    name: net.ipv4.tcp_tw_reuse
-    value: 1
-    state: present
-
-- name: Enable tcp_mtu_probing
-  sysctl:
-    name: net.ipv4.tcp_mtu_probing
-    value: 1
-    state: present
-
-- name: Enable tcp_sack
-  sysctl:
-    name: net.ipv4.tcp_sack
-    value: 1
-    state: present
-
-- name: Increase tcp_adv_win_scale
-  sysctl:
-    name: net.ipv4.tcp_adv_win_scale
-    value: 2
-    state: present
-
-- name: Enable tcp_rfc1337
-  sysctl:
-    name: net.ipv4.tcp_rfc1337
-    value: 1
-    state: present
-
-- name: Increase tcp_fin_timeout
-  sysctl:
-    name: net.ipv4.tcp_fin_timeout
-    value: 10
-    state: present
-
-- name: Disable tcp_slow_start_after_idle
-  sysctl:
-    name: net.ipv4.tcp_slow_start_after_idle
-    value: 0
-    state: present
-
-- name: Increase udp_rmem_min
-  sysctl:
-    name: net.ipv4.udp_rmem_min
-    value: 8192
-    state: present
-
-- name: Increase udp_wmem_min
-  sysctl:
-    name: net.ipv4.udp_wmem_min
-    value: 8192
-    state: present
-
-- name: Disable accept_source_route
-  sysctl:
-    name: net.ipv4.conf.all.accept_source_route
-    value: 0
-    state: present
-
-- name: Disable accept_redirects
-  sysctl:
-    name: net.ipv4.conf.all.accept_redirects
-    value: 0
-    state: present
-
-- name: Disable secure_redirects
-  sysctl:
-    name: net.ipv4.conf.all.secure_redirects
-    value: 0
-    state: present
-
-- name: Set default_qdisc to fq
-  sysctl:
-    name: net.core.default_qdisc
-    value: fq
-    state: present
-
-- name: Set max_user_watches for plex inotify
-  sysctl:
-    name: fs.inotify.max_user_watches
-    value: 131072
-    state: present
-
-- name: Set net.core.netdev_budget
-  sysctl:
-    name: net.core.netdev_budget
-    value: 50000
-    state: present
-
-- name: Set netdev_budget_usecs
-  sysctl:
-    name: net.core.netdev_budget_usecs
-    value: 5000
-    state: present
+  loop:
+    # Enable tcp_window_scaling
+    - { name: net.ipv4.tcp_window_scaling, value: 1 }
+    # Increase rmem_max test buffer limit to 64 MB
+    - { name: net.core.rmem_max, value: 67108864 }
+    # Increase wmem_max test buffer limit to 64 MB
+    - { name: net.core.wmem_max, value: 67108864 }
+    # Increase tcp_rmem autotune buffer limit to 32 MB
+    - { name: net.ipv4.tcp_rmem, value: "4096 87380 33554432" }
+    # Increase tcp_wmem autotune buffer limit to 32 MB
+    - { name: net.ipv4.tcp_wmem, value: "4096 87380 33554432" }
+    # Set tcp_congestion_control to bbr
+    - { name: net.ipv4.tcp_congestion_control, value: bbr }
+    # Increase system file descriptor limit
+    - { name: fs.file-max, value: 100000 }
+    # Reduce swappiness
+    - { name: vm.swappiness, value: 10 }
+    # Set dirty_ratio
+    - { name: vm.dirty_ratio, value: 15 }
+    # Set dirty_background_ratio
+    - { name: vm.dirty_background_ratio, value: 10 }
+    # Set somaxconn to 1024
+    - { name: net.core.somaxconn, value: 1024 }
+    # Increase netdev_max_backlog
+    - { name: net.core.netdev_max_backlog, value: 100000 }
+    # Increase tcp_max_syn_backlog
+    - { name: net.ipv4.tcp_max_syn_backlog, value: 30000 }
+    # Increase tcp_max_tw_buckets
+    - { name: net.ipv4.tcp_max_tw_buckets, value: 2000000 }
+    # Enable tcp_tw_reuse
+    - { name: net.ipv4.tcp_tw_reuse, value: 1 }
+    # Enable tcp_mtu_probing
+    - { name: net.ipv4.tcp_mtu_probing, value: 1 }
+    # Enable tcp_sack
+    - { name: net.ipv4.tcp_sack, value: 1 }
+    # Increase tcp_adv_win_scale
+    - { name: net.ipv4.tcp_adv_win_scale, value: 2 }
+    # Enable tcp_rfc1337
+    - { name: net.ipv4.tcp_rfc1337, value: 1 }
+    # Increase tcp_fin_timeout
+    - { name: net.ipv4.tcp_fin_timeout, value: 10 }
+    # Disable tcp_slow_start_after_idle
+    - { name: net.ipv4.tcp_slow_start_after_idle, value: 0 }
+    # Increase udp_rmem_min
+    - { name: net.ipv4.udp_rmem_min, value: 8192 }
+    # Increase udp_wmem_min
+    - { name: net.ipv4.udp_wmem_min, value: 8192 }
+    # Disable accept_source_route
+    - { name: net.ipv4.conf.all.accept_source_route, value: 0 }
+    # Disable accept_redirects
+    - { name: net.ipv4.conf.all.accept_redirects, value: 0 }
+    # Disable secure_redirects
+    - { name: net.ipv4.conf.all.secure_redirects, value: 0 }
+    # Set default_qdisc to fq
+    - { name: net.core.default_qdisc, value: fq }
+    # Set max_user_watches for plex inotify
+    - { name: fs.inotify.max_user_watches, value: 131072 }
+    # Set net.core.netdev_budget
+    - { name: net.core.netdev_budget, value: 50000 }
+    # Set netdev_budget_usecs
+    - { name: net.core.netdev_budget_usecs, value: 5000 }
