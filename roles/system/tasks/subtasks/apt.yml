@@ -32,14 +32,14 @@
     - apt-utils
     - byobu
 
-- name: apt update
+- name: APT update
   apt:
     update_cache: yes
   ignore_errors: yes
 
 # https://serverfault.com/a/839563
 # https://raymii.org/s/tutorials/Silent-automatic-apt-get-upgrade.html
-- name: apt upgrade
+- name: APT upgrade
   shell: apt-get upgrade --quiet --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   environment: "{{ env_vars }}"
   when: not continuous_integration
@@ -47,7 +47,7 @@
 
 # https://serverfault.com/a/839563
 # https://raymii.org/s/tutorials/Silent-automatic-apt-get-upgrade.html
-- name: apt dist-upgrade
+- name: APT dist-upgrade
   shell: apt-get dist-upgrade --quiet --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   environment: "{{ env_vars }}"
   when: not continuous_integration
