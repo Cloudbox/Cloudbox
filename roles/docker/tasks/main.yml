@@ -121,8 +121,22 @@
     state: latest
   ignore_errors: yes
 
-- name: Import daemon.json
-  copy: "src=daemon.json dest=/etc/docker/daemon.json force=no mode=0775"
+- name: Create '/var/lib/docker/' path
+  file:
+    path: "/var/lib/docker/"
+    state: directory
+    mode: 0711
+
+- name: Check filesystem of '/var/lib/docker' path
+  shell: stat -f -c %T /var/lib/docker
+  register: var_lib_docker
+
+- name: Import 'daemon.json'
+  template:
+    src: daemon.json.js2
+    dest: /etc/docker/daemon.json
+    mode: 0775
+    force: yes
 
 - name: Start docker
   systemd: name=docker state=started enabled=yes daemon_reload=yes
