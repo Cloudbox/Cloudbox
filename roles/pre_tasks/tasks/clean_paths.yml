@@ -10,7 +10,9 @@
 ---
 - name: Remove trailing slash from new downloads paths
   set_fact:
-    downloads: { nzbs: "{{ (downloads.nzbs | default('',true)) | regex_replace('\\/$', '') }}", torrents: "{{ downloads.torrents | regex_replace('\\/$', '') }}" }
+    downloads:
+      nzbs: "{{ (downloads.nzbs | default('',true)) | regex_replace('\\/$', '') }}"
+      torrents: "{{ downloads.torrents | regex_replace('\\/$', '') }}"
   when: (downloads is defined) and (downloads.nzbs is defined) and (downloads.torrents is defined)
 
 - name: Remove trailing slash from old downloads paths
