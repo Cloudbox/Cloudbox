@@ -29,7 +29,15 @@
     - /mnt/local/Media/Music
     - /mnt/local/Media/TV
 
-- name: Add multiverse repositories
+- name: Install required packages
+  apt:
+    state: present
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+
+- name: Add Ubuntu repositories
   apt_repository:
     repo: "{{item}}"
     state: present
