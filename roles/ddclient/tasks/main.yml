@@ -37,7 +37,7 @@
 
 - name: Import 'ddclient.conf'
   template:
-    src: "ddclient.conf.js2"
+    src: "ddclient.conf.j2"
     dest: "/opt/ddclient/ddclient.conf"
     owner: "{{user}}"
     group: "{{user}}"

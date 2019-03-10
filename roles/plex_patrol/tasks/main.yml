@@ -30,7 +30,7 @@
 
 - name: Import default config
   template:
-    src: settings.ini.js2
+    src: settings.ini.j2
     dest: /opt/plex_patrol/settings.ini
     owner: "{{user}}"
     group: "{{user}}"

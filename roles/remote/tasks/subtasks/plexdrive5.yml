@@ -25,7 +25,7 @@
 
 - name: Plexdrive 5 | Import 'plexdrive5.service'
   template:
-    src: plexdrive5.service.js2
+    src: plexdrive5.service.j2
     dest: /etc/systemd/system/plexdrive5.service
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 

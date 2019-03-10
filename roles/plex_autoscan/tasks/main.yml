@@ -68,7 +68,7 @@
 
   - name: Import default config
     template:
-      src: config.json.js2
+      src: config.json.j2
       dest: /opt/plex_autoscan/config/config.json
       owner: "{{user}}"
       group: "{{user}}"
@@ -86,7 +86,7 @@
 
 - name: Import plex_autoscan service
   template:
-    src: plex_autoscan.service.js2
+    src: plex_autoscan.service.j2
     dest: /etc/systemd/system/plex_autoscan.service
     force: yes
   when: not plex_autoscan_service.stat.exists

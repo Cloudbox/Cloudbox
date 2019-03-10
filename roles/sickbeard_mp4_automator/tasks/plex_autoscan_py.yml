@@ -34,7 +34,7 @@
 
 - name: "Import 'plex_autoscan.py'"
   template:
-    src: "plex_autoscan.py.js2"
+    src: "plex_autoscan.py.j2"
     dest: "/opt/scripts/sickbeard_mp4_automator/post_process/plex_autoscan.py"
     owner: "{{user}}"
     group: "{{user}}"

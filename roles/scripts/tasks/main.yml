@@ -83,7 +83,7 @@
 
 - name: Import 'revoke_certs.sh'
   template:
-    src: "revoke_certs.sh.js2"
+    src: "revoke_certs.sh.j2"
     dest: "/opt/scripts/nginx-proxy/revoke_certs.sh"
     owner: "{{user}}"
     group: "{{user}}"
@@ -148,7 +148,7 @@
 
 - name: Import 'sync_torrents_to_rclone_remote.sh'
   template:
-    src: "sync_torrents_to_rclone_remote.sh.js2"
+    src: "sync_torrents_to_rclone_remote.sh.j2"
     dest: "/opt/scripts/rclone/sync_torrents_to_rclone_remote.sh"
     owner: "{{user}}"
     group: "{{user}}"
@@ -167,7 +167,7 @@
 
 - name: Import 'download_torrents_from_rclone_remote.sh'
   template:
-    src: "download_torrents_from_rclone_remote.sh.js2"
+    src: "download_torrents_from_rclone_remote.sh.j2"
     dest: "/opt/scripts/rclone/download_torrents_from_rclone_remote.sh"
     owner: "{{user}}"
     group: "{{user}}"

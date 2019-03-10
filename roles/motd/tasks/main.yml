@@ -55,7 +55,7 @@
 
 - name: Import default config
   template:
-    src: config.json.js2
+    src: config.json.j2
     dest: /opt/motd/config.json
     force: yes
   when: (not motd_config.stat.exists)

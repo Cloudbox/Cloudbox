@@ -133,7 +133,7 @@
 
 - name: Import 'daemon.json'
   template:
-    src: daemon.json.js2
+    src: daemon.json.j2
     dest: /etc/docker/daemon.json
     mode: 0775
     force: yes

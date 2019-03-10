@@ -53,7 +53,7 @@
 
   - name: Import 'config.json'
     template:
-      src: config.json.js2
+      src: config.json.j2
       dest: /opt/drive_strm/config.json
       owner: "{{user}}"
       group: "{{user}}"

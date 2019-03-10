@@ -31,7 +31,7 @@
 
 - name: Import default config
   template:
-    src: "config.json.js2"
+    src: "config.json.j2"
     dest: "/opt/nzbthrottle/config.json"
     owner: "{{user}}"
     group: "{{user}}"
