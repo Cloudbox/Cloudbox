@@ -8,9 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get IP Address
-  ipinfoio_facts:
-
 - name: "Cloudflare: Remove 'cloudbox' subdomain from '{{domain}}'"
   cloudflare_dns:
     account_api_token: "{{cloudflare_api_token}}"
