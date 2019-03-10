@@ -8,11 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Restore Service | Install common packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - curl
-  ignore_errors: yes
+- name: Restore Service | Install 'curl'
+  apt: "name=curl state=present"
 
 - name: Restore Service | Set variables
   set_fact:

@@ -23,10 +23,11 @@
     force: yes
 
 - name: Install nfs server
-  apt: 'name={{item}} state=present'
-  with_items:
-    - rpcbind
-    - nfs-kernel-server
+  apt:
+    state: present
+    name:
+      - rpcbind
+      - nfs-kernel-server
 
 - name: Import exports file
   template:

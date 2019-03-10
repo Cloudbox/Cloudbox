@@ -9,19 +9,21 @@
 #########################################################################
 ---
 - name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - lsb-release
-    - figlet
-    - jq
-    - toilet
-    - boxes
+  apt:
+    state: present
+    name:
+      - lsb-release
+      - figlet
+      - jq
+      - toilet
+      - boxes
 
 - name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - update-motd
-    - update-notifier-common
+  apt:
+    state: present
+    name:
+      - update-motd
+      - update-notifier-common
   when: (ansible_distribution|lower == 'ubuntu')
 
 - name: Remove existing motd
@@ -92,10 +94,8 @@
     path: "/etc/ssh/sshd_config"
   register: sshd_config
 
-- name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - "openssh-server"
+- name: Install 'openssh-server'
+  apt: "name=openssh-server state=present"
   when: (not sshd_config.stat.exists)
 
 - name: Wait for '/etc/ssh/sshd_config' to be created

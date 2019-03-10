@@ -9,12 +9,11 @@
 #########################################################################
 ---
 - name: Install common packages
-  apt: "name={{inner_item}} state=present"
-  loop:
-    - curl
-    - jq
-  loop_control:
-    loop_var: inner_item
+  apt:
+    state: present
+    name:
+      - curl
+      - jq
 
 - name: Get latest yyq URL
   shell: curl -s https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r ".assets[] | select(.name | test(\"yq_linux_amd64\")) | .browser_download_url"

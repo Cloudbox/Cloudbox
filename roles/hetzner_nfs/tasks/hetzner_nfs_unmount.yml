@@ -22,10 +22,11 @@
   when: nfs_vlan_service.stat.exists
 
 - name: Uninstall nfs requirements
-  apt: 'name={{item}} state=absent'
-  with_items:
-    - rpcbind
-    - nfs-common
+  apt:
+    state: absent
+    name:
+      - rpcbind
+      - nfs-common
 
 - name: Remove files
   file:

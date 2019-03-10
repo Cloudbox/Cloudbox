@@ -8,10 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - zsh
+- name: Install 'zsh'
+  apt: "name=zsh state=present"
 
 - name: Clone oh-my-zsh repo
   git:

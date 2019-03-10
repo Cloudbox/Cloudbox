@@ -9,10 +9,11 @@
 #########################################################################
 ---
 - name: Install common packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - unzip
-    - man-db
+  apt:
+    state: present
+    name:
+      - unzip
+      - man-db
 
 - name: Create rclone directories
   file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
