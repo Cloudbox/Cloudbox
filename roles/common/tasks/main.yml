@@ -39,22 +39,33 @@
 
 - name: Add Ubuntu repositories
   apt_repository:
-    repo: "{{item}}"
+    repo: "{{ item }}"
     state: present
   with_items:
-    - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
-    - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
-    - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
-    - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
-  register: apt_multiverse_repositories
+    - 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse'
+    - 'deb-src http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse'
+    - 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-updates multiverse'
+    - 'deb-src http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-updates multiverse'
   when: ansible_distribution == 'Ubuntu'
-  ignore_errors: yes
+
+- name: Add Debian repositories
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - deb https://deb.debian.org/debian {{ ansible_distribution_release }} main contrib non-free
+    - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }} main contrib non-free
+    - deb https://deb.debian.org/debian-security/ {{ ansible_distribution_release }}/updates main contrib non-free
+    - deb-src https://deb.debian.org/debian-security/ {{ ansible_distribution_release }}/updates main contrib non-free
+    - deb https://deb.debian.org/debian {{ ansible_distribution_release }}-updates main contrib non-free
+    - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }}-updates main contrib non-free
+    - deb https://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib non-free
+    - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib non-free
+  when: ansible_distribution == 'Debian'
 
 - name: Update APT packages list
   apt:
     update_cache: yes
-  when: apt_multiverse_repositories.changed
-  ignore_errors: yes
 
 - name: Fetch pci info
   shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
