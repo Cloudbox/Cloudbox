@@ -8,23 +8,24 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check if user '{{ user }}' exists"
+- name: "User | Check if user '{{ user }}' exists"
   shell: "id -un {{ user }} >/dev/null 2>&1;"
   register: user_check
   failed_when: user_check.rc > 1
 
-- block:
+- name: "User | Set user variables when '{{ user }}' exists"
+  block:
 
-  - name: "Get '{{ user }}' info"
+  - name: "User | Get '{{ user }}' info"
     user:
       name: "{{ user }}"
     register: user_info
 
-  - name: Get vgid
+  - name: "User | Get 'video' gid"
     shell: "getent group video | cut -d: -f3"
     register: vgid_lookup
 
-  - name: "Set 'uid', 'gid', and 'vgid'"
+  - name: "User | Set 'uid', 'gid', and 'vgid'"
     set_fact:
       uid: "{{ user_info.uid }}"
       gid: "{{ user_info.group }}"

@@ -9,11 +9,11 @@
 #########################################################################
 ---
 # Needed again for cloudbox_mod.
-- name: "Set 'continuous_integration' variable"
+- name: "Vars | Set 'continuous_integration' variable"
   set_fact:
     continuous_integration: "{{ continuous_integration | default(false,true) }}"
 
-- name: "Set 'cloudflare_enabled' variable"
+- name: "Vars | Set 'cloudflare_enabled' variable"
   set_fact:
     cloudflare_enabled: "{{ true if not(
         (cloudflare_api_token is undefined)
@@ -24,11 +24,11 @@
       )
       else false }}"
 
-- name: "Set 'localhost_ip' variable"
+- name: "Vars | Set 'localhost_ip' variable"
   set_fact:
     localhost_ip: "127.0.0.1"
 
-- name: "Set 'plex_account_enabled' variable"
+- name: "Vars | Set 'plex_account_enabled' variable"
   set_fact:
     plex_account_enabled: "{{ true if not(
         (plex is undefined)
@@ -51,7 +51,7 @@
       )
       else false }}"
 
-- name: "Set 'nzbs_downloads_path' variable"
+- name: "Vars | Set 'nzbs_downloads_path' variable"
   set_fact:
     nzbs_downloads_path:
       - "{{ downloads.nzbs }}:/downloads/nzbs"
@@ -69,7 +69,7 @@
         (downloads.nzbs | trim | length == 0)
       )
 
-- name: "Set 'torrents_downloads_path' variable"
+- name: "Vars | Set 'torrents_downloads_path' variable"
   set_fact:
     torrents_downloads_path:
       - "{{ downloads.torrents }}:/downloads/torrents"
@@ -88,11 +88,11 @@
       )
 
 
-- name: Set `suitarr_default_version` variable
+- name: Vars | Set `suitarr_default_version` variable
   set_fact:
     suitarr_default_version: "unstable"
 
-- name: Check if 'suitarr.version' was specified
+- name: Vars | Check if 'suitarr.version' was specified
   set_fact:
     suitarr_version_is_specified: "{{ true if not (
         (suitarr is undefined)
@@ -109,7 +109,7 @@
       )
       else false }}"
 
-- name: Validate and set proper 'suitarr' key variables
+- name: Vars | Validate and set proper 'suitarr' key variables
   set_fact:
     suitarr_tmp: { version: "{{ (suitarr.version) if (
         (suitarr_version_is_specified)
@@ -120,7 +120,7 @@
       )
       else (suitarr_default_version) }}" }
 
-- name: Merge changes back to 'suitarr' key
+- name: Vars | Merge changes back to 'suitarr' key
   set_fact:
     suitarr: "{{ (suitarr_tmp) if (
         (suitarr is undefined)
@@ -131,7 +131,7 @@
         )
       else ((suitarr) | combine(suitarr_tmp))  }}"
 
-- name: "Set 'sma_enabled' role tag"
+- name: "Vars | Set 'sma_enabled' role tag"
   set_fact:
     sma_enabled: "{{ true if (
         (sickbeard_mp4_automator is defined)
@@ -140,13 +140,13 @@
         )
       else false }}"
 
-- name: Fetch time zone
+- name: Vars | Fetch time zone
   uri:
     url: http://ip-api.com/line?fields=timezone
     return_content: yes
   register: timezone_response
   when: (system.timezone|lower == 'auto') or (not system.timezone)
 
-- name: Set time zone variable
+- name: Vars | Set time zone variable
   set_fact:
     tz: "{{ (timezone_response.content | trim) if ((system.timezone|lower == 'auto') or (not system.timezone)) else (system.timezone) }}"

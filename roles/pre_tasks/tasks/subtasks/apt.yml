@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Remove APT locks
+- name: APT | Remove APT locks
   file:
     path: "{{ item }}"
     state: absent

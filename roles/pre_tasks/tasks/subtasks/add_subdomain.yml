@@ -8,15 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get Public IP Address
+- name: Add Subdomain | Get Public IP Address
   shell: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
   register: public_ip_lookup
 
-- name: Set 'public_ip' variable
+- name: Add Subdomain | Set 'public_ip' variable
   set_fact:
     public_ip: "{{ public_ip_lookup.stdout }}"
 
-- name: "Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ domain }}'"
+- name: "Add Subdomain | Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ domain }}'"
   cloudflare_dns:
     account_api_token: "{{ cloudflare_api_token }}"
     account_email: "{{ email }}"
