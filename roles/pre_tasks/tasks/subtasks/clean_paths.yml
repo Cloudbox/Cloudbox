@@ -8,14 +8,14 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Remove trailing slash from new downloads paths
+- name: Clean Paths | Remove trailing slash from new downloads paths
   set_fact:
     downloads:
       nzbs: "{{ (downloads.nzbs | default('',true)) | regex_replace('\\/$', '') }}"
       torrents: "{{ downloads.torrents | regex_replace('\\/$', '') }}"
   when: (downloads is defined) and (downloads.nzbs is defined) and (downloads.torrents is defined)
 
-- name: Remove trailing slash from old downloads paths
+- name: Clean Paths | Remove trailing slash from old downloads paths
   set_fact:
     nzbget: { downloads: "{{ (nzbget.downloads | default('',true)) | regex_replace('\\/$', '') }}" }
     rutorrent: { downloads: "{{ (rutorrent.downloads | default('',true)) | regex_replace('\\/$', '') }}" }

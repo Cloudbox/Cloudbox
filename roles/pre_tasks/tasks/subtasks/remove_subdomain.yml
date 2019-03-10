@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Cloudflare: Remove 'cloudbox' subdomain from '{{ domain }}'"
+- name: "Remove Subdomain | Cloudflare: Remove 'cloudbox' subdomain from '{{ domain }}'"
   cloudflare_dns:
     account_api_token: "{{ cloudflare_api_token }}"
     account_email: "{{ email }}"

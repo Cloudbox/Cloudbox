@@ -8,15 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set 'use_nzbs'"
+- name: "Role Vars | Set 'use_nzbs'"
   set_fact:
     use_nzbs: "{{ true if (nzbs_downloads_path is defined|default(false,true)) else false }}"
 
-- name: "Set 'use_torrents'"
+- name: "Role Vars | Set 'use_torrents'"
   set_fact:
     use_torrents: "{{ true if (torrents_downloads_path is defined|default(false,true)) else false }}"
 
-- name: "Set 'use_remote'"
+- name: "Role Vars | Set 'use_remote'"
   set_fact:
     use_remote: "{{ true if not(
         (rclone is undefined)
