@@ -9,10 +9,11 @@
 #########################################################################
 ---
 - name: Install common packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - curl
-    - jq
+  apt:
+    state: present
+    name:
+      - curl
+      - jq
 
 - name: Check if rclone version was specified
   set_fact:

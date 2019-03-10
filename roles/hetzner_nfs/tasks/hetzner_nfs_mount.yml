@@ -33,10 +33,11 @@
     force: yes
 
 - name: Install nfs requirements
-  apt: 'name={{item}} state=present'
-  with_items:
-    - rpcbind
-    - nfs-common
+  apt:
+    state: present
+    name:
+      - rpcbind
+      - nfs-common
 
 - name: Import 'init_vlan.sh' file
   template:

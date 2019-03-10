@@ -9,11 +9,11 @@
 #########################################################################
 ---
 - name: Install common packages
-  apt: "name={{ item }} state=present"
-  with_items:
-    - vnstat
-    - pciutils
-  ignore_errors: yes
+  apt:
+    state: present
+    name:
+      - vnstat
+      - pciutils
 
 - block:
 
