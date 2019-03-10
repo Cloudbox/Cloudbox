@@ -1,0 +1,18 @@
+#########################################################################
+# Title:         Pre-Tasks Role - APT Task                              #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Remove APT locks
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/var/lib/apt/lists/lock"
+    - "/var/cache/apt/archives/lock"
+    - "/var/lib/dpkg/lock"

@@ -56,3 +56,7 @@
   tags:
     - mediabox
     - feederbox
+
+- name: APT Tasks
+  import_tasks: "apt.yml"
+  tags: always
