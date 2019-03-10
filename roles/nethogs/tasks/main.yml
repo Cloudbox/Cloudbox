@@ -12,37 +12,44 @@
   apt: "name=nethogs state=absent"
 
 - name: Install nethog dependencies
-  apt: name="{{item}}" state=present update_cache=yes
-  become: true
+  apt: name="{{ item }}" state=present update_cache=yes
   with_items:
       - build-essential
       - libncurses5-dev
       - libpcap-dev
 
 - name: Pull nethogs repo from github
-  git: clone=yes repo=https://github.com/raboof/nethogs dest=/tmp/nethogs/
+  git:
+    repo: "https://github.com/raboof/nethogs"
+    dest: "/var/tmp/nethogs"
+    clone: yes
+    force: yes
   register: diff
 
 - name: Build and install nethogs
-  shell: "cd /tmp/nethogs && \
-          make && \
-          make install && \
-          hash -r && \
-          setcap 'cap_net_admin,cap_net_raw+pe' /usr/local/sbin/nethogs"
-  when: diff.changed
+  shell: |
+    cd /var/tmp/nethogs
+    make
+    make install
+    hash -r
+    setcap 'cap_net_admin,cap_net_raw+pe' /usr/local/sbin/nethogs
+    rm -rf /var/tmp/nethogs
+  when: diff is success
 
 - name: Symlink binary to /usr/local/bin
   file:
     src: "/usr/local/sbin/nethogs"
-    dest: /usr/local/bin/nethogs
+    dest: "/usr/local/bin/nethogs"
     state: link
     force: yes
+  when: diff is success
 
 - name: "Get nethogs version"
   shell: "/usr/local/sbin/nethogs -V | head -n 1 | awk '{print $2}' | cut -f1,2 -d'-'"
   register: nethogs_version
-  ignore_errors: yes
+  when: diff is success
 
 - name: "Display nethogs version"
   debug:
-    msg: "nethogs {{nethogs_version.stdout}} installed."
+    msg: "nethogs {{ nethogs_version.stdout }} installed."
+  when: diff is success
