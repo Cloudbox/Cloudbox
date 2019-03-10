@@ -8,12 +8,24 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install required packages
-  apt: "name={{ item }} state=present"
-  with_items:
-    - cpufrequtils
-    - linux-tools-common
-    - linux-tools-generic
+- name: Install 'cpufrequtils'
+  apt:
+    name: cpufrequtils
+    state: present
+
+- name: Install 'linux-tools' for Ubuntu
+  apt:
+    state: present
+    name:
+      - linux-tools-common
+      - linux-tools-generic
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install 'linux-tools' for Debian
+  apt:
+    name: linux-tools
+    state: present
+  when: ansible_distribution == 'Debian'
 
 - name: "Install linux-tools-{{ ansible_kernel }}"
   shell: "apt-get install -qq $(apt-cache search -n linux-tools-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
