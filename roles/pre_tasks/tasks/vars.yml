@@ -20,7 +20,7 @@
         or
         (cloudflare_api_token is none)
         or
-        (cloudflare_api_token | trim == '')
+        (cloudflare_api_token | trim | length == 0)
       )
       else false }}"
 
@@ -35,56 +35,56 @@
         or
         (plex is none)
         or
-        (plex | trim == '')
+        (plex | trim | length == 0)
         or
         (plex.user is undefined)
         or
         (plex.user is none)
         or
-        (plex.user | trim == '')
+        (plex.user | trim | length == 0)
         or
         (plex.pass is undefined)
         or
         (plex.pass is none)
         or
-        (plex.pass | trim == '')
+        (plex.pass | trim | length == 0)
       )
       else false }}"
 
 - name: "Set 'nzbs_downloads_path' variable"
   set_fact:
     nzbs_downloads_path:
-      - "{{downloads.nzbs}}:/downloads/nzbs"
+      - "{{ downloads.nzbs }}:/downloads/nzbs"
   when: not (
         (downloads is undefined)
         or
         (downloads is none)
         or
-        (downloads | trim == '')
+        (downloads | trim | length == 0)
         or
         (downloads.nzbs is undefined)
         or
         (downloads.nzbs is none)
         or
-        (downloads.nzbs | trim == '')
+        (downloads.nzbs | trim | length == 0)
       )
 
 - name: "Set 'torrents_downloads_path' variable"
   set_fact:
     torrents_downloads_path:
-      - "{{downloads.torrents}}:/downloads/torrents"
+      - "{{ downloads.torrents }}:/downloads/torrents"
   when: not (
         (downloads is undefined)
         or
         (downloads is none)
         or
-        (downloads | trim == '')
+        (downloads | trim | length == 0)
         or
         (downloads.torrents is undefined)
         or
         (downloads.torrents is none)
         or
-        (downloads.torrents | trim == '')
+        (downloads.torrents | trim | length == 0)
       )
 
 
@@ -99,13 +99,13 @@
         or
         (suitarr is none)
         or
-        (suitarr | trim == '')
+        (suitarr | trim | length == 0)
         or
         (suitarr.version is undefined)
         or
         (suitarr.version is none)
         or
-        (suitarr.version | trim == '')
+        (suitarr.version | trim | length == 0)
       )
       else false }}"
 
@@ -127,7 +127,7 @@
         or
         (suitarr is none)
         or
-        (suitarr | trim == '')
+        (suitarr | trim | length == 0)
         )
       else ((suitarr) | combine(suitarr_tmp))  }}"
 
