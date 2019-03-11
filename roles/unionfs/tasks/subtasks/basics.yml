@@ -8,12 +8,14 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Basics | Create remote directory"
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=no"
-  with_items:
-    - /mnt/remote
+- name: Check to see if unrar installed
+  stat:
+    path: "/mnt/remote"
+  register: mnt_remote
 
-- name: "Basics | Create unionfs directory"
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
-  with_items:
-    - /mnt/unionfs
+- name: "Basics | Create '/mnt/remote' directory"
+  file: "path=/mnt/remote state=directory mode=0775 owner={{ user }} group={{ user }} recurse=no"
+  when: (not mnt_remote.stat.exists)
+
+- name: "Basics | Create '/mnt/unionfs' directory"
+  file: "path=/mnt/unionfs state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
