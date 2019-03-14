@@ -77,6 +77,15 @@
 
   when: not plex_autoscan_config.stat.exists
 
+- name: Set 'PLEX_LD_LIBRARY_PATH' in config.json
+  shell: |
+    CONFIG_PATH="/opt/plex_autoscan/config"
+    jq -c '.PLEX_LD_LIBRARY_PATH = "/usr/lib/plexmediaserver/lib"' ${CONFIG_PATH}/config.json >> \
+    ${CONFIG_PATH}/tmp.$$.json && mv ${CONFIG_PATH}/tmp.$$.json ${CONFIG_PATH}/config.json
+  become: yes
+  become_user: "{{ user }}"
+  when: plex_autoscan_config.stat.exists
+
 - name: Set scan.py as executable
   file:
     path: /opt/plex_autoscan/scan.py
