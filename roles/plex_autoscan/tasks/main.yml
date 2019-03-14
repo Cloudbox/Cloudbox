@@ -32,7 +32,7 @@
   when: plex_autoscan_service.stat.exists
 
 - name: Create plex_autoscan directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/plex_autoscan
 
@@ -42,7 +42,7 @@
     dest: /opt/plex_autoscan
     force: yes
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 - name: Install pip requirements
   pip:
@@ -70,8 +70,8 @@
     template:
       src: config.json.j2
       dest: /opt/plex_autoscan/config/config.json
-      owner: "{{user}}"
-      group: "{{user}}"
+      owner: "{{ user }}"
+      group: "{{ user }}"
       mode: 0775
       force: yes
 
@@ -80,8 +80,8 @@
 - name: Set scan.py as executable
   file:
     path: /opt/plex_autoscan/scan.py
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: a+x
 
 - name: Import plex_autoscan service
@@ -93,21 +93,21 @@
 
 - name: Start plex_autoscan service
   systemd:
-    state: started
     name: plex_autoscan
-    daemon_reload: yes
+    state: started
     enabled: yes
+    daemon_reload: yes
 
 - name: Update config.json
   command: "/opt/plex_autoscan/scan.py sections"
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
   ignore_errors: yes
   tags: plex_autoscan_update_sections
 
 - name: Configure PLEX_SECTION_PATH_MAPPINGS
   command: "/opt/plex_autoscan/scan.py update_sections"
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
   ignore_errors: yes
   tags: plex_autoscan_update_sections
