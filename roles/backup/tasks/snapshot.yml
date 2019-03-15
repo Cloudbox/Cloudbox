@@ -44,4 +44,4 @@
     with_items:
       - /btrfs/snapshots
 
-  when: (misc.snapshot) and (root_fstype == 'btrfs')
+  when: (misc.snapshot) and ((root_fstype is defined) and (root_fstype == 'btrfs'))
