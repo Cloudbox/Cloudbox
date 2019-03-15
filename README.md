@@ -13,7 +13,8 @@
 <br />
 [![License: GPL 3](https://img.shields.io/badge/License-GPL%203-blue.svg?colorB=177DC1&label=License)](LICENSE.md)
 [![Version](https://img.shields.io/github/release/cloudbox/cloudbox.svg?colorB=177DC1&label=Version)](https://github.com/cloudbox/cloudbox/releases)
-[![AppVeyor](https://img.shields.io/appveyor/ci/desimaniac/cloudbox/master.svg?colorB=177DC1&label=AppVeyor)](https://ci.appveyor.com/project/desimaniac/cloudbox)
+[![Last Commit (develop)](https://img.shields.io/github/last-commit/Cloudbox/Cloudbox/develop.svg?colorB=177DC1&label=Last%20Commit)](https://github.com/Cloudbox/Cloudbox/commits/develop)
+[![AppVeyor](https://img.shields.io/appveyor/ci/Cloudbox/Cloudbox/develop.svg?colorB=177DC1&label=AppVeyor)](https://ci.appveyor.com/project/Cloudbox/Cloudbox)
 [![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/badge.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
 [![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/make-wish.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
 
