@@ -161,8 +161,7 @@
   tags: docker-housekeeping
 
 - name: "Re-start all previously running Docker containers"
-  shell: 'docker start {{ docker_running_containers.stdout }}'
-  ignore_errors: yes
+  shell: 'docker start {{ docker_running_containers.stdout }} &> /dev/null || true'
   when: (docker_binary.stat.exists) and (docker_service_running) and (docker_running_containers.stdout | trim | length > 0)
 
 - name: "Install ctop"
