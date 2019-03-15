@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check to see if unrar installed
+- name: "Basics | Check to see if '/mnt/remote' exists"
   stat:
     path: "/mnt/remote"
   register: mnt_remote
