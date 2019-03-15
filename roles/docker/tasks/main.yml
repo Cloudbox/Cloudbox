@@ -35,7 +35,7 @@
     ignore_errors: yes
 
   - name: Stop all running Docker containers
-    shell: "docker stop {{ docker_running_containers.stdout }}"
+    shell: "docker stop {{ docker_running_containers.stdout }} &> /dev/null || true"
     ignore_errors: yes
     when: (docker_running_containers.stdout | trim | length > 0)
 
