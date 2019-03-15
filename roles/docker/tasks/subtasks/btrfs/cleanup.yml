@@ -27,6 +27,11 @@
       docker rm $(docker ps -aq) &> /dev/null || true
       docker rmi -f $(docker images -q) &> /dev/null || true
 
+  - name: Stop docker service
+    systemd:
+      name: docker
+      state: stopped
+
   - name: Cleanup '/var/lib/docker' path
     shell: |
       for subvolume in /var/lib/docker/btrfs/subvolumes/*; do

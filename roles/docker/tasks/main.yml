@@ -29,10 +29,6 @@
 - name: Tasks for when Docker exists and is running
   block:
 
-  - name: Btrfs Tasks
-    include_tasks: "subtasks/btrfs/cleanup.yml"
-    when: ('btrfs' in var_lib_file_system.stdout)
-
   - name: Gather list of running Docker containers
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
     register: docker_running_containers
@@ -42,6 +38,10 @@
     shell: "docker stop {{ docker_running_containers.stdout }}"
     ignore_errors: yes
     when: (docker_running_containers.stdout | trim | length > 0)
+
+  - name: Btrfs Tasks
+    include_tasks: "subtasks/btrfs/cleanup.yml"
+    when: ('btrfs' in var_lib_file_system.stdout)
 
   - name: Stop docker service
     systemd:
