@@ -1,0 +1,37 @@
+#########################################################################
+# Title:         Docker - Btrfs - Cleanup Tasks                         #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# https://gist.github.com/hopeseekr/cd2058e71d01deca5bae9f4e5a555440
+
+- name: Check to see if '/var/lib/docker/' exists
+  stat:
+    path: "/var/lib/docker/"
+  register: var_lib_docker
+
+- name: Tasks when '/var/lib/docker' exists
+  block:
+
+  - name: Check filesystem of '/var/lib/docker' path
+    shell: stat -f -c %T /var/lib/docker
+    register: var_lib_docker_file_system
+
+  - name: Remove all docker containers and images
+    shell: |
+      docker rm $(docker ps -aq) &> /dev/null || true
+      docker rmi -f $(docker images -q) &> /dev/null || true
+
+  - name: Cleanup '/var/lib/docker' path
+    shell: |
+      for subvolume in /var/lib/docker/btrfs/subvolumes/*; do
+          btrfs subvolume delete $subvolume
+      done
+      rm -rf /var/lib/docker
+
+  when: (var_lib_docker.stat.exists)

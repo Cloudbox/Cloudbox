@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Docker: Housekeeping Tasks                             #
+# Title:         Cloudbox: Docker - Pseudo File System Tasks            #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,10 +8,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Remove all unused docker images
-  shell: docker image prune -af &> /dev/null || true
-  ignore_errors: yes
+- name: Create '/media/docker-volume.img'
+  shell: fallocate -l 20G /media/docker-volume.img
 
-- name: Remove all unused docker volumes
-  shell: docker volume prune -f &> /dev/null || true
-  ignore_errors: yes
+- name: Create pseudo filesystem
+  filesystem:
+    fstype: ext4
+    dev: /media/docker-volume.img
+
+- name: Mount pseudo filesystem
+  mount:
+    name: /var/lib/docker
+    src: /media/docker-volume.img
+    fstype: ext4
+    opts: loop
+    state: mounted
