@@ -8,18 +8,28 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Btrfs | Pseudo File System | Create '/media/docker-volume.img'
-  shell: fallocate -l 20G /media/docker-volume.img
+- name: Btrfs | Pseudo File System | Check to see if '/var/lib/docker/' exists
+  stat:
+    path: "/var/lib/docker/"
+  register: var_lib_docker
 
-- name: Btrfs | Pseudo File System | Create pseudo filesystem
-  filesystem:
-    fstype: ext4
-    dev: /media/docker-volume.img
+- name: Btrfs | Pseudo File System | Tasks when '/var/lib/docker' does not exist
+  block:
 
-- name: Btrfs | Pseudo File System | Mount pseudo filesystem
-  mount:
-    name: /var/lib/docker
-    src: /media/docker-volume.img
-    fstype: ext4
-    opts: loop
-    state: mounted
+  - name: Btrfs | Pseudo File System | Create '/media/docker-volume.img'
+    shell: fallocate -l 20G /media/docker-volume.img
+
+  - name: Btrfs | Pseudo File System | Create pseudo filesystem
+    filesystem:
+      fstype: ext4
+      dev: /media/docker-volume.img
+
+  - name: Btrfs | Pseudo File System | Mount pseudo filesystem
+    mount:
+      name: /var/lib/docker
+      src: /media/docker-volume.img
+      fstype: ext4
+      opts: loop
+      state: mounted
+
+  when: (not var_lib_docker.stat.exists)
