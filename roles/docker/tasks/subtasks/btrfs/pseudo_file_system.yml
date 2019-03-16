@@ -8,15 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create '/media/docker-volume.img'
+- name: Btrfs | Pseudo File System | Create '/media/docker-volume.img'
   shell: fallocate -l 20G /media/docker-volume.img
 
-- name: Create pseudo filesystem
+- name: Btrfs | Pseudo File System | Create pseudo filesystem
   filesystem:
     fstype: ext4
     dev: /media/docker-volume.img
 
-- name: Mount pseudo filesystem
+- name: Btrfs | Pseudo File System | Mount pseudo filesystem
   mount:
     name: /var/lib/docker
     src: /media/docker-volume.img
