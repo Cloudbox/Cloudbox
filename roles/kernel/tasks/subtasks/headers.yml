@@ -16,6 +16,7 @@
       name: "linux-headers-{{ ansible_kernel }}"
       state: present
     register: s
+    ignore_errors: yes
 
   - name: Fix apt
     shell: apt-get --fix-broken --yes install
