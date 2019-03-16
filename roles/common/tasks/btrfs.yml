@@ -8,16 +8,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Determine '/' filesystem type"
-  set_fact:
-    root_fstype: "{{ item.fstype }}"
-  when: "(item.mount == '/')"
-  with_items:
-    - "{{ ansible_mounts }}"
+- name: Btrfs | Check if '{{ outer_item }}' exists
+  stat:
+    path: "{{ outer_item }}"
+  register: outer_item_stat
 
-- name: Set no-cow on '/opt' and '/mnt/local' if '/' is btrfs
-  shell: "chattr +C {{item}}"
-  when: (root_fstype is defined) and (root_fstype == 'btrfs')
-  with_items:
-    - /opt
-    - /mnt/local
+- name: Btrfs | Do following tasks when '{{ outer_item }}' does not exist
+  block:
+
+  - name: Btrfs | Create '{{ outer_item }}' path
+    file: "path={{ outer_item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+
+  - name: Btrfs | Set no-cow on '{{ outer_item }}'
+    shell: "chattr +C {{ outer_item }}"
+
+  when: (not outer_item_stat.stat.exists)
