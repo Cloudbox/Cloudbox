@@ -24,7 +24,6 @@
 
   - name: Remove all docker containers and images
     shell: |
-      docker stop $(docker ps -aq) &> /dev/null || true
       docker rm $(docker ps -aq) &> /dev/null || true
       docker rmi -f $(docker images -q) &> /dev/null || true
 
