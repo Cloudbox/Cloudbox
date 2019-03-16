@@ -24,6 +24,7 @@
 
   - name: Remove all docker containers and images
     shell: |
+      docker stop $(docker ps -aq) &> /dev/null || true
       docker rm $(docker ps -aq) &> /dev/null || true
       docker rmi -f $(docker images -q) &> /dev/null || true
 
@@ -31,6 +32,10 @@
     systemd:
       name: docker
       state: stopped
+
+  - name: Wait for 30 seconds before commencing
+    wait_for:
+      timeout: 30
 
   - name: Cleanup '/var/lib/docker' path
     shell: |
