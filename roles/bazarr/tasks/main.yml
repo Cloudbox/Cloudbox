@@ -42,7 +42,6 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
-      MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "bazarr.{{ domain }}"
       VIRTUAL_PORT: 6767
       LETSENCRYPT_HOST: "bazarr.{{ domain }}"

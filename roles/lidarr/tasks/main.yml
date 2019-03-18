@@ -50,7 +50,6 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
-      MONO_TLS_PROVIDER: legacy
       VIRTUAL_HOST: "lidarr.{{ domain }}"
       VIRTUAL_PORT: 8686
       LETSENCRYPT_HOST: "lidarr.{{ domain }}"
