@@ -1,0 +1,51 @@
+#########################################################################
+# Title:         Docker - Btrfs - Cleanup Tasks                         #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# https://gist.github.com/hopeseekr/cd2058e71d01deca5bae9f4e5a555440
+
+- name: Btrfs | Cleanup | Check to see if '/var/lib/docker/' exists
+  stat:
+    path: "/var/lib/docker/"
+  register: var_lib_docker
+
+- name: Btrfs | Cleanup | Tasks when '/var/lib/docker' exists
+  block:
+
+  - name: Btrfs | Cleanup | Check filesystem of '/var/lib/docker' path
+    shell: stat -f -c %T /var/lib/docker
+    register: var_lib_docker_file_system
+
+  - name: Btrfs | Cleanup | Tasks when '/var/lib/docker' is btrfs
+    block:
+
+    - name: Btrfs | Cleanup | Remove all docker containers and images
+      shell: |
+        docker rm $(docker ps -aq) &> /dev/null || true
+        docker rmi -f $(docker images -q) &> /dev/null || true
+
+    - name: Btrfs | Cleanup | Stop docker service
+      systemd:
+        name: docker
+        state: stopped
+
+    - name: Btrfs | Cleanup | Wait for 30 seconds before commencing
+      wait_for:
+        timeout: 30
+
+    - name: Btrfs | Cleanup | Cleanup '/var/lib/docker' path
+      shell: |
+        for subvolume in /var/lib/docker/btrfs/subvolumes/*; do
+            btrfs subvolume delete $subvolume
+        done
+        rm -rf /var/lib/docker
+
+    when: ('btrfs' in var_lib_docker_file_system.stdout)
+
+  when: (var_lib_docker.stat.exists)
