@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Docker - Housekeeping Tasks                  #
+# Title:         Docker: Housekeeping Tasks                             #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,10 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Remove all unused docker images
-  shell: docker image prune -af
+- name: Housekeeping | Remove all unused docker images
+  shell: docker image prune -af &> /dev/null || true
   ignore_errors: yes
 
-- name: Remove all unused docker volumes
-  shell: docker volume prune -f
+- name: Housekeeping | Remove all unused docker volumes
+  shell: docker volume prune -f &> /dev/null || true
   ignore_errors: yes

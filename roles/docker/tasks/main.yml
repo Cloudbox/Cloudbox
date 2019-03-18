@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Check filesystem of '/var/lib/' path
+  shell: stat -f -c %T /var/lib/
+  register: var_lib_file_system
+
 - name: Check to see if docker is installed
   stat:
     path: "/usr/bin/docker"
@@ -22,21 +26,28 @@
     docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == 'running') }}"
   when: docker_binary.stat.exists
 
-- name: Gather list of running Docker containers
-  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
-  register: docker_running_containers
-  ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_service_running)
+- name: Tasks for when Docker exists and is running
+  block:
 
-- name: Stop all running Docker containers
-  shell: "docker stop {{ docker_running_containers.stdout }}"
-  ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_service_running) and (docker_running_containers.stdout | trim | length > 0)
+  - name: Gather list of running Docker containers
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+    register: docker_running_containers
+    ignore_errors: yes
 
-- name: Stop docker service
-  systemd:
-    name: docker
-    state: stopped
+  - name: Stop all running Docker containers
+    shell: "docker stop {{ docker_running_containers.stdout }} &> /dev/null || true"
+    ignore_errors: yes
+    when: (docker_running_containers.stdout | trim | length > 0)
+
+  - name: Btrfs Tasks
+    include_tasks: "subtasks/btrfs/cleanup.yml"
+    when: ('btrfs' in var_lib_file_system.stdout)
+
+  - name: Stop docker service
+    systemd:
+      name: docker
+      state: stopped
+
   when: (docker_binary.stat.exists) and (docker_service_running)
 
 - name: Add official gpg signing key
@@ -121,15 +132,9 @@
     state: latest
   ignore_errors: yes
 
-- name: Create '/var/lib/docker/' path
-  file:
-    path: "/var/lib/docker/"
-    state: directory
-    mode: 0711
-
-- name: Check filesystem of '/var/lib/docker' path
-  shell: stat -f -c %T /var/lib/docker
-  register: var_lib_docker
+- name: Btrfs psuedo file system tasks
+  include_tasks: "subtasks/btrfs/pseudo_file_system.yml"
+  when: ('btrfs' in var_lib_file_system.stdout)
 
 - name: Import 'daemon.json'
   template:
@@ -146,21 +151,17 @@
     timeout: 30
 
 - name: "Stop all Docker containers"
-  shell: "docker stop $(docker ps -aq)"
-  register: s
-  failed_when: s.rc > 1
-  ignore_errors: yes
+  shell: docker stop $(docker ps -aq) &> /dev/null || true
+
+- name: "Import Docker Network tasks"
+  import_tasks: "subtasks/network.yml"
 
 - name: "Import Docker Housekeeping tasks"
   import_tasks: "subtasks/housekeeping.yml"
   tags: docker-housekeeping
 
-- name: "Import Docker Network tasks"
-  import_tasks: "subtasks/network.yml"
-
 - name: "Re-start all previously running Docker containers"
-  shell: 'docker start {{ docker_running_containers.stdout }}'
-  ignore_errors: yes
+  shell: 'docker start {{ docker_running_containers.stdout }} &> /dev/null || true'
   when: (docker_binary.stat.exists) and (docker_service_running) and (docker_running_containers.stdout | trim | length > 0)
 
 - name: "Install ctop"

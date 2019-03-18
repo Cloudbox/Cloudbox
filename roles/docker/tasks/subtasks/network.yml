@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Docker - Network Tasks                       #
+# Title:         Docker: Network Tasks                                  #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,16 +8,16 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get list of docker networks
+- name: Network | Get list of docker networks
   shell: docker network ls --format '{{ '{{' }} .Name{{ '}}' }}'
   register: docker_networks
 
-- name: Get cloudbox docker network gateway
+- name: Network | Get cloudbox docker network gateway
   shell: docker network inspect cloudbox -f '{{ '{{' }}range .IPAM.Config{{ '}}' }}{{ '{{' }}.Gateway{{ '}}' }}{{ '{{' }}end{{ '}}' }}'
   register: docker_gateway
   when: ('cloudbox' in docker_networks.stdout_lines)
 
-- name: "Block: Create new cloudbox docker network"
+- name: "Network | Create new cloudbox docker network block"
   block:
 
   - name: Create cloudbox network
@@ -27,27 +27,27 @@
 
   when: ('cloudbox' not in docker_networks.stdout_lines)
 
-- name: "Block: Rebuild existing cloudbox docker network"
+- name: "Network | Rebuild existing cloudbox docker network block"
   block:
 
-  - name: Get list of containers on cloudbox network
+  - name: Network | Get list of containers on cloudbox network
     shell: docker ps -a --filter network=cloudbox --format '{{ '{{' }}.Names{{ '}}' }}'
     register: docker_containers
 
-  - name: Disconnect containers from bridge network
+  - name: Network | Disconnect containers from bridge network
     shell: docker network disconnect -f bridge {{ item }}
     with_items: "{{ docker_containers.stdout_lines }}"
     register: r
     failed_when: r.rc > 1
     ignore_errors: yes
 
-  - name: Rebuild cloudbox network
+  - name: Network | Rebuild cloudbox network
     docker_network:
       name: cloudbox
       state: present
       force: yes
 
-  - name: Connect containers to cloudbox network
+  - name: Network | Connect containers to cloudbox network
     shell: docker network connect cloudbox {{ item }} --alias {{ item }}
     with_items: "{{ docker_containers.stdout_lines }}"
     register: q
