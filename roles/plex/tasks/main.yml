@@ -17,7 +17,7 @@
   when: cloudflare_enabled
 
 - name: "Create Plex directories"
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - "/opt/plex"
     - "/opt/plex/Library"
@@ -25,8 +25,8 @@
     - "/opt/plex/Library/Application Support/Plex Media Server"
     - "/opt/plex/Library/Logs"
     - "/opt/plex/Library/Logs/Plex Media Server"
-    - "{{plex.transcodes}}/1"
-    - "{{plex.transcodes}}/2"
+    - "{{ plex.transcodes }}/1"
+    - "{{ plex.transcodes }}/2"
 
 - name: "Stop and remove any existing container"
   docker_container:
@@ -35,7 +35,7 @@
 
 - name: "Pull Plex Docker image"
   docker_image:
-    name: "cloudb0x/plex:{{plex.tag}}"
+    name: "cloudb0x/plex:{{ plex.tag }}"
 
 - name: "Check if '/dev/dri' exists"
   stat:
@@ -50,8 +50,8 @@
 - name: "Get Plex server claim code"
   uri:
     url: https://plex.tv/api/claim/token.json
-    user: "{{plex.user}}"
-    password: "{{plex.pass}}"
+    user: "{{ plex.user }}"
+    password: "{{ plex.pass }}"
     force_basic_auth: yes
   register: plex_claim
   when: plex_account_enabled and not (
@@ -62,7 +62,7 @@
 
 - name: "Set 'plex_claim_code' variable"
   set_fact:
-    plex_claim_code: "{{plex_claim.json.token}}"
+    plex_claim_code: "{{ plex_claim.json.token }}"
   when: plex_account_enabled and not (
       (plex_prefs.stat.exists)
       or
@@ -71,7 +71,7 @@
 
 - name: "Ask user for Plex server claim code"
   pause:
-    prompt: "To continue the installation of Plex, please visit 'https://plex.tv/claim', login with your Plex account, copy the Claim Code, paste it below, and press ENTER."
+    prompt: "Please visit 'https://plex.tv/claim', login with your Plex account, copy the Claim Code, paste it below, and press ENTER."
   register: plex_claim_code_prompt
   when: not (
       (plex_prefs.stat.exists)
@@ -83,7 +83,7 @@
 
 - name: "Set 'plex_claim_code' variable"
   set_fact:
-    plex_claim_code: "{{plex_claim_code_prompt.user_input}}"
+    plex_claim_code: "{{ plex_claim_code_prompt.user_input }}"
   when: not (
       (plex_prefs.stat.exists)
       or
@@ -93,13 +93,13 @@
     )
 
 - name: "Display Plex server claim code"
-  debug: msg="Using Plex Claim Code{{':'}} {{plex_claim_code}}"
+  debug: msg="Using Plex Claim Code{{ ':' }} {{ plex_claim_code }}"
   when: not (
       (plex_claim_code is undefined)
       or
       (plex_claim_code is none)
       or
-      (plex_claim_code | trim == '')
+      (plex_claim_code | trim | length == 0)
     )
 
 - name: "Grab lazyman IP address"
@@ -120,7 +120,7 @@
 - name: "Create and start container"
   docker_container:
     name: plex
-    image: "cloudb0x/plex:{{plex.tag}}"
+    image: "cloudb0x/plex:{{ plex.tag }}"
     pull: yes
     published_ports:
       - "{{ (( plex.open_port | default(false,true)) | ternary('', '127.0.0.1:')) + '32400:32400/tcp' }}"
@@ -135,15 +135,15 @@
       - "33400:33400/tcp"
       - "33443:33443/tcp"
     env:
-      PLEX_UID: "{{uid}}"
-      PLEX_GID: "{{gid}}"
-      PLEX_CLAIM: "{{ plex_claim_code | default (omit)}}"
+      PLEX_UID: "{{ uid }}"
+      PLEX_GID: "{{ gid }}"
+      PLEX_CLAIM: "{{ plex_claim_code | default (omit) }}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://plex.{{domain}}:80/,https://plex.{{domain}}:443/"
-      VIRTUAL_HOST: "plex.{{domain}}"
+      ADVERTISE_IP: "http://plex.{{ domain }}:80/,https://plex.{{ domain }}:443/"
+      VIRTUAL_HOST: "plex.{{ domain }}"
       VIRTUAL_PORT: 32400
-      LETSENCRYPT_HOST: "plex.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "plex.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
       HTTPS_METHOD: noredirect
       HEALTHCHECK_MOUNT: /mnt/unionfs
       NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia | default(false) else omit }}"
@@ -152,13 +152,13 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
       - "/opt/scripts:/scripts"
-      - "{{plex.transcodes}}/1:/transcode"
-      - "{{plex.transcodes}}/2:/transcodes"
+      - "{{ plex.transcodes }}/1:/transcode"
+      - "{{ plex.transcodes }}/2:/transcodes"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
       - "/tmp:/tmp"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
-    etc_hosts: "{{plex_default_hosts | combine(plex_custom_hosts|default([])) }}"
+    etc_hosts: "{{ plex_default_hosts | combine(plex_custom_hosts|default([])) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
@@ -176,9 +176,9 @@
 # we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
 - name: "Ensure transcodes folder has the correct permissions"
   file:
-    path: "{{plex.transcodes}}"
-    owner: "{{user}}"
-    group: "{{user}}"
+    path: "{{ plex.transcodes }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     recurse: yes
 
