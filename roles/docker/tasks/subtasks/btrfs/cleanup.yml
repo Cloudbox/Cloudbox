@@ -39,12 +39,14 @@
       wait_for:
         timeout: 30
 
-    - name: Btrfs | Cleanup | Cleanup '/var/lib/docker' path
+    - name: Btrfs | Cleanup | Cleanup '/var/lib/docker' path subvolumes
       shell: |
         for subvolume in /var/lib/docker/btrfs/subvolumes/*; do
             btrfs subvolume delete $subvolume
         done
-        rm -rf /var/lib/docker
+
+    - name: Btrfs | Cleanup | Cleanup '/var/lib/docker' path
+      shell: rm -rf /var/lib/docker
 
     when: ('btrfs' in var_lib_docker_file_system.stdout)
 
