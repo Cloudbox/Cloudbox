@@ -25,9 +25,10 @@
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Logs"
     state: present
+  when: (not continuous_integration)
 
 - name: Create plexpy directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/plexpy
     - /opt/scripts/plexpy
@@ -40,14 +41,14 @@
     published_ports:
       - "127.0.0.1:8181:8181"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
-      VIRTUAL_HOST: "plexpy.{{domain}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "plexpy.{{ domain }}"
       VIRTUAL_PORT: 8181
-      LETSENCRYPT_HOST: "plexpy.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "plexpy.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
       ADVANCED_GIT_BRANCH: nightly
-      TZ: "{{tz}}"
+      TZ: "{{ tz }}"
     volumes:
       - "/opt/plexpy:/config"
       - "/opt/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
