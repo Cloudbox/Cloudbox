@@ -13,7 +13,7 @@
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
     state: present
     timeout: 600
-    
+
 - name: Get Current Plex DB Cache Size
   shell: sqlite3 "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" "PRAGMA default_cache_size;"
   args:
@@ -31,13 +31,15 @@
         or
         (plex.db_cache_size is none)
         or
-        (plex.db_cache_size | trim == '')
+        (plex.db_cache_size | trim | length == 0)
       )
       else false }}"
 
 - name: Get Desired Plex DB Cache Size
   set_fact:
-    desired_db_cache_size: "{{ default_db_cache_size if ( (not db_cache_size_is_specified) or (plex.db_cache_size == 'default') ) else ( (plex.db_cache_size) | regex_replace(',', '') | int ) }}"
+    desired_db_cache_size: "{{ default_db_cache_size
+      if ( (not db_cache_size_is_specified) or (plex.db_cache_size == 'default') )
+      else ( (plex.db_cache_size) | regex_replace(',', '') | int ) }}"
 
 - name: Make Plex DB Edits
   block:
@@ -48,12 +50,16 @@
       state: stopped
 
   - name: "Set Plex DB Cache Size to '{{ desired_db_cache_size | regex_replace(',', '') | int }}'"
-    shell: "sqlite3 \"/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db\" \"PRAGMA default_cache_size = '{{ desired_db_cache_size | int }}';\""
+    shell: |
+      sqlite3 \"/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db\" \
+        \"PRAGMA default_cache_size = '{{ desired_db_cache_size | int }}';\"
     args:
       executable: /bin/bash
 
   - name: Get Current Plex DB Cache Size
-    shell: sqlite3 "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" "PRAGMA default_cache_size;"
+    shell: |
+      sqlite3 "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" \
+        "PRAGMA default_cache_size;"
     args:
       executable: /bin/bash
     register: new_db_cache_size

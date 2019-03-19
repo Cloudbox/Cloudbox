@@ -9,7 +9,6 @@
 ##########################################################################
 #   Based on the work by Michael Zemsky (https://github.com/zmike808)    #
 ##########################################################################
-
 ---
 - name: Install lxml pip module
   pip: "name=lxml state=present"
