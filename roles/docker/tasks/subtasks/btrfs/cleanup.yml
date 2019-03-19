@@ -25,10 +25,14 @@
   - name: Btrfs | Cleanup | Tasks when '/var/lib/docker' is btrfs
     block:
 
-    - name: Btrfs | Cleanup | Remove all docker containers and images
+    - name: Btrfs | Cleanup | Remove all docker containers, images, and volumes
       shell: |
-        docker rm $(docker ps -aq) &> /dev/null || true
-        docker rmi -f $(docker images -q) &> /dev/null || true
+        docker container stop $(docker ps -aq) &> /dev/null || true
+        docker container rm $(docker ps -aq) &> /dev/null || true
+        docker image rm -f $(docker images -q) &> /dev/null || true
+        docker image prune -af &> /dev/null || true
+        docker volume rm $(docker volume ls -q) &> /dev/null || true
+        docker volume prune -f &> /dev/null || true
 
     - name: Btrfs | Cleanup | Stop docker service
       systemd:
@@ -39,13 +43,13 @@
       wait_for:
         timeout: 30
 
-    - name: Btrfs | Cleanup | Cleanup '/var/lib/docker' path subvolumes
+    - name: Btrfs | Cleanup | Remove '/var/lib/docker' btrfs subvolumes
       shell: |
         for subvolume in /var/lib/docker/btrfs/subvolumes/*; do
             btrfs subvolume delete $subvolume
         done
 
-    - name: Btrfs | Cleanup | Cleanup '/var/lib/docker' path
+    - name: Btrfs | Cleanup | Remove '/var/lib/docker' path
       shell: rm -rf /var/lib/docker
 
     when: ('btrfs' in var_lib_docker_file_system.stdout)
