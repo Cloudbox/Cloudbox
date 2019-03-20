@@ -37,7 +37,7 @@
 - name: Check sudoers exists
   stat:
     path: "/etc/sudoers"
-  register: sudoers
+  register: etc_sudoers
 
 - name: Set sudo group to NOPASSWD
   lineinfile:
@@ -45,7 +45,7 @@
     regexp: '^%sudo\s'
     line: '%sudo   ALL=(ALL) NOPASSWD:ALL'
     state: present
-  when: not sudoers.stat.exists
+  when: etc_sudoers.stat.exists
 
 - name: Create 'cloudbox_folder_path' variable
   set_fact:
