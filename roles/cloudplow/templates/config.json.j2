@@ -52,18 +52,20 @@
                 "--stats": "60s",
                 "--transfers": 8,
                 "--verbose": 1,
-                "--skip-links": null
+                "--skip-links": null,
+                "--retries": 1,
+                "--low-level-retries": 2
             },
             "rclone_sleeps": {
                 "Failed to copy: googleapi: Error 403: User rate limit exceeded": {
-                    "count": 5,
+                    "count": 10,
                     "sleep": 25,
-                    "timeout": 3600
+                    "timeout": 7200
                 },
                 " 0/s,": {
-                    "count": 50,
+                    "count": 16,
                     "sleep": 25,
-                    "timeout": 300
+                    "timeout": 62
                 }
             },
             "rclone_command": "move",
@@ -85,7 +87,8 @@
             ],
             "size_excludes": [
                 "downloads/*"
-            ]
+            ],
+            "service_account_path": ""
         }
     }
 }
