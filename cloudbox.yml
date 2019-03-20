@@ -44,6 +44,7 @@
     - { role: plex_auth_token, tags: ['plex_auth_token'] }
     - { role: webtools, tags: ['webtools', 'reinstall-webtools'] }
     - { role: sub-zero, tags: ['sub-zero', 'reinstall-sub-zero'] }
+    - { role: subliminal, tags: ['subliminal'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: plexrequests, tags: ['plexrequests'] }
     - { role: resilio-sync, tags: ['resilio-sync'] }

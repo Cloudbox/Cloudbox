@@ -214,12 +214,6 @@
   tags: nethogs
   ignore_errors: yes
 
-- name: Install Subliminal
-  import_role:
-    name: subliminal
-  tags: subliminal
-  ignore_errors: yes
-
 - name: Cloudflare Cache Purge Task
   import_tasks: "cloudflare_cache_purge.yml"
   when: cloudflare_enabled
