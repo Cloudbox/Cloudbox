@@ -66,3 +66,17 @@
   debug:
     msg: "frontail {{ frontail_version.stdout }} installed."
   when: frontail_binary.stdout | trim | length > 0
+
+- name: Install hastebin npm module
+  npm: "name={{ item }} global=yes state=present"
+  with_items:
+    - hastebin
+
+- name: "Get hastebin binary path"
+  shell: "command -v hastebin || true"
+  register: hastebin_binary
+
+- name: "Display hastebin install info"
+  debug:
+    msg: "hastebin installed."
+  when: hastebin_binary.stdout | trim | length > 0
