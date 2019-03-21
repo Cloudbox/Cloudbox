@@ -15,17 +15,18 @@
   tags: nodejs
 
 - name: "Get nodejs binary path"
-  shell: "command -v nodejs"
+  shell: "command -v nodejs || true"
   register: nodejs_binary
 
 - name: "Get nodejs version"
-  shell: "{{nodejs_binary.stdout}} --version | head -n 1 | awk '{ print substr($1, 2) }'"
+  shell: "{{ nodejs_binary.stdout }} --version | head -n 1 | awk '{ print substr($1, 2) }'"
   register: nodejs_version
-  ignore_errors: yes
+  when: nodejs_binary.stdout | trim | length > 0
 
 - name: "Display nodejs version"
   debug:
-    msg: "NodeJS {{nodejs_version.stdout}} installed."
+    msg: "NodeJS {{ nodejs_version.stdout }} installed."
+  when: nodejs_binary.stdout | trim | length > 0
 
 - name: Update npm
   shell: "npm install -g npm"
@@ -34,32 +35,34 @@
   shell: "npm update -g"
 
 - name: "Get npm binary path"
-  shell: "command -v npm"
+  shell: "command -v npm || true"
   register: npm_binary
 
 - name: "Get npm version"
-  shell: "{{npm_binary.stdout}} --version | head -n 1 | awk '{ print $1 }'"
+  shell: "{{ npm_binary.stdout }} --version | head -n 1 | awk '{ print $1 }'"
   register: npm_version
-  ignore_errors: yes
+  when: npm_binary.stdout | trim | length > 0
 
 - name: "Display npm version"
   debug:
-    msg: "npm {{npm_version.stdout}} installed."
+    msg: "npm {{ npm_version.stdout }} installed."
+  when: npm_binary.stdout | trim | length > 0
 
 - name: Install frontail npm module
-  npm: "name={{item}} global=yes state=present"
+  npm: "name={{ item }} global=yes state=present"
   with_items:
     - frontail
 
 - name: "Get frontail binary path"
-  shell: "command -v frontail"
+  shell: "command -v frontail || true"
   register: frontail_binary
 
 - name: "Get frontail version"
-  shell: "{{frontail_binary.stdout}} --version | head -n 1 | awk '{ print $1 }'"
+  shell: "{{ frontail_binary.stdout }} --version | head -n 1 | awk '{ print $1 }'"
   register: frontail_version
-  ignore_errors: yes
+  when: frontail_binary.stdout | trim | length > 0
 
 - name: "Display frontail version"
   debug:
-    msg: "frontail {{frontail_version.stdout}} installed."
+    msg: "frontail {{ frontail_version.stdout }} installed."
+  when: frontail_binary.stdout | trim | length > 0
