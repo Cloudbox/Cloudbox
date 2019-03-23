@@ -51,8 +51,8 @@
 
   - name: "Set Plex DB Cache Size to '{{ desired_db_cache_size | regex_replace(',', '') | int }}'"
     shell: |
-      sqlite3 \"/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db\" \
-        \"PRAGMA default_cache_size = '{{ desired_db_cache_size | int }}';\"
+      sqlite3 "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" \
+        "PRAGMA default_cache_size = '{{ desired_db_cache_size | int }}';"
     args:
       executable: /bin/bash
 
