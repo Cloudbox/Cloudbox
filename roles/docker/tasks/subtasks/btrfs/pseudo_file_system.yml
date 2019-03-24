@@ -8,6 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Install common pip modules
+  pip:
+    state: present
+    name:
+      - jmespath
+
 - name: "Btrfs | Pseudo File System | Determine if '/var/lib/docker' is mounted"
   set_fact:
     var_lib_docker_mount_exists: "{{ true if ( ansible_mounts | json_query('[?mount == `/var/lib/docker`]') ) else false }}"
