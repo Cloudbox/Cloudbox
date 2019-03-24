@@ -8,6 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Install common pip modules
+  pip:
+    state: present
+    name:
+      - jmespath
+
 - name: Fetch Nvidia card info
   shell: |
       if [ `lspci | grep -c -E '.*VGA.*NVIDIA'` -eq 1 ]; then
@@ -88,7 +94,7 @@
       when: (docker_default_runtime != 'nvidia')
 
   # Install Nvidia Nvtop Tool
-  
+
   - name: Nvidia Nvtop Tasks
     block:
 
@@ -100,6 +106,5 @@
     - name: "Nvidia Nvtop Task"
       include_tasks: "nvidia_nvtop.yml"
       when: not nvtop_binary.stat.exists
-      
 
   when: (ansible_distribution == 'Ubuntu') and ('NVIDIA' in lspci_resp.stdout)
