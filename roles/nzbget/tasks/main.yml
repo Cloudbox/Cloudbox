@@ -27,7 +27,7 @@
     state: absent
   when: not (darkerr.enable | default(false,true))
 
-- name: Suitarr Migration Tasks
+- name: Suitarr Migration Task
   import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create nzbget directories
@@ -90,12 +90,12 @@
     state: started
 
 - name: Scripts Task
-  import_tasks: "subtasks/nzbget_scripts.yml"
+  import_tasks: "subtasks/scripts.yml"
   when: not continuous_integration
   tags: nzbget-scripts
 
 - name: Settings Task
-  include_tasks: "subtasks/nzbget_settings.yml"
+  include_tasks: "subtasks/settings.yml"
   when: not (
         (nzbget_conf.stat.exists)
         or
