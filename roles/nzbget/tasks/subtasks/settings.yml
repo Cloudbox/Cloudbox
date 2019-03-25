@@ -9,32 +9,32 @@
 #########################################################################
 ---
 # Stop Container
-- name: Wait for nzbget.conf to be created
+- name: Settings | Wait for nzbget.conf to be created
   wait_for:
     path: "/opt/nzbget/app/nzbget.conf"
     state: present
 
-- name: Stop container to customize nzbget.conf
+- name: Settings | Stop container to customize nzbget.conf
   docker_container:
     name: nzbget
     state: stopped
 
 # Authentication
-- name: Set Username
+- name: Settings | Set Username
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^ControlUsername\s?='
     line: "ControlUsername={{ user }}"
     state: present
 
-- name: Set Password
+- name: Settings | Set Password
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^ControlPassword\s?=.*'
     line: "ControlPassword={{ passwd }}"
     state: present
 
-- name: Set FormAuth
+- name: Settings | Set FormAuth
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^FormAuth\s?=.*'
@@ -42,42 +42,42 @@
     state: present
 
 # Paths
-- name: Change MainDir to downloads directory
+- name: Settings | Change MainDir to downloads directory
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^MainDir\s?='
     line: 'MainDir=/downloads/nzbs/nzbget'
     state: present
 
-- name: Change QueueDir path
+- name: Settings | Change QueueDir path
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^QueueDir\s?='
     line: 'QueueDir=${MainDir}/queue'
     state: present
 
-- name: Change TempDir path
+- name: Settings | Change TempDir path
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^TempDir\s?='
     line: 'TempDir=${MainDir}/tmp'
     state: present
 
-- name: Change ScriptDir path
+- name: Settings | Change ScriptDir path
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^ScriptDir\s?='
     line: 'ScriptDir=/scripts/nzbget'
     state: present
 
-- name: Change LockFile path
+- name: Settings | Change LockFile path
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^LockFile\s?='
     line: 'LockFile=/config/app/nzbget.lock'
     state: present
 
-- name: Change LogFile path
+- name: Settings | Change LogFile path
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^LogFile\s?='
@@ -86,77 +86,77 @@
 
 # Categories
 
-- name: Rename movies category
+- name: Settings | Rename movies category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category1\.Name\s?=.*'
     line: 'Category1.Name=movies'
     state: present
 
-- name: Add aliases to movies category
+- name: Settings | Add aliases to movies category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category1\.Aliases\s?='
     line: 'Category1.Aliases=movies*, Movies*'
     state: present
 
-- name: Rename series category
+- name: Settings | Rename series category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category2\.Name\s?=.*'
     line: 'Category2.Name=series'
     state: present
 
-- name: Add aliases to series category
+- name: Settings | Add aliases to series category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category2\.Aliases\s?='
     line: 'Category2.Aliases=TV - HD, TV - SD, TV*'
     state: present
 
-- name: Rename music category
+- name: Settings | Rename music category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category3\.Name\s?=.*'
     line: 'Category3.Name=music'
     state: present
 
-- name: Add aliases to music category
+- name: Settings | Add aliases to music category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category3\.Aliases\s?='
     line: 'Category3.Aliases=audio*'
     state: present
 
-- name: Rename apps category
+- name: Settings | Rename apps category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category4\.Name\s?=.*'
     line: 'Category4.Name=apps'
     state: present
 
-- name: Add aliases to apps category
+- name: Settings | Add aliases to apps category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category4\.Aliases\s?='
     line: 'Category4.Aliases=apps*, pc*'
     state: present
 
-- name: Add Radarr category
+- name: Settings | Add Radarr category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category5\.Name\s?='
     line: 'Category5.Name=radarr'
     state: present
 
-- name: Add Sonarr category
+- name: Settings | Add Sonarr category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category6\.Name\s?='
     line: 'Category6.Name=sonarr'
     state: present
 
-- name: Add Lidarr category
+- name: Settings | Add Lidarr category
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^Category7\.Name\s?='
@@ -164,14 +164,14 @@
     state: present
 
 # Miscellaneous
-- name: Set DiskSpace
+- name: Settings | Set DiskSpace
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^DiskSpace\s?=.*'
     line: 'DiskSpace=100000'
     state: present
 
-- name: Remove 'Task1' schedule
+- name: Settings | Remove 'Task1' schedule
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: "{{ item.regexp }}"
@@ -182,7 +182,7 @@
     - {regexp: '.Task1\.Command\=.*' }
     - {regexp: '.Task1\.Param\=.*' }
 
-- name: Create a'Tasks1' unpauser schedule
+- name: Settings | Create a'Tasks1' unpauser schedule
   blockinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     block: |
@@ -192,7 +192,7 @@
       Task1.Param=
     insertafter: "^### SCHEDULER"
 
-- name: Set HealthCheck
+- name: Settings | Set HealthCheck
   lineinfile:
     path: "/opt/nzbget/app/nzbget.conf"
     regexp: '^HealthCheck\s?=.*'
@@ -200,7 +200,7 @@
     state: present
 
 # Start Container
-- name: Start container to apply changes
+- name: Settings | Start container to apply changes
   docker_container:
     name: nzbget
     state: started

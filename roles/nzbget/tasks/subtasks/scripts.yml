@@ -8,13 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create nzbget script directories
+- name: Scripts | Create nzbget script directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/scripts/nzbget
     - /opt/scripts/nzbget/nzbgetpp
 
-- name: Download various scripts
+- name: Scripts | Download various scripts
   get_url:
     url:  "{{ item }}"
     dest: "/opt/scripts/nzbget/"
@@ -29,7 +29,7 @@
     - "https://raw.githubusercontent.com/Prinz23/nzbget-pp-reverse/master/reverse_name.py"
   ignore_errors: yes
 
-- name: Download unzip.py script
+- name: Scripts | Download unzip.py script
   git:
     repo: "https://github.com/Prinz23/nzbgetpp"
     dest: "/opt/scripts/nzbget/nzbgetpp/"
@@ -39,7 +39,7 @@
   register: unzip_py
   ignore_errors: yes
 
-- name: Add unrar path to rarfile.py
+- name: Scripts | Add unrar path to rarfile.py
   lineinfile:
     path: "/opt/scripts/nzbget/nzbgetpp/rarfile/rarfile.py"
     regexp: '^UNRAR_TOOL\s?=.*'
@@ -47,7 +47,7 @@
     state: present
   when: unzip_py is success
 
-- name: Import HashRenamer.py
+- name: Scripts | Import HashRenamer.py
   copy:
     src: "HashRenamer.py"
     dest: "/opt/scripts/nzbget/HashRenamer.py"
