@@ -16,7 +16,7 @@
 
 - name: "Get 'cloudbox.yml' info."
   stat:
-    path: "{{playbook_dir}}/cloudbox.yml"
+    path: "{{ playbook_dir }}/cloudbox.yml"
   register: cloudbox_yml
 
 - name: "Settings: Ansible Config"

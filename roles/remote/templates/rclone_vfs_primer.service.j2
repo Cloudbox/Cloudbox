@@ -15,8 +15,8 @@ Requires=rclone_vfs.service
 After=rclone_vfs.service
 
 [Service]
-User={{user}}
-Group={{user}}
+User={{ user }}
+Group={{ user }}
 Type=oneshot
 ExecStartPre=/bin/sleep 10
 ExecStart=/usr/bin/rclone \

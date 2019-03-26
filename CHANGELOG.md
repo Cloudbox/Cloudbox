@@ -456,7 +456,7 @@ Links:
 - **Scripts:** Torrent Cleaner - Experimental support for Lidarr.
 - **NZBGet:** Tweaked /scripts mount path.
 - **ruTorrent:** Tweaked /scripts mount path.
-- **Pre-Install:** Set ownership of entire `/home/{{user}}` folder to `{{user}}:{{user}}`.
+- **Pre-Install:** Set ownership of entire `/home/{{ user }}` folder to `{{ user }}:{{ user }}`.
 
 ## [1.2.0][] - 2018-06-17
 

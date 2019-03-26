@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo ip link add link {{ansible_default_ipv4.interface}} name {{ansible_default_ipv4.interface}}.{{hetzner_nfs.vlan_id}} type vlan id {{hetzner_nfs.vlan_id}}
-sudo ip link set {{ansible_default_ipv4.interface}}.{{hetzner_nfs.vlan_id}} mtu 1400
-sudo ip link set dev {{ansible_default_ipv4.interface}}.{{hetzner_nfs.vlan_id}} up
-sudo ip addr add 192.168.100.2/24 brd 192.168.100.255 dev {{ansible_default_ipv4.interface}}.{{hetzner_nfs.vlan_id}}
+sudo ip link add link {{ ansible_default_ipv4.interface }} name {{ ansible_default_ipv4.interface }}.{{ hetzner_nfs.vlan_id }} type vlan id {{ hetzner_nfs.vlan_id }}
+sudo ip link set {{ ansible_default_ipv4.interface }}.{{ hetzner_nfs.vlan_id }} mtu 1400
+sudo ip link set dev {{ ansible_default_ipv4.interface }}.{{ hetzner_nfs.vlan_id }} up
+sudo ip addr add 192.168.100.2/24 brd 192.168.100.255 dev {{ ansible_default_ipv4.interface }}.{{ hetzner_nfs.vlan_id }}

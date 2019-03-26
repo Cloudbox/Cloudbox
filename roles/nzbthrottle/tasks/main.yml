@@ -15,7 +15,7 @@
     state: absent
 
 - name: Create nzbthrottle directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/nzbthrottle
 
@@ -33,8 +33,8 @@
   template:
     src: "config.json.j2"
     dest: "/opt/nzbthrottle/config.json"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: (not nzbthrottle_config.stat.exists)

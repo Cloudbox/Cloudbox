@@ -35,5 +35,5 @@
   fail:
     msg:
     - "Nvidia patch did not install!"
-    - "{{patch_install.stdout}}"
+    - "{{ patch_install.stdout }}"
   when: (patch_install is failed) or ('Patched!' not in patch_install.stdout)

@@ -15,7 +15,7 @@
     state: absent
 
 - name: Create ddclient directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/ddclient
 
@@ -39,8 +39,8 @@
   template:
     src: "ddclient.conf.j2"
     dest: "/opt/ddclient/ddclient.conf"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: no
   when: cloudflare_enabled
@@ -51,8 +51,8 @@
     image: "linuxserver/ddclient:latest"
     pull: yes
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
     volumes:
       - "/opt/ddclient:/config"
     labels:

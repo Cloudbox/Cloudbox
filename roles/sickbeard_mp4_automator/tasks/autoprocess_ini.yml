@@ -12,8 +12,8 @@
   copy:
     src: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini.sample"
     dest: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: no
 
@@ -22,8 +22,8 @@
     path: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
     section: "{{ item }}"
     state: absent
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
   loop:
     - "SickBeard"
@@ -77,8 +77,8 @@
       option: "{{ item.option }}"
       value: "{{ item.value }}"
       state: present
-      owner: "{{user}}"
-      group: "{{user}}"
+      owner: "{{ user }}"
+      group: "{{ user }}"
       mode: 0775
     loop:
       - { option: 'host', value: 'sonarr' }
@@ -131,8 +131,8 @@
       option: "{{ item.option }}"
       value: "{{ item.value }}"
       state: present
-      owner: "{{user}}"
-      group: "{{user}}"
+      owner: "{{ user }}"
+      group: "{{ user }}"
       mode: 0775
     loop:
       - { option: 'host', value: 'radarr' }
@@ -150,8 +150,8 @@
     option: "{{ item.option }}"
     value: "{{ item.value }}"
     state: present
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
   loop:
     - { option: 'ffmpeg', value: '/usr/bin/ffmpeg' }

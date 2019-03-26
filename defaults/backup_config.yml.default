@@ -1,7 +1,7 @@
 ---
 local:
   enable: yes
-  destination: /home/{{user}}/Backups/Cloudbox
+  destination: /home/{{ user }}/Backups/Cloudbox
 rclone:
   enable: yes
   destination: google:/Backups/Cloudbox

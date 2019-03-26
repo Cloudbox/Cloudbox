@@ -8,24 +8,24 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check if '{{item}}' exists."
+- name: "Check if '{{ item }}' exists."
   stat:
-    path: "{{playbook_dir}}/{{item}}"
+    path: "{{ playbook_dir }}/{{ item }}"
   register: file
 
-- name: "Copy '{{item}}.default' to '{{item}}'."
+- name: "Copy '{{ item }}.default' to '{{ item }}'."
   copy:
-    src: "{{playbook_dir}}/defaults/{{item}}.default"
-    dest: "{{playbook_dir}}/{{item}}"
-    owner: "{{cloudbox_yml.stat.uid}}"
-    group: "{{cloudbox_yml.stat.gid}}"
+    src: "{{ playbook_dir }}/defaults/{{ item }}.default"
+    dest: "{{ playbook_dir }}/{{ item }}"
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
     mode: 0664
     force: yes
   when: not file.stat.exists
 
-- name: "Add hash_behaviour into '{{item}}'."
+- name: "Add hash_behaviour into '{{ item }}'."
   lineinfile:
-    path: "{{playbook_dir}}/{{item}}"
+    path: "{{ playbook_dir }}/{{ item }}"
     regexp: '^hash_behaviour\s?=.*'
     state: present
     line: 'hash_behaviour = merge'

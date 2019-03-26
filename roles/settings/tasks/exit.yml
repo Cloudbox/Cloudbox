@@ -30,12 +30,12 @@
 # Make sure accounts.yml has been filled in by user
 - name: "Get stats on 'accounts.yml' for hash check."
   stat:
-    path: "{{playbook_dir}}/accounts.yml"
+    path: "{{ playbook_dir }}/accounts.yml"
   register: accounts_yml
 
 - name: "Get stats on 'accounts.yml.default' for hash check."
   stat:
-    path: "{{playbook_dir}}/defaults/accounts.yml.default"
+    path: "{{ playbook_dir }}/defaults/accounts.yml.default"
   register: accounts_yml_default
 
 - name: "Ensure that 'accounts.yml' is configured."
@@ -43,5 +43,5 @@
     that:
       - accounts_yml.stat.exists
       - accounts_yml.stat.checksum != accounts_yml_default.stat.checksum
-      - '"{{domain}}" != "testcloudbox.yml"'
+      - '"{{ domain }}" != "testcloudbox.yml"'
     msg: "You must configure 'accounts.yml' before running the Cloudbox installer."

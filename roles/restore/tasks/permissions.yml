@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Set '/opt' ownership recursively
-  shell: "chown -R {{user}}:{{user}} /opt"
+  shell: "chown -R {{ user }}:{{ user }} /opt"
   args:
     warn: no
 

@@ -16,7 +16,7 @@
   when: cloudflare_enabled
 
 - name: "Create drive_strm directories"
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - "/opt/drive_strm"
     - "/opt/scripts/drive_strm"
@@ -41,7 +41,7 @@
     register: client_id
 
   - name: "Display Google Drive Client ID"
-    debug: msg="Using Google Drive Client ID{{':'}} {{ client_id.user_input }}"
+    debug: msg="Using Google Drive Client ID{{ ':' }} {{ client_id.user_input }}"
 
   - name: "Get Google Drive Client Secret"
     pause:
@@ -49,14 +49,14 @@
     register: client_secret
 
   - name: "Display Google Drive Client Secret"
-    debug: msg="Using Google Drive Client Secret{{':'}} {{ client_secret.user_input }}"
+    debug: msg="Using Google Drive Client Secret{{ ':' }} {{ client_secret.user_input }}"
 
   - name: Import 'config.json'
     template:
       src: config.json.j2
       dest: /opt/drive_strm/config.json
-      owner: "{{user}}"
-      group: "{{user}}"
+      owner: "{{ user }}"
+      group: "{{ user }}"
       mode: 0775
       force: yes
 
@@ -84,11 +84,11 @@
         name: drive_strm
         image: "cloudb0x/drive_strm:latest"
         pull: no
-        command: "{{item}}"
+        command: "{{ item }}"
         detach: no
         keep_volumes: no
         cleanup: yes
-        user: "{{uid}}:{{gid}}"
+        user: "{{ uid }}:{{ gid }}"
         volumes:
           - "/etc/localtime:/etc/localtime:ro"
           - "/opt/drive_strm:/config"
@@ -127,7 +127,7 @@
         detach: no
         keep_volumes: no
         cleanup: yes
-        user: "{{uid}}:{{gid}}"
+        user: "{{ uid }}:{{ gid }}"
         volumes:
           - "/etc/localtime:/etc/localtime:ro"
           - "/opt/drive_strm:/config"
@@ -155,8 +155,8 @@
   copy:
     src: "drive_strm_rebuild.sh"
     dest: "/opt/scripts/drive_strm/drive_strm_rebuild.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: no
 
@@ -168,7 +168,7 @@
     rm ${APP_PATH}/*.db*
     jq -c '.page_token = "1"' ${APP_PATH}/token.json >> ${APP_PATH}/tmp.$$.json && mv ${APP_PATH}/tmp.$$.json ${APP_PATH}/token.json
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
   when: ('drive_strm_rebuild' in ansible_run_tags)
 
 - name: "Create and start container"
@@ -178,12 +178,12 @@
     pull: yes
     published_ports:
       - "7294:7294/tcp"
-    user: "{{uid}}:{{gid}}"
+    user: "{{ uid }}:{{ gid }}"
     env:
-      VIRTUAL_HOST: "strm.{{domain}}"
+      VIRTUAL_HOST: "strm.{{ domain }}"
       VIRTUAL_PORT: 7294
-      LETSENCRYPT_HOST: "strm.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "strm.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
       HTTPS_METHOD: noredirect
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

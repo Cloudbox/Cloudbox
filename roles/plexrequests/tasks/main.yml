@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create plexrequests directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/plexrequests
 
@@ -34,12 +34,12 @@
     published_ports:
       - "127.0.0.1:3000:3000"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
-      VIRTUAL_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{domain}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{ domain }}"
       VIRTUAL_PORT: 3000
-      LETSENCRYPT_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "{{ plexrequests.subdomain|default('plexrequests',true) }}.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plexrequests:/config"

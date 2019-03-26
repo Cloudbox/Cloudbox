@@ -2,12 +2,12 @@
     "core": {
         "dry_run": false,
         "rclone_binary_path": "/usr/bin/rclone",
-        "rclone_config_path": "/home/{{user}}/.config/rclone/rclone.conf"
+        "rclone_config_path": "/home/{{ user }}/.config/rclone/rclone.conf"
     },
     "hidden": {
         "/mnt/local/.unionfs-fuse": {
             "hidden_remotes": [
-                "{{rclone.remote}}"
+                "{{ rclone.remote }}"
             ]
         }
     },
@@ -15,11 +15,11 @@
     },
     "nzbget": {
         "enabled": false,
-        "url": "https://{{user}}:{{passwd}}@nzbget.{{domain}}"
+        "url": "https://{{ user }}:{{ passwd }}@nzbget.{{ domain }}"
     },
     "plex": {
         "enabled": false,
-        "url": "https://plex.{{domain}}",
+        "url": "https://plex.{{ domain }}",
         "token": "{{ plex_auth_token | default('') }}",
         "poll_interval": 60,
         "verbose_notifications": false,
@@ -37,8 +37,8 @@
         }
     },
     "remotes": {
-        "{{rclone.remote}}": {
-            "hidden_remote": "{{rclone.remote}}:",
+        "{{ rclone.remote }}": {
+            "hidden_remote": "{{ rclone.remote }}:",
             "rclone_excludes": [
                 "**partial~",
                 "**_HIDDEN~",
@@ -70,15 +70,15 @@
             },
             "rclone_command": "move",
             "remove_empty_dir_depth": 2,
-            "sync_remote": "{{rclone.remote}}:/Media",
+            "sync_remote": "{{ rclone.remote }}:/Media",
             "upload_folder": "/mnt/local/Media",
-            "upload_remote": "{{rclone.remote}}:/Media"
+            "upload_remote": "{{ rclone.remote }}:/Media"
         }
     },
     "syncer": {
     },
     "uploader": {
-        "{{rclone.remote}}": {
+        "{{ rclone.remote }}": {
             "check_interval": 30,
             "exclude_open_files": false,
             "max_size_gb": 200,

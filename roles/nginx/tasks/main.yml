@@ -20,14 +20,14 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: "{{item}}"
+    subdomain: "{{ item }}"
   with_items:
-    - "{{domain}}"
+    - "{{ domain }}"
     - "www"
   when: (cloudflare_enabled) and (nginx.direct_domain|default(false,true))
 
 - name: Create nginx directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/nginx
 
@@ -42,12 +42,12 @@
     image: linuxserver/nginx
     pull: yes
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
       VIRTUAL_HOST: "{{ (nginx.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain, nginx.subdomain|default('web',true) + '.' + domain) }}"
       VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: "{{ (nginx.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain, nginx.subdomain|default('web',true) + '.' + domain) }}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx:/config"

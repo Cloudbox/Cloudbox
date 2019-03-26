@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create nzbhydra directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/nzbhydra
     - /opt/nzbhydra/hydra/
@@ -39,10 +39,10 @@
 
 - name: Copy config files from Suitarr to LSIO
   copy:
-    src: "/opt/nzbhydra/{{item.src}}"
-    dest: "/opt/nzbhydra/hydra/{{item.dest}}"
-    owner: "{{user}}"
-    group: "{{user}}"
+    src: "/opt/nzbhydra/{{ item.src }}"
+    dest: "/opt/nzbhydra/hydra/{{ item.dest }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: no
   with_items:
@@ -56,9 +56,9 @@
 
 - name: Remove Suitarr config files after transfer
   file:
-    path: "/opt/nzbhydra/{{item.item.src}}"
+    path: "/opt/nzbhydra/{{ item.item.src }}"
     state: absent
-  with_items: "{{transfer.results}}"
+  with_items: "{{ transfer.results }}"
   when: (old_config_path.stat.exists) and (not new_config_path.stat.exists)
 
 - name: Create and start container
@@ -69,12 +69,12 @@
     published_ports:
       - "127.0.0.1:5075:5075"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
-      VIRTUAL_HOST: "nzbhydra.{{domain}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "nzbhydra.{{ domain }}"
       VIRTUAL_PORT: 5075
-      LETSENCRYPT_HOST: "nzbhydra.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "nzbhydra.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra:/config"

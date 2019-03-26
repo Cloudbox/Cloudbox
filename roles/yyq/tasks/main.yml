@@ -42,7 +42,7 @@
 
 - name: "Display yyq version"
   debug:
-    msg: "yyq {{yyq_version.stdout}} installed."
+    msg: "yyq {{ yyq_version.stdout }} installed."
   when: x is success
 
 - debug:

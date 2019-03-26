@@ -41,12 +41,12 @@
 - name: Move older version 'organizr' to `organizrv1`
   shell: |
     mv /opt/organizr /opt/organizrv1
-    chown -R {{user}}:{{user}} /opt/organizrv1
+    chown -R {{ user }}:{{ user }} /opt/organizrv1
   when: (function_php.stat.exists) and (organizr_version.stdout is version('2.0', '<'))
 # END - Migration Tasks
 
 - name: Create organizrv1 directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/organizrv1
 
@@ -58,12 +58,12 @@
     published_ports:
       - "127.0.0.1:7422:80"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
-      VIRTUAL_HOST: "organizrv1.{{domain}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "organizrv1.{{ domain }}"
       VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "organizrv1.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "organizrv1.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/organizrv1:/config"

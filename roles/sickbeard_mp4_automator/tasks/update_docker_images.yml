@@ -8,34 +8,34 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check if {{app}} is installed
-  shell: docker ps -aq --format {% raw %}'{{ .Names}}'{% endraw %} --filter name='^/{{app}}$'
+- name: Check if {{ app }} is installed
+  shell: docker ps -aq --format {% raw %}'{{ .Names}}'{% endraw %} --filter name='^/{{ app }}$'
   register: container_lookup
 
 - name: Set 'container_is_installed' variable
   set_fact:
     container_is_installed: "{{ ( (container_lookup.stdout | trim) == (app | quote) ) | ternary(true,false) }}"
 
-- name: Do following tasks when {{app}} is installed
+- name: Do following tasks when {{ app }} is installed
   block:
 
-  - name: Inspect {{app}}
-    shell: "docker inspect {{app}}"
+  - name: Inspect {{ app }}
+    shell: "docker inspect {{ app }}"
     register: container_facts
 
-  - name: Set {{app}} variables
+  - name: Set {{ app }} variables
     set_fact:
       container_is_running: "{{ (container_facts.stdout | from_json)[0].State.Running }}"
       container_image_updated: "{{ ((container_facts.stdout | from_json)[0].Config.Image) == ('andrewkhunn/suitarr_mp4_automator:' + app ) }}"
 
-  - name: Reinstall {{app}} to update image
+  - name: Reinstall {{ app }} to update image
     include_role:
-      name: "{{app}}"
+      name: "{{ app }}"
     when: not container_image_updated
 
-  - name: Shutdown {{app}} if it was stopped before
+  - name: Shutdown {{ app }} if it was stopped before
     docker_container:
-      name: "{{app}}"
+      name: "{{ app }}"
       state: stopped
     when: not container_is_running
 

@@ -26,7 +26,7 @@
 
 - name: "Display ngrok version"
   debug:
-    msg: "ngrok {{ngrok_version.stdout}} installed."
+    msg: "ngrok {{ ngrok_version.stdout }} installed."
   when: x is success
 
 - debug:

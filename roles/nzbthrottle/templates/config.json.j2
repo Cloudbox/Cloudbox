@@ -1,14 +1,14 @@
 {
   "plex":
   {
-    "url":"https://plex.{{domain}}",
+    "url":"https://plex.{{ domain }}",
     "interval":60,
     "token": "{{ plex_auth_token | default('') }}"
   },
   "nzbget":
   {
-    "username":"{{user}}",
-    "password":"{{passwd}}",
+    "username":"{{ user }}",
+    "password":"{{ passwd }}",
     "url":"http://nzbget:6789",
     "speeds":{
       "1":50000,

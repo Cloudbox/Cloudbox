@@ -21,4 +21,4 @@
 
 - name: "Display Subliminal version"
   debug:
-    msg: "Subliminal {{subliminal_version.stdout}} installed."
+    msg: "Subliminal {{ subliminal_version.stdout }} installed."

@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create thelounge directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/thelounge
 
@@ -34,12 +34,12 @@
     published_ports:
       - "127.0.0.1:9500:9000"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
-      VIRTUAL_HOST: "thelounge.{{domain}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "thelounge.{{ domain }}"
       VIRTUAL_PORT: 9000
-      LETSENCRYPT_HOST: "thelounge.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "thelounge.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/thelounge:/config"
