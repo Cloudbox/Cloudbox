@@ -21,7 +21,7 @@
     name: nzbget
     state: absent
 
-- name: Suitarr Migration Task
+- name: Suitarr Migration Tasks
   import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create nzbget directories
@@ -31,7 +31,7 @@
     - "{{ downloads.nzbs }}"
     - "{{ downloads.nzbs }}/nzbget"
 
-- name: Darkerr Task
+- name: Darkerr Tasks
   import_tasks: "subtasks/darkerr.yml"
 
 - name: Check nzbget.conf exists
