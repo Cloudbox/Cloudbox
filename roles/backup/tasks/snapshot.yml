@@ -40,7 +40,7 @@
     when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
 
   - name: Snapshot | Create brfs snapshot directory
-    file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+    file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
     with_items:
       - /btrfs/snapshots
 

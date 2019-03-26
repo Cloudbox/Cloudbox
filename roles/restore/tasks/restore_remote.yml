@@ -20,15 +20,15 @@
 # Folder
 
 - name: Cleanup backup location
-  shell: "rm -rf {{local.destination}}/*"
+  shell: "rm -rf {{ local.destination }}/*"
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 # Rclone
 
-- name: "Check if 'rclone.conf' exists in '{{playbook_dir}}' folder"
+- name: "Check if 'rclone.conf' exists in '{{ playbook_dir }}' folder"
   stat:
-    path: "{{playbook_dir}}/rclone.conf"
+    path: "{{ playbook_dir }}/rclone.conf"
   register: rclone_conf_playbook_dir
 
 - name: Check if rclone is installed
@@ -42,30 +42,30 @@
   when: (rclone_conf_playbook_dir.stat.exists) or (not rclone_binary.stat.exists)
 
 - name: Test rclone remote destination
-  shell: "rclone lsd {{rclone.destination}}"
+  shell: "rclone lsd {{ rclone.destination }}"
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
   register: rclone_test
   failed_when: (rclone_test.rc > 5)
 
 - name: "Fail when rclone is misconfigured."
-  fail: msg="The rclone remote is misconfigured - You must place a valid 'rclone.conf' file in '{{playbook_dir}}' (or setup Rclone via 'rclone config') and verify that the 'rclone.destination' in settings is valid."
+  fail: msg="The rclone remote is misconfigured - You must place a valid 'rclone.conf' file in '{{ playbook_dir }}' (or setup Rclone via 'rclone config') and verify that the 'rclone.destination' in settings is valid."
   when: (rclone_test.rc > 0)
 
-- name: "Fetch backup from '{{rclone.destination}}'"
-  command: "rclone copy '{{rclone.destination}}/' '{{local.destination}}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --exclude 'archived/**' --log-file='{{playbook_dir}}/restore_rclone.log'"
+- name: "Fetch backup from '{{ rclone.destination }}'"
+  command: "rclone copy '{{ rclone.destination }}/' '{{ local.destination }}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --exclude 'archived/**' --log-file='{{ playbook_dir }}/restore_rclone.log'"
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 # Checks
 
 - name: "Check if tar files were retrieved"
   find:
-    paths: "{{local.destination}}/opt"
+    paths: "{{ local.destination }}/opt"
     file_type: file
     patterns: '*.tar'
   register: dir_files2
 
 - name: "Fail if tar files are missing"
-  fail: msg="There must have been an issue retrieving the tar files as they are missing in '{{local.destination}}/opt/'"
+  fail: msg="There must have been an issue retrieving the tar files as they are missing in '{{ local.destination }}/opt/'"
   when: (dir_files2.matched|int == 0)

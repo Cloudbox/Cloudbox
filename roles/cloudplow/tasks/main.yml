@@ -31,7 +31,7 @@
   when: cloudplow_service.stat.exists
 
 - name: Create cloudplow directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/cloudplow
 
@@ -41,7 +41,7 @@
     dest: /opt/cloudplow
     force: yes
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 - name: Install pip requirements
   pip:
@@ -62,8 +62,8 @@
   template:
     src: config.json.j2
     dest: /opt/cloudplow/config.json
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: not cloudplow_config.stat.exists
@@ -71,12 +71,12 @@
 - name: Set cloudplow.py as executable
   file:
     path: /opt/cloudplow/cloudplow.py
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: a+x
 
 - name: Set directory permissions
-  file: "path=/opt/cloudplow state=directory owner={{user}} group={{user}} recurse=yes"
+  file: "path=/opt/cloudplow state=directory owner={{ user }} group={{ user }} recurse=yes"
 
 - name: "Create /usr/local/bin symlink"
   file:

@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Install nvtop dependencies
-  apt: name="{{item}}" state=present update_cache=yes
+  apt: name="{{ item }}" state=present update_cache=yes
   become: true
   with_items:
       - cmake
@@ -36,4 +36,4 @@
 
 - name: "Display nvtop version"
   debug:
-    msg: "nvtop {{nvtop_version.stdout}} installed."
+    msg: "nvtop {{ nvtop_version.stdout }} installed."

@@ -37,6 +37,6 @@
 - name: Nvidia driver did not install
   fail:
     msg:
-      - "{{driver_install.stdout}}"
+      - "{{ driver_install.stdout }}"
       - "Nvidia driver did not install"
   when: (driver_install is failed) or ('ERROR' in driver_install.stdout)

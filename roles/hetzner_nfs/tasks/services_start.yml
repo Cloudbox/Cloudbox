@@ -22,6 +22,6 @@
   when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
 
 - name: "Re-start all previously running Docker containers"
-  shell: 'docker start {{docker_running_containers.stdout}}'
+  shell: 'docker start {{ docker_running_containers.stdout }}'
   ignore_errors: yes
   when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')

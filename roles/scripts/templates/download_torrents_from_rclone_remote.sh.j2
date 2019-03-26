@@ -17,7 +17,7 @@ if ! /usr/bin/screen -list | /bin/grep -q "torrents_download"; then
 	/bin/rm -rfv /opt/scripts/rclone/download_torrents_from_rclone_remote.log
 	
 	/usr/bin/screen -dmS torrents_download /usr/bin/rclone copy \
-		--config=/home/{{user}}/.config/rclone/rclone.conf \
+		--config=/home/{{ user }}/.config/rclone/rclone.conf \
 		--verbose=1 \
 		--transfers=8 \
 		--stats=60s \
@@ -25,6 +25,6 @@ if ! /usr/bin/screen -list | /bin/grep -q "torrents_download"; then
 		--drive-chunk-size=128M \
 		--fast-list \
 		--log-file=/opt/scripts/rclone/download_torrents_from_rclone_remote.log \
-		{{rclone.remote}}:/downloads/torrents {{downloads.torrents}}
+		{{ rclone.remote }}:/downloads/torrents {{ downloads.torrents }}
 		
 fi

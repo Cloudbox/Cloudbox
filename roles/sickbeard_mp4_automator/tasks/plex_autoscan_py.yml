@@ -15,10 +15,10 @@
 
 - name: "Import 'plex_autoscan_url.sh'"
   copy:
-    src: "{{playbook_dir}}/roles/scripts/files/plex_autoscan_url.sh"
+    src: "{{ playbook_dir }}/roles/scripts/files/plex_autoscan_url.sh"
     dest: "/opt/scripts/plex_autoscan/plex_autoscan_url.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: plex_autoscan_config.stat.exists
@@ -28,7 +28,7 @@
   args:
     executable: /bin/bash
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
   register: plex_autoscan_url
   when: plex_autoscan_config.stat.exists
 
@@ -36,6 +36,6 @@
   template:
     src: "plex_autoscan.py.j2"
     dest: "/opt/scripts/sickbeard_mp4_automator/post_process/plex_autoscan.py"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775

@@ -5,8 +5,8 @@ Description=Plex Autoscan
 After=network-online.target
 
 [Service]
-User={{user}}
-Group={{user}}
+User={{ user }}
+Group={{ user }}
 Type=simple
 WorkingDirectory=/opt/plex_autoscan/
 ExecStart=/opt/plex_autoscan/scan.py server --loglevel=INFO

@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create portainer directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/portainer
 
@@ -38,10 +38,10 @@
       - "/opt/portainer:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
     env:
-      VIRTUAL_HOST: "portainer.{{domain}}"
+      VIRTUAL_HOST: "portainer.{{ domain }}"
       VIRTUAL_PORT: 9000
-      LETSENCRYPT_HOST: "portainer.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "portainer.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:

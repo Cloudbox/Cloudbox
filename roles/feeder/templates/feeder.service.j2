@@ -14,12 +14,12 @@ Description=Feeder Mount
 After=network-online.target
 
 [Service]
-User={{user}}
-Group={{user}}
+User={{ user }}
+Group={{ user }}
 Type=notify
 ExecStartPre=/bin/sleep 10
 ExecStart=/usr/bin/rclone mount \
-  --config=/home/{{user}}/.config/rclone/rclone.conf \
+  --config=/home/{{ user }}/.config/rclone/rclone.conf \
   --allow-other \
   --allow-non-empty \
   --copy-links \

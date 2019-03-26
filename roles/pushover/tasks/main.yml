@@ -10,7 +10,7 @@
 ---
 - name: "Pushover Message"
   pushover:
-    msg: "{{message}}"
+    msg: "{{ message }}"
     app_token: "{{ pushover.app_token }}"
     user_key: "{{ pushover.user_key }}"
     pri: "{{ pushover.priority | default(0,true) }}"

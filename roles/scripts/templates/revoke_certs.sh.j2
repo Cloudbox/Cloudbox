@@ -30,7 +30,7 @@ $GREEN
 $NORMAL
 "
 
-domain={{domain}}
+domain={{ domain }}
 
 cd /opt/nginx-proxy/certs
 
@@ -42,4 +42,4 @@ for i in *.${domain}.chain.pem;
     sudo certbot revoke -n --cert-path ${base}/fullchain.pem --key-path ${base}/key.pem
 done
 
-sudo chown -R {{user}}:{{user}} /opt/nginx-proxy
+sudo chown -R {{ user }}:{{ user }} /opt/nginx-proxy

@@ -11,12 +11,12 @@
 # Set basic variable(s)
 - name: "Get 'cloudbox.yml' info."
   stat:
-    path: "{{playbook_dir}}/backup.yml"
+    path: "{{ playbook_dir }}/backup.yml"
   register: backup_yml
 
 - name: Set variables
   set_fact:
-    user: "{{backup_yml.stat.pw_name}}"
+    user: "{{ backup_yml.stat.pw_name }}"
 
 # Remove trailing forward slashes from backup paths
 - name: Remove trailing forward slashes from backup paths

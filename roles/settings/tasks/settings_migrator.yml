@@ -12,8 +12,8 @@
   block:
 
   # Decryption Tasks
-  - name: "Check '{{item}}' for encryption."
-    shell: "head -1 {{item}} | grep -q \\$ANSIBLE_VAULT"
+  - name: "Check '{{ item }}' for encryption."
+    shell: "head -1 {{ item }} | grep -q \\$ANSIBLE_VAULT"
     register: encryption_check
     ignore_errors: yes
     failed_when: encryption_check.rc > 1
@@ -22,10 +22,10 @@
     set_fact:
       file_is_encrypted: "{{ ((encryption_check.rc == 0) | default(false,true)) }}"
 
-  - name: "Decrypt '{{item}}' when encrypted."
-    shell: "ansible-vault decrypt {{item}}"
+  - name: "Decrypt '{{ item }}' when encrypted."
+    shell: "ansible-vault decrypt {{ item }}"
     become: yes
-    become_user: "{{cloudbox_yml.stat.pw_name}}"
+    become_user: "{{ cloudbox_yml.stat.pw_name }}"
     when: file_is_encrypted
 
   # Migration 1: Move over vault_service to restore_service
@@ -84,19 +84,19 @@
         yyq w -i {{ playbook_dir }}/backup_config.yml restore_service.user {{ vault_service.user }}
         yyq w -i {{ playbook_dir }}/backup_config.yml restore_service.pass {{ vault_service.pass }}
       become: yes
-      become_user: "{{cloudbox_yml.stat.pw_name}}"
+      become_user: "{{ cloudbox_yml.stat.pw_name }}"
       when: (vault_service_defined) and not (restore_service_defined)
 
     - name: Update file
       shell: yyq d -i {{ playbook_dir }}/backup_config.yml vault_service
       become: yes
-      become_user: "{{cloudbox_yml.stat.pw_name}}"
+      become_user: "{{ cloudbox_yml.stat.pw_name }}"
 
     when: (item == "backup_config.yml")
 
   always:
-  - name: "Re-encrypt '{{item}}' if previously encrypted."
-    shell: "ansible-vault encrypt {{item}}"
+  - name: "Re-encrypt '{{ item }}' if previously encrypted."
+    shell: "ansible-vault encrypt {{ item }}"
     become: yes
-    become_user: "{{cloudbox_yml.stat.pw_name}}"
+    become_user: "{{ cloudbox_yml.stat.pw_name }}"
     when: file_is_encrypted

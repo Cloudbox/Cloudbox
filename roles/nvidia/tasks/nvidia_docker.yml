@@ -36,7 +36,7 @@
   when: (docker_service_running)
 
 - name: Stop all running Docker containers
-  shell: "docker stop {{docker_running_containers.stdout}}"
+  shell: "docker stop {{ docker_running_containers.stdout }}"
   ignore_errors: yes
   when: (docker_service_running) and not (docker_running_containers.stdout | trim == '')
 
@@ -60,7 +60,7 @@
   when: (docker_service_running)
 
 - name: "Re-start all previously running Docker containers"
-  shell: 'docker start {{docker_running_containers.stdout}}'
+  shell: 'docker start {{ docker_running_containers.stdout }}'
   ignore_errors: yes
   when: (docker_service_running) and not (docker_running_containers.stdout | trim == '')
 

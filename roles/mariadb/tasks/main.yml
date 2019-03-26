@@ -10,12 +10,12 @@
 #########################################################################
 ---
 - name: Stop and remove any existing containers
-  docker_container: "name={{item}} state=absent"
+  docker_container: "name={{ item }} state=absent"
   with_items:
     - mariadb
 
 - name: Create required directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/mariadb
 
@@ -27,8 +27,8 @@
     published_ports:
       - "127.0.0.1:3306:3306"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
       MYSQL_ROOT_PASSWORD: "password321"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

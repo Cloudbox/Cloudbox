@@ -10,7 +10,7 @@
 ---
 - name: "Check if 'backup.lock' is present"
   stat:
-    path: "{{playbook_dir}}/backup.lock"
+    path: "{{ playbook_dir }}/backup.lock"
   register: backup_lock
 
 # Age in hours
@@ -22,7 +22,7 @@
 # Delete if older than 2 hours.
 - name: "Delete stale 'backup.lock'"
   file:
-    path: "{{playbook_dir}}/backup.lock"
+    path: "{{ playbook_dir }}/backup.lock"
     state: absent
   when: (backup_lock.stat.exists) and (backup_lock_age|int >= 2)
 

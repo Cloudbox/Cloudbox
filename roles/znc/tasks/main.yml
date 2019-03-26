@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create znc directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/znc
 
@@ -35,12 +35,12 @@
       - "127.0.0.1:6501:6501"
       - "6502:6502"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
-      VIRTUAL_HOST: "znc.{{domain}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "znc.{{ domain }}"
       VIRTUAL_PORT: 6501
-      LETSENCRYPT_HOST: "znc.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "znc.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/znc:/config"

@@ -20,25 +20,25 @@
   file: "path='/tmp/restore_service' state=absent"
 
 - name: Restore Service | Create '/tmp/restore_service' path
-  file: "path='/tmp/restore_service' state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path='/tmp/restore_service' state=directory mode=0775 owner={{ user }} group={{ user }}"
 
 - name: Restore Service | Encrypt config file(s)
   shell: "openssl enc -aes-256-cbc -salt -md md5 -in {{ item }} -out /tmp/restore_service/{{ item | basename }}.enc -k '{{ restore_service_password }}'"
   args:
     warn: no
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
   ignore_errors: yes
   with_items:
-   - "{{playbook_dir}}/ansible.cfg"
-   - "{{playbook_dir}}/accounts.yml"
-   - "{{playbook_dir}}/settings.yml"
-   - "{{playbook_dir}}/adv_settings.yml"
-   - "{{playbook_dir}}/backup_config.yml"
-   - "/home/{{user}}/.config/rclone/rclone.conf"
+   - "{{ playbook_dir }}/ansible.cfg"
+   - "{{ playbook_dir }}/accounts.yml"
+   - "{{ playbook_dir }}/settings.yml"
+   - "{{ playbook_dir }}/adv_settings.yml"
+   - "{{ playbook_dir }}/backup_config.yml"
+   - "/home/{{ user }}/.config/rclone/rclone.conf"
 
 - name: "Restore Service | Validate config file(s) for encryption."
-  shell: "head -c 10 {{item}} | grep -q Salted"
+  shell: "head -c 10 {{ item }} | grep -q Salted"
   register: encryption_check
   ignore_errors: yes
   failed_when: encryption_check.rc > 1

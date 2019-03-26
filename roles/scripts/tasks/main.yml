@@ -24,7 +24,7 @@
       - yq
 
 - name: Create script directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/scripts
     - /opt/scripts/docker
@@ -51,18 +51,18 @@
   copy:
     src: "arrpush.legacy.sh"
     dest: "/opt/scripts/torrents/arrpush.legacy.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: arrpush_legacy_script.stat.exists == False
 
 - name: Import remaining torrent scripts
   copy:
-    src: "{{item}}"
-    dest: "/opt/scripts/torrents/{{item}}"
-    owner: "{{user}}"
-    group: "{{user}}"
+    src: "{{ item }}"
+    dest: "/opt/scripts/torrents/{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   with_items:
@@ -71,10 +71,10 @@
 
 - name: Import plex scripts
   copy:
-    src: "{{item}}"
-    dest: "/opt/scripts/plex/{{item}}"
-    owner: "{{user}}"
-    group: "{{user}}"
+    src: "{{ item }}"
+    dest: "/opt/scripts/plex/{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   with_items:
@@ -85,8 +85,8 @@
   template:
     src: "revoke_certs.sh.j2"
     dest: "/opt/scripts/nginx-proxy/revoke_certs.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
 
@@ -94,8 +94,8 @@
   copy:
     src: "plex_autoscan_url.sh"
     dest: "/opt/scripts/plex_autoscan/plex_autoscan_url.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
 
@@ -112,8 +112,8 @@
   copy:
     src: "restart_containers.sh"
     dest: "/opt/scripts/docker/restart_containers.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: restart_containers.stat.exists == False
@@ -131,8 +131,8 @@
   copy:
     src: "frontail_custom_preset.json"
     dest: "/opt/scripts/frontail/frontail_custom_preset.json"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: frontail_preset.stat.exists == False
@@ -150,8 +150,8 @@
   template:
     src: "sync_torrents_to_rclone_remote.sh.j2"
     dest: "/opt/scripts/rclone/sync_torrents_to_rclone_remote.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: sync_torrents_to_rclone_remote.stat.exists == False
@@ -169,8 +169,8 @@
   template:
     src: "download_torrents_from_rclone_remote.sh.j2"
     dest: "/opt/scripts/rclone/download_torrents_from_rclone_remote.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: download_torrents_from_rclone_remote.stat.exists == False

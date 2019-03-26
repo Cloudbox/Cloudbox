@@ -20,9 +20,9 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: "{{item}}"
+    subdomain: "{{ item }}"
   with_items:
-    - "{{domain}}"
+    - "{{ domain }}"
     - "www"
   when: (cloudflare_enabled) and (organizr.direct_domain|default(false,true))
 
@@ -45,19 +45,19 @@
 - name: Move older version 'organizr' to `organizrv1`
   shell: |
     mv /opt/organizr /opt/organizrv1
-    chown -R {{user}}:{{user}} /opt/organizrv1
+    chown -R {{ user }}:{{ user }} /opt/organizrv1
   when: (function_php.stat.exists) and (organizr_version.stdout is version('2.0', '<'))
 # END - Migration Tasks
 
 - name: Remove certain js files from organizr
-  file: "path=/opt/organizr/www/Dashboard/js/{{item}} state=absent"
+  file: "path=/opt/organizr/www/Dashboard/js/{{ item }} state=absent"
   with_items:
     - "custom.min.js"
     - "functions.js"
   ignore_errors: yes
 
 - name: Create Organizr directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/organizr
 
@@ -69,12 +69,12 @@
     published_ports:
       - "127.0.0.1:7421:80"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
       VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain,'organizr.' + domain) }}"
       VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain,'organizr.' + domain) }}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/organizr:/config"
@@ -97,8 +97,8 @@
   get_url:
     url:  "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
     dest: "/opt/organizr/www/Dashboard/css/themes/"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0664
     force: yes
     validate_certs: no

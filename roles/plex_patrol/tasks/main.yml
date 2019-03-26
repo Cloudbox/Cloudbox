@@ -14,7 +14,7 @@
     state: absent
 
 - name: Create plex_patrol directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/plex_patrol
 
@@ -32,8 +32,8 @@
   template:
     src: settings.ini.j2
     dest: /opt/plex_patrol/settings.ini
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: not plex_patrol_config.stat.exists
@@ -43,7 +43,7 @@
     name: plex_patrol
     image: "cloudb0x/plex_patrol:latest"
     pull: yes
-    user: "{{uid}}:{{gid}}"
+    user: "{{ uid }}:{{ gid }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex_patrol:/config"
