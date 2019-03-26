@@ -1,7 +1,0 @@
-# https://github.com/ydkmlt84/DarkerNZBget
-proxy_set_header Accept-Encoding "";
-sub_filter
- '</head>'
- '<link rel="stylesheet" type="text/css" href="https://rawgit.com/ydkmlt84/DarkerNZBget/master/nzbget_custom_darkblue.css">
- </head>';
-sub_filter_once on;
