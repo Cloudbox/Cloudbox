@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Kernel: Hetzner Task                                   #
+# Title:         Cloudbox: Kernel - Hetzner Tasks                       #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,40 +8,40 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install 'pciutils'
+- name: Hetzner | Install 'pciutils'
   apt: "name=pciutils state=present"
 
-- name: Fetch pci info
+- name: Hetzner | Fetch PCI info
   shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
   register: lscpi_resp
 
-- name: Check if 'blacklist-hetzner.conf' exists
+- name: Hetzner | Check if 'blacklist-hetzner.conf' exists
   stat:
     path: "/etc/modprobe.d/blacklist-hetzner.conf"
   register: blacklist_hetzner_conf
 
-- name: Hetzner GRUB Edits Block
+- name: Hetzner | Hetzner GRUB Edits Block
   block:
 
-  - name: Comment out 'i915' blacklists in 'blacklist-hetzner.conf'
+  - name: Hetzner | Comment out 'i915' blacklists in 'blacklist-hetzner.conf'
     replace:
       path: "/etc/modprobe.d/blacklist-hetzner.conf"
       regexp: '(^blacklist\si915.*)'
       replace: '#\1'
 
-  - name: Hetzner GRUB files
+  - name: Hetzner | Hetzner GRUB files
     set_fact:
       hetzner_grub_files:
         - "/etc/default/grub.d/hetzner.cfg"
         - "/etc/default/grub"
 
-  - name: Check status of GRUB files
+  - name: Hetzner | Check status of GRUB files
     stat:
       path: "{{ item }}"
     loop: "{{ hetzner_grub_files }}"
     register: hetzner_grub_files_status
 
-  - name: Hetzner GRUB edits
+  - name: Hetzner | Hetzner GRUB edits
     include_tasks: "hetzner_grub_edits.yml"
     when: outer_item.stat.exists
     loop: "{{ hetzner_grub_files_status.results }}"

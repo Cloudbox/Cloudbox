@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Kernel: Headers Task                                   #
+# Title:         Cloudbox: Kernel - Header Tasks                        #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,32 +8,32 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Update the linux kernel headers if required
+- name: Header | Update the linux kernel headers if required
   block:
 
-  - name: Install 'linux-headers'
+  - name: Header | Install 'linux-headers'
     apt:
       name: "linux-headers-{{ ansible_kernel }}"
       state: present
     register: s
     ignore_errors: yes
 
-  - name: Fix apt
+  - name: Header | Fix apt
     shell: apt-get --fix-broken --yes install
     when: (s.changed)
     ignore_errors: yes
 
-  - name: Set 'reboot_is_necessary' variable
+  - name: Header | Set 'reboot_is_necessary' variable
     set_fact:
       reboot_is_necessary: true
     when: (s.changed)
 
-  - name: Kernel headers were updated
+  - name: Header | Kernel headers were updated
     debug:
       msg: "Kernel headers were updated."
     when: (s.changed)
 
-  - name: Kernel headers were not updated
+  - name: Header | Kernel headers were not updated
     debug:
       msg: "Kernel headers were not updated."
     when: not (s.changed)
