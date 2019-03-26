@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Rclone: Build URL                                      #
+# Title:         Cloudbox: Rclone - Build URL Tasks                     #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,87 +8,99 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install common packages
+- name: Build URL | Install common packages
   apt:
     state: present
     name:
       - curl
       - jq
 
-- name: Check if rclone version was specified
+- name: Build URL | Check if rclone version was specified
   set_fact:
     rclone_version_is_specified: "{{ true if not (
         (rclone is undefined)
         or
         (rclone is none)
         or
-        (rclone | trim == '')
+        (rclone | trim | length == 0)
         or
         (rclone.version is undefined)
         or
         (rclone.version is none)
         or
-        (rclone.version | trim == '')
+        (rclone.version | trim | length == 0)
       )
       else false }}"
 
-- name: Display rclone version specified
+- name: Build URL | Display rclone version specified
   debug:
     msg: "Rclone version specified: {{ rclone.version }}"
   when: rclone_version_is_specified
 
-- name: Check if github rate limit is active
+- name: Build URL | Check if github rate limit is active
   shell: curl -s https://api.github.com/repos/ncw/rclone/git/refs/tags | head -n 4
   register: github_rate_limit_check
 
-- name: Set 'github_rate_limited'
+- name: Build URL | Set 'github_rate_limited'
   set_fact:
     github_rate_limited: "{{ 'API rate limit exceeded' in github_rate_limit_check.stdout }}"
 
-- name: Display message about GitHub API limit
+- name: Build URL | Display message about GitHub API limit
   debug:
-    msg: "GitHub API limit has been reached. Unable to check if Rclone version {{ rclone.version }} is available. Installing the latest available version instead..."
+    msg: >-
+      GitHub API limit has been reached.
+      Unable to check if Rclone version {{ rclone.version }} is available.
+      Installing the latest available version instead...
   when: github_rate_limited
 
-- name: Set vars for current version
+- name: Build URL | Set vars for current version
   set_fact:
     rclone_version_specified: "{{ 'latest' if (github_rate_limited) else (rclone.version) }}"
     rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
   when: (not rclone_version_is_specified) or (rclone.version == 'latest') or (rclone.version == 'current') or (github_rate_limited)
 
-- name: Set vars for beta version
+- name: Build URL | Set vars for beta version
   set_fact:
     rclone_version_specified: "{{ rclone.version }}"
     rclone_download_url: "https://beta.rclone.org/rclone-beta-latest-linux-amd64.zip"
   when: (rclone_version_is_specified) and (rclone.version == 'beta')
 
-- name: Specified version tasks
+- name: Build URL | Specified version tasks
   block:
 
-  - name: Set temp 'rclone_version_specified0' var for specified version
+  - name: Build URL | Set temp 'rclone_version_specified0' var for specified version
     set_fact:
-      rclone_version_specified0: "{{ ('%.2f'|format(rclone.version|float)) if ((rclone.version | type_debug == 'float') or (rclone.version | type_debug == 'int')) else ( '%.2f'|format((rclone.version | regex_replace('(^v\\.|^v)', '')) | float) )}}"
+      rclone_version_specified0: >-
+        {{ ('%.2f'|format(rclone.version|float))
+        if ((rclone.version | type_debug == 'float') or (rclone.version | type_debug == 'int'))
+        else ( '%.2f'|format((rclone.version | regex_replace('(^v\\.|^v)', '')) | float) ) }}
 
-  - name: Check if version '{{ rclone_version_specified0 }}' is available
-    shell: curl -s https://api.github.com/repos/ncw/rclone/git/refs/tags | jq -r  '.[] | .ref' | sed 's/\/\?refs\/tags\/v//g' | grep '{{ rclone_version_specified0 }}'
+  - name: Build URL | Check if version '{{ rclone_version_specified0 }}' is available
+    shell: |
+      curl -s https://api.github.com/repos/ncw/rclone/git/refs/tags \
+      | jq -r  '.[] | .ref' | sed 's/\/\?refs\/tags\/v//g' \
+      | grep '{{ rclone_version_specified0 }}'
     register: rclone_version_specified0_check
-    failed_when: rclone_version_specified0_check.rc > 1
+    failed_when: (rclone_version_specified0_check.rc > 1)
 
-  - name: Set vars for specified version if available
+  - name: Build URL | Set vars for specified version if available
     set_fact:
       rclone_version_specified: "{{ rclone_version_specified0 }}"
       rclone_download_url: 'https://downloads.rclone.org/v{{ rclone_version_specified0 }}/rclone-v{{ rclone_version_specified0 }}-linux-amd64.zip'
-    when: (rclone_version_specified0_check.stdout | trim != '')
+    when: (rclone_version_specified0_check.stdout | trim | length > 0)
 
-  - name: Display message if specified version is not available
+  - name: Build URL | Display message if specified version is not available
     debug:
       msg: "Rclone version {{ rclone_version_specified0 }} is not available. Installing the latest available version instead..."
-    when: (rclone_version_specified0_check.stdout | trim == '')
+    when: (rclone_version_specified0_check.stdout | trim | length == 0)
 
-  - name: Set vars for specified version if not available
+  - name: Build URL | Set vars for specified version if not available
     set_fact:
       rclone_version_specified: "latest"
       rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
-    when: (rclone_version_specified0_check.stdout | trim == '')
+    when: (rclone_version_specified0_check.stdout | trim | length == 0)
 
-  when: (rclone_version_is_specified) and not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current')) and (not github_rate_limited)
+  when:
+    - (rclone_version_is_specified)
+    - not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current'))
+    - (not github_rate_limited)
