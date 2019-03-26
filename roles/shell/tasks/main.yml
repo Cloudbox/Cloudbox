@@ -15,7 +15,3 @@
 - name: Set zsh as default shell
   import_tasks: "zsh.yml"
   when: shell|default('zsh',true) == "zsh"
-
-- name: Preinstall task
-  include_tasks: "preinstall.yml"
-  when: ('preinstall' in ansible_run_tags)
