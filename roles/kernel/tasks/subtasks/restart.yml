@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Kernel: Restart After Changes                          #
+# Title:         Cloudbox: Kernel - Restart Tasks                       #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,24 +8,26 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set preinstall variables"
+# Restart only after changes
+
+- name: "Restart | Set preinstall variables"
   set_fact:
     preinstall_kernel_restart: true
   when: ('preinstall' in ansible_run_tags)
 
-- name: Tasks for non-preinstall
+- name: Restart | Tasks for non-preinstall
   block:
 
-  - name: Success message
+  - name: Restart | Success message
     debug:
       msg:
         - "Kernel was updated."
         - "Restarting the server to apply changes..."
 
-  - name: Reboot
+  - name: Restart | Reboot
     shell: reboot
 
-  - name: Reboot message
+  - name: Restart | Reboot message
     debug:
       msg:
         - "Failed to reboot automatically."

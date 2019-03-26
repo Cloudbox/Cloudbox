@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Kernel: Cron Task                                      #
+# Title:         Cloudbox: Kernel - Cron Tasks                          #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Purge old kernels on reboot
+- name: Cron | Purge old kernels on reboot
   cron:
     name: "Remove old kernels on reboot"
     special_time: reboot
