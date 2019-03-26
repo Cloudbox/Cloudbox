@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install 'dnsutils'
+- name: Add Subdomain | Install 'dnsutils'
   apt: "name=dnsutils state=present"
 
 - name: Add Subdomain | Get Public IP Address
