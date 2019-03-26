@@ -19,3 +19,7 @@
 
 - name: Import Existing Config
   import_tasks: "import_config.yml"
+
+- name: Preinstall Tasks
+  include_tasks: "preinstall.yml"
+  when: ('preinstall' in ansible_run_tags)
