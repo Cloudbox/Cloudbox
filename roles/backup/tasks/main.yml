@@ -154,14 +154,14 @@
   - name: "Stop all running Docker containers"
     shell: "docker stop {{ cloudbox_managed_containers.stdout }}"
     ignore_errors: yes
-    when: (cloudbox_managed_containers.stdout | trim != '')
+    when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
   - name: "Pushover Message: Stopped Docker containers"
     include_role:
       name: pushover
     vars:
       message: "Stopped Docker containers."
-    when: (cloudbox_managed_containers.stdout | trim != '')
+    when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
   # Stop Plexdrive
 
@@ -228,14 +228,14 @@
     - name: "Snapshot | Start all previously running Docker containers"
       shell: 'docker start {{ cloudbox_managed_containers.stdout }}'
       ignore_errors: yes
-      when: (cloudbox_managed_containers.stdout | trim != '')
+      when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
     - name: "Snapshot | Pushover Message: Started Docker containers"
       include_role:
         name: pushover
       vars:
         message: "Started Docker containers."
-      when: (cloudbox_managed_containers.stdout | trim != '')
+      when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
     when: (use_snapshot)
 
@@ -305,14 +305,14 @@
     - name: "Start all previously running Docker containers"
       shell: 'docker start {{ cloudbox_managed_containers.stdout }}'
       ignore_errors: yes
-      when: (cloudbox_managed_containers.stdout | trim != '')
+      when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
     - name: "Pushover Message: Started Docker containers"
       include_role:
         name: pushover
       vars:
         message: "Started Docker containers."
-      when: (cloudbox_managed_containers.stdout | trim != '')
+      when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
     when: (not use_snapshot)
 
@@ -447,7 +447,7 @@
     - name: "Start all previously running Docker containers"
       shell: 'docker start {{ cloudbox_managed_containers.stdout }}'
       ignore_errors: yes
-      when: (cloudbox_managed_containers.stdout | trim != '')
+      when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
     when: (not use_snapshot)
 

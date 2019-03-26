@@ -31,12 +31,12 @@
 - name: Stop all running Docker containers
   shell: "docker stop {{ docker_running_containers.stdout }}"
   ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim | length == 0)
 
 - name: Wait for 10 seconds before commencing
   wait_for:
     timeout: 10
-  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
+  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim | length == 0)
 
 - name: Check if 'unionfs.service' exists
   stat:

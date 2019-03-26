@@ -19,18 +19,18 @@
       or
       (pushover is none)
       or
-      (pushover | trim == '')
+      (pushover | trim | length == 0)
       or
       (pushover.app_token is undefined)
       or
       (pushover.app_token is none)
       or
-      (pushover.app_token | trim == '')
+      (pushover.app_token | trim | length == 0)
       or
       (pushover.user_key is undefined)
       or
       (pushover.user_key is none)
       or
-      (pushover.user_key | trim == '')
+      (pushover.user_key | trim | length == 0)
     )
   ignore_errors: yes

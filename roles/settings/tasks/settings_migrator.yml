@@ -43,19 +43,19 @@
             or
             (vault_service is none)
             or
-            (vault_service | trim == '')
+            (vault_service | trim | length == 0)
             or
             (vault_service.user is undefined)
             or
             (vault_service.user is none)
             or
-            (vault_service.user | trim == '')
+            (vault_service.user | trim | length == 0)
             or
             (vault_service.pass is undefined)
             or
             (vault_service.pass is none)
             or
-            (vault_service.pass | trim == '')
+            (vault_service.pass | trim | length == 0)
           )
             else false }}"
         restore_service_defined: "{{ true if not(
@@ -63,19 +63,19 @@
             or
             (restore_service is none)
             or
-            (restore_service | trim == '')
+            (restore_service | trim | length == 0)
             or
             (restore_service.user is undefined)
             or
             (restore_service.user is none)
             or
-            (restore_service.user | trim == '')
+            (restore_service.user | trim | length == 0)
             or
             (restore_service.pass is undefined)
             or
             (restore_service.pass is none)
             or
-            (restore_service.pass | trim == '')
+            (restore_service.pass | trim | length == 0)
           )
             else false }}"
 

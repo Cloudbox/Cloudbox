@@ -107,7 +107,7 @@
     - name: "Failed to retrieve authorization link"
       fail:
         debug: "Failed to retrieve authorization link"
-      when: authorize_link.results[1].ansible_facts.docker_container.Output | trim == ""
+      when: (authorize_link.results[1].ansible_facts.docker_container.Output | trim | length == 0)
 
     - name: "Authorization Link"
       debug:
