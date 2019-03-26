@@ -33,6 +33,21 @@
     - /etc/motd
     - /etc/motd.dynamic
 
+- name: Check if MOTD news service
+  stat:
+    path: "/etc/default/motd-news"
+  register: motd_news
+
+- name: Disable MOTD news service
+  ini_file:
+    path: "/etc/default/motd-news"
+    section: null
+    option: "ENABLED"
+    value: 0
+    no_extra_spaces: yes
+    state: present
+  when: (motd_news.stat.exists)
+
 - name: Create dynamic motd directory
   file:
     path: /etc/update-motd.d
