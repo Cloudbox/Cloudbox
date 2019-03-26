@@ -21,12 +21,6 @@
     name: radarr4k
     state: absent
 
-- name: Remove darkerr config
-  file:
-    path: "/opt/nginx-proxy/vhost.d/radarr4k.{{ domain }}_location"
-    state: absent
-  when: not (darkerr.enable | default(false,true))
-
 - name: Suitarr Migration Tasks
   import_tasks: "subtasks/suitarr_migration.yml"
 
@@ -35,17 +29,10 @@
   with_items:
     - /opt/radarr4k
 
-- name: Add darkerr config
-  copy:
-    src: "darkerr-nginx-conf"
-    dest: "/opt/nginx-proxy/vhost.d/radarr4k.{{ domain }}_location"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: 0664
-    force: yes
-  when: (darkerr.enable | default(false,true))
+- name: Darkerr Tasks
+  import_tasks: "subtasks/darkerr.yml"
 
-- name: Set default_volumes variable
+- name: Set 'default_volumes' variable
   set_fact:
     default_volumes:
       - "/opt/radarr4k:/config"
