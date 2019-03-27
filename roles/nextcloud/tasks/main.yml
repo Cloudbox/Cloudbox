@@ -17,7 +17,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: nextcloud
+    subdomain: "{{ nextcloud.subdomain|default('nextcloud',true) }}"
   when: cloudflare_enabled
 
 - name: Stop and remove any existing containers
@@ -42,10 +42,10 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "nextcloud.{{ domain }}"
+      VIRTUAL_HOST: "{{ nextcloud.subdomain|default('nextcloud',true) }}.{{domain}}"
       VIRTUAL_PORT: 443
       VIRTUAL_PROTO: https
-      LETSENCRYPT_HOST: "nextcloud.{{ domain }}"
+      LETSENCRYPT_HOST: "{{ nextcloud.subdomain|default('nextcloud',true) }}.{{domain}}"
       LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
