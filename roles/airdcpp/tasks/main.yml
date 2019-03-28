@@ -33,15 +33,14 @@
     image: "gangefors/airdcpp-webclient"
     pull: yes
     published_ports:
-      - "127.0.0.1:80:5600"
-      - "127.0.0.1:443:5601"
+      - "127.0.0.1:2617:5600"
+      - "127.0.0.1:7327:5601"
       - "21248:21248"
       - "21248:21248/udp"
       - "21249:21249"
     user: "{{ uid }}:{{ gid }}"
+    command: "--configure"
     env:
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
       VIRTUAL_HOST: "airdcpp.{{ domain }}"
       VIRTUAL_PORT: 5600
       LETSENCRYPT_HOST: "airdcpp.{{ domain }}"
