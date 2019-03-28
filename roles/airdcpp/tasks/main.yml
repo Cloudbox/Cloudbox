@@ -1,0 +1,62 @@
+#########################################################################
+# Title:         Cloudbox: airdcpp Role                                 #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  linuxserver/plexrequests                               #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: "{{ airdcpp.subdomain|default('airdcpp',true) }}"
+  when: cloudflare_enabled
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: airdcpp
+    state: absent
+
+- name: Create airdcpp directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  with_items:
+    - /opt/airdcpp
+    - /mnt/local/downloads/airdcpp
+
+- name: Create and start container
+  docker_container:
+    name: airdcpp
+    image: "gangefors/airdcpp-webclient"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:80:5600"
+      - "127.0.0.1:443:5601"
+      - "21248:21248"
+      - "21248:21248/udp"
+      - "21249:21249"
+    user: "{{ uid }}:{{ gid }}"
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "{{ airdcpp.subdomain|default('airdcpp',true) }}.{{ domain }}"
+      VIRTUAL_PORT: 5600
+      LETSENCRYPT_HOST: "{{ airdcpp.subdomain|default('airdcpp',true) }}.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/airdcpp:/.airdcpp"
+      - "/mnt/local/downloads/airdcpp:/Downloads"
+      - "/mnt/local/Media:/Share"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - airdcpp
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
