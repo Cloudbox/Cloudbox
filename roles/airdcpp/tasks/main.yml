@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: "{{ airdcpp.subdomain|default('airdcpp',true) }}"
+    subdomain: airdcpp
   when: cloudflare_enabled
 
 - name: Stop and remove any existing container
@@ -42,9 +42,9 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "{{ airdcpp.subdomain|default('airdcpp',true) }}.{{ domain }}"
+      VIRTUAL_HOST: "airdcpp.{{ domain }}"
       VIRTUAL_PORT: 5600
-      LETSENCRYPT_HOST: "{{ airdcpp.subdomain|default('airdcpp',true) }}.{{ domain }}"
+      LETSENCRYPT_HOST: "airdcpp.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
