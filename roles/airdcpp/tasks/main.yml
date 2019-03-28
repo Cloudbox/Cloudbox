@@ -49,7 +49,7 @@
 
 - name: Import default 'DCPlusPlus.xml'
   copy:
-    src: DCPlusPlus.conf
+    src: DCPlusPlus.xml
     dest: /opt/airdcpp/DCPlusPlus.xml
     owner: "{{ user }}"
     group: "{{ user }}"
