@@ -27,6 +27,36 @@
     - /opt/airdcpp
     - /mnt/local/downloads/airdcpp
 
+- name: Check WebServer.xml exists
+  stat:
+    path: "/opt/airdcpp/WebServer.xml"
+  register: webserver_xml
+
+- name: Check DCPlusPlus.xml exists
+  stat:
+    path: "/opt/airdcpp/DCPlusPlus.xml"
+  register: dcplusplus_xml
+
+- name: Import default 'WebServer.xml'
+  copy:
+    src: WebServer.xml
+    dest: /opt/airdcpp/WebServer.xml
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0775
+    force: yes
+  when: not webserver_xml.stat.exists
+
+- name: Import default 'DCPlusPlus.xml'
+  copy:
+    src: DCPlusPlus.conf
+    dest: /opt/airdcpp/DCPlusPlus.xml
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0775
+    force: yes
+  when: not dcplusplus_xml.stat.exists
+
 - name: Create and start container
   docker_container:
     name: airdcpp
@@ -39,7 +69,6 @@
       - "21248:21248/udp"
       - "21249:21249"
     user: "{{ uid }}:{{ gid }}"
-    command: "--configure"
     env:
       VIRTUAL_HOST: "airdcpp.{{ domain }}"
       VIRTUAL_PORT: 5600
