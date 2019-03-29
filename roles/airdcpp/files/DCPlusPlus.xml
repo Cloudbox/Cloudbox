@@ -6,18 +6,18 @@
                 <UDPPort type="int">21248</UDPPort>
                 <TLSPort type="int">21249</TLSPort>
                 <DownloadSpeed type="string">1000</DownloadSpeed>
-		<UploadSpeed type="string">1000</UploadSpeed>
-		<AutoRefreshTime type="int">120</AutoRefreshTime>
-		<MinSegmentSize type="int">15625</MinSegmentSize>
-		<IncomingRefreshTime type="int">60</IncomingRefreshTime>
-		<TLSMode type="int">2</TLSMode>
-		<MaxHashingThreads type="int">2</MaxHashingThreads>
-		<HashersPerVolume type="int">2</HashersPerVolume>
-		<MultithreadedRefresh type="int">2</MultithreadedRefresh>
-		<AutoKick type="int">1</AutoKick>
-		<NoZeroByte type="int">1</NoZeroByte>
-		<SystemShowUploads type="int">1</SystemShowUploads>
-		<SystemShowDownloads type="int">1</SystemShowDownloads>
+                <UploadSpeed type="string">1000</UploadSpeed>
+                <AutoRefreshTime type="int">120</AutoRefreshTime>
+                <MinSegmentSize type="int">15625</MinSegmentSize>
+                <IncomingRefreshTime type="int">60</IncomingRefreshTime>
+                <TLSMode type="int">2</TLSMode>
+                <MaxHashingThreads type="int">2</MaxHashingThreads>
+                <HashersPerVolume type="int">2</HashersPerVolume>
+                <MultithreadedRefresh type="int">2</MultithreadedRefresh>
+                <AutoKick type="int">1</AutoKick>
+                <NoZeroByte type="int">1</NoZeroByte>
+                <SystemShowUploads type="int">1</SystemShowUploads>
+                <SystemShowDownloads type="int">1</SystemShowDownloads>
         </Settings>
         <Share Token="0" Name="Default">
                 <Directory Virtual="Share" Incoming="0">/Share/</Directory>
