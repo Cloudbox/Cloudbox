@@ -24,6 +24,166 @@ Links:
 
 ## [Unreleased][]
 
+## [1.4.0][] - 2019-03-29
+
+- **Preinstall:** Removed 'pre_install' role and created 'preinstall' tag instead. [ansible]
+- **UnionFS:** Reworked role & added support for MergerFS. New settings in `adv_settings.yml`.
+- **Rclone:** Added ability to set Rclone remote into `settings.yml`
+- **Scripts:** Update torrent syncing scripts to match new `rclone.remote` variable.
+- **Remote:** New Role and settings in `adv_settings.yml`.
+- **Mounts:** New Ansible tag `mounts`.
+- **Mounts:** Start and stop Docker containers when `mounts` tag is ran. [ansible]
+- **Mounts:** Fixes incorrect `rc-addr` in existing service files.
+- **Mounts:** Updates rclone remote in `rclone_vfs.service `file.
+- **MergerFS:** Fix for log message errors and high iowait.
+- **Mounts:** Removes `mnt-unionfs.mount` file.
+- **Mounts:** Removes `prime-rclone.service` file.
+- **Mounts:** Added `mounts_override` tag to force importing of service files. [ansible]
+- **Preinstall:** Improved the order of tasks to allow for seamless run. [ansible]
+- **Kernel:** Reworked reboot task.
+- **Kernel:** Does GRUB edits to enable iGPU on Hetzner.
+- **Kernel:** Only restarts when actual change is made. [ansible]
+- **Docker:** Updated `docker-ce` to `18.09.2`.
+- **Docker:** Install/update `docker-ce-cli` as well.
+- **Settings:** Remove `vault_service` key from `backup_config.yml` if present.
+- **Nvidia:** New Role. Installs drivers, patches, and runtimes to enable HW transcoding.
+- **Settings:** Add `gpu` enable/disable options to `adv_settings.yml`.
+- **Plex:** Use the customized Cloudbox docker image.
+- **Plex:** Implement conditionals for igpu setting in `adv_settings.yml`. [ansible]
+- **Emby:** Implement conditionals for igpu setting in `adv_settings.yml`. [ansible]
+- **Plex:** Set HEALTHCHECK_MOUNT env variable to `/mnt/unionfs`.
+- **Nvidia:** Only patches GeForce cards.
+- **Cloudflare:** Use amazonaws.com to lookup public IP. [ansible]
+- **Preinstall:** Will now try to reboot after `preinstall` if required. [ansible]
+- **Backup:** Rsync transfers no longer use compression.
+- **Restore:** Removed Rsync from restore.
+- **Backup:** Updated log paths.
+- **SMA:** Pass through iGPU.
+- **Common:** Install `intel-gpu-tools` if theres an Intel iGPU present.
+- **Nvidia:** Install nvtop (#267).
+- **Aliases:** Add aliases role to make use of the Cloudbox aliases repo.
+- **Cloudplow:** Git clones HEAD (vs Master branch).
+- **MOTD:** Git clones HEAD (vs Master branch).
+- **Traktarr:** Git clones HEAD (vs Master branch).
+- **Plex Dupefinder:** Git clones HEAD (vs Master branch).
+- **Plex Autoscan:** Git clones HEAD (vs Master branch).
+- **Python-PlexLibrary:** Updated Recipes to support upstream YAML format changes.
+- **TorrentCleanup:** Sonarr V3 Test (#269).
+- **ruTorrent:** Will not move completed downloads into a label subfolder anymore.
+- **Restore:** Updated folder creation logic to create `/mnt/local/` before btrfs tasks in case the backup destination is on `/mnt/local/`.
+- **Cloudplow:** Remove `After=unionfs.service` from service file.
+- **Plex Autoscan:** Remove `After=unionfs.service` from service file.
+- **Remote:** Force unmount before checking path status.
+- **Unionfs:** Force unmount before checking path status.
+- **Remote:** Remove `RemainAfterExit=yes` from service files.
+- **Remote:** Installs rclone_vfs_primer timer.
+- **Emby:** Create directories with correct permissions so that user can save password on first run.
+- **Emby:** Create default `dlna.xml` config with dlna turned off.
+- **Emby:** Import `dlna.xml` only when it doesn't exist.
+- **DDclient:** New Role. If Cloudflare credentials exist, setup is automated.
+- **Cloudflare:** Replaced curl command with URI ansible module. [ansible]
+- **Ombi:** Set language to "en_US.UTF-8".
+- **Settings:** Removed deprecated download paths.
+- **Pretasks:** Removed deprecated download paths.
+- **Lidarr:** Removed deprecated download paths.
+- **NZBGet:** Removed deprecated download paths.
+- **Radarr:** Removed deprecated download paths.
+- **Radarr4k:** Removed deprecated download paths.
+- **Sonarr:** Removed deprecated download paths.
+- **Sonarr4k:** Removed deprecated download paths.
+- **ruTorrent:** Removed deprecated download paths.
+- **ruTorrent:** Removed incomplete folder. Now all torrents go to 'completed', regardless if they are complete or incomplete. Makes it inline with hardlink guide on wiki.
+- **ruTorrent:** Reorganized Role. [ansible]
+- **Hetzner NFS:** Added new role for creating Hetzner to Hetzner NFS mounts.
+- **Sanity Check:** Will not allow Plexdrive to be used with MergerFS.
+- **Unionfs:** Regex remove User/Group from `mergerfs.service`
+- **Traktarr:** Removed 'unionfs.service' requirement from systemd file.
+- **Kernel:** Update kernel headers if required.
+- **Suitarr:** Removed obsolete fallback option.
+- **ruTorrent:** Fix escaping on `throttle.global_down.max_rate.set_kb` (#276)
+- **Zsh:** Fix description and add line earlier in `.zshrc` (#277)
+- **System:** Set time zone for all users.
+- **PIP:** Changed install state to 'present' [ansible]
+- **Pretasks:** Created global `tz` variable for use with Ansible docker roles. [ansible]
+- **System:** Set time zone with `tz` variable.
+- **Suitarr:** Replaced `/etc/localtime` volume with TZ env variable
+- **NZBGet:** Moved `HashRenamer.py` file to correct location in role. [ansible]
+- **NZBGet:** Added DarkerNZBget theme support.
+- **NZBGet:** Set permissions recursively.
+- **SABnzbd:** Set permissions recursively.
+- **System:** Install `tzdata` if missing
+- **Backup:** Swapped 'lookup' plugin for shell command. [ansible]
+- **User:** Swapped 'lookup' plugin for shell command. [ansible]
+- **Mounts:** Swapped 'lookup' plugin for 'ansible_date_time' Ansible fact. [ansible]
+- **Backup:** Updated method of backup size lookup [ansible]
+- **Cloudflare:** Updated method of public ip lookup [ansible]
+- **Cloudflare:** Added `cloudflare_enabled` conditional to all roles.
+- **Scripts:** Updated method of public ip lookup in `plex_autoscan_url.sh`.
+- **Backup:** Tweaked pushover message. [ansible]
+- **System:** Added locale subtask to set `en_US.UTF-8` as default lang.
+- **Feeder:** Updated role to match recent mount changes.
+- **PlexPy:** Use `tz` env variable for timezone.
+- **Remote:** Added support for Rclone Cache mount.
+- **Sonarr:** Fixed sonarr version. [ansible]
+- **Sonarr4K:** Fixed sonarr version. [ansible]
+- **Remote:** Removed `--clear-chunk-age` from Plexdrive 4 service file.
+- **Radarr:** Updated docker images names to reflect recent hotio changes.
+- **Sonarr:** Updated docker images names to reflect recent hotio changes.
+- **Sonarr4K:** Updated docker images names to reflect recent hotio changes.
+- **Radarr:** Updated docker images names to reflect recent hotio changes.
+- **Sonarr:** Updated docker images names to reflect recent hotio changes.
+- **Sonarr4K:** Updated docker images names to reflect recent hotio changes.
+- **Sonarr:** v3 uses "unstable" version. Also supports custom install files.
+- **Sonarr4K:** v3 uses "unstable" version. Also supports custom install files.
+- **Python-PlexLibrary:** Now inserts Plex URL to config.
+- **User:** Add user to `video` group.
+- **Restore:** Set shell after creating user account. [ansible]
+- **Traktarr:** Removed `--ignore-backlist` argument from systemd.
+- **Ansible:** Renamed role vars. [ansible]
+- **Ansible:** Added new role var `use_remote`. Will be used to skip certain roles when `rclone.remote` in `settings.yml` is blank. [ansible]
+- **UnionFS:** Skip Docker service restarting if not required. [ansible]
+- **Remote:** Skip role when `use_remote` is false. [ansible]
+- **UnionFS:** Added container stop tasks when `use_remote` is false. [ansible]
+- **BTRFS:** Check if `root_fstype` variable is defined before looking for 'btrfs'. [ansible]
+- **Pre-Tasks:** Updated method of public ip lookup. [ansible]
+- **Pre-Tasks:** Remove APT locks before starting. [ansible]
+- **Docker:** Switch storage driver to ZFS when `/var/lib/docker` is on a ZFS filesystem.
+- **Common:** Adds Debian repositories
+- **System:** Install correct `linux-tools` package for Debian.
+- **Kernel:** Install correct `linux-headers` for Debian vs Ubuntu.
+- **Ansible:** Renamed `*.js2` to `*.j2`. [ansible]
+- **Iperf3:** Changed tmp folder to `/var/tmp/`. [ansible]
+- **Nethogs:** Changed tmp folder to `/var/tmp/`. [ansible]
+- **Ansible:** Swapped loops in APT and PIP modules for lists. [ansible]
+- **System:** Ignore errors during `systctl` role. Also simplified role. [ansible]
+- **Unionfs:** Only create remote dir when it doesn't exist. Related to `use_remote` variable skipping remote role. [ansible]
+- **Pre-Tasks:** Installs dig utility for Cloudflare task.
+- **Cloudflare:** Installs dig for Cloudflare tasks.
+- **Plex Autoscan:** Updates `PLEX_LD_LIBRARY_PATH` in `config.json`
+- **Backups:** Check if `root_fstype` is defined before looking for 'btrfs'.
+- **Readme:** Updated Badges
+- **Common:** Does Btrfs tasks when only when necessary
+- **Kernel:** Ignore errors during kernel headers install.
+- **Docker:** BTRFS - Creates a 20GB pseudo filesystem that is mounted on `/var/lib/docker` (#279)
+- **Suitarr:** Removed env `MONO_TLS_PROVIDER: legacy` from related docker containers.
+- **User:** Add sudo group to nopasswd (typo fix).
+- **Subliminal:** New role
+- **Cloudplow:** Tweaked default config
+- **Nodejs:** Better handling of tasks with conditionals. [ansible]
+- **Nodejs:** Install `hastebin`.
+- **Nvidia:** Install `jmespath` pip module.
+- **Docker:** Install `jmespath` pip module.
+- **NZBGet:** Darkerr theme now installs via Ansible block.
+- **MOTD:** Disable MOTD news service if it exists.
+- **Sonarr:** Darkerr theme now installs via Ansible block.
+- **Sonarr4K:** Darkerr theme now installs via Ansible block.
+- **Radarr4K:** Darkerr theme now installs via Ansible block.
+- **Radarr:** Darkerr theme now installs via Ansible block.
+- **NZBGet:** Attribution update to `HashRenamer.py` script.
+- **Rclone:** Now part of `preinstall`.
+- **Kernel:** Added tag for hetzner related tasks `kernel-hetzner`
+- **ruTorrent:** Update method of public IP lookup.
+
 ## [1.3.3][] - 2019-02-10
 
 - **Plex:** Added `/transcodes` to mount. Now either `/transcodes` or `/transcode` can be used in Plex.
@@ -55,7 +215,7 @@ Links:
 - **Scripts:** `CleanupTorrents.py` fix for sonarrv3.
 - **Sonarr:** Set docker image version in `adv_settings.yml`.
 - **Docker:** Added init into daemon.
-- **Backup:** Adds snapshot support for Btrfs file systems (thanks [RXWatcher1](https://github.com/RXWatcher1)).
+- **Backup:** Adds snapshot support for Btrfs file systems.
 - **Suitarr:** Updated image names to new format.
 - **Backup:** Will now shutdown containers and Plexdrive when snapshot is enabled, but only for a short while.
 - **Backup:** Added missing pushover message tasks to for starting-of-containers task - for previous commit.
@@ -121,7 +281,7 @@ Links:
 - **Traktarr:** Start service if previous config exists.
 - **Plex Autoscan:** Swapped localhost domain to <https://plex.domain.com>.
 - **Cloudplow:** Added nzbget section into default config.
-- **NZBThrottle:** New role (thanks [davemaster223](https://github.com/daghaian)).
+- **NZBThrottle:** New role.
 - **Plex:** Moved default transcodes folder out of `/home/`.
 - **Docker:** Set all container's restart policty to `unless-stopped`.
 - **Unionfs:** Suppress error message in output - when force unmounting.
@@ -290,10 +450,8 @@ Links:
 - **Kernel:** Will quit now if kernel is already updated.
 - **Common:** Adds multiverse APT repositories.
 - **Common:** Added `common` tag to role.
-- **Plex:** Reorganized Host Tasks (thanks [EnorMOZ](https://github.com/EnorMOZ)).
-- **Plex:** Added support for entering in login info in `accounts.yml`.
-  - This will bypass the claim code prompt and automate everything needed to setup Plex.
-  - Based on the work by [EnorMOZ](https://github.com/EnorMOZ).
+- **Plex:** Reorganized Host Tasks.
+- **Plex:** Added support for entering in login info in `accounts.yml`. This will bypass the claim code prompt and automate everything needed to setup Plex.
 - **Backup:** Added `ANSIBLE_CONFIG` env variable to cron task.
 - **Backup:** Added `--skip-tags settings` to the cron task.
 - **Scripts:** Updated paths for nzb scripts.
@@ -302,9 +460,7 @@ Links:
   - Will now go to `/opt/scripts/torents/`.
 - **System:** Certain kernel versions that have no matching linux-tools will no error out anymore.
 - **Settings:** Automatically adds in `hash_behavior` into `ansible.cfg` if missing (for current users).
-- **Settings:** New downloads folder structure.
-  - This will allow for more downloaders to be added without the need to modify PVR (eg Sonarr) mounts.
-  - Left backwards compatibility for previous downloads folder settings (for now). But will _eventually_ remove them from from there (`settings.yml`).
+- **Settings:** New downloads folder structure. This will allow for more downloaders to be added without the need to modify PVR (eg Sonarr) mounts. Left backwards compatibility for previous downloads folder settings (for now). But will _eventually_ remove them from there (`settings.yml`).
 - **Variables:** Created `old_downloads_settings` and `new_downloads_settings` variables.
 - **NZBGet:** Support for the new downloads path settings.
 - **ruTorrent:** Support for the new downloads path settings.
@@ -319,7 +475,6 @@ Links:
 - **Nginx-Proxy:** Creates `vhost.d` folder.
 - **Scripts:** Changed `nzbs` folder to `nzbget`.
 - **[SABnzbd](https://sabnzbd.org):** New role.
-  - Install tag: `--tags sabnzbd`
   - After setup wizard finishes, it will try to redirect to `domain:8080`. Just take out the `:8080` part and it will be OK from then on.
   - User will also need to add in categories for sonarr, radarr, and lidarr. Was also not able to do that without server already filled in.
   - Direct unpack is disabled by default. Left it as-is for user to setup.
@@ -341,9 +496,7 @@ Links:
 - **Plex:** Added 'Forced Automatic Quality Settings' (experimental)
 - **Docker:** Added `purge_networks: yes` to all container tasks.
 - **Docker:** Reworked `cloudbox` docker network
-- **Nginx:** New role. 'Nginx' web server.
-  - Can be used to host websites.
-  - Access via www.domain.com or domain.com.
+- **Nginx:** New role. 'Nginx' web server. Can be used to host websites. Access via www.domain.com or domain.com.
 - **Pre-Install:** Migrates folder to home location.
 - **Settings:** Went back to saving log files in cloudbox folder.
 - **Lidarr:** Support for the new downloads path settings.
@@ -371,7 +524,7 @@ Links:
 - **Organizr:** Added Organizr v2 (beta) (from here on will be referred to as just 'Organizr')
   - will migrate over folder of previous version from `/opt/organizr` to `/opt/organizrv1`.
 - **Plex:** Added `adv_settings.yml `option to open/close port 32400 on host.
-- **OrganizrV1:** Took out support fro `direct_domain` option in `adv_settings.yml`. Can now only be used with a subdomain.
+- **OrganizrV1:** Took out support  `direct_domain` option in `adv_settings.yml`. Can now only be used with a subdomain.
 - **Organizr:** Added Plex theme support.
 - **Ombi:** Replaces 'Plex Requests' for default installs ('cloudbox' and 'mediabox').
 - **Feeder:** Mount and Dismount tags renamed to match role names.
@@ -400,7 +553,7 @@ Links:
 - **Shell:** Copy `.bashrc` from `/etc/skel` when missing.
 - **Backup:** Added accounts.yml to backed up files list.
 - **Settings:** Addition of `accounts.yml`.
-  - Shifting of account related settings from settings.yml into accounts.yml.
+  - Shifting of account related settings from `settings.yml` into `accounts.yml`.
 - **Ansible:** Skip installing certain apps if downloads paths are left blank (on purpose).
 - **Docker:** Changed docker start up delay to 30s post unionfs (from 120s). 120s delay was just not needed.
 - **Docker:** Service is always stopped/started during the role runtime.
@@ -451,7 +604,7 @@ Links:
 - **[Z (jump)](https://github.com/rupa/z)** - New role.
 - **[NowShowing](https://github.com/ninthwalker/NowShowing)** - New role.
 - **Plex Autoscan:** Updated config to support latest changes.
-- **Nginx-Proxy:** Allows EPGs with large channel data to be added in to Plex. (_[EnorMOZ](https://github.com/EnorMOZ)_)
+- **Nginx-Proxy:** Allows EPGs with large channel data to be added in to Plex.
 - **Plexpy:** `/scripts/plexpy/` points to `/opt/scripts/plexpy/`.
 - **Scripts:** Torrent Cleaner - Experimental support for Lidarr.
 - **NZBGet:** Tweaked /scripts mount path.
@@ -461,19 +614,19 @@ Links:
 ## [1.2.0][] - 2018-06-17
 
 - **Kernel:** Added `PATH` to cron task fix issues with purge-old-kernels.
-- **General:** Added support for 18.04/18.10 (thanks [EnorMOZ](https://github.com/EnorMOZ)).
+- **General:** Added support for 18.04/18.10.
 - **Settings:** Added support for `adv_settings.yml` For misc/advanced settings that that don't seem to fit in the main `settings.yml` file.
 - **Organizr:** Direct domain option in `adv_settings.yml`.
 - **Ombi:** Custom subdomain option in `adv_settings.yml`.
 - Plex Requests: Custom subdomain option in `adv_settings.yml`.
 - **System:** Removes useless packages and dependencies.
-- **[Telly](https://github.com/tombowditch/telly):** New role (thanks [EnorMOZ](https://github.com/EnorMOZ)).
+- **[Telly](https://github.com/tombowditch/telly):** New role.
   - Options are set in adv_settings.yml.
 - **Common:** Install [iperf3](https://software.es.net/iperf/).
 - **Ctop:** display the version after install.
 - **Hostess:** display the version after install.
 - **Settings:** Took out entry for Plex Autoscan IP, as it's usually 0.0.0.0 for CB purposes.
-- **NZBGet:** Fixed unrar issue with latest version of NZBGet (thanks [RXWatcher1](https://github.com/RXWatcher1)).
+- **NZBGet:** Fixed unrar issue with latest version of NZBGet.
 - **Sanity Check:** Exit any CB install when backup is in progress.
 - **NZBHydra1:** Switched to LSIO image as Hotio/Suitarr dropped support.
 - **NZBHydra2:** NZBHydra2 now replaces NZBHydra1 for "default" installs (i.e. `cloudbox` and `feederbox`).
@@ -484,13 +637,13 @@ Links:
 - **Pre-Tasks:** Removes cloudbox subdomain for plex/feeder box installs.
 - **Ansible:** Added localhost to inventory to suppress warning messages.
 - **PIP:** Suppress outdated pip warnings.
-- **[Nethogs](https://github.com/raboof/nethogs):** New role (thanks [EnorMOZ](https://github.com/EnorMOZ)).
+- **[Nethogs](https://github.com/raboof/nethogs):** New role.
 - **[Cloudplow](https://github.com/l3uddz/cloudplow/):** Cloudplow replaces UnionFS Cleaner.
 - **Rutorrent:** Disables `extsearch` plugin for new and old installs.
   - Will help fix some slow loading issues.
 - **Scripts:** 'Plex Autoscan URL Script' will now catch errors and display the error message (e.g. missing dependencies, invalid JSON formatting). Also Added some visual enhancements.
 - **Feeder Dismount Role:** New Role. Reverts all changes from Feeder Mount role.
-- **Sanity Check:** Make sure users are using a valid tag (thanks [EnorMOZ](https://github.com/EnorMOZ)).
+- **Sanity Check:** Make sure users are using a valid tag.
 - **Rutorrent:** Uses same password as `passwd` in `settings.yml`.
 - **NZBHydra1:** Config files for Suitarr path now automatically migrated over to LSIO path.
 - **NZBHydra2:** Automates entering in login and auth info, and sets JVM memory to 512MB if the system has >= 16GB of RAM.
@@ -523,7 +676,7 @@ Links:
 ## [1.1.1][] - 2018-05-19
 
 - **Backup:** systemd-backup now uses synchronize, should avoid issues with copy module failing on 0 byte files.
-- **Docker:** Better log size management (thanks [EnorMOZ](https://github.com/EnorMOZ)).
+- **Docker:** Better log size management.
 - **ZSH:** Existing .zshrc file will no longer be replaced with default one.
 - **[Plex Patrol](https://github.com/l3uddz/plex_patrol):** New role.
 - **Watchower:** now an optional module.
@@ -602,7 +755,7 @@ Links:
       -  `/mnt/unionfs/Media/Movies/Movies4K/`
       -  `/mnt/unionfs/Media/Movies4K/`
   - Plex Autoscan will also require tweaking. See "Configuring Plex Libraries" wiki page for more info.
-- **[Heimdall](https://heimdall.site/):** New role (thanks [TheBradz](https://github.com/TheBradz)).
+- **[Heimdall](https://heimdall.site/):** New role.
 - **Nginx Proxy:** Added in HTTP Authentication support. See [here](https://github.com/Cloudbox/Cloudbox/wiki/HTTP-Auth-Support) for more details.
 - **Rclone:** fix for trailing zeroes in version numbers.
 - **[The Lounge](https://thelounge.chat/):** New role.
@@ -612,7 +765,7 @@ Links:
   - Will also add one of 3 relevant subdomains: `plexbox`, `feederbox`, or `cloudbox`.
     - This is useful for ssh, ftp, etc, especially with a Feederbox/Plexbox setup.
   - This requires the email address in `settings.yml` to match the one used for the Cloudflare account.
-- **MOTD:** Now shows memory info (based off the word by [EnorMOZ](https://github.com/EnorMOZ)).
+- **MOTD:** Now shows memory info.
 - **Ansible:** Added command_warnings: off
 - **[Netdata](https://my-netdata.io):** New role.
 - **Pre-Install:** Set `sudo` group to `NOPASSWD`
@@ -627,8 +780,8 @@ Links:
 - **Scripts:** Removed `cloudflared.py` as this is not needed anymore.
 - **[Quassel IRC Core](https://quassel-irc.org/):** New role.
 - **Rclone:** `rclone.conf` location: `~/.config/rclone/rclone.conf`.
-- **Backup:** Rclone uses less bandwidth, due to server-side move commands (initially submitted by [RXWatcher1](https://github.com/RXWatcher1)).
-- **Backup:** Will archive older versions of `cloudbox.tar` on Rclone remotes (initially submitted by [RXWatcher1](https://github.com/RXWatcher1)).
+- **Backup:** Rclone uses less bandwidth, due to server-side move commands.
+- **Backup:** Will archive older versions of `cloudbox.tar` on Rclone remotes.
 - **Backup:** Systemd files will be saved to `/opt/systemd-backup` (vs `/opt/systemd`).
   - The name makes the purpose of the folder clearer.
 - **Backup:** Local `cloudbox.tar.backup` file is now deleted after a successful tar archiving task.
@@ -661,6 +814,7 @@ Links:
 - **Initial**: First "GitHub release".
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.4.0]: https://github.com/cloudbox/cloudbox/compare/1.3.3...1.4.0
 [1.3.3]: https://github.com/cloudbox/cloudbox/compare/1.3.2...1.3.3
 [1.3.2]: https://github.com/cloudbox/cloudbox/compare/1.3.1...1.3.2
 [1.3.1]: https://github.com/cloudbox/cloudbox/compare/1.3.0...1.3.1
