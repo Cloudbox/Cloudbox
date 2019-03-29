@@ -183,6 +183,8 @@ Links:
 - **Rclone:** Now part of `preinstall`.
 - **Kernel:** Added tag for hetzner related tasks `kernel-hetzner`
 - **ruTorrent:** Update method of public IP lookup.
+- **Sonarr:** Set default version to `v3`. To revert to v2, set `sonarr.version` to `image`,`stable`, or `stable` in `adv_settings.yml`.
+- **Sonarr4K:** Set default version to `v3`. To revert to v2, set `sonarr.version` to `image`,`stable`, or `stable` in `adv_settings.yml`.
 
 ## [1.3.3][] - 2019-02-10
 

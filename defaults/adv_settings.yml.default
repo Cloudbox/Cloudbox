@@ -12,7 +12,7 @@ plex:
 suitarr:
   version: default
 sonarr:
-  version: unstable
+  version: v3
 darkerr:
   enable: no
 emby:
