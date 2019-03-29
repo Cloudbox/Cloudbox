@@ -39,6 +39,7 @@
   git:
     repo: https://github.com/l3uddz/cloudplow/
     dest: /opt/cloudplow
+    version: HEAD
     force: yes
   become: yes
   become_user: "{{ user }}"

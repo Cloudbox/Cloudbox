@@ -26,6 +26,7 @@
   git:
     repo: https://github.com/l3uddz/traktarr/
     dest: /opt/traktarr
+    version: HEAD
     force: yes
   become: yes
   become_user: "{{ user }}"

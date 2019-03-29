@@ -40,6 +40,7 @@
   git:
     repo: https://github.com/l3uddz/plex_autoscan/
     dest: /opt/plex_autoscan
+    version: HEAD
     force: yes
   become: yes
   become_user: "{{ user }}"
