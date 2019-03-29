@@ -8,7 +8,7 @@
                 <DownloadSpeed type="string">1000</DownloadSpeed>
                 <UploadSpeed type="string">1000</UploadSpeed>
                 <AutoRefreshTime type="int">120</AutoRefreshTime>
-                <MinSegmentSize type="int">15625</MinSegmentSize>
+                <MinSegmentSize type="int">31250</MinSegmentSize>
                 <IncomingRefreshTime type="int">60</IncomingRefreshTime>
                 <TLSMode type="int">2</TLSMode>
                 <MaxHashingThreads type="int">2</MaxHashingThreads>
