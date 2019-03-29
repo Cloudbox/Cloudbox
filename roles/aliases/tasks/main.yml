@@ -17,7 +17,7 @@
   git:
     repo: https://github.com/Cloudbox/aliases
     dest: /opt/aliases
-    version: master
+    version: HEAD
     force: yes
   become: yes
   become_user: "{{ user }}"

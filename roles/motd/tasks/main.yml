@@ -58,6 +58,7 @@
   git:
     repo: https://github.com/cloudbox/motd.git
     dest: /opt/motd
+    version: HEAD
     force: yes
 
 - name: Install pip requirements

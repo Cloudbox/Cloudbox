@@ -17,6 +17,7 @@
   git:
     repo: https://github.com/l3uddz/plex_dupefinder/
     dest: /opt/plex_dupefinder
+    version: HEAD
     force: yes
 
 - name: Install pip requirements
