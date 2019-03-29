@@ -51,7 +51,7 @@ Links:
 - **Plex:** Use the customized Cloudbox docker image.
 - **Plex:** Implement conditionals for igpu setting in `adv_settings.yml`. [ansible]
 - **Emby:** Implement conditionals for igpu setting in `adv_settings.yml`. [ansible]
-- **Plex:** Set HEALTHCHECK_MOUNT env variable to `/mnt/unionfs`.
+- **Plex:** Set `HEALTHCHECK_MOUNT` env variable to `/mnt/unionfs`.
 - **Nvidia:** Only patches GeForce cards.
 - **Cloudflare:** Use amazonaws.com to lookup public IP. [ansible]
 - **Preinstall:** Will now try to reboot after `preinstall` if required. [ansible]
@@ -60,7 +60,7 @@ Links:
 - **Backup:** Updated log paths.
 - **SMA:** Pass through iGPU.
 - **Common:** Install `intel-gpu-tools` if theres an Intel iGPU present.
-- **Nvidia:** Install nvtop (#267).
+- **Nvidia:** Install `nvtop` (#267).
 - **Aliases:** Add aliases role to make use of the Cloudbox aliases repo.
 - **Cloudplow:** Git clones HEAD (vs Master branch).
 - **MOTD:** Git clones HEAD (vs Master branch).
@@ -159,10 +159,10 @@ Links:
 - **Unionfs:** Only create remote dir when it doesn't exist. Related to `use_remote` variable skipping remote role. [ansible]
 - **Pre-Tasks:** Installs dig utility for Cloudflare task.
 - **Cloudflare:** Installs dig for Cloudflare tasks.
-- **Plex Autoscan:** Updates `PLEX_LD_LIBRARY_PATH` in `config.json`
+- **Plex Autoscan:** Updates `PLEX_LD_LIBRARY_PATH` in `config.json`.
 - **Backups:** Check if `root_fstype` is defined before looking for 'btrfs'.
-- **Readme:** Updated Badges
-- **Common:** Does Btrfs tasks when only when necessary
+- **Readme:** Updated Badges.
+- **Common:** Do Btrfs tasks only when necessary.
 - **Kernel:** Ignore errors during kernel headers install.
 - **Docker:** BTRFS - Creates a 20GB pseudo filesystem that is mounted on `/var/lib/docker` (#279)
 - **Suitarr:** Removed env `MONO_TLS_PROVIDER: legacy` from related docker containers.
@@ -183,8 +183,8 @@ Links:
 - **Rclone:** Now part of `preinstall`.
 - **Kernel:** Added tag for hetzner related tasks `kernel-hetzner`
 - **ruTorrent:** Update method of public IP lookup.
-- **Sonarr:** Set default version to `v3`. To revert to v2, set `sonarr.version` to `image`,`stable`, or `stable` in `adv_settings.yml`.
-- **Sonarr4K:** Set default version to `v3`. To revert to v2, set `sonarr.version` to `image`,`stable`, or `stable` in `adv_settings.yml`.
+- **Sonarr:** Set default version to `v3`. To revert to v2, set `sonarr.version` to `image`,`stable`, or `unstable` in `adv_settings.yml`.
+- **Sonarr4K:** Set default version to `v3`. To revert to v2, set `sonarr.version` to `image`,`stable`, or `unstable` in `adv_settings.yml`.
 
 ## [1.3.3][] - 2019-02-10
 
