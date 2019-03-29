@@ -1,0 +1,27 @@
+#########################################################################
+# Title:         Cloudbox: NZBGet - Darkerr Task                        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Darkerr | Darkerr theme location block'
+  blockinfile:
+    path: "/opt/nginx-proxy/vhost.d/nzbget.{{ domain }}_location"
+    marker: "### {mark} CLOUDBOX - DARKERR THEME ###"
+    block: |
+      # https://github.com/ydkmlt84/DarkerNZBget
+      proxy_set_header Accept-Encoding "";
+      sub_filter
+       '</head>'
+       '<link rel="stylesheet" type="text/css" href="https://rawgit.com/ydkmlt84/DarkerNZBget/master/nzbget_custom_darkblue.css">
+       </head>';
+      sub_filter_once on;
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0664
+    create: yes
+    state: "{{ (darkerr.enable | default(false,true)) | ternary('present','absent') }}"

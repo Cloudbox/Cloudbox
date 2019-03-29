@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: "Create 'sickbeard_mp4_automator' directory"
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - "/opt/scripts/sickbeard_mp4_automator"
 
@@ -20,7 +20,7 @@
     version: master
     force: yes
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 - name: "Wait for 'autoProcess.ini.sample' file"
   wait_for:

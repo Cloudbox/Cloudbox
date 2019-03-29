@@ -1,0 +1,51 @@
+#########################################################################
+# Title:         Cloudbox: Rclone VFS Mount                             #
+# Location:      /etc/systemd/system/rclone_vfs.service                 #
+# Author(s):     EnorMOZ                                                #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
+[Unit]
+Description=Rclone VFS Mount
+After=network-online.target
+
+[Service]
+User={{ user }}
+Group={{ user }}
+Type=notify
+ExecStartPre=/bin/sleep 10
+ExecStart=/usr/bin/rclone mount \
+  --config=/home/{{ user }}/.config/rclone/rclone.conf \
+  --allow-other \
+  --rc \
+  --rc-addr=localhost:5572 \
+  --fast-list \
+  --drive-skip-gdocs \
+  --vfs-read-chunk-size=64M \
+  --vfs-read-chunk-size-limit=2048M \
+  --buffer-size=64M \
+  --max-read-ahead=256M \
+  --poll-interval=1m \
+  --dir-cache-time=168h \
+  --timeout=10m \
+  --transfers=16 \
+  --checkers=8 \
+  --drive-chunk-size=64M \
+  --fuse-flag=sync_read \
+  --fuse-flag=auto_cache \
+  --umask=002 \
+  --syslog \
+  -v \
+  {{ rclone.remote }}: /mnt/remote
+ExecStop=/bin/fusermount -uz /mnt/remote
+Restart=on-abort
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+
+[Install]
+WantedBy=default.target

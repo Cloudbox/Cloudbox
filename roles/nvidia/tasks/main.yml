@@ -1,0 +1,110 @@
+#########################################################################
+# Title:         Cloudbox: Nvidia Role                                  #
+# Author(s):     desimaniac, l3uddz                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Install common pip modules
+  pip:
+    state: present
+    name:
+      - jmespath
+
+- name: Fetch Nvidia card info
+  shell: |
+      if [ `lspci | grep -c -E '.*VGA.*NVIDIA'` -eq 1 ]; then
+        lspci -s $(lspci | grep -E '.*VGA.*NVIDIA' | cut -d' ' -f 1)
+      else
+        echo ""
+      fi
+  register: lspci_resp
+
+- name: Nvidia Setup block
+  block:
+
+  # Install Ubuntu drivers
+
+  - name: Install Ubuntu drivers
+    apt:
+      name: ubuntu-drivers-common
+      update_cache: yes
+      state: present
+
+  - name: Get list of devices
+    shell: ubuntu-drivers devices
+    register: ubuntu_devices
+
+  # Install Nvidia Drivers
+
+  - name: Nvidia Kernel and Driver Tasks
+    block:
+
+    - name: Check if 'blacklist-nouveau.conf' exists
+      stat:
+        path: "/etc/modprobe.d/blacklist-nouveau.conf"
+      register: blacklist_nouveau_conf
+
+    - name: "Nvidia Kernel Task"
+      include_tasks: "nvidia_kernel.yml"
+      when: (not blacklist_nouveau_conf.stat.exists)
+
+    - name: "Nvidia Driver Task"
+      include_tasks: "nvidia_driver.yml"
+
+    when: '("manual_install: True" not in ubuntu_devices.stdout)'
+
+  # Install Nvidia Driver Patch to remove transcode limit
+
+  - name: Nvidia Driver Patch Tasks
+    block:
+
+    - name: Check to see if patch backup files exist
+      find:
+        paths: "/opt/nvidia/libnvidia-encode-backup"
+        file_type: file
+        recurse: yes
+        patterns: '*.so*'
+      register: nvidia_patch_backup_files
+
+    - name: "Nvidia Driver Patch Task"
+      include_tasks: "nvidia_patch.yml"
+      when: (nvidia_patch_backup_files.matched|int == 0)
+
+    when: ('GeForce' in lspci_resp.stdout)
+
+  # Install Nvidia Runtime Container
+
+  - name: Nvidia Runtime Container Tasks
+    block:
+
+    - name: Get contents of 'daemon.json'
+      shell: cat /etc/docker/daemon.json
+      register: docker_daemon_json
+
+    - name: Set 'docker_default_runtime'
+      set_fact:
+        docker_default_runtime: "{{ docker_daemon_json.stdout | from_json | json_query('\"default-runtime\"') }}"
+
+    - name: "Nvidia Docker Task"
+      include_tasks: "nvidia_docker.yml"
+      when: (docker_default_runtime != 'nvidia')
+
+  # Install Nvidia Nvtop Tool
+
+  - name: Nvidia Nvtop Tasks
+    block:
+
+    - name: Check nvtop exists
+      stat:
+        path: "/usr/local/bin/nvtop"
+      register: nvtop_binary
+
+    - name: "Nvidia Nvtop Task"
+      include_tasks: "nvidia_nvtop.yml"
+      when: not nvtop_binary.stat.exists
+
+  when: (ansible_distribution == 'Ubuntu') and ('NVIDIA' in lspci_resp.stdout)

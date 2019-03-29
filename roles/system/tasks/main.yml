@@ -9,16 +9,16 @@
 #########################################################################
 ---
 - name: apt tasks
-  include_tasks: "apt.yml"
+  include_tasks: "subtasks/apt.yml"
 
 - name: Network tasks
-  import_tasks: "network.yml"
+  import_tasks: "subtasks/network.yml"
 
 - name: sysctl tasks
-  include_tasks: "sysctl.yml"
+  include_tasks: "subtasks/sysctl.yml"
 
 - name: Mounts tasks
-  include_tasks: "mounts.yml"
+  include_tasks: "subtasks/mounts.yml"
 
 - name: Check if intel_pstate directory exists.
   stat:
@@ -26,12 +26,18 @@
   register: p
 
 - name: CPU Frequency tasks
-  include_tasks: "cpufrequency.yml"
+  include_tasks: "subtasks/cpufrequency.yml"
   when: p.stat.isdir is defined and p.stat.isdir
 
 - name: Remove CPU Power task
-  include_tasks: "remove_cpupower.yml"
+  include_tasks: "subtasks/remove_cpupower.yml"
 
-- name: Fix timezone
-  import_tasks: "timezone.yml"
-  ignore_errors: yes
+- name: Set Time Zone task
+  import_tasks: "subtasks/timezone.yml"
+  tags: set-timezone
+
+- name: Set Locale task
+  import_tasks: "subtasks/locale.yml"
+  tags: set-locale
+
+- meta: flush_handlers

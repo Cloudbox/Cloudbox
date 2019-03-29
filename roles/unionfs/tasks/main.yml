@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: UnionFS Role                                 #
-# Author(s):     l3uddz, desimaniac                                     #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,53 +8,46 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check if unionfs service exists
-  stat:
-    path: "/etc/systemd/system/unionfs.service"
-  register: unionfs_service
+# Stop Containers
 
-- name: Populate Service Facts
-  service_facts:
-  when: unionfs_service.stat.exists
+- name: Container Stop Tasks
+  import_tasks: "subtasks/containers_stop.yml"
+  when: (('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)) and (not use_remote)
 
-- name: Get unionfs service state
-  set_fact:
-    unionfs_service_running: "{{ (services['unionfs.service'] is defined) and (services['unionfs.service']['state'] == \"running\") }}"
-  when: unionfs_service.stat.exists
+# Existing Setup
 
-- name: Stop existing unionfs service
-  systemd: state=stopped name=unionfs
-  when: unionfs_service.stat.exists and unionfs_service_running
+- name: Legacy Tasks
+  import_tasks: "subtasks/legacy.yml"
 
-- name: "Force unmount /mnt/unionfs"
-  shell: "/bin/umount -f /mnt/unionfs 2>/dev/null || :"
-  ignore_errors: yes
+- name: Service Tasks
+  include_tasks: "subtasks/services.yml"
+  loop_control:
+    loop_var: outer_item
+  loop:
+    - "unionfs.service"
+    - "mergerfs.service"
 
-- name: Create unionfs directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
-  with_items:
-    - /mnt/unionfs
-    - /mnt/local/.unionfs-fuse
+- name: Mount Tasks
+  import_tasks: "subtasks/mounts.yml"
 
-- name: Install fuse
-  apt:
-    name: fuse
-    state: present
+# New Setup
 
-- name: Import fuse.conf
-  copy: src=fuse.conf dest=/etc/fuse.conf force=yes
+- name: Basic Tasks
+  import_tasks: "subtasks/basics.yml"
 
-- name: Install unionfs
-  apt:
-    name: unionfs-fuse
-    state: present
+- name: MergerFS Tasks
+  import_tasks: "subtasks/mergerfs.yml"
+  when: (mounts.unionfs | lower == "mergerfs")
 
-- name: Import unionfs.service
-  template:
-    src: unionfs.service.js2
-    dest: /etc/systemd/system/unionfs.service
-    force: yes
-  when: not unionfs_service.stat.exists
+- name: UnionFS Tasks
+  import_tasks: "subtasks/unionfs.yml"
+  when: (mounts.unionfs | lower == "unionfs")
 
-- name: Start unionfs service
-  systemd: state=started name=unionfs daemon_reload=yes enabled=yes
+- name: Docker Tasks
+  import_tasks: "subtasks/docker.yml"
+
+# Start Containers
+
+- name: Container Start Tasks
+  import_tasks: "subtasks/containers_start.yml"
+  when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)

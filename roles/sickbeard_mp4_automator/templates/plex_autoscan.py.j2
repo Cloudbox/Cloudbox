@@ -1,0 +1,39 @@
+#!/usr/bin/python
+"""
+
+    #########################################################################
+    # Title:         SMA: Plex Autoscan Post-Processing Script              #
+    # Author(s):     andrewkhunn                                            #
+    # URL:           https://github.com/cloudbox/cloudbox                   #
+    # Description:   Sends scan request to Plex Autoscan.                   #
+    # --                                                                    #
+    #         Part of the Cloudbox project: https://cloudbox.works          #
+    #########################################################################
+    #                   GNU General Public License v3.0                     #
+    #########################################################################
+
+"""
+import os
+import json
+import requests
+
+def main():
+  print("plex_autoscan Post-processing Script")
+  url = "{{ plex_autoscan_url.stdout|default('PLEX_AUTOSCAN_URL',true) }}"
+
+  files = json.loads(os.environ.get('MH_FILES'))
+  if not (files):
+    print("Error - Did not find environment variables.")
+    return
+
+  for filename in files:
+    dirname = os.path.dirname(filename)
+    payload = {'eventType': 'Manual', 'filepath': dirname}
+    try:
+      requests.post(url, json=payload)
+    except Exception as e:
+      print("Error - Request failed.")
+      print(e)
+
+if __name__ == "__main__":
+  main()

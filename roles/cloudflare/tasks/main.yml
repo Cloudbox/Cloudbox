@@ -8,22 +8,33 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get IP Address
-  ipinfoio_facts:
+- name: Install 'dnsutils'
+  apt: "name=dnsutils state=present"
 
-- name: Determine Record
+- name: Get Public IP Address
+  shell: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
+  register: public_ip_lookup
+
+- name: Set 'public_ip' variable
+  set_fact:
+    public_ip: "{{ public_ip_lookup.stdout }}"
+
+- name: Set 'record' variable
   set_fact:
     record: "{{ (subdomain == domain) | ternary(domain,subdomain + '.' + domain) }}"
 
-- name: "Set DNS Record for {{record}} to {{ip}}"
+- name: Set DNS Record
   cloudflare_dns:
-    account_api_token: "{{cloudflare_api_token}}"
-    account_email: "{{email}}"
-    zone: "{{domain}}"
+    account_api_token: "{{ cloudflare_api_token }}"
+    account_email: "{{ email }}"
+    zone: "{{ domain }}"
     state: present
     solo: true
     proxied: no
     type: A
-    value: "{{ip}}"
-    record: "{{subdomain}}"
-  when: cloudflare_enabled
+    value: "{{ public_ip }}"
+    record: "{{ subdomain }}"
+
+- name: Display DNS Record
+  debug:
+    msg: "DNS Record for '{{ record }}' set to '{{ public_ip }}'."

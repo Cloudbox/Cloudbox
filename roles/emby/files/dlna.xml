@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<DlnaOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EnablePlayTo>false</EnablePlayTo>
+  <EnableServer>false</EnableServer>
+  <EnableDebugLog>false</EnableDebugLog>
+  <BlastAliveMessages>false</BlastAliveMessages>
+  <ClientDiscoveryIntervalSeconds>60</ClientDiscoveryIntervalSeconds>
+  <AliveMessageIntervalSeconds>1800</AliveMessageIntervalSeconds>
+</DlnaOptions>

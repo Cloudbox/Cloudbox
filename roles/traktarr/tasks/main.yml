@@ -18,7 +18,7 @@
   when: traktarr_service.stat.exists
 
 - name: Create traktarr directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/traktarr
 
@@ -26,10 +26,10 @@
   git:
     repo: https://github.com/l3uddz/traktarr/
     dest: /opt/traktarr
-    version: master
+    version: HEAD
     force: yes
   become: yes
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 - name: Install pip requirements
   pip:
@@ -87,10 +87,10 @@
 
 - name: Import default config
   template:
-    src: config.json.js2
+    src: config.json.j2
     dest: /opt/traktarr/config.json
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: not traktarr_config.stat.exists
@@ -98,12 +98,12 @@
 - name: Set traktarr.py as executable
   file:
     path: /opt/traktarr/traktarr.py
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: a+x
 
 - name: Set directory permissions
-  file: "path=/opt/traktarr state=directory owner={{user}} group={{user}} recurse=yes"
+  file: "path=/opt/traktarr state=directory owner={{ user }} group={{ user }} recurse=yes"
 
 - name: "Create /usr/local/bin symlink"
   file:
@@ -113,7 +113,7 @@
 
 - name: Import traktarr service
   template:
-    src: traktarr.service.js2
+    src: traktarr.service.j2
     dest: /etc/systemd/system/traktarr.service
     force: yes
   when: not traktarr_service.stat.exists

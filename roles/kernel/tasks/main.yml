@@ -8,11 +8,34 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Kernel cron task
-  include_tasks: "cron.yml"
+- name: Set default 'reboot_is_necessary' variable
+  set_fact:
+    reboot_is_necessary: false
 
-- name: Kernel script task
-  include_tasks: "script.yml"
+- name: Preinstall task
+  include_tasks: "subtasks/preinstall.yml"
+  when: ('preinstall' in ansible_run_tags)
 
-- name: Kernel update task
-  include_tasks: "update.yml"
+- name: "Hetzner Tasks"
+  import_tasks: "subtasks/hetzner.yml"
+  tags: kernel-hetzner
+
+- name: "Cron Tasks"
+  include_tasks: "subtasks/cron.yml"
+
+- name: "Mainline Kernel Script Tasks"
+  include_tasks: "subtasks/script.yml"
+
+- name: "Update Tasks"
+  include_tasks: "subtasks/update.yml"
+
+- name: "Header Tasks"
+  include_tasks: "subtasks/headers.yml"
+
+- name: "Restart Tasks"
+  include_tasks: "subtasks/restart.yml"
+  when: (reboot_is_necessary) and
+    (not continuous_integration)
+
+- name: "Checks Tasks"
+  include_tasks: "subtasks/checks.yml"

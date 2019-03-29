@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Check filesystem of '/var/lib/' path
+  shell: stat -f -c %T /var/lib/
+  register: var_lib_file_system
+
 - name: Check to see if docker is installed
   stat:
     path: "/usr/bin/docker"
@@ -19,32 +23,32 @@
 
 - name: Get Docker service state
   set_fact:
-    docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == \"running\") }}"
+    docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == 'running') }}"
   when: docker_binary.stat.exists
 
-- name: Gather list of running Docker containers
-  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
-  register: docker_running_containers
-  ignore_errors: yes
+- name: Tasks for when Docker exists and is running
+  block:
+
+  - name: Gather list of running Docker containers
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+    register: docker_running_containers
+    ignore_errors: yes
+
+  - name: Stop all running Docker containers
+    shell: "docker stop {{ docker_running_containers.stdout }} &> /dev/null || true"
+    ignore_errors: yes
+    when: (docker_running_containers.stdout | trim | length > 0)
+
+  - name: Btrfs Tasks
+    include_tasks: "subtasks/btrfs/cleanup.yml"
+    when: ('btrfs' in var_lib_file_system.stdout)
+
+  - name: Stop docker service
+    systemd:
+      name: docker
+      state: stopped
+
   when: (docker_binary.stat.exists) and (docker_service_running)
-
-- name: Stop all running Docker containers
-  shell: "docker stop {{docker_running_containers.stdout}}"
-  ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
-
-- name: Stop docker service
-  systemd:
-    name: docker
-    state: stopped
-  when: (docker_binary.stat.exists) and (docker_service_running)
-
-- name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - software-properties-common
 
 - name: Add official gpg signing key
   apt_key:
@@ -53,7 +57,7 @@
 
 - name: Add official repository
   apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution|lower}} {{ ansible_distribution_release }} edge"
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} edge"
     filename: docker
   register: apt_docker_repositories
 
@@ -62,105 +66,103 @@
     update_cache: yes
   when: apt_docker_repositories.changed
 
-- name: Release docker-ce from hold
+- name: Release 'docker-ce' from hold
   dpkg_selections:
     name: docker-ce
     selection: install
 
-- name: Install docker-ce
+- name: Install 'docker-ce'
   apt:
-    name: "docker-ce=*18.09.2~3-0~{{ansible_distribution|lower}}-{{ansible_distribution_release|lower}}"
+    name: "docker-ce=*18.09.2~3-0~{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}"
     state: present
     update_cache: yes
     force: yes
 
-- name: Put docker-ce into hold
+- name: Put 'docker-ce' into hold
   dpkg_selections:
     name: docker-ce
     selection: hold
 
-- name: Get docker-ce version
+- name: Get 'docker-ce' version
   shell: "/usr/bin/dockerd-ce --version | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
   register: docker_ce_version
   ignore_errors: yes
 
-- name: Display docker-ce version
+- name: Display 'docker-ce' version
   debug:
-    msg: "Docker CE version {{docker_ce_version.stdout}} installed."
+    msg: "Docker CE version {{ docker_ce_version.stdout }} installed."
   when: docker_ce_version is defined
 
-- name: Release docker-ce-cli from hold
+- name: Release 'docker-ce-cli' from hold
   dpkg_selections:
     name: docker-ce-cli
     selection: install
 
-- name: Install docker-ce-cli
+- name: Install 'docker-ce-cli'
   apt:
-    name: "docker-ce-cli=*18.09.2~3-0~{{ansible_distribution|lower}}-{{ansible_distribution_release|lower}}"
+    name: "docker-ce-cli=*18.09.2~3-0~{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}"
     state: present
     update_cache: yes
     force: yes
 
-- name: Put docker-ce-cli into hold
+- name: Put 'docker-ce-cli' into hold
   dpkg_selections:
     name: docker-ce-cli
     selection: hold
 
-- name: Get docker-ce-cli version
+- name: Get 'docker-ce-cli' version
   shell: "/usr/bin/docker --version | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
   register: docker_ce_cli_version
   ignore_errors: yes
 
-- name: Display docker-ce-cli version
+- name: Display 'docker-ce-cli' version
   debug:
-    msg: "Docker CE CLI version {{docker_ce_cli_version.stdout}} installed."
+    msg: "Docker CE CLI version {{ docker_ce_cli_version.stdout }} installed."
   when: docker_ce_cli_version is defined
 
-- name: Uninstall docker-py pip module
+- name: Uninstall 'docker-py' pip module
   pip:
     name: docker-py
     state: absent
   ignore_errors: yes
 
-- name: Install docker pip module
+- name: Install 'docker' pip module
   pip:
     name: docker
     state: latest
   ignore_errors: yes
 
-- name: Import daemon.json
-  copy: "src=daemon.json dest=/etc/docker/daemon.json force=yes mode=0775"
+- name: Btrfs psuedo file system tasks
+  include_tasks: "subtasks/btrfs/pseudo_file_system.yml"
+  when: ('btrfs' in var_lib_file_system.stdout)
 
-- name: Create override directory
-  file: "path=/etc/systemd/system/docker.service.d state=directory mode=0775"
-
-- name: Import override file
-  copy: "src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf force=yes mode=0775"
+- name: Import 'daemon.json'
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    mode: 0775
+    force: yes
 
 - name: Start docker
-  systemd: state=started name=docker enabled=yes
+  systemd: name=docker state=started enabled=yes daemon_reload=yes
 
 - name: Wait for 30 seconds before commencing
   wait_for:
     timeout: 30
 
 - name: "Stop all Docker containers"
-  shell: "docker stop $(docker ps -aq)"
-  register: s
-  failed_when: s.rc > 1
-  ignore_errors: yes
-
-- name: "Import Docker Housekeeping tasks"
-  import_tasks: "docker_housekeeping.yml"
-  tags: docker-housekeeping
+  shell: docker stop $(docker ps -aq) &> /dev/null || true
 
 - name: "Import Docker Network tasks"
-  import_tasks: "docker_network.yml"
+  import_tasks: "subtasks/network.yml"
+
+- name: "Import Docker Housekeeping tasks"
+  import_tasks: "subtasks/housekeeping.yml"
+  tags: docker-housekeeping
 
 - name: "Re-start all previously running Docker containers"
-  shell: 'docker start {{docker_running_containers.stdout}}'
-  ignore_errors: yes
-  when: (docker_binary.stat.exists) and (docker_service_running) and not (docker_running_containers.stdout | trim == '')
+  shell: 'docker start {{ docker_running_containers.stdout }} &> /dev/null || true'
+  when: (docker_binary.stat.exists) and (docker_service_running) and (docker_running_containers.stdout | trim | length > 0)
 
 - name: "Install ctop"
   import_role:

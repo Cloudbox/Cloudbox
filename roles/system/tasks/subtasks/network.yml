@@ -1,0 +1,63 @@
+#########################################################################
+# Title:         System: Network Tasks                                  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Install common packages
+  apt:
+    state: present
+    name:
+      - vnstat
+      - pciutils
+
+- block:
+
+  - name: Check for '/etc/vnstat.conf'
+    stat:
+      path: "/etc/vnstat.conf"
+    register: vnstat_conf
+
+  - name: Set vnstat to proper default interface
+    lineinfile:
+      path: "/etc/vnstat.conf"
+      regexp: '(Interface)\s?.*'
+      line: '\1 "{{ ansible_default_ipv4.interface }}"'
+      state: present
+      backrefs: yes
+    when: (vnstat_conf.stat.exists)
+
+  - name: Import rc.local if missing
+    copy:
+      src: "etc/rc.local"
+      dest: "/etc/rc.local"
+      owner: "root"
+      group: "root"
+      mode: 0755
+      force: no
+
+  - name: Get nic info
+    shell: lspci
+    register: nic
+
+  - name: Disable TSO / TX
+    blockinfile:
+      path: "/etc/rc.local"
+      state: present
+      create: no
+      marker: "### {mark} CLOUDBOX MANAGED BLOCK ###"
+      block: |
+        /sbin/ifconfig {{ ansible_default_ipv4.interface }} txqueuelen 10000
+        ethtool -G {{ ansible_default_ipv4.interface }} rx 4096 tx 4096
+        ethtool -K {{ ansible_default_ipv4.interface }} tso off tx off
+      insertbefore: "^exit 0"
+      owner: "root"
+      group: "root"
+      mode: 0755
+    when: ('I218' in nic.stdout) or ('I219' in nic.stdout)
+
+  when: (ansible_default_ipv4 is defined) and (ansible_default_ipv4.type == "ether")

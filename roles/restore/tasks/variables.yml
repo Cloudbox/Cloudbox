@@ -13,10 +13,8 @@
   set_fact:
     local_tmp: { destination: "{{ (local.destination | default('',true)) | regex_replace('\\/$', '') }}" }
     rclone_tmp: { destination: "{{ (rclone.destination | default('',true)) | regex_replace('\\/$', '') }}" }
-    rsync_tmp: { destination: "{{ (rsync.destination | default('',true)) | regex_replace('\\/$', '') }}" }
 
 - name: Merge changes back
   set_fact:
     local: "{{ local | combine(local_tmp) }}"
     rclone: "{{ rclone | combine(rclone_tmp) }}"
-    rsync: "{{ rsync | combine(rsync_tmp) }}"

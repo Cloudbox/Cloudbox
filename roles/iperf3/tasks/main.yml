@@ -8,35 +8,38 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Cleanup tmp iperf3 path
-  shell: rm -rf /tmp/iperf3
-  args:
-    warn: no
+- name: Make sure iperf3 package is not installed
+  apt: "name=iperf3 state=absent"
 
 - name: "Clone iperf3 repo"
   git:
     repo: "https://github.com/esnet/iperf/"
-    dest: "/tmp/iperf3"
+    dest: "/var/tmp/iperf3"
     force: yes
-  ignore_errors: yes
+  register: diff
 
 - name: "Build and install iperf3"
-  shell: "export LD_RUN_PATH=/usr/local/lib && \
-          cd /tmp/iperf3 && \
-          ./configure && \
-          make && \
-          make install && \
-          ldconfig"
+  shell: |
+    export LD_RUN_PATH=/usr/local/lib
+    cd /var/tmp/iperf3
+    ./configure
+    make
+    make install
+    ldconfig
+    rm -rf /var/tmp/iperf3
+  register: diff
 
 - name: "Get iperf3 binary path"
   shell: "which iperf3"
   register: iperf3_binary
+  when: diff is success
 
 - name: "Get iperf3 version"
-  shell: "{{iperf3_binary.stdout}} --version | head -n 1 | awk '{ print $2 }'"
+  shell: "{{ iperf3_binary.stdout }} --version | head -n 1 | awk '{ print $2 }'"
   register: iperf3_version
-  ignore_errors: yes
+  when: diff is success
 
 - name: "Display iperf3 version"
   debug:
-    msg: "iperf3 {{iperf3_version.stdout}} installed."
+    msg: "iperf3 {{ iperf3_version.stdout }} installed."
+  when: diff is success

@@ -2,13 +2,10 @@
 downloads:
   nzbs: /mnt/local/downloads/nzbs
   torrents: /mnt/local/downloads/torrents
-nzbget:
-  downloads:
-rutorrent:
-  downloads:
 plex:
   tag: public
   transcodes: /mnt/local/transcodes
 rclone:
   version: latest
+  remote: google
 shell: zsh

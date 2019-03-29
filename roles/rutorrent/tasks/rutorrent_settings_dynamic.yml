@@ -1,0 +1,37 @@
+#########################################################################
+# Title:         ruTorrent -  Dynamic Settings Tasks                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  horjulf/rutorrent-autodl                               #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+## rtorrent.rc
+
+- name: Install 'dnsutils'
+  apt: "name=dnsutils state=present"
+
+- name: Get Public IP Address
+  shell: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
+  register: public_ip_lookup
+
+- name: Set 'public_ip' variable
+  set_fact:
+    public_ip: "{{ public_ip_lookup.stdout }}"
+
+- name: Set 'network.local_address.set'
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^network\.local_address\.set\s*=.*'
+    line: 'network.local_address.set = {{ public_ip }}'
+    state: present
+
+- name: Add comment for 'network.local_address.set'
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    insertbefore: '^network\.local_address\.set\s*=.*'
+    line: "# The ip address reported to the tracker"
+    state: present

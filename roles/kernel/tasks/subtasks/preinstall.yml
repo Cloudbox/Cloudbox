@@ -1,0 +1,18 @@
+#########################################################################
+# Title:         Cloudbox: Kernel - Preinstall Tasks                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Preinstall | Cloudbox pre-install has started!"
+  debug:
+    msg: "Cloudbox pre-install has started!"
+
+- name: Preinstall | Set default preinstall variables
+  set_fact:
+    preinstall_kernel_restart: false
+    preinstall_user_relogin: false

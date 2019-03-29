@@ -8,84 +8,121 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create common directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+- name: "Btrfs | Determine '/' filesystem type"
+  set_fact:
+    root_fstype: "{{ item.fstype }}"
+  when: "(item.mount == '/')"
   with_items:
-    - /home/{{user}}
-    - /home/{{user}}/logs
-    - /home/{{user}}/.config
-    - /home/{{user}}/.config/pip
-    - /opt
-    - /mnt/local
+    - "{{ ansible_mounts }}"
 
 - name: Btrfs Task
-  import_tasks: "btrfs.yml"
+  include_tasks: "btrfs.yml"
+  loop:
+    - /opt
+    - /mnt/local
+  loop_control:
+    loop_var: outer_item
+  when: (root_fstype is defined) and (root_fstype == 'btrfs')
 
-- name: Create '/mnt/local' sub-directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+- name: Create common directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
+    - /home/{{ user }}
+    - /home/{{ user }}/logs
+    - /home/{{ user }}/.config
+    - /home/{{ user }}/.config/pip
+    - /opt
+    - /mnt/local
     - /mnt/local/Media
     - /mnt/local/Media/Movies
     - /mnt/local/Media/Music
     - /mnt/local/Media/TV
 
-- name: Add multiverse repositories
+- name: Install required packages
+  apt:
+    state: present
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+
+- name: Add Ubuntu repositories
   apt_repository:
-    repo: "{{item}}"
+    repo: "{{ item }}"
     state: present
   with_items:
-    - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
-    - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
-    - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
-    - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
-  register: apt_multiverse_repositories
+    - 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse'
+    - 'deb-src http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse'
+    - 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-updates multiverse'
+    - 'deb-src http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-updates multiverse'
   when: ansible_distribution == 'Ubuntu'
-  ignore_errors: yes
+
+- name: Add Debian repositories
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - deb https://deb.debian.org/debian {{ ansible_distribution_release }} main contrib non-free
+    - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }} main contrib non-free
+    - deb https://deb.debian.org/debian-security/ {{ ansible_distribution_release }}/updates main contrib non-free
+    - deb-src https://deb.debian.org/debian-security/ {{ ansible_distribution_release }}/updates main contrib non-free
+    - deb https://deb.debian.org/debian {{ ansible_distribution_release }}-updates main contrib non-free
+    - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }}-updates main contrib non-free
+    - deb https://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib non-free
+    - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib non-free
+  when: ansible_distribution == 'Debian'
 
 - name: Update APT packages list
   apt:
     update_cache: yes
-  when: apt_multiverse_repositories.changed
-  ignore_errors: yes
+
+- name: Fetch pci info
+  shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
+  register: lscpi_resp
 
 - name: Install common packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - nano
-    - zip
-    - unzip
-    - p7zip
-    - curl
-    - httpie
-    - sqlite3
-    - tree
-    - lsof
-    - man-db
-    - ksmtuned
-    - git
-    - pwgen
-    - rsync
-    - logrotate
-    - htop
-    - iotop
-    - nload
-    - fail2ban
-    - ufw
-    - ncdu
-    - mc
-    - speedtest-cli
-    - dnsutils
-    - screen
-    - tmux
-    - apache2-utils
-    - jq
-    - lib32z1
+  apt:
+    state: present
+    name:
+      - "nano"
+      - "zip"
+      - "unzip"
+      - "p7zip"
+      - "curl"
+      - "httpie"
+      - "sqlite3"
+      - "tree"
+      - "lsof"
+      - "man-db"
+      - "ksmtuned"
+      - "git"
+      - "pwgen"
+      - "rsync"
+      - "logrotate"
+      - "htop"
+      - "iotop"
+      - "nload"
+      - "fail2ban"
+      - "ufw"
+      - "ncdu"
+      - "mc"
+      - "speedtest-cli"
+      - "dnsutils"
+      - "screen"
+      - "tmux"
+      - "apache2-utils"
+      - "jq"
+      - "lib32z1"
   ignore_errors: yes
 
+- name: Install 'intel-gpu-tools'
+  apt: "name=intel-gpu-tools state=present"
+  when: ('i915' not in lscpi_resp.stdout)
+
 - name: Install unrar
-  apt: "name={{item}} state=present"
-  with_items:
-    - unrar
+  apt:
+    name: unrar
+    state: present
   ignore_errors: yes
 
 - name: Check to see if unrar installed
@@ -94,40 +131,42 @@
   register: unrar_binary
 
 - name: Install unrar-free if unrar was not installed
-  apt: "name={{item}} state=present"
-  with_items:
-    - unrar-free
+  apt:
+    name: unrar-free
+    state: present
   ignore_errors: yes
-  when: not unrar_binary.stat.exists
+  when: (not unrar_binary.stat.exists)
 
-- name: "Import pip.conf into /home/{{user}}/.config/pip/pip.conf"
+- name: "Import pip.conf into /home/{{ user }}/.config/pip/pip.conf"
   copy:
     src: "pip.conf"
-    dest: "/home/{{user}}/.config/pip/pip.conf"
-    owner: "{{user}}"
-    group: "{{user}}"
+    dest: "/home/{{ user }}/.config/pip/pip.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
 
 - name: Install common pip modules
-  pip: "name={{item}} state=present"
-  with_items:
-    - passlib
-    - certbot
-    - ansible-toolbox
-    - ndg-httpsclient
-    - dnspython
-    - yq
-    - lxml
-    - apprise
-    - jmespath
+  pip:
+    state: present
+    name:
+      - passlib
+      - certbot
+      - ansible-toolbox
+      - ndg-httpsclient
+      - dnspython
+      - yq
+      - lxml
+      - apprise
+      - jmespath
   ignore_errors: yes
 
 - name: Uninstall apt glances
-  apt: "name={{item}} state=absent"
-  with_items:
-    - glances
+  apt:
+    name: glances
+    state: absent
   ignore_errors: yes
+  tags: glances
 
 - name: Install pip glances
   shell: pip install glances[action,browser,cloud,cpuinfo,docker,folders,gpu,graph,ip,raid,snmp,web]
@@ -173,12 +212,6 @@
   import_role:
     name: nethogs
   tags: nethogs
-  ignore_errors: yes
-
-- name: Install Subliminal
-  import_role:
-    name: subliminal
-  tags: subliminal
   ignore_errors: yes
 
 - name: Cloudflare Cache Purge Task

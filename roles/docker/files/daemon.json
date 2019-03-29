@@ -1,7 +1,0 @@
-{
-    "storage-driver": "overlay2",
-    "userland-proxy": false,
-    "log-driver": "json-file",
-    "init": true,
-    "log-opts": {"max-size": "10m", "max-file": "3"}
-}

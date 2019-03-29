@@ -10,6 +10,8 @@
 
 ./bazarr/app/log/*
 
+./cloudbox/backup/modified_files/*
+
 ./cloudplow/cloudplow.log
 ./cloudplow/cloudplow.log.*
 ./cloudplow/locks/*
@@ -17,6 +19,8 @@
 ./drive_strm/*.log*
 
 ./lidarr/app/logs/*
+
+./nvidia/*
 
 ./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*
 ./plex/Library/Application Support/Plex Media Server/Cache/Transcode/*

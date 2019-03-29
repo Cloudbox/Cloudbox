@@ -9,13 +9,9 @@
 ##########################################################################
 #   Based on the work by Michael Zemsky (https://github.com/zmike808)    #
 ##########################################################################
-
 ---
 - name: Install lxml pip module
-  pip: "name={{item}} state=latest"
-  with_items:
-    - lxml
-  ignore_errors: yes
+  pip: "name=lxml state=present"
 
 - name: Wait for 'Preferences.xml' to be created by Plex
   wait_for:

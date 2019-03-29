@@ -8,16 +8,39 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: "Check if user '{{ user }}' exists"
+  shell: "id -un {{ user }} >/dev/null 2>&1;"
+  register: user_check
+  failed_when: (user_check.rc > 1)
+
 - name: User Role
   include_role:
     name: user
+  when: (user_check.rc == 1)
+
+- name: Set shell
+  include_role:
+    name: shell
+  when: (user_check.rc == 1)
 
 - name: Variables
   import_tasks: "variables.yml"
 
+- name: Create common directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  with_items:
+    - /opt
+    - /mnt/local
+
+- name: Btrfs Task
+  import_tasks: "btrfs.yml"
+
+- name: "Create backup location '{{ local.destination }}'"
+  file: path={{ local.destination }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes
+
 - name: Check if previous backup exists locally
   find:
-    paths: "{{local.destination}}/opt"
+    paths: "{{ local.destination }}/opt"
     file_type: file
     patterns: '*.tar'
   register: dir_files
@@ -27,45 +50,37 @@
   import_tasks: "restore_remote.yml"
   when: (dir_files.matched|int == 0)
 
-- name: "Look for 'backup_excludes_list.txt' file in '{{local.destination}}'"
+- name: "Look for 'backup_excludes_list.txt' file in '{{ local.destination }}'"
   stat:
-    path: "{{local.destination}}/backup_excludes_list.txt"
+    path: "{{ local.destination }}/backup_excludes_list.txt"
   register: backup_excludes_list
 
-- name: "Copy 'backup_excludes_list.txt' from '{{local.destination}}'."
+- name: "Copy 'backup_excludes_list.txt' from '{{ local.destination }}'."
   copy:
-    src: "{{local.destination}}/backup_excludes_list.txt"
-    dest: "{{playbook_dir}}"
-    owner: "{{user}}"
-    group: "{{user}}"
+    src: "{{ local.destination }}/backup_excludes_list.txt"
+    dest: "{{ playbook_dir }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   when: (backup_excludes_list.stat.exists)
 
-- name: "Create '/opt' directory"
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
-  with_items:
-    - /opt
-
-- name: Btrfs Task
-  import_tasks: "btrfs.yml"
-
 - name: "Unarchive backup tars to /opt"
   shell: |
     mv /opt/{{ (item | basename | splitext)[0] }} /opt/{{ (item | basename | splitext)[0] }}_bak 2>/dev/null || :
-    tar -xf '{{item}}' -C /opt .
+    tar -xf '{{ item }}' -C /opt .
   with_fileglob:
-  - "{{local.destination}}/opt/*.tar"
+  - "{{ local.destination }}/opt/*.tar"
   register: unarchive
 
 - name: "Set '/opt' ownership and permissions"
   import_tasks: "permissions.yml"
   tags: opt-permissions-reset
 
-- name: "Remove '{{local.destination}}'"
-  file:
-    path: "{{local.destination}}"
-    state: absent
+- name: Cleanup backup location
+  shell: "rm -rf {{ local.destination }}/*"
+  become: yes
+  become_user: "{{ user }}"
   when: not (local.enable)
 
 - debug:

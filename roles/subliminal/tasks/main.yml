@@ -9,9 +9,9 @@
 #########################################################################
 ---
 - name: Install Subliminal
-  pip: "name={{item}}"
-  with_items:
-    - "git+https://github.com/Diaoul/subliminal.git@develop"
+  pip:
+    state: present
+    name: "git+https://github.com/Diaoul/subliminal.git@develop"
   ignore_errors: yes
 
 - name: "Get Subliminal version"
@@ -21,4 +21,4 @@
 
 - name: "Display Subliminal version"
   debug:
-    msg: "Subliminal {{subliminal_version.stdout}} installed."
+    msg: "Subliminal {{ subliminal_version.stdout }} installed."

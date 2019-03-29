@@ -9,22 +9,23 @@
 #########################################################################
 ---
 - name: Install common packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - jq
-    - figlet
-    - toilet
-    - boxes
-  ignore_errors: yes
+  apt:
+    state: present
+    name:
+      - jq
+      - figlet
+      - toilet
+      - boxes
+      - dnsutils
 
 - name: Install common pip modules
-  pip: "name={{item}} state=latest"
-  with_items:
-    - yq
-  ignore_errors: yes
+  pip:
+    state: present
+    name:
+      - yq
 
 - name: Create script directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
     - /opt/scripts
     - /opt/scripts/docker
@@ -38,7 +39,7 @@
     - /opt/scripts/torrents
     - /opt/scripts/rclone
 
-- name: Check arrpush.legacy.sh exists
+- name: Check 'arrpush.legacy.sh' exists
   stat:
     path: "/opt/scripts/torrents/arrpush.legacy.sh"
     get_attributes: false
@@ -47,22 +48,22 @@
     get_mime: false
   register: arrpush_legacy_script
 
-- name: Import arrpush.legacy.sh
+- name: Import 'arrpush.legacy.sh'
   copy:
     src: "arrpush.legacy.sh"
     dest: "/opt/scripts/torrents/arrpush.legacy.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
-  when: arrpush_legacy_script.stat.exists == False
+  when: not arrpush_legacy_script.stat.exists
 
 - name: Import remaining torrent scripts
   copy:
-    src: "{{item}}"
-    dest: "/opt/scripts/torrents/{{item}}"
-    owner: "{{user}}"
-    group: "{{user}}"
+    src: "{{ item }}"
+    dest: "/opt/scripts/torrents/{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   with_items:
@@ -71,35 +72,35 @@
 
 - name: Import plex scripts
   copy:
-    src: "{{item}}"
-    dest: "/opt/scripts/plex/{{item}}"
-    owner: "{{user}}"
-    group: "{{user}}"
+    src: "{{ item }}"
+    dest: "/opt/scripts/plex/{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
   with_items:
     - "plex_token.sh"
     - "plex_trash_fixer.py"
 
-- name: Import revoke_certs.sh
+- name: Import 'revoke_certs.sh'
   template:
-    src: "revoke_certs.sh.js2"
+    src: "revoke_certs.sh.j2"
     dest: "/opt/scripts/nginx-proxy/revoke_certs.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
 
-- name: Import plex_autoscan_url.sh
+- name: Import 'plex_autoscan_url.sh'
   copy:
     src: "plex_autoscan_url.sh"
     dest: "/opt/scripts/plex_autoscan/plex_autoscan_url.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
 
-- name: Check if restart_containers.sh exists
+- name: Check if 'restart_containers.sh' exists
   stat:
     path: "/opt/scripts/docker/restart_containers.sh"
     get_attributes: false
@@ -108,17 +109,17 @@
     get_mime: false
   register: restart_containers
 
-- name: Import restart_containers.sh
+- name: Import 'restart_containers.sh'
   copy:
     src: "restart_containers.sh"
     dest: "/opt/scripts/docker/restart_containers.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
-  when: restart_containers.stat.exists == False
+  when: not restart_containers.stat.exists
 
-- name: Check if frontail_custom_preset.json exists
+- name: Check if 'frontail_custom_preset.json' exists
   stat:
     path: "/opt/scripts/frontail/frontail_custom_preset.json"
     get_attributes: false
@@ -127,50 +128,50 @@
     get_mime: false
   register: frontail_preset
 
-- name: Import frontail_custom_preset.json
+- name: Import 'frontail_custom_preset.json'
   copy:
     src: "frontail_custom_preset.json"
     dest: "/opt/scripts/frontail/frontail_custom_preset.json"
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
-  when: frontail_preset.stat.exists == False
+  when: not frontail_preset.stat.exists
 
-- name: Check if sync_torrents_to_google.sh exists
+- name: Check if 'sync_torrents_to_rclone_remote.sh' exists
   stat:
-    path: "/opt/scripts/rclone/sync_torrents_to_google.sh"
+    path: "/opt/scripts/rclone/sync_torrents_to_rclone_remote.sh"
     get_attributes: false
     get_checksum: false
     get_md5: false
     get_mime: false
-  register: sync_torrents_to_google
+  register: sync_torrents_to_rclone_remote
 
-- name: Import sync_torrents_to_google.sh
-  copy:
-    src: "sync_torrents_to_google.sh"
-    dest: "/opt/scripts/rclone/sync_torrents_to_google.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+- name: Import 'sync_torrents_to_rclone_remote.sh'
+  template:
+    src: "sync_torrents_to_rclone_remote.sh.j2"
+    dest: "/opt/scripts/rclone/sync_torrents_to_rclone_remote.sh"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
-  when: sync_torrents_to_google.stat.exists == False
+  when: not sync_torrents_to_rclone_remote.stat.exists
 
-- name: Check if download_torrents_from_google.sh exists
+- name: Check if 'download_torrents_from_rclone_remote.sh' exists
   stat:
-    path: "/opt/scripts/rclone/download_torrents_from_google.sh"
+    path: "/opt/scripts/rclone/download_torrents_from_rclone_remote.sh"
     get_attributes: false
     get_checksum: false
     get_md5: false
     get_mime: false
-  register: download_torrents_from_google
+  register: download_torrents_from_rclone_remote
 
-- name: Import download_torrents_from_google.sh
-  copy:
-    src: "download_torrents_from_google.sh"
-    dest: "/opt/scripts/rclone/download_torrents_from_google.sh"
-    owner: "{{user}}"
-    group: "{{user}}"
+- name: Import 'download_torrents_from_rclone_remote.sh'
+  template:
+    src: "download_torrents_from_rclone_remote.sh.j2"
+    dest: "/opt/scripts/rclone/download_torrents_from_rclone_remote.sh"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
     force: yes
-  when: download_torrents_from_google.stat.exists == False
+  when: not download_torrents_from_rclone_remote.stat.exists

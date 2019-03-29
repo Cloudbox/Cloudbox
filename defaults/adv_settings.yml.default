@@ -1,4 +1,9 @@
 ---
+system:
+  timezone: auto
+mounts:
+  unionfs: unionfs
+  remote: plexdrive
 plex:
   open_port: no
   force_auto_adjust_quality: no
@@ -22,3 +27,9 @@ ombi:
 plexrequests:
   subdomain: plexrequests
 sickbeard_mp4_automator: no
+gpu:
+  intel: yes
+  nvidia: no
+hetzner_nfs:
+  vlan_id: 4000
+  mount_client: 3

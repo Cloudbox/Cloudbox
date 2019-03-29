@@ -1,0 +1,152 @@
+#########################################################################
+# Title:         Cloudbox: Pre-Tasks - Variables Task                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# Needed again for cloudbox_mod.
+- name: "Vars | Set 'continuous_integration' variable"
+  set_fact:
+    continuous_integration: "{{ continuous_integration | default(false,true) }}"
+
+- name: "Vars | Set 'cloudflare_enabled' variable"
+  set_fact:
+    cloudflare_enabled: "{{ true if not(
+        (cloudflare_api_token is undefined)
+        or
+        (cloudflare_api_token is none)
+        or
+        (cloudflare_api_token | trim | length == 0)
+      )
+      else false }}"
+
+- name: "Vars | Set 'localhost_ip' variable"
+  set_fact:
+    localhost_ip: "127.0.0.1"
+
+- name: "Vars | Set 'plex_account_enabled' variable"
+  set_fact:
+    plex_account_enabled: "{{ true if not(
+        (plex is undefined)
+        or
+        (plex is none)
+        or
+        (plex | trim | length == 0)
+        or
+        (plex.user is undefined)
+        or
+        (plex.user is none)
+        or
+        (plex.user | trim | length == 0)
+        or
+        (plex.pass is undefined)
+        or
+        (plex.pass is none)
+        or
+        (plex.pass | trim | length == 0)
+      )
+      else false }}"
+
+- name: "Vars | Set 'nzbs_downloads_path' variable"
+  set_fact:
+    nzbs_downloads_path:
+      - "{{ downloads.nzbs }}:/downloads/nzbs"
+  when: not (
+        (downloads is undefined)
+        or
+        (downloads is none)
+        or
+        (downloads | trim | length == 0)
+        or
+        (downloads.nzbs is undefined)
+        or
+        (downloads.nzbs is none)
+        or
+        (downloads.nzbs | trim | length == 0)
+      )
+
+- name: "Vars | Set 'torrents_downloads_path' variable"
+  set_fact:
+    torrents_downloads_path:
+      - "{{ downloads.torrents }}:/downloads/torrents"
+  when: not (
+        (downloads is undefined)
+        or
+        (downloads is none)
+        or
+        (downloads | trim | length == 0)
+        or
+        (downloads.torrents is undefined)
+        or
+        (downloads.torrents is none)
+        or
+        (downloads.torrents | trim | length == 0)
+      )
+
+
+- name: Vars | Set `suitarr_default_version` variable
+  set_fact:
+    suitarr_default_version: "unstable"
+
+- name: Vars | Check if 'suitarr.version' was specified
+  set_fact:
+    suitarr_version_is_specified: "{{ true if not (
+        (suitarr is undefined)
+        or
+        (suitarr is none)
+        or
+        (suitarr | trim | length == 0)
+        or
+        (suitarr.version is undefined)
+        or
+        (suitarr.version is none)
+        or
+        (suitarr.version | trim | length == 0)
+      )
+      else false }}"
+
+- name: Vars | Validate and set proper 'suitarr' key variables
+  set_fact:
+    suitarr_tmp: { version: "{{ (suitarr.version) if (
+        (suitarr_version_is_specified)
+        and
+        (suitarr.version != 'default')
+        and
+        ((suitarr.version == 'unstable') or (suitarr.version == 'stable') or (suitarr.version == 'image'))
+      )
+      else (suitarr_default_version) }}" }
+
+- name: Vars | Merge changes back to 'suitarr' key
+  set_fact:
+    suitarr: "{{ (suitarr_tmp) if (
+        (suitarr is undefined)
+        or
+        (suitarr is none)
+        or
+        (suitarr | trim | length == 0)
+        )
+      else ((suitarr) | combine(suitarr_tmp))  }}"
+
+- name: "Vars | Set 'sma_enabled' role tag"
+  set_fact:
+    sma_enabled: "{{ true if (
+        (sickbeard_mp4_automator is defined)
+        and
+        (sickbeard_mp4_automator)
+        )
+      else false }}"
+
+- name: Vars | Fetch time zone
+  uri:
+    url: http://ip-api.com/line?fields=timezone
+    return_content: yes
+  register: timezone_response
+  when: (system.timezone|lower == 'auto') or (not system.timezone)
+
+- name: Vars | Set time zone variable
+  set_fact:
+    tz: "{{ (timezone_response.content | trim) if ((system.timezone|lower == 'auto') or (not system.timezone)) else (system.timezone) }}"

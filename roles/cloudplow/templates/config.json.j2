@@ -1,0 +1,94 @@
+{
+    "core": {
+        "dry_run": false,
+        "rclone_binary_path": "/usr/bin/rclone",
+        "rclone_config_path": "/home/{{ user }}/.config/rclone/rclone.conf"
+    },
+    "hidden": {
+        "/mnt/local/.unionfs-fuse": {
+            "hidden_remotes": [
+                "{{ rclone.remote }}"
+            ]
+        }
+    },
+    "notifications": {
+    },
+    "nzbget": {
+        "enabled": false,
+        "url": "https://{{ user }}:{{ passwd }}@nzbget.{{ domain }}"
+    },
+    "plex": {
+        "enabled": false,
+        "url": "https://plex.{{ domain }}",
+        "token": "{{ plex_auth_token | default('') }}",
+        "poll_interval": 60,
+        "verbose_notifications": false,
+        "max_streams_before_throttle": 1,
+        "rclone": {
+            "throttle_speeds": {
+                "0": "1000M",
+                "1": "50M",
+                "2": "40M",
+                "3": "30M",
+                "4": "20M",
+                "5": "10M"
+            },
+            "url": "http://localhost:7949"
+        }
+    },
+    "remotes": {
+        "{{ rclone.remote }}": {
+            "hidden_remote": "{{ rclone.remote }}:",
+            "rclone_excludes": [
+                "**partial~",
+                "**_HIDDEN~",
+                ".unionfs/**",
+                ".unionfs-fuse/**",
+                "**.fuse_hidden**"
+            ],
+            "rclone_extras": {
+                "--checkers": 16,
+                "--drive-chunk-size": "128M",
+                "--stats": "60s",
+                "--transfers": 8,
+                "--verbose": 1,
+                "--skip-links": null,
+                "--retries": 1,
+                "--low-level-retries": 2
+            },
+            "rclone_sleeps": {
+                "Failed to copy: googleapi: Error 403: User rate limit exceeded": {
+                    "count": 10,
+                    "sleep": 25,
+                    "timeout": 7200
+                },
+                " 0/s,": {
+                    "count": 16,
+                    "sleep": 25,
+                    "timeout": 62
+                }
+            },
+            "rclone_command": "move",
+            "remove_empty_dir_depth": 2,
+            "sync_remote": "{{ rclone.remote }}:/Media",
+            "upload_folder": "/mnt/local/Media",
+            "upload_remote": "{{ rclone.remote }}:/Media"
+        }
+    },
+    "syncer": {
+    },
+    "uploader": {
+        "{{ rclone.remote }}": {
+            "check_interval": 30,
+            "exclude_open_files": false,
+            "max_size_gb": 200,
+            "opened_excludes": [
+                "/downloads/"
+            ],
+            "size_excludes": [
+                "downloads/*"
+            ],
+            "service_account_path": ""
+        }
+    }
+}

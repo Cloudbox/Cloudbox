@@ -17,8 +17,8 @@
       X-Plex-Product: "cloudbox"
       X-Plex-Client-Identifier: "XXXX"
       Content-Type: "application/x-www-form-urlencoded; charset=utf-8"
-    user: '{{plex.user}}'
-    password: '{{plex.pass}}'
+    user: '{{ plex.user }}'
+    password: '{{ plex.pass }}'
     status_code: 201
   register: plex_token_raw
 
@@ -28,4 +28,4 @@
 
 - name: Display Plex Auth Token
   debug:
-    msg: "Your Plex Auth Token is: {{plex_auth_token}}"
+    msg: "Your Plex Auth Token is: {{ plex_auth_token }}"

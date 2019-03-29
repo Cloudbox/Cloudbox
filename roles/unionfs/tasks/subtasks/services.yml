@@ -1,0 +1,59 @@
+#########################################################################
+# Title:         UnionFS: Service Tasks                                 #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Services | Check if '{{ outer_item }}' exists"
+  stat:
+    path: "/etc/systemd/system/{{ outer_item }}"
+  register: service_file
+
+- name: "Services | Tasks for '{{ outer_item }}'"
+  block:
+
+  - name: "Services | Stop and disable existing '{{ outer_item }}'"
+    systemd:
+      name: "{{ outer_item }}"
+      state: stopped
+      enabled: no
+
+  - name: "Services | Update ownership in existing '{{ outer_item }}'"
+    ini_file:
+      path: "/etc/systemd/system/{{ outer_item }}"
+      section: Service
+      option: "{{ item.option }}"
+      value: "{{ item.value }}"
+      state: present
+      no_extra_spaces: yes
+    loop:
+      - { option: 'User', value: "{{ user }}" }
+      - { option: 'Group', value: "{{ user }}" }
+    when: outer_item != "mergerfs.service"
+
+  - name: "Services | Remove ownership in existing '{{ outer_item }}'"
+    ini_file:
+      path: "/etc/systemd/system/{{ outer_item }}"
+      section: Service
+      option: "{{ item.option }}"
+      state: absent
+    loop:
+      - { option: 'User' }
+      - { option: 'Group' }
+    when: outer_item == "mergerfs.service"
+
+  # if applicable
+  - name: "Services | Replace '/mnt/plexdrive' with '/mnt/remote' in '{{ outer_item }}'"
+    replace:
+      path: "/etc/systemd/system/{{ outer_item }}"
+      regexp: "\\/mnt\\/plexdrive"
+      replace: '/mnt/remote'
+
+  - name: "Services | Systemd daemon-reload"
+    systemd: daemon_reload=yes
+
+  when: (service_file.stat.exists)

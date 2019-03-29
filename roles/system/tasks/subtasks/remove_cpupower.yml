@@ -1,0 +1,29 @@
+#########################################################################
+# Title:         System: Remove CPU Power Tasks                         #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Check if cpupower.service exists
+  stat:
+    path: "/etc/systemd/system/cpupower.service"
+  register: cpupower_service
+
+- name: Stop and disable cpupower.service
+  systemd:
+    state: stopped
+    name: cpupower
+    daemon_reload: yes
+    enabled: no
+  ignore_errors: yes
+  when: cpupower_service.stat.exists
+
+- name: Delete cpupower.service
+  file:
+    path: /etc/systemd/system/cpupower.service
+    state: absent
+  when: cpupower_service.stat.exists

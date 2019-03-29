@@ -1,0 +1,30 @@
+#########################################################################
+# Title:         Cloudbox: Rclone VFS Primer - Service                  #
+# Location:      /etc/systemd/system/rclone_vfs_primer.service          #
+# Author(s):     EnorMOZ                                                #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
+[Unit]
+Description=Rclone VFS Primer - Service
+Requires=rclone_vfs.service
+After=rclone_vfs.service
+
+[Service]
+User={{ user }}
+Group={{ user }}
+Type=oneshot
+ExecStartPre=/bin/sleep 10
+ExecStart=/usr/bin/rclone \
+  --config /home/{{ user }}/.config/rclone/rclone.conf \
+  --timeout=1h \
+  -vvv \
+  --rc-addr=localhost:5572 \
+  rc vfs/refresh dir=Media recursive=true
+
+[Install]
+WantedBy=default.target

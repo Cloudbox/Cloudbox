@@ -1,0 +1,21 @@
+#########################################################################
+# Title:         UnionFS: Basic Tasks                                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Basics | Check to see if '/mnt/remote' exists"
+  stat:
+    path: "/mnt/remote"
+  register: mnt_remote
+
+- name: "Basics | Create '/mnt/remote' directory"
+  file: "path=/mnt/remote state=directory mode=0775 owner={{ user }} group={{ user }} recurse=no"
+  when: (not mnt_remote.stat.exists)
+
+- name: "Basics | Create '/mnt/unionfs' directory"
+  file: "path=/mnt/unionfs state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"

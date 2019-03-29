@@ -1,0 +1,51 @@
+#########################################################################
+# Title:         Cloudbox: Kernel - Hetzner Tasks                       #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Hetzner | Install 'pciutils'
+  apt: "name=pciutils state=present"
+
+- name: Hetzner | Fetch PCI info
+  shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
+  register: lscpi_resp
+
+- name: Hetzner | Check if 'blacklist-hetzner.conf' exists
+  stat:
+    path: "/etc/modprobe.d/blacklist-hetzner.conf"
+  register: blacklist_hetzner_conf
+
+- name: Hetzner | Hetzner GRUB Edits Block
+  block:
+
+  - name: Hetzner | Comment out 'i915' blacklists in 'blacklist-hetzner.conf'
+    replace:
+      path: "/etc/modprobe.d/blacklist-hetzner.conf"
+      regexp: '(^blacklist\si915.*)'
+      replace: '#\1'
+
+  - name: Hetzner | Hetzner GRUB files
+    set_fact:
+      hetzner_grub_files:
+        - "/etc/default/grub.d/hetzner.cfg"
+        - "/etc/default/grub"
+
+  - name: Hetzner | Check status of GRUB files
+    stat:
+      path: "{{ item }}"
+    loop: "{{ hetzner_grub_files }}"
+    register: hetzner_grub_files_status
+
+  - name: Hetzner | Hetzner GRUB edits
+    include_tasks: "hetzner_grub_edits.yml"
+    when: outer_item.stat.exists
+    loop: "{{ hetzner_grub_files_status.results }}"
+    loop_control:
+      loop_var: outer_item
+
+  when: ('i915' in lscpi_resp.stdout) and (blacklist_hetzner_conf.stat.exists)

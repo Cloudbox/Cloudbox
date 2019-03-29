@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+#########################################################################
+# Title:         Sync Torrent Data To An Rclone Remote                  #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Description:   Keeps torrent data synced up an Rclone Remote.         #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
+if ! /usr/bin/screen -list | /bin/grep -q "torrents_sync"; then
+	
+	/bin/rm -rfv /opt/scripts/rclone/sync_torrents_to_rclone_remote.log
+	
+	/usr/bin/screen -dmS torrents_sync /usr/bin/rclone sync \
+		--config=/home/{{ user }}/.config/rclone/rclone.conf \
+		--verbose=1 \
+		--transfers=8 \
+		--stats=60s \
+		--checkers=16 \
+		--drive-chunk-size=128M \
+		--fast-list \
+		--log-file=/opt/scripts/rclone/sync_torrents_to_rclone_remote.log \
+		{{ downloads.torrents }} {{ rclone.remote }}:/downloads/torrents
+	
+fi

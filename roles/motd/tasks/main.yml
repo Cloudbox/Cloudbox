@@ -9,27 +9,44 @@
 #########################################################################
 ---
 - name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - lsb-release
-    - figlet
-    - jq
-    - toilet
-    - boxes
+  apt:
+    state: present
+    name:
+      - lsb-release
+      - figlet
+      - jq
+      - toilet
+      - boxes
 
 - name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - update-motd
-    - update-notifier-common
+  apt:
+    state: present
+    name:
+      - update-motd
+      - update-notifier-common
   when: (ansible_distribution|lower == 'ubuntu')
 
 - name: Remove existing motd
-  file: "path={{item}} state=absent"
+  file: "path={{ item }} state=absent"
   with_items:
     - /etc/update-motd.d
     - /etc/motd
     - /etc/motd.dynamic
+
+- name: Check if MOTD news service
+  stat:
+    path: "/etc/default/motd-news"
+  register: motd_news
+
+- name: Disable MOTD news service
+  ini_file:
+    path: "/etc/default/motd-news"
+    section: null
+    option: "ENABLED"
+    value: 0
+    no_extra_spaces: yes
+    state: present
+  when: (motd_news.stat.exists)
 
 - name: Create dynamic motd directory
   file:
@@ -37,11 +54,11 @@
     state: directory
     mode: 0775
 
-- name: Clone cloudbox_motd
+- name: Clone Cloudbox MOTD
   git:
     repo: https://github.com/cloudbox/motd.git
     dest: /opt/motd
-    version: master
+    version: HEAD
     force: yes
 
 - name: Install pip requirements
@@ -49,27 +66,27 @@
     requirements: /opt/motd/requirements.txt
     executable: pip3
 
-- name: Check config exists
+- name: Check if 'config.json' exists
   stat:
     path: "/opt/motd/config.json"
   register: motd_config
 
-- name: Import default config
+- name: Import default 'config.json'
   template:
-    src: config.json.js2
+    src: config.json.j2
     dest: /opt/motd/config.json
     force: yes
   when: (not motd_config.stat.exists)
 
-- name: Touch log file
+- name: Touch '/opt/motd/activity.log' file
   file:
     path: /opt/motd/activity.log
     state: touch
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0775
 
-- name: Set cloudbox-motd.py as executable
+- name: Set 'cloudbox-motd.py' as executable
   file:
     path: /opt/motd/cloudbox-motd.py
     mode: a+x
@@ -78,7 +95,7 @@
   copy: "src=/opt/motd/motd/ dest=/etc/update-motd.d/ force=yes mode=0775"
 
 - name: Set directory permissions
-  file: "path=/opt/motd state=directory owner={{user}} group={{user}} recurse=yes"
+  file: "path=/opt/motd state=directory owner={{ user }} group={{ user }} recurse=yes"
 
 - name: Create symlink to dynamic motd
   file:
@@ -93,10 +110,8 @@
     path: "/etc/ssh/sshd_config"
   register: sshd_config
 
-- name: Install required packages
-  apt: "name={{item}} state=present"
-  with_items:
-    - "openssh-server"
+- name: Install 'openssh-server'
+  apt: "name=openssh-server state=present"
   when: (not sshd_config.stat.exists)
 
 - name: Wait for '/etc/ssh/sshd_config' to be created
@@ -105,7 +120,7 @@
     state: present
   when: (not sshd_config.stat.exists)
 
-- name: Set PrintLastLog to no
+- name: Set 'PrintLastLog no' to '/etc/ssh/sshd_config'
   lineinfile:
     path: "/etc/ssh/sshd_config"
     regexp: '^PrintLastLog\s?'
