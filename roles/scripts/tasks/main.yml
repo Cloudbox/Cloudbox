@@ -16,6 +16,7 @@
       - figlet
       - toilet
       - boxes
+      - dnsutils
 
 - name: Install common pip modules
   pip:
