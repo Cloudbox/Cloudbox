@@ -78,7 +78,6 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/airdcpp:/.airdcpp"
       - "/mnt/local/downloads/airdcpp:/Downloads"
-      - "/mnt/local/Media:/Share"
       - "/mnt:/mnt"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
