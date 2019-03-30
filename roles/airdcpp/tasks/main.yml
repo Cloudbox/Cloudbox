@@ -26,6 +26,11 @@
   with_items:
     - /opt/airdcpp
     - /mnt/local/downloads/airdcpp
+    - /mnt/local/downloads/airdcpp/Movies
+    - /mnt/local/downloads/airdcpp/TV
+    - /mnt/local/downloads/airdcpp/4K
+    - /mnt/local/downloads/airdcpp/4K/Movies
+    - /mnt/local/downloads/airdcpp/4K/TV
 
 - name: Check WebServer.xml exists
   stat:
