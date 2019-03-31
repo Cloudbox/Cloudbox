@@ -157,6 +157,7 @@
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
       - "/tmp:/tmp"
+      - "/dev/shm:/dev/shm"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
     etc_hosts: "{{ plex_default_hosts | combine(plex_custom_hosts|default([])) }}"
     labels:
