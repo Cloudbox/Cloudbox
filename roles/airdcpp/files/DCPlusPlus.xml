@@ -1,0 +1,32 @@
+<DCPlusPlus>
+        <Settings>
+                <DownloadDirectory type="string">/Downloads/</DownloadDirectory>
+                <AutoDetectIncomingConnection type="int">0</AutoDetectIncomingConnection>
+                <InPort type="int">21248</InPort>
+                <UDPPort type="int">21248</UDPPort>
+                <TLSPort type="int">21249</TLSPort>
+                <DownloadSpeed type="string">1000</DownloadSpeed>
+                <UploadSpeed type="string">1000</UploadSpeed>
+                <AutoRefreshTime type="int">120</AutoRefreshTime>
+                <MinSegmentSize type="int">134217700</MinSegmentSize>
+                <IncomingRefreshTime type="int">0</IncomingRefreshTime>
+                <TLSMode type="int">2</TLSMode>
+                <MaxHashingThreads type="int">2</MaxHashingThreads>
+                <HashersPerVolume type="int">1</HashersPerVolume>
+                <MultithreadedRefresh type="int">2</MultithreadedRefresh>
+                <AutoKick type="int">1</AutoKick>
+                <NoZeroByte type="int">1</NoZeroByte>
+                <SystemShowUploads type="int">1</SystemShowUploads>
+                <SystemShowDownloads type="int">1</SystemShowDownloads>
+                <BufferSize type="int">524288</BufferSize>
+                <SocketInBuffer type="int">33554430</SocketInBuffer>
+                <SocketOutBuffer type="int">33554430</SocketOutBuffer>
+                <DbCacheSize type="int">32</DbCacheSize>
+                <DontDlAlreadyQueued type="int">1</DontDlAlreadyQueued>
+                <DontDLAlreadyShared type="int">1</DontDLAlreadyShared>
+        </Settings>
+        <Share Token="0" Name="Default">
+                <Directory Virtual="Share" Incoming="0">/Share/</Directory>
+                <NoShare/>
+        </Share>
+</DCPlusPlus>
