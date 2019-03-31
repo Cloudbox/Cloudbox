@@ -22,6 +22,8 @@
                 <SocketInBuffer type="int">33554430</SocketInBuffer>
                 <SocketOutBuffer type="int">33554430</SocketOutBuffer>
                 <DbCacheSize type="int">32</DbCacheSize>
+                <DontDlAlreadyQueued type="int">1</DontDlAlreadyQueued>
+                <DontDLAlreadyShared type="int">1</DontDLAlreadyShared>
         </Settings>
         <Share Token="0" Name="Default">
                 <Directory Virtual="Share" Incoming="0">/Share/</Directory>
