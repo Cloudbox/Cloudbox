@@ -1,0 +1,95 @@
+#########################################################################
+# Title:         Cloudbox: airdcpp Role                                 #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  gangefors/airdcpp-webclient                            #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: airdcpp
+  when: cloudflare_enabled
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: airdcpp
+    state: absent
+
+- name: Create airdcpp directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  with_items:
+    - /opt/airdcpp
+    - /mnt/local/downloads/airdcpp
+    - /mnt/local/downloads/airdcpp/Movies
+    - /mnt/local/downloads/airdcpp/TV
+    - /mnt/local/downloads/airdcpp/4K
+    - /mnt/local/downloads/airdcpp/4K/Movies
+    - /mnt/local/downloads/airdcpp/4K/TV
+
+- name: Check WebServer.xml exists
+  stat:
+    path: "/opt/airdcpp/WebServer.xml"
+  register: webserver_xml
+
+- name: Check DCPlusPlus.xml exists
+  stat:
+    path: "/opt/airdcpp/DCPlusPlus.xml"
+  register: dcplusplus_xml
+
+- name: Import default 'WebServer.xml'
+  copy:
+    src: WebServer.xml
+    dest: /opt/airdcpp/WebServer.xml
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0775
+    force: yes
+  when: not webserver_xml.stat.exists
+
+- name: Import default 'DCPlusPlus.xml'
+  copy:
+    src: DCPlusPlus.xml
+    dest: /opt/airdcpp/DCPlusPlus.xml
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0775
+    force: yes
+  when: not dcplusplus_xml.stat.exists
+
+- name: Create and start container
+  docker_container:
+    name: airdcpp
+    image: "gangefors/airdcpp-webclient"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:2617:5600"
+      - "127.0.0.1:7327:5601"
+      - "21248:21248"
+      - "21248:21248/udp"
+      - "21249:21249"
+    user: "{{ uid }}:{{ gid }}"
+    env:
+      VIRTUAL_HOST: "airdcpp.{{ domain }}"
+      VIRTUAL_PORT: 5600
+      LETSENCRYPT_HOST: "airdcpp.{{ domain }}"
+      LETSENCRYPT_EMAIL: "{{ email }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/airdcpp:/.airdcpp"
+      - "/mnt/local/downloads/airdcpp:/Downloads"
+      - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - airdcpp
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
