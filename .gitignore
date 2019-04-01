@@ -17,3 +17,19 @@
 
 # Python
 *.pyc
+
+# Created by https://www.gitignore.io/api/vagrant
+# Edit at https://www.gitignore.io/?templates=vagrant
+
+### Vagrant ###
+# General
+.vagrant/
+
+# Log files (if you are creating logs in debug mode, uncomment this)
+# *.logs
+
+### Vagrant Patch ###
+*.box
+
+
+# End of https://www.gitignore.io/api/vagrant
