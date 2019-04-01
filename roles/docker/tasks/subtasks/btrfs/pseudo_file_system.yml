@@ -8,6 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+# https://gist.github.com/hopeseekr/cd2058e71d01deca5bae9f4e5a555440
+
 - name: Install common pip modules
   pip:
     state: present
