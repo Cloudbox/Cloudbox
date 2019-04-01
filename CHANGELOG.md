@@ -358,7 +358,7 @@ Links:
   - However, you can set a custom kernel version in `adv_settings.yml` as well. Be sure to put this in quotes or else trailing zeroes in single dot versions will drop off (eg `4.10` will become `4.1`).
 - **Git:** Filter out `.DS_Store` for Macs.
 - **Suitarr:** Added option to set Docker image version via `adv_settings.yml`.
-  - Choices are `default` (let Cloudox decide), `image`, `stable`, and `unstable`.
+  - Choices are `default` (let Cloudbox decide), `image`, `stable`, and `unstable`.
   - Currently Cloudbox `default` is set to `unstable`.
 - **ZSH:** Auto update Oh My Zsh without prompt.
 - **Scripts:** PAS URL Script can now take `-s`/`--simple` arguments to pass only url with no formatting or banners.
@@ -526,7 +526,7 @@ Links:
 - **Organizr:** Added Organizr v2 (beta) (from here on will be referred to as just 'Organizr')
   - will migrate over folder of previous version from `/opt/organizr` to `/opt/organizrv1`.
 - **Plex:** Added `adv_settings.yml `option to open/close port 32400 on host.
-- **OrganizrV1:** Took out support  `direct_domain` option in `adv_settings.yml`. Can now only be used with a subdomain.
+- **OrganizrV1:** Took out support for `direct_domain` option in `adv_settings.yml`. Can now only be used with a subdomain.
 - **Organizr:** Added Plex theme support.
 - **Ombi:** Replaces 'Plex Requests' for default installs ('cloudbox' and 'mediabox').
 - **Feeder:** Mount and Dismount tags renamed to match role names.
