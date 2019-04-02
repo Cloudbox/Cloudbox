@@ -20,7 +20,7 @@
     - { role: aliases, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'aliases'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
     - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'docker'] }
-    - { role: nvidia, tags: ['core', 'cloudbox', 'mediabox', 'nvidia'] }
+    - { role: nvidia, tags: ['core', 'cloudbox', 'mediabox', 'nvidia'], when: ['use_nvidia'] }
     - { role: remote, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts', 'mounts_override'], when: ['use_remote'] }
     - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts', 'mounts_override'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
