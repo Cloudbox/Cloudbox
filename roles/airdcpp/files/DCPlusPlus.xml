@@ -11,6 +11,7 @@
                 <MinSegmentSize type="int">134217700</MinSegmentSize>
                 <IncomingRefreshTime type="int">0</IncomingRefreshTime>
                 <TLSMode type="int">2</TLSMode>
+                <MaxHashSpeed type="int">50</MaxHashSpeed>
                 <MaxHashingThreads type="int">2</MaxHashingThreads>
                 <HashersPerVolume type="int">1</HashersPerVolume>
                 <MultithreadedRefresh type="int">2</MultithreadedRefresh>
