@@ -113,6 +113,7 @@
       - "apache2-utils"
       - "jq"
       - "lib32z1"
+      - "run-one"
   ignore_errors: yes
 
 - name: Install 'intel-gpu-tools'
