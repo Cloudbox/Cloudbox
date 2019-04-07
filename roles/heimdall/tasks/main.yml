@@ -43,12 +43,13 @@
     image: linuxserver/heimdall
     pull: yes
     published_ports:
-      - "127.0.0.1:8078:80"
+      - "127.0.0.1:8078:443"
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       VIRTUAL_HOST: "heimdall.{{ domain }}"
-      VIRTUAL_PORT: 80
+      VIRTUAL_PORT: 443
+      VIRTUAL_PROTO: https
       LETSENCRYPT_HOST: "heimdall.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
     volumes:
