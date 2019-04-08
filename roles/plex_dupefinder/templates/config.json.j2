@@ -41,7 +41,9 @@
   "PLEX_SERVER": "https://plex.{{ domain }}",
   "PLEX_TOKEN": "{{ plex_auth_token | default('') }}",
   "SCORE_FILESIZE": true,
-  "SKIP_LIST": [],
+  "SKIP_LIST": [
+    "/Plex Versions/"
+  ],
   "VIDEO_CODEC_SCORES": {
     "h264": 10000,
     "h265": 5000,
