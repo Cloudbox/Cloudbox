@@ -22,12 +22,12 @@
     name: grafana
 
 - name: Stop and remove any existing containers
-  docker_container: "name={{item}} state=absent"
+  docker_container: "name={{ item }} state=absent"
   with_items:
     - varken
 
 - name: Create required directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
   with_items:
     - /opt/varken
 
@@ -43,13 +43,13 @@
 - name: Create and start varken container
   docker_container:
     name: varken
-    image: "boerderij/varken:nightly"
+    image: "boerderij/varken"
     pull: yes
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/varken:/config"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
