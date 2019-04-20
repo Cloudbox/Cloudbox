@@ -68,7 +68,7 @@
           - rutorrent
     purge_networks: yes
     restart_policy: unless-stopped
-    stop_timeout: 300
+    stop_timeout: 900
     state: started
 
 - name: ruTorrent Settings Tasks
