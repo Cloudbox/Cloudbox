@@ -40,16 +40,16 @@
     name: rutorrent
     state: stopped
 
-## Import ruTorrent Static Settings Tasks
+## ruTorrent Static Settings Tasks
 
 - name: ruTorrent Static Settings Tasks
-  include_tasks: "rutorrent_settings_static.yml"
+  include_tasks: "static.yml"
   when: (not rtorrent_rc.stat.exists)
 
-## Import ruTorrent Dynamic Settings Tasks
+## ruTorrent Dynamic Settings Tasks
 
 - name: ruTorrent Dynamic Settings Tasks
-  include_tasks: "rutorrent_settings_dynamic.yml"
+  include_tasks: "dynamic.yml"
 
 - name: Start container
   docker_container:

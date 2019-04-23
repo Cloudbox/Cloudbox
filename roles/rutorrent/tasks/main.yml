@@ -72,5 +72,5 @@
     state: started
 
 - name: ruTorrent Settings Tasks
-  include_tasks: "rutorrent_settings.yml"
+  include_tasks: "settings/main.yml"
   when: (not continuous_integration)
