@@ -30,6 +30,11 @@
     - "{{ downloads.torrents }}/rutorrent/completed"
     - "{{ downloads.torrents }}/rutorrent/watched"
 
+- name: Remove 'config.php' if it exists
+  file:
+    path: "/opt/rutorrent/rutorrent/settings/config.php"
+    state: absent
+
 - name: Check if rtorrent.rc exists
   stat:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"

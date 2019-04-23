@@ -12,7 +12,7 @@
 ## rtorrent.rc
 
 # Disable DHT - i.e. disables trackerless torrents.
-- name: Disable DHT
+- name: Settings | Static | Disable DHT
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^dht\.mode\.set\s*=.*'
@@ -20,7 +20,7 @@
     state: present
 
 # Disable Peer exchange (PEX) - i.e. allows torrents marked private, only.
-- name: Disable PEX
+- name: Settings | Static | Disable PEX
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^protocol\.pex\.set\s*=.*'
@@ -28,7 +28,7 @@
     state: present
 
 # Minimum number of peers to connect to per torrent
-- name: Reduce 'min_peers'
+- name: Settings | Static | Reduce 'min_peers'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.min_peers\.normal\.set\s*=.*'
@@ -36,7 +36,7 @@
     state: present
 
 # Maximum number of simultaneous upload slots per torrent.
-- name: Increase 'max_uploads'
+- name: Settings | Static | Increase 'max_uploads'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.max_uploads\.set\s*=.*'
@@ -44,7 +44,7 @@
     state: present
 
 # Maximum number of simultaneous downloads slots globally
-- name: Set 'max_downloads_global' to 1024
+- name: Settings | Static | Set 'max_downloads_global' to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.max_downloads\.global\.set\s*=.*'
@@ -52,7 +52,7 @@
     state: present
 
 # Maximum number of simultaneous downloads and uploads slots globally
-- name: Set 'max_uploads_global' to 1024
+- name: Settings | Static | Set 'max_uploads_global' to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.max_uploads\.global\.set\s*=.*'
@@ -60,7 +60,7 @@
     state: present
 
 # Global download rate in KiB
-- name: Set 'global_download_rate' to unlimited
+- name: Settings | Static | Set 'global_download_rate' to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.global_down\.max_rate\.set_kb\s*=.*'
@@ -68,7 +68,7 @@
     state: present
 
 # Global upload rate in KiB
-- name: Set 'global_upload_rate' to unlimited
+- name: Settings | Static | Set 'global_upload_rate' to unlimited
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^throttle\.global_up\.max_rate\.set_kb\s*=.*'
@@ -76,21 +76,21 @@
     state: present
 
 # Maximum number of open files rtorrent can keep open.
-- name: Set 'max_open_files' to 1024
+- name: Settings | Static | Set 'max_open_files' to 1024
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^network\.max_open_files\.set\s*=.*'
     line: 'network.max_open_files.set = 1024'
     state: present
 
-- name: Set encryption parameters
+- name: Settings | Static | Set encryption parameters
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^protocol\.encryption\.set\s*=.*'
     line: 'protocol.encryption.set = allow_incoming,try_outgoing,enable_retry,prefer_plaintext'
     state: present
 
-- name: Disable - Hash check.
+- name: Settings | Static | Disable - Hash check
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^pieces\.hash\.on_completion\.set\s*=.*'
@@ -98,48 +98,53 @@
     state: present
 
 # Allocate disk space
-- name: Disable 'file_allocate'
+- name: Settings | Static | Disable 'file_allocate'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^system\.file\.allocate\.set\s*=.*'
     line: 'system.file.allocate.set = 0'
     state: present
 
-- name: Set download directory
+- name: Settings | Static | Set download directory
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^directory\.default\.set\s*=.*'
     line: 'directory.default.set = /downloads/torrents/rutorrent/completed'
     state: present
 
-- name: Set watched directory
+- name: Settings | Static | Set watched directory
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^.*#.*schedule.*=.*watch_directory.*'
     line: 'schedule = watch_directory,5,5,"load.start=/downloads/torrents/rutorrent/watched/*.torrent,d.delete_tied="'
     state: present
 
-- name: Set 'upload_max_filesize' to 8M
+- name: Settings | Static | Set 'network.xmlrpc.size_limit.set' to 20M
   lineinfile:
-    path: "/opt/rutorrent/php/php.ini"
-    regexp: '^upload_max_filesize\s*=.*'
-    line: 'upload_max_filesize = 8M'
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    regexp: '^network\.xmlrpc\.size_limit\.set\s*=.*'
+    line: 'network.xmlrpc.size_limit.set = 20M'
     state: present
 
-## nginx.conf
+- name: Settings | Static | Add line space
+  lineinfile:
+    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
+    insertbefore: 'network.xmlrpc.size_limit.set = 20M'
+    line: ""
+    state: present
 
-- name: Import custom 'nginx.conf' with htpasswd support
-  copy:
-    src: nginx.conf
-    dest: /opt/rutorrent/nginx/nginx.conf
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: 0775
-    force: yes
+## php-local.ini
+
+- name: Settings | Static | Set 'upload_max_filesize' to 20M
+  lineinfile:
+    path: "/opt/rutorrent/php/php-local.ini"
+    regexp: '^upload_max_filesize\s*=.*'
+    line: 'upload_max_filesize = 20M'
+    state: present
 
 ## .htpasswd
 
-- name: Create '.htpasswd'
+- name: Settings | Static | Create '.htpasswd'
   htpasswd:
     path: /opt/rutorrent/nginx/.htpasswd
     name: "{{ user }}"
@@ -150,7 +155,7 @@
 
 ## plugins.ini
 
-- name: Import custom 'plugins.ini'
+- name: Settings | Static | Import custom 'plugins.ini'
   copy:
     src: plugins.ini
     dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
