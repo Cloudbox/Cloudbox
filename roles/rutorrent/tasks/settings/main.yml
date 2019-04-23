@@ -11,47 +11,47 @@
 ---
 ## Checks
 
-- name: Wait for 'rtorrent.rc' to be created
+- name: Settings | Wait for 'rtorrent.rc' to be created
   wait_for:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     state: present
 
-- name: Wait for 'php.ini' to be created
+- name: Settings | Wait for 'php-local.ini' to be created
   wait_for:
-    path: "/opt/rutorrent/php/php.ini"
+    path: "/opt/rutorrent/php/php-local.ini"
     state: present
 
-- name: Wait for 'nginx.conf' to be created
+- name: Settings | Wait for 'nginx.conf' to be created
   wait_for:
     path: "/opt/rutorrent/nginx/nginx.conf"
     state: present
 
-- name: Wait for 'plugins.ini' to be created
+- name: Settings | Wait for 'plugins.ini' to be created
   wait_for:
     path: "/opt/rutorrent/rutorrent/settings/plugins.ini"
     state: present
 
-- name: "Wait for 10 seconds before stopping rutorrent container"
+- name: Settings | Wait for 10 seconds before stopping rutorrent container
   wait_for:
     timeout: 10
 
-- name: Stop container
+- name: Settings | Stop container
   docker_container:
     name: rutorrent
     state: stopped
 
 ## ruTorrent Static Settings Tasks
 
-- name: ruTorrent Static Settings Tasks
+- name: Settings | ruTorrent Static Settings Tasks
   include_tasks: "static.yml"
   when: (not rtorrent_rc.stat.exists)
 
 ## ruTorrent Dynamic Settings Tasks
 
-- name: ruTorrent Dynamic Settings Tasks
+- name: Settings | ruTorrent Dynamic Settings Tasks
   include_tasks: "dynamic.yml"
 
-- name: Start container
+- name: Settings | Start container
   docker_container:
     name: rutorrent
     state: started
