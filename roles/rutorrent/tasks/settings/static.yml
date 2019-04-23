@@ -150,7 +150,7 @@
 
 ## plugins.ini
 
-- name: Import custon 'plugins.ini'
+- name: Import custom 'plugins.ini'
   copy:
     src: plugins.ini
     dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
