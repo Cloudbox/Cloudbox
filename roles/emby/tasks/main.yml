@@ -64,7 +64,7 @@
       VIRTUAL_PORT: 8096
       LETSENCRYPT_HOST: "emby.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
-      HTTPS_METHOD: noredirect
+      HTTPS_METHOD: "{{ 'redirect' if emby.http_redirect | default('noredirect') }}"
       NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia | default(false) else omit }}"
       NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia | default(false) else omit }}"
     volumes:

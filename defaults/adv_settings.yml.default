@@ -9,6 +9,7 @@ plex:
   force_auto_adjust_quality: no
   force_high_output_bitrates: no
   db_cache_size: default
+  http_redirect: no
 suitarr:
   version: default
 sonarr:
@@ -17,6 +18,7 @@ darkerr:
   enable: no
 emby:
   version: latest
+  http_redirect: no
 organizr:
   direct_domain: no
 nginx:

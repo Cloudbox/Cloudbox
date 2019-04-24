@@ -145,7 +145,7 @@
       VIRTUAL_PORT: 32400
       LETSENCRYPT_HOST: "plex.{{ domain }}"
       LETSENCRYPT_EMAIL: "{{ email }}"
-      HTTPS_METHOD: noredirect
+      HTTPS_METHOD: "{{ 'redirect' if emby.http_redirect | default('noredirect') }}"
       HEALTHCHECK_MOUNT: /mnt/unionfs
       NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia | default(false) else omit }}"
       NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia | default(false) else omit }}"
