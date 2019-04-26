@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Darkerr | Darkerr theme location block'
+- name: Darkerr | Darkerr theme location block
   blockinfile:
     path: "/opt/nginx-proxy/vhost.d/sonarr4k.{{ domain }}_location"
     marker: "### {mark} CLOUDBOX - DARKERR THEME ###"
