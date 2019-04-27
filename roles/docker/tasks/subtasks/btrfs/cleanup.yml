@@ -46,7 +46,7 @@
     - name: Btrfs | Cleanup | Remove '/var/lib/docker' btrfs subvolumes
       shell: |
         for subvolume in /var/lib/docker/btrfs/subvolumes/*; do
-            btrfs subvolume delete $subvolume
+            btrfs subvolume delete $subvolume &> /dev/null || true
         done
 
     - name: Wait for 30 seconds before commencing
