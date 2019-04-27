@@ -15,8 +15,6 @@
 [![Version](https://img.shields.io/github/release/cloudbox/cloudbox.svg?colorB=177DC1&label=Version)](https://github.com/cloudbox/cloudbox/releases)
 [![Last Commit (develop)](https://img.shields.io/github/last-commit/Cloudbox/Cloudbox/develop.svg?colorB=177DC1&label=Last%20Commit)](https://github.com/Cloudbox/Cloudbox/commits/develop)
 [![AppVeyor](https://img.shields.io/appveyor/ci/Cloudbox/Cloudbox/develop.svg?colorB=177DC1&label=AppVeyor)](https://ci.appveyor.com/project/Cloudbox/Cloudbox)
-[![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/badge.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
-[![Beerpay](https://beerpay.io/Cloudbox/Cloudbox/make-wish.svg?style=flat)](https://beerpay.io/Cloudbox/Cloudbox)
 
 Cloudbox is an Ansible and Docker based solution for rapidly deploying a cloud media server.
 
@@ -56,5 +54,5 @@ If you find this project helpful, feel free to make a small donation to the deve
 
 |  Developers  | Roles | Donation Methods   |
 |:---|:---|:---|
-| [l3uddz](https://github.com/l3uddz) | creator, developer | [Beerpay](https://beerpay.io/Cloudbox/Cloudbox), [Paypal (l3uddz@gmail.com)](https://www.paypal.me/l3uddz), [Monzo](https://monzo.me/jamesbayliss9) (Apple Pay, Google Pay), [BTC](https://en.cryptobadges.io/donate/3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL)
-| [desimaniac](https://github.com/desimaniac) | developer | [Beerpay](https://beerpay.io/Cloudbox/Cloudbox), [Paypal (desimaniac@outlook.com)](https://www.paypal.me/desimaniac123), [Square Cash](https://cash.me/$desimaniac), [BTC](https://en.cryptobadges.io/donate/3Jz922kDLQwjnFh986igeEmc72c8Hh5T3Y), [ETH](https://en.cryptobadges.io/donate/0xE50B388Aa66593153801e4ff99bA23737c888BF9)|
+| [l3uddz](https://github.com/l3uddz) | creator, developer | [Paypal (l3uddz@gmail.com)](https://www.paypal.me/l3uddz), [Monzo](https://monzo.me/jamesbayliss9) (Apple Pay, Google Pay), [BTC](https://en.cryptobadges.io/donate/3CiHME1HZQsNNcDL6BArG7PbZLa8zUUgjL)
+| [desimaniac](https://github.com/desimaniac) | developer | [Paypal (desimaniac@outlook.com)](https://www.paypal.me/desimaniac123), [Square Cash](https://cash.me/$desimaniac), [BTC](https://en.cryptobadges.io/donate/3Jz922kDLQwjnFh986igeEmc72c8Hh5T3Y), [ETH](https://en.cryptobadges.io/donate/0xE50B388Aa66593153801e4ff99bA23737c888BF9)|
