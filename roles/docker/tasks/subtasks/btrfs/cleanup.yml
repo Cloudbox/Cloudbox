@@ -49,10 +49,6 @@
             btrfs subvolume delete $subvolume &> /dev/null || true
         done
 
-    - name: Wait for 30 seconds before commencing
-      wait_for:
-        timeout: 30
-
     - name: Btrfs | Cleanup | Remove '/var/lib/docker' path
       shell: rm -rf /var/lib/docker
 
