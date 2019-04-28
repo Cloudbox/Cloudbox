@@ -8,7 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Generate Locales"
+- name: "Install 'locales'"
+  apt:
+    name: locales
+    state: present
+
+- name: "Generate 'locales'"
   locale_gen:
     name: "en_US.UTF-8"
     state: present
@@ -20,7 +25,7 @@
     regexp: '^#(LANG=.*)'
     replace: '\1'
 
-- name: "Set Default Locale"
+- name: "Set Default 'locale'"
   ini_file:
     path: "/etc/default/locale"
     section: null
