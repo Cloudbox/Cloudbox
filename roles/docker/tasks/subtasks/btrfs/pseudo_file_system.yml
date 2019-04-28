@@ -31,10 +31,17 @@
       fstype: ext4
       dev: /media/docker-volume.img
 
+  - name: Btrfs | Pseudo File System | Stop docker service
+    systemd:
+      name: docker
+      state: stopped
+
+  - name: Btrfs | Pseudo File System | Wait for 30 seconds before commencing
+    wait_for:
+      timeout: 30
+
   - name: Btrfs | Pseudo File System | Remove '/var/lib/docker' if it exists
-    file:
-      path: "/var/lib/docker"
-      state: absent
+    shell: rm -rf /var/lib/docker
 
   - name: Btrfs | Pseudo File System | Mount pseudo filesystem
     mount:

@@ -143,8 +143,12 @@
     mode: 0775
     force: yes
 
-- name: Start docker
-  systemd: name=docker state=started enabled=yes daemon_reload=yes
+- name: Start docker service
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+    daemon_reload: yes
 
 - name: Wait for 30 seconds before commencing
   wait_for:
