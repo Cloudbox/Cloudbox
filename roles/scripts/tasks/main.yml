@@ -39,36 +39,25 @@
     - /opt/scripts/torrents
     - /opt/scripts/rclone
 
-- name: Check 'arrpush.legacy.sh' exists
-  stat:
-    path: "/opt/scripts/torrents/arrpush.legacy.sh"
-    get_attributes: false
-    get_checksum: false
-    get_md5: false
-    get_mime: false
-  register: arrpush_legacy_script
-
-- name: Import 'arrpush.legacy.sh'
-  copy:
-    src: "arrpush.legacy.sh"
-    dest: "/opt/scripts/torrents/arrpush.legacy.sh"
+- name: Import 'arrpush.py'
+  get_url:
+    url:  "https://raw.githubusercontent.com/l3uddz/arrpush/master/arrpush.py"
+    dest: "/opt/scripts/torrents/arrpush.py"
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: 0775
     force: yes
-  when: not arrpush_legacy_script.stat.exists
+    validate_certs: no
+  ignore_errors: yes
 
-- name: Import remaining torrent scripts
+- name: Import 'TorrentCleanup.py'
   copy:
-    src: "{{ item }}"
-    dest: "/opt/scripts/torrents/{{ item }}"
+    src: "TorrentCleanup.py"
+    dest: "/opt/scripts/torrents/TorrentCleanup.py"
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: 0775
     force: yes
-  with_items:
-    - "arrpush.py"
-    - "TorrentCleanup.py"
 
 - name: Import plex scripts
   copy:
