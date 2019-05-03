@@ -59,17 +59,25 @@
     mode: 0775
     force: yes
 
-- name: Import plex scripts
-  copy:
-    src: "{{ item }}"
-    dest: "/opt/scripts/plex/{{ item }}"
+- name: Import 'plex_trash_fixer.py'
+  get_url:
+    url:  "https://raw.githubusercontent.com/l3uddz/plex_trash_fixer/master/plex_trash_fixer.py"
+    dest: "/opt/scripts/plex/plex_trash_fixer.py"
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: 0775
     force: yes
-  with_items:
-    - "plex_token.sh"
-    - "plex_trash_fixer.py"
+    validate_certs: no
+  ignore_errors: yes
+
+- name: Import 'plex_token.sh'
+  copy:
+    src: "plex_token.sh"
+    dest: "/opt/scripts/plex/plex_token.sh"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0775
+    force: yes
 
 - name: Import 'revoke_certs.sh'
   template:
