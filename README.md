@@ -12,7 +12,7 @@
 [![credits](https://img.shields.io/badge/Credits-CREDITS.md-blue.svg?colorB=177DC1&label=credits)](CREDITS.md)
 <br />
 [![latest version](https://img.shields.io/github/release/cloudbox/cloudbox.svg?colorB=177DC1&label=latest%20version)](https://github.com/cloudbox/cloudbox/releases)
-[![commits since (develop)](https://img.shields.io/github/commits-since/Cloudbox/Cloudbox/latest/develop.svg?colorB=177DC1)](https://github.com/Cloudbox/Cloudbox/commits/develop)
+[![commits since](https://img.shields.io/github/commits-since/Cloudbox/Cloudbox/latest/develop.svg?colorB=177DC1)](https://github.com/cloudbox/cloudbox/compare/HEAD...develop)
 [![last commit (develop)](https://img.shields.io/github/last-commit/Cloudbox/Cloudbox/develop.svg?colorB=177DC1)](https://github.com/Cloudbox/Cloudbox/commits/develop)
 [![appveyor](https://img.shields.io/appveyor/ci/Cloudbox/Cloudbox/develop.svg?colorB=177DC1&label=appveyor)](https://ci.appveyor.com/project/Cloudbox/Cloudbox)
 
