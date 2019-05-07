@@ -16,7 +16,7 @@
 [![last commit (develop)](https://img.shields.io/github/last-commit/Cloudbox/Cloudbox/develop.svg?colorB=177DC1)](https://github.com/Cloudbox/Cloudbox/commits/develop)
 [![appveyor](https://img.shields.io/appveyor/ci/Cloudbox/Cloudbox/develop.svg?colorB=177DC1&label=appveyor)](https://ci.appveyor.com/project/Cloudbox/Cloudbox)
 
-Cloudbox is an Ansible and Docker based solution for rapidly deploying a cloud media server.
+Cloudbox is an Ansible-based solution for rapidly deploying a Docker containerized cloud media server. 
 
 This project was designed for x64 machines running Ubuntu Server 16.04/18.04.<sup name="a1">[\[1\]](#f1) </sup>
 
