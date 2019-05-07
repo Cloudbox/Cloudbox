@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Bug",
+    "color": "#ee0701"
+  },
+  {
+    "name": "Docs",
+    "color": "#abfcee"
+  },
+  {
+    "name": "Duplicate",
+    "color": "#cccccc"
+  },
+  {
+    "name": "Expected Behavior",
+    "color": "#cccccc"
+  },
+  {
+    "name": "Feature Request",
+    "color": "#2f58b7"
+  },
+  {
+    "name": "Invalid",
+    "color": "#e6e6e6"
+  },
+  {
+    "name": "Support",
+    "color": "#cc317c"
+  },
+  {
+    "name": "Waiting-For-Info",
+    "color": "#13db34"
+  },
+  {
+    "name": "Won't Fix",
+    "color": "#ffffff"
+  },
+  {
+    "name": "Work-In-Progress",
+    "color": "#dd3087"
+  }
+]
