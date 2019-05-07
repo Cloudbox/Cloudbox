@@ -24,6 +24,30 @@ Links:
 
 ## [Unreleased][]
 
+## [1.4.1][] - 2019-05-06
+
+- **Airdcpp:** New role
+- **Plex:** Add mount point for `/dev/shm`
+- **Airdcpp:** Set max hash speed to 50MB/s.
+- **Nvidia:** Role only runs when enabled in `adv_settings.yml`.
+- **Common:** Install `run-one`.
+- **Heimdall:** Updated internal port and protocol.
+- **Plex Dupefinder:** Add `"/Plex Versions/"` into skip list.
+- **Rutorrent:** Changed `stop_timeout` to 900 seconds to reflect recent upstream changes.
+- **ruTorrent:** Reorganized role.
+- **ruTorrent:** Support/Fixes for recent rTorrent/ruTorrent changes.
+- **Docker:** Wait 30 seconds before `/var/lib/docker` cleanup.
+- **User:** Resetting of permissions for user folder will not follow symlinks anymore.
+- **Docker:** Ignore errors during btrfs subvolume deletion.
+- **System:** Install `locales` apt package if missing.
+- **Docker:** Misc tweaks to docker Btrfs tasks.
+- **Scripts:** Updated location of ArrPush script.
+- **Scripts:** Updated location of `plex_trash_fixer.py` script
+- **Git:** Added issue templates.
+- **Git:** Backup git-labelmaker `labels.json` file.
+- **Cloudplow:** Minor tweak to default `config.json`.
+- **Readme:** Updated with new badges and donation link.
+
 ## [1.4.0][] - 2019-03-29
 
 - **Preinstall:** Removed 'pre_install' role and created 'preinstall' tag instead. [ansible]
