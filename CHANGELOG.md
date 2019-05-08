@@ -52,7 +52,6 @@ Links:
 - **Git:** Backup git-labelmaker `labels.json` file.
 - **Cloudplow:** Minor tweak to default `config.json`.
 - **Readme:** Updated with new badges and donation link.
-- **Plex Autoscan:** Set `PLEX_WAIT_FOR_EXTERNAL_SCANNERS: false` in default config.
 
 ## [1.4.0][] - 2019-03-29
 
