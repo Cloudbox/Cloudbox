@@ -24,6 +24,11 @@ Links:
 
 ## [Unreleased][]
 
+## [1.4.2][] - 2019-05-08
+
+- **Plex Autoscan:** Set `PLEX_WAIT_FOR_EXTERNAL_SCANNERS: false` in default config.
+- **Settings:** Set default mount to mergerfs/rclone_vfs (in `adv_settings.yml`).
+
 ## [1.4.1][] - 2019-05-06
 
 - **Airdcpp:** New role
@@ -841,6 +846,7 @@ Links:
 - **Initial**: First "GitHub release".
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
+[1.4.1]: https://github.com/cloudbox/cloudbox/compare/1.4.1...1.4.2
 [1.4.1]: https://github.com/cloudbox/cloudbox/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/cloudbox/cloudbox/compare/1.3.3...1.4.0
 [1.3.3]: https://github.com/cloudbox/cloudbox/compare/1.3.2...1.3.3
