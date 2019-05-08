@@ -2,8 +2,8 @@
 system:
   timezone: auto
 mounts:
-  unionfs: unionfs
-  remote: plexdrive
+  unionfs: mergerfs
+  remote: rclone_vfs
 plex:
   open_port: no
   force_auto_adjust_quality: no
