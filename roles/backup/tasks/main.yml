@@ -39,7 +39,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Started Cloudbox {{ backup_type }} backup task."
+      message: "Started Cloudbox {{ use_snapshot | ternary('(snapshot-enabled) ','') }}backup task."
 
   - name: "Create 'backup.lock'."
     file:
@@ -417,7 +417,7 @@
     include_role:
       name: pushover
     vars:
-      message: "Finished Cloudbox {{ backup_type }} backup task in {{ total_time }} minutes."
+      message: "Finished Cloudbox {{ use_snapshot | ternary('(snapshot-enabled) ','') }}backup task in {{ total_time }} minutes."
 
   - name: "Start cloudplow service"
     systemd:
