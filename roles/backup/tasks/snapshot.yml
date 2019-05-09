@@ -27,6 +27,7 @@
   - name: "Snapshot | Set btrfs variables"
     set_fact:
       backup_type: "snapshot-enabled"
+      snapshot_type: "btrfs"
       backup_root_path: "/btrfs/snapshots/root"
       use_snapshot: true
 

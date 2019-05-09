@@ -253,6 +253,10 @@
       executable: /bin/bash
       warn: no
 
+  - name: Snapshot | Delete btrfs snapshot
+    command: "btrfs subvolume delete /btrfs/snapshots/root"
+    when: (use_snapshot) and (snapshot_type == 'btrfs')
+
   - name: Check if tar files were created
     find:
       paths: "{{ local.destination }}/opt/"
@@ -431,6 +435,10 @@
       msg: "Backup Completed Successfully."
 
   rescue:
+  - name: Snapshot | Delete btrfs snapshot
+    command: "btrfs subvolume delete /btrfs/snapshots/root"
+    when: (use_snapshot) and (snapshot_type == 'btrfs')
+
   - name: Start plexdrive and containers
     block:
 
@@ -471,10 +479,6 @@
     file:
       path: "{{ playbook_dir }}/backup.lock"
       state: absent
-
-  - name: Snapshot | Delete btrfs snapshot
-    command: "btrfs subvolume delete /btrfs/snapshots/root"
-    when: (misc.snapshot) and ((root_fstype is defined) and (root_fstype == 'btrfs'))
 
   - name: "Reset logs folder ownership."
     shell: "chown -R {{ user }}:{{ user }} /home/{{ user }}/logs/"
