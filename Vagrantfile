@@ -5,7 +5,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: false
-  config.vm.synced_folder ".", "/home/vagrant/cloudbox", disabled: false, create: true
+  config.vm.synced_folder ".", "/home/vagrant/cloudbox", disabled: false
   config.vm.provision "shell", path: "https://cloudbox.works/scripts/dep.sh"
   config.vm.provision "shell", privileged: false, inline: $script
   config.vm.provision "ansible_local", run: "always" do |ansible|
