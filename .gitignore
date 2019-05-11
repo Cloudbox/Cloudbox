@@ -1,4 +1,18 @@
-# Cloudbox
+### Vagrant ###
+.vagrant/
+*.box
+
+### MacOS ###
+.DS_Store
+
+### Python ###
+*.pyc
+
+### Ansible ###
+/backup.lock
+/cloudbox.retry
+
+### Cloudbox ###
 /ansible.cfg
 /accounts.yml
 /settings.yml
@@ -7,13 +21,3 @@
 /backup_config.yml
 /backup_excludes_list.txt
 /*.log
-
-# Ansible
-/backup.lock
-/cloudbox.retry
-
-# MacOS
-.DS_Store
-
-# Python
-*.pyc
