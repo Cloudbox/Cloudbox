@@ -10,16 +10,21 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: false, inline: $script
   config.vm.provision "ansible_local" do |ansible|
     ansible.compatibility_mode = "2.0"
-    ansible.verbose = "y"
-    ansible.playbook = "/home/vagrant/Cloudbox/cloudbox.yml"
-    ansible.tags = "cloudbox"
+    ansible.inventory_path = "/home/vagrant/Cloudbox/inventories/local"
     ansible.limit = "all"
+    ansible.playbook = "/home/vagrant/Cloudbox/cloudbox.yml"
     ansible.become = true
+    # ansible.verbose Examples: false, true (equivalent to v), -vvv (equivalent to vvv), vvvv.
+    ansible.verbose = false
+    ansible.tags = "cloudbox"
+    ansible.skip_tags = "settings"
+    ansible.extra_vars = { continuous_integration: true }
+
   end
-  config.vm.define "ubuntu18" do |ubuntu18|
-    ubuntu18.vm.box = "generic/ubuntu1804"
-  end
-  # config.vm.define "ubuntu16" do |ubuntu16|
-  #   ubuntu16.vm.box = "generic/ubuntu1604"
-  # end
+#  config.vm.define "ubuntu18" do |ubuntu18|
+#    ubuntu18.vm.box = "generic/ubuntu1804"
+#  end
+   config.vm.define "ubuntu16" do |ubuntu16|
+     ubuntu16.vm.box = "generic/ubuntu1604"
+   end
 end
