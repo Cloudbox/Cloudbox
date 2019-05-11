@@ -1,6 +1,6 @@
 $script = <<-SCRIPT
 cd ~/Cloudbox
-for f in defaults/*.default; do base=${f##*/} base=${base%.default}; cp -- "$f" "$base"; done
+for f in defaults/*.default; do base=${f##*/} base=${base%.default}; cp -n -- "$f" "$base"; done
 SCRIPT
 
 Vagrant.configure("2") do |config|
