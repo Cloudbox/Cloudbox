@@ -24,6 +24,13 @@ Links:
 
 ## [Unreleased][]
 
+## [1.4.3][] - 2019-05-10
+
+- **Backup:** Moved snapshot deletion task right after tarball creation.
+- **Backup:** Tweaked snapshot related pushover messages.
+- **Github:** Updated `CONTRIBUTING.md` page.
+- **Plex Autoscan:** Updated default config to reflect recent updates to PAS.
+
 ## [1.4.2][] - 2019-05-08
 
 - **Plex Autoscan:** Set `PLEX_WAIT_FOR_EXTERNAL_SCANNERS: false` in default config.
@@ -845,7 +852,8 @@ Links:
 - **Initial**: First "GitHub release".
 
 [Unreleased]: https://github.com/cloudbox/cloudbox/compare/HEAD...develop
-[1.4.1]: https://github.com/cloudbox/cloudbox/compare/1.4.1...1.4.2
+[1.4.3]: https://github.com/cloudbox/cloudbox/compare/1.4.2...1.4.3
+[1.4.2]: https://github.com/cloudbox/cloudbox/compare/1.4.1...1.4.2
 [1.4.1]: https://github.com/cloudbox/cloudbox/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/cloudbox/cloudbox/compare/1.3.3...1.4.0
 [1.3.3]: https://github.com/cloudbox/cloudbox/compare/1.3.2...1.3.3
