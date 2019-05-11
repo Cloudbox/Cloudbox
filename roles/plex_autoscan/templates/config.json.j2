@@ -1,21 +1,34 @@
 {
    "DOCKER_NAME":"plex",
-   "GDRIVE":{
-      "CLIENT_ID":"",
-      "CLIENT_SECRET":"",
-      "ENABLED":false,
-      "POLL_INTERVAL":60,
-      "IGNORE_PATHS": [],
-      "SCAN_EXTENSIONS":[
-        "webm","mkv","flv","vob","ogv","ogg","drc","gif",
-        "gifv","mng","avi","mov","qt","wmv","yuv","rm",
-        "rmvb","asf","amv","mp4","m4p","m4v","mpg","mp2",
-        "mpeg","mpe","mpv","m2v","m4v","svi","3gp","3g2",
-        "mxf","roq","nsv","f4v","f4p","f4a","f4b","mp3",
-        "flac","ts"
-        ],
-        "TEAMDRIVE": false
-    },
+   "GOOGLE": {
+     "ENABLED": false,
+     "CLIENT_ID": "",
+     "CLIENT_SECRET": "",
+     "ALLOWED": {
+       "FILE_PATHS": [
+         "My Drive/Media/Movies"
+         "My Drive/Media/TV",
+         "My Drive/Media/Music"
+       ],
+       "FILE_EXTENSIONS": true,
+       "FILE_EXTENSIONS_LIST": [
+         "webm","mkv","flv","vob","ogv","ogg","drc","gif",
+         "gifv","mng","avi","mov","qt","wmv","yuv","rm",
+         "rmvb","asf","amv","mp4","m4p","m4v","mpg","mp2",
+         "mpeg","mpe","mpv","m2v","m4v","svi","3gp","3g2",
+         "mxf","roq","nsv","f4v","f4p","f4a","f4b","mp3",
+         "flac","ts"
+       ],
+       "MIME_TYPES": true,
+       "MIME_TYPES_LIST": [
+         "video"
+       ]
+     },
+     "TEAMDRIVE": false,
+     "TEAMDRIVES": [],
+     "POLL_INTERVAL": 120,
+     "SHOW_CACHE_LOGS": false
+   },
    "PLEX_ANALYZE_DIRECTORY":true,
    "PLEX_ANALYZE_TYPE":"basic",
    "PLEX_DATABASE_PATH":"/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db",
@@ -40,8 +53,9 @@
       ]
    },
    "PLEX_SUPPORT_DIR":"/var/lib/plexmediaserver/Library/Application\\ Support",
-   "PLEX_TOKEN":"{{ plex_auth_token | default('') }}",
    "PLEX_USER":"plex",
+   "PLEX_TOKEN":"{{ plex_auth_token | default('') }}",
+   "PLEX_CHECK_BEFORE_SCAN":true,
    "PLEX_WAIT_FOR_EXTERNAL_SCANNERS":false,
    "RCLONE_RC_CACHE_EXPIRE":{
       "ENABLED":false,
