@@ -42,7 +42,9 @@
   when: (rclone_conf_playbook_dir.stat.exists) or (not rclone_binary.stat.exists)
 
 - name: Test rclone remote destination
-  shell: "rclone lsd {{ rclone.destination }}"
+  shell: |
+    /usr/bin/rclone lsd {{ rclone.destination }} \
+      --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
   become: yes
   become_user: "{{ user }}"
   register: rclone_test
@@ -53,7 +55,16 @@
   when: (rclone_test.rc > 0)
 
 - name: "Fetch backup from '{{ rclone.destination }}'"
-  command: "rclone copy '{{ rclone.destination }}/' '{{ local.destination }}' --stats=30s -v --transfers=4 --drive-chunk-size=128M --exclude 'archived/**' --log-file='{{ playbook_dir }}/restore_rclone.log'"
+  shell: |
+    /usr/bin/rclone copy \
+      --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36' \
+      --transfers=4 \
+      --drive-chunk-size=128M \
+      --exclude 'archived/**' \
+      --stats=30s \
+      -v \
+      --log-file='{{ playbook_dir }}/restore_rclone.log' \
+      '{{ rclone.destination }}/' '{{ local.destination }}'
   become: yes
   become_user: "{{ user }}"
 
