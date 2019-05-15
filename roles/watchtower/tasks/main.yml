@@ -19,7 +19,7 @@
     name: watchtower
     image: "v2tec/watchtower"
     pull: yes
-    command: “--cleanup”
+    command: "--cleanup"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
