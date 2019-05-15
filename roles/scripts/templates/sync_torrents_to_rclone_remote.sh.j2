@@ -12,10 +12,11 @@
 #########################################################################
 
 if ! /usr/bin/screen -list | /bin/grep -q "torrents_sync"; then
-	
+
 	/bin/rm -rfv /opt/scripts/rclone/sync_torrents_to_rclone_remote.log
-	
+
 	/usr/bin/screen -dmS torrents_sync /usr/bin/rclone sync \
+		--user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36' \
 		--config=/home/{{ user }}/.config/rclone/rclone.conf \
 		--verbose=1 \
 		--transfers=8 \
@@ -25,5 +26,5 @@ if ! /usr/bin/screen -list | /bin/grep -q "torrents_sync"; then
 		--fast-list \
 		--log-file=/opt/scripts/rclone/sync_torrents_to_rclone_remote.log \
 		{{ downloads.torrents }} {{ rclone.remote }}:/downloads/torrents
-	
+
 fi
