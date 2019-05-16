@@ -57,6 +57,12 @@
       recurse: yes
     register: dir_files
 
+  # Remove backup.old folder if it exists.
+  - name: "Remove '{{ local.destination }}.old'"
+    file:
+      path: "{{ local.destination }}.old"
+      state: absent
+
   # Use mv because Ansible copy & delete takes a lot longer.
   - name: "Moving '{{ local.destination }}' to '{{ local.destination }}.old'"
     shell: "mv '{{ local.destination }}' '{{ local.destination }}.old'"
@@ -201,14 +207,27 @@
 
   # Create snapshot
 
-  - name: "Snapshot | Wait for 5 seconds before creating snapshot"
-    wait_for:
-      timeout: 5
+  - name: Create Snapshot
+    block:
+
+    - name: "Snapshot | Wait for 5 seconds before creating snapshot"
+      wait_for:
+        timeout: 5
+
+    - name: Snapshot | Display snapshot destination
+      debug:
+        msg: "Creating snapshot of '/opt/' in '{{ backup_root_path }}/' ..."
+
+    - name: Snapshot | Create btrfs snapshot
+      shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
+      when: (snapshot_type == 'btrfs')
+
+    - name: Snapshot | Display location of '/opt/' folder in snapshot
+      debug:
+        msg: "Backup will now archive folders from '{{ backup_root_path }}/opt/'"
+
     when: (use_snapshot)
 
-  - name: Snapshot | Create btrfs snapshot
-    shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
-    when: (misc.snapshot) and ((root_fstype is defined) and (root_fstype == 'btrfs'))
 
   # Start Plexdrive and containers when snapshot is enabled
 
@@ -239,24 +258,43 @@
 
     when: (use_snapshot)
 
-  - name: "Archiving '{{ backup_root_path }}/opt' to '{{ local.destination }}/opt/'"
+  - name: "Get list of all folders in '{{ backup_root_path }}/opt/'"
+    find:
+      paths: "{{ backup_root_path }}/opt"
+      recurse: no
+      file_type: directory
+    register: opt_folders_temp
+
+  - name: Create 'opt_folders' variable
+    set_fact:
+      opt_folders: []
+
+  - name: Add folder list to 'opt_folders' variable
+    set_fact:
+      opt_folders: "{{ opt_folders }} + [ '{{ item.path }}' ]"
+    with_items: "{{ opt_folders_temp.files }}"
+    loop_control:
+      label: "{{ item.path }}"
+
+  - name: "Archiving '{{ backup_root_path }}/opt/' folders into '{{ local.destination }}/'"
     shell: |
-      find {{ backup_root_path }}/opt/ -mindepth 1 -maxdepth 1 -type d -execdir \
       tar \
         --ignore-failed-read \
         --warning=no-file-changed \
         --warning=no-file-removed \
         --exclude-from '{{ (backup_excludes_list is defined and backup_excludes_list.stat.exists) | ternary(playbook_dir + '/backup_excludes_list.txt', playbook_dir + '/roles/backup/files/backup_excludes_list.txt') }}' \
-        -cf "{{ local.destination }}/opt/"{}.tar {} \; \
-        2> /home/{{ user }}/logs/backup/cloudbox_backup_tar_stderr.log
+        -cf '{{ local.destination }}/opt/{{ item | basename }}.tar' -C '{{ item | dirname }}' './{{ item | basename }}' \
+        2> /dev/null
     args:
       executable: /bin/bash
       warn: no
+    with_items: "{{ opt_folders }}"
+    loop_control:
+      label: "'{{ item }}' --> '{{ local.destination }}/opt/{{ item | basename }}.tar'"
 
   - name: Snapshot | Delete btrfs snapshot
-    command: "btrfs subvolume delete /btrfs/snapshots/root"
+    shell: btrfs subvolume delete /btrfs/snapshots/root &> /dev/null || true
     when: (use_snapshot) and (snapshot_type == 'btrfs')
-    ignore_errors: yes
 
   - name: Check if tar files were created
     find:
@@ -448,14 +486,19 @@
       state: absent
     when: (dir_files2.matched|int != 0) and (not local.enable)
 
-  - debug:
+  - name: Backup Status - Success
+    debug:
       msg: "Backup Completed Successfully."
 
   rescue:
   - name: Snapshot | Delete btrfs snapshot
-    command: "btrfs subvolume delete /btrfs/snapshots/root"
+    shell: btrfs subvolume delete /btrfs/snapshots/root &> /dev/null || true
     when: (use_snapshot) and (snapshot_type == 'btrfs')
-    ignore_errors: yes
+
+  - name: "Reset folder ownership"
+    shell: "chown -R {{ user }}:{{ user }} {{ local.destination }}/"
+    args:
+      warn: no
 
   - name: Start plexdrive and containers
     block:
@@ -464,7 +507,7 @@
       systemd:
         name: plexdrive
         state: started
-      when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
+      when: (plexdrive_service is defined) and (plexdrive_service.stat.exists) and (plexdrive_service_running)
 
     - name: "Wait for 5 seconds before starting containers"
       wait_for:
@@ -481,9 +524,10 @@
     systemd:
       name: cloudplow
       state: started
-    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
+    when: (cloudplow_service is defined) and (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
-  - debug:
+  - name: Backup Status - Failure
+    debug:
       msg: 'Backup terminated due to an error'
 
   - name: "Pushover Message: Backup terminated due to an error"
@@ -499,6 +543,6 @@
       state: absent
 
   - name: "Reset logs folder ownership."
-    shell: "chown -R {{ user }}:{{ user }} /home/{{ user }}/logs/"
+    shell: "chown -R {{ user }}:{{ user }} '/home/{{ user }}/logs/'"
     args:
       warn: no
