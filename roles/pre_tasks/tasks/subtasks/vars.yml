@@ -111,7 +111,7 @@
 
 - name: Vars | Validate and set proper 'suitarr' key variables
   set_fact:
-    suitarr_tmp: { version: "{{ (suitarr.version) if (
+    suitarr_tmp: { version: "{{ (suitarr.version | lower) if (
         (suitarr_version_is_specified)
         and
         (suitarr.version != 'default')

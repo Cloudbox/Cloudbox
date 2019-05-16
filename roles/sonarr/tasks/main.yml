@@ -36,7 +36,7 @@
 - name: Set 'suitarr_image' variable for v2
   set_fact:
     suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/sonarr','hotio/sonarr') }}"
-    suitarr_version: "{{ sonarr.version }}"
+    suitarr_version: "{{ sonarr.version | lower }}"
   when: ("v3" not in sonarr.version | lower)
 
 - name: Set 'suitarr_image' variable for v3
