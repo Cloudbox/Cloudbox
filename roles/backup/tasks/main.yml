@@ -169,23 +169,41 @@
       message: "Stopped Docker containers."
     when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
-  # Stop Plexdrive
+  # Stop Plexdrive 4
 
-  - name: Check if 'plexdrive.service' exists
+  - name: Check if 'plexdrive4.service' exists
     stat:
-      path: "/etc/systemd/system/plexdrive.service"
-    register: plexdrive_service
+      path: "/etc/systemd/system/plexdrive4.service"
+    register: plexdrive4_service
 
-  - name: Get plexdrive service state
+  - name: Get 'plexdrive4' service state
     set_fact:
-      plexdrive_service_running: "{{ (services['plexdrive.service'] is defined) and (services['plexdrive.service']['state'] == 'running') }}"
-    when: (plexdrive_service.stat.exists)
+      plexdrive4_service_running: "{{ (services['plexdrive4.service'] is defined) and (services['plexdrive4.service']['state'] == 'running') }}"
+    when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists)
 
-  - name: Stop plexdrive service
+  - name: Stop 'plexdrive4' service
     systemd:
-      name: plexdrive
+      name: plexdrive4
       state: stopped
-    when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
+    when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists) and (plexdrive4_service_running)
+
+  # Stop Plexdrive 5
+
+  - name: Check if 'plexdrive5.service' exists
+    stat:
+      path: "/etc/systemd/system/plexdrive5.service"
+    register: plexdrive5_service
+
+  - name: Get 'plexdrive5' service state
+    set_fact:
+      plexdrive5_service_running: "{{ (services['plexdrive5.service'] is defined) and (services['plexdrive5.service']['state'] == 'running') }}"
+    when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists)
+
+  - name: Stop 'plexdrive5' service
+    systemd:
+      name: plexdrive5
+      state: stopped
+    when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists) and (plexdrive5_service_running)
 
   # Stop Cloudplow
 
@@ -194,16 +212,16 @@
       path: "/etc/systemd/system/cloudplow.service"
     register: cloudplow_service
 
-  - name: Get cloudplow service state
+  - name: Get 'cloudplow' service state
     set_fact:
       cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == 'running') }}"
     when: (cloudplow_service.stat.exists)
 
-  - name: Stop cloudplow service
+  - name: Stop 'cloudplow' service
     systemd:
       name: cloudplow
       state: stopped
-    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
+    when: (cloudplow_service is defined) and (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
   # Create snapshot
 
@@ -228,19 +246,24 @@
 
     when: (use_snapshot)
 
+  # Start Plexdrive and Docker containers when snapshot is enabled
 
-  # Start Plexdrive and containers when snapshot is enabled
-
-  - name: Snapshot | Start plexdrive and containers
+  - name: Snapshot | Start Plexdrive and Docker containers
     block:
 
-    - name: "Snapshot | Start plexdrive service"
+    - name: "Snapshot | Start 'plexdrive4' service"
       systemd:
-        name: plexdrive
+        name: plexdrive4
         state: started
-      when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
+      when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists) and (plexdrive4_service_running)
 
-    - name: "Snapshot | Wait for 5 seconds before starting containers"
+    - name: "Snapshot | Start 'plexdrive5' service"
+      systemd:
+        name: plexdrive5
+        state: started
+      when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists) and (plexdrive5_service_running)
+
+    - name: "Snapshot | Wait for 5 seconds before starting Docker containers"
       wait_for:
         timeout: 5
 
@@ -296,15 +319,16 @@
     shell: btrfs subvolume delete /btrfs/snapshots/root &> /dev/null || true
     when: (use_snapshot) and (snapshot_type == 'btrfs')
 
-  - name: Check if tar files were created
+  - name: Check if tarball files were created
     find:
       paths: "{{ local.destination }}/opt/"
       file_type: file
       patterns: '*.tar'
     register: dir_files2
 
-  - name: Abort backup when tar creation fails
-    fail: msg="There must have been an issue during the tar creation tasks as they are missing in '{{ local.destination }}/opt/'"
+  - name: Abort backup when the creation of tarball files fails
+    fail:
+      msg: "There must have been an issue during the tarball creation tasks as they are missing in '{{ local.destination }}/opt/'"
     when: (dir_files2.matched|int == 0)
 
   - name: "Remove '{{ local.destination }}.old'"
@@ -330,18 +354,24 @@
       message: "Backup created. Total size = {{ backup_size }}."
     ignore_errors: yes
 
-  # Start Plexdrive and containers when snapshot is not enabled
+  # Start Plexdrive and Docker containers when snapshot is not enabled
 
-  - name: Start plexdrive and containers
+  - name: Start Plexdrive and Docker Containers
     block:
 
-    - name: "Start plexdrive service"
+    - name: "Start 'plexdrive4' service"
       systemd:
-        name: plexdrive
+        name: plexdrive4
         state: started
-      when: (plexdrive_service.stat.exists) and (plexdrive_service_running)
+      when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists) and (plexdrive4_service_running)
 
-    - name: "Wait for 5 seconds before starting containers"
+    - name: "Start 'plexdrive5' service"
+      systemd:
+        name: plexdrive5
+        state: started
+      when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists) and (plexdrive5_service_running)
+
+    - name: "Wait for 5 seconds before starting Docker containers"
       wait_for:
         timeout: 5
 
@@ -363,7 +393,7 @@
     wait_for:
       timeout: 10
 
-  - name: "Reset folder ownership"
+  - name: "Reset folder ownership of '{{ local.destination }}/'"
     shell: "chown -R {{ user }}:{{ user }} {{ local.destination }}/"
     args:
       warn: no
@@ -474,11 +504,11 @@
     vars:
       message: "Finished Cloudbox {{ use_snapshot | ternary('(snapshot-enabled) ','') }}backup task in {{ total_time }} minutes."
 
-  - name: "Start cloudplow service"
+  - name: "Start 'cloudplow' service"
     systemd:
       name: cloudplow
       state: started
-    when: (cloudplow_service.stat.exists) and (cloudplow_service_running)
+    when: (cloudplow_service is defined) and (cloudplow_service.stat.exists) and (cloudplow_service_running)
 
   - name: "Remove {{ local.destination }}"
     file:
@@ -495,21 +525,27 @@
     shell: btrfs subvolume delete /btrfs/snapshots/root &> /dev/null || true
     when: (use_snapshot) and (snapshot_type == 'btrfs')
 
-  - name: "Reset folder ownership"
+  - name: "Reset folder ownership of '{{ local.destination }}/'"
     shell: "chown -R {{ user }}:{{ user }} {{ local.destination }}/"
     args:
       warn: no
 
-  - name: Start plexdrive and containers
+  - name: Start Plexdrive and Docker Containers
     block:
 
-    - name: "Start plexdrive service"
+    - name: "Start 'plexdrive4' service"
       systemd:
-        name: plexdrive
+        name: plexdrive4
         state: started
-      when: (plexdrive_service is defined) and (plexdrive_service.stat.exists) and (plexdrive_service_running)
+      when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists) and (plexdrive4_service_running)
 
-    - name: "Wait for 5 seconds before starting containers"
+    - name: "Start 'plexdrive5' service"
+      systemd:
+        name: plexdrive5
+        state: started
+      when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists) and (plexdrive5_service_running)
+
+    - name: "Wait for 5 seconds before starting Docker containers"
       wait_for:
         timeout: 5
 
@@ -520,7 +556,7 @@
 
     when: (not use_snapshot)
 
-  - name: "Start cloudplow service"
+  - name: "Start 'cloudplow' service"
     systemd:
       name: cloudplow
       state: started
