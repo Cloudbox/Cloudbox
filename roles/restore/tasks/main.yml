@@ -65,12 +65,23 @@
     force: yes
   when: (backup_excludes_list.stat.exists)
 
-- name: "Unarchive backup tars to /opt"
-  shell: |
-    mv /opt/{{ (item | basename | splitext)[0] }} /opt/{{ (item | basename | splitext)[0] }}_bak 2>/dev/null || :
-    tar -xf '{{ item }}' -C /opt .
+- name: "Backup existing folders in '/opt' to prevent overwriting them"
+  shell: mv '/opt/{{ (item | basename | splitext)[0] }}' '/opt/{{ (item | basename | splitext)[0] }}_bak' 2>/dev/null || true
+  args:
+    warn: false
   with_fileglob:
   - "{{ local.destination }}/opt/*.tar"
+  loop_control:
+    label: "'/opt/{{ (item | basename | splitext)[0] }}' --> '/opt/{{ (item | basename | splitext)[0] }}_bak'"
+
+- name: "Unarchive backup tarballs into '/opt'"
+  shell: tar -xf '{{ item }}' -C '/opt/'
+  args:
+    warn: false
+  with_fileglob:
+  - "{{ local.destination }}/opt/*.tar"
+  loop_control:
+    label: "{{ item | basename }}"
   register: unarchive
 
 - name: "Set '/opt' ownership and permissions"
