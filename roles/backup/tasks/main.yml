@@ -80,6 +80,7 @@
       - "/opt/systemd-backup"
       - "/opt/crontab-backup"
 
+  # Backup config files
   - name: "Copy files to '{{ local.destination }}'"
     copy:
       src: "{{ item }}"
@@ -97,6 +98,7 @@
      - "/home/{{ user }}/.config/rclone/rclone.conf"
     ignore_errors: yes
 
+  # Backup the excludes list if it exists
   - name: "Look for 'backup_excludes_list.txt' file in cloudbox folder"
     stat:
       path: "{{ playbook_dir }}/backup_excludes_list.txt"
@@ -111,6 +113,13 @@
       mode: 0775
       force: yes
     when: (backup_excludes_list.stat.exists)
+
+  - name: Set 'backup_excludes_list_path' variable
+    set_fact:
+      backup_excludes_list_path: "{{
+        (playbook_dir + '/backup_excludes_list.txt')
+        if ((backup_excludes_list is defined) and (backup_excludes_list.stat.exists))
+        else (playbook_dir + '/roles/backup/files/backup_excludes_list.txt') }}"
 
   - name: Cloudbox Restore Service
     import_tasks: "restore_service.yml"
@@ -305,7 +314,7 @@
         --ignore-failed-read \
         --warning=no-file-changed \
         --warning=no-file-removed \
-        --exclude-from '{{ (backup_excludes_list is defined and backup_excludes_list.stat.exists) | ternary(playbook_dir + '/backup_excludes_list.txt', playbook_dir + '/roles/backup/files/backup_excludes_list.txt') }}' \
+        --exclude-from '{{ backup_excludes_list_path }}' \
         -cf '{{ local.destination }}/opt/{{ item | basename }}.tar' -C '{{ item | dirname }}' './{{ item | basename }}' \
         2> /dev/null
     args:
