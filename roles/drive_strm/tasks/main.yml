@@ -166,7 +166,7 @@
     STRM_PATH="/mnt/strm"
     rm -rf ${STRM_PATH}/*
     rm ${APP_PATH}/*.db*
-    jq -c '.page_token = "1"' ${APP_PATH}/token.json >> ${APP_PATH}/tmp.$$.json && mv ${APP_PATH}/tmp.$$.json ${APP_PATH}/token.json
+    jq -c '.page_token = "1"' ${APP_PATH}/token.json | jq . > ${APP_PATH}/tmp.$$.json && mv ${APP_PATH}/tmp.$$.json ${APP_PATH}/token.json
   become: yes
   become_user: "{{ user }}"
   when: ('drive_strm_rebuild' in ansible_run_tags)
