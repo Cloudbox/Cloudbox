@@ -81,7 +81,7 @@
 - name: Set 'PLEX_LD_LIBRARY_PATH' in config.json
   shell: |
     CONFIG_PATH="/opt/plex_autoscan/config"
-    jq -c '.PLEX_LD_LIBRARY_PATH = "/usr/lib/plexmediaserver/lib"' ${CONFIG_PATH}/config.json >> \
+    jq -c '.PLEX_LD_LIBRARY_PATH = "/usr/lib/plexmediaserver/lib"' ${CONFIG_PATH}/config.json | jq . > \
     ${CONFIG_PATH}/tmp.$$.json && mv ${CONFIG_PATH}/tmp.$$.json ${CONFIG_PATH}/config.json
   become: yes
   become_user: "{{ user }}"
