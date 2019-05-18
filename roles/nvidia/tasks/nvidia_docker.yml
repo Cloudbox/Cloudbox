@@ -50,7 +50,7 @@
 - name: Add runtime to '/etc/docker/daemon.json'
   shell: |
     jq '."default-runtime" = "nvidia" | .runtimes.nvidia.path = "/usr/bin/nvidia-container-runtime" | .runtimes.nvidia.runtimeArgs = []' \
-    /etc/docker/daemon.json > /etc/docker/daemon.json_tmp \
+    /etc/docker/daemon.json | jq . > /etc/docker/daemon.json_tmp \
     && mv /etc/docker/daemon.json_tmp /etc/docker/daemon.json
 
 - name: Start docker service
@@ -63,4 +63,3 @@
   shell: 'docker start {{ docker_running_containers.stdout }}'
   ignore_errors: yes
   when: (docker_service_running) and not (docker_running_containers.stdout | trim | length == 0)
-
