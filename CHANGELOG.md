@@ -24,6 +24,53 @@ Links:
 
 ## [Unreleased][]
 
+## [1.4.4][] - 2019-05-18
+
+- **Plex Autoscan**: Minor update to default config. ([#1af78d5e][])
+- **Vagrant**: Added Vagrantfile for development (#294) ([#614c3954][])
+- **Cloudplow**: Added user agent to `rclone_extras` in default config. ([#d1459d0a][])
+- **Scripts**: Added user agent to 'sync torrent downloads' scripts. ([#04d263f3][])
+- **Feeder**: Added user agent to Rclone command. ([#4563de55][])
+- **Mounts**: Added user agent to Rclone commands. ([#e1bbde91][])
+- **Restore**: Added user agent to Rclone command. ([#fa351292][])
+- **Backup**: Added user agent to Rclone command. ([#ae2b9fe9][])
+- **Watchtower**: Use proper quotes. (#299) ([#e9148556][])
+- **Suitarr**: Convert version to lower case. ([#f0c05363][])
+- **Plex**: Minor task rename [ansible] ([#c3fc6cb3][])
+- **Backup**: Now shows progress during tarball creation. ([#54c3f772][])
+- **Backup**: Updated to stop/start Plexdrive4 and Plexdrive5 ([#915f6a30][])
+- **Backup**: Cleaner looking tarball creation task [ansible] ([#a7d8418f][])
+- **Plex Autoscan**: jq tasks will now keep nice formatting. ([#b5695f40][])
+- **Nvidia**: jq tasks will now keep nice formatting. ([#103275ec][])
+- **Drive STRM**: jq tasks will now keep nice formatting. ([#254ae24a][])
+- **Changelog**: Added `changelog.sh` script ([#195b704b][])
+- **Changelog**: Added '-s/--simple' argument to 'changelog.sh' ([#c10602ce][])
+- **Changelog**: Added `release.sh` script ([#e3987353][])
+- **Changelog**: Diff between tag & dev vs master & dev ([#7276cab2][])
+
+[1.4.4]: https://github.com/cloudbox/cloudbox/compare/1.4.3...1.4.4
+[#1af78d5e]: https://github.com/cloudbox/cloudbox/commit/1af78d5e
+[#614c3954]: https://github.com/cloudbox/cloudbox/commit/614c3954
+[#d1459d0a]: https://github.com/cloudbox/cloudbox/commit/d1459d0a
+[#04d263f3]: https://github.com/cloudbox/cloudbox/commit/04d263f3
+[#4563de55]: https://github.com/cloudbox/cloudbox/commit/4563de55
+[#e1bbde91]: https://github.com/cloudbox/cloudbox/commit/e1bbde91
+[#fa351292]: https://github.com/cloudbox/cloudbox/commit/fa351292
+[#ae2b9fe9]: https://github.com/cloudbox/cloudbox/commit/ae2b9fe9
+[#e9148556]: https://github.com/cloudbox/cloudbox/commit/e9148556
+[#f0c05363]: https://github.com/cloudbox/cloudbox/commit/f0c05363
+[#c3fc6cb3]: https://github.com/cloudbox/cloudbox/commit/c3fc6cb3
+[#54c3f772]: https://github.com/cloudbox/cloudbox/commit/54c3f772
+[#915f6a30]: https://github.com/cloudbox/cloudbox/commit/915f6a30
+[#a7d8418f]: https://github.com/cloudbox/cloudbox/commit/a7d8418f
+[#b5695f40]: https://github.com/cloudbox/cloudbox/commit/b5695f40
+[#103275ec]: https://github.com/cloudbox/cloudbox/commit/103275ec
+[#254ae24a]: https://github.com/cloudbox/cloudbox/commit/254ae24a
+[#195b704b]: https://github.com/cloudbox/cloudbox/commit/195b704b
+[#c10602ce]: https://github.com/cloudbox/cloudbox/commit/c10602ce
+[#e3987353]: https://github.com/cloudbox/cloudbox/commit/e3987353
+[#7276cab2]: https://github.com/cloudbox/cloudbox/commit/7276cab2
+
 ## [1.4.3][] - 2019-05-10
 
 - **Backup:** Moved snapshot deletion task right after tarball creation.
