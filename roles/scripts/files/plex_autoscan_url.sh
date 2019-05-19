@@ -102,7 +102,7 @@ function build_url() {
     head -1 ${CB_ACCOUNTS} | grep -q "\$ANSIBLE_VAULT"
     rc=$?
     if [[ ${rc} == 0 ]]; then
-        VAULT_FILE=$(cat ${CB_ANSIBLE} | grep "vault_password_file" | sed 's/^.*=//' | sed "s/ //g")
+        VAULT_FILE=$(cat ${CB_ANSIBLE} | grep "^vault_password_file" | sed 's/^.*=//' | sed "s/ //g")
         DOMAIN=$(ansible-vault view --vault-password-file=${VAULT_FILE} ${CB_ACCOUNTS} | yq -r .domain)
     elif [[ ${rc} == 1 ]]; then
         DOMAIN=$(cat ${CB_ACCOUNTS} | yq -r .domain)
