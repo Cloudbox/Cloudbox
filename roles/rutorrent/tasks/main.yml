@@ -24,7 +24,9 @@
 - name: Create rutorrent directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
   with_items:
-    - /opt/rutorrent
+    - "/opt/rutorrent"
+    - "/opt/rutorrent/plugins"
+    - "/opt/rutorrent/themes"
     - "{{ downloads.torrents }}"
     - "{{ downloads.torrents }}/rutorrent"
     - "{{ downloads.torrents }}/rutorrent/completed"
