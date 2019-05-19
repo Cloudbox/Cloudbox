@@ -197,11 +197,11 @@
     name: sub-zero
 
 - name: "Forced Automatic Quality Settings"
-  import_tasks: "forced_quality_settings.yml"
+  import_tasks: "subtasks/forced_quality_settings.yml"
   tags: plex_forced_quality_settings
   when: (not continuous_integration)
 
 - name: "DB Cache Size Settings"
-  import_tasks: "db_cache_size_settings.yml"
+  import_tasks: "subtasks/db_cache_size_settings.yml"
   tags: plex_db_cache_size_settings
   when: (not continuous_integration)
