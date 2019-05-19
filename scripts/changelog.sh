@@ -48,7 +48,7 @@ function commits() {
     log \
     --reverse \
     --pretty=format:"%s ([#%h][])" \
-    develop...master | \
+    develop...$PREVIOUS_VERSION | \
     sed 's/\(^[^:]*\):/- **\1**:/g' | \
     sed 's/\[skip ci\]//g' | \
     sed 's/\[minor\]//g' \
@@ -74,7 +74,7 @@ function commit_ref() {
     log \
     --reverse \
     --pretty=format:"[#%h]: $REPO/commit/%h" \
-    develop...master \
+    develop...$PREVIOUS_VERSION \
     >> $CHANGELOG
 }
 
