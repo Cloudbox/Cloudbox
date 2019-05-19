@@ -21,56 +21,118 @@ readonly REPO="https://github.com/cloudbox/cloudbox"
 readonly PREVIOUS_VERSION=$(git describe --abbrev=0 --tags)
 readonly NEXT_VERSION=$(echo $PREVIOUS_VERSION | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{$NF=sprintf("%0*d", length($NF), ($NF+1)); print}')
 
+# Boolean vars
+readonly TRUE=1
+readonly FALSE=0
+
+################################
+# Functions
+################################
+
+# Cleanup
+function cleanup() {
+  [ ! -e $CHANGELOG ] || rm $CHANGELOG
+}
+
+# Header
+function header() {
+  echo \
+    -e \
+    "\n## [$NEXT_VERSION][] - $DATE\n" \
+    >> changelog.txt
+}
+
+# List of commits
+function commits() {
+  git \
+    log \
+    --reverse \
+    --pretty=format:"%s ([#%h][])" \
+    develop...master | \
+    sed 's/\(^[^:]*\):/- **\1**:/g' | \
+    sed 's/\[skip ci\]//g' | \
+    sed 's/\[minor\]//g' \
+    >> $CHANGELOG
+  }
+
+# Whitespace
+function whitespace() {
+  echo "" >> $CHANGELOG
+}
+
+# Header Reference Link
+function header_ref() {
+  echo \
+    -e \
+    "[$NEXT_VERSION]: $REPO/compare/$PREVIOUS_VERSION...$NEXT_VERSION" \
+    >> $CHANGELOG
+}
+
+# Commit Reference links
+function commit_ref() {
+  git \
+    log \
+    --reverse \
+    --pretty=format:"[#%h]: $REPO/commit/%h" \
+    develop...master \
+    >> $CHANGELOG
+}
+
+# Display $CHANGELOG
+function display() {
+  if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    cat $CHANGELOG
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    cat $CHANGELOG
+  fi
+}
+
+# Open $CHANGELOG in Atom
+function display_atom() {
+  if [[ -x "$(command -v atom)" ]]; then
+    atom $CHANGELOG
+  fi
+}
+
+################################
+# Argument Parser
+################################
+
+## https://stackoverflow.com/a/39398359
+FULL=${TRUE}
+# As long as there is at least one more argument, keep looping
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case "$key" in
+    # This flag type option will catch either -s or --simple
+    -s|--simple)
+      FULL=${FALSE}
+    ;;
+    *)
+    # Exit when unknown argument is passed
+    echo "Unknown option '$key'"
+    exit 10
+    ;;
+  esac
+  shift
+done
+
+
 ################################
 # Main
 ################################
 
-# Cleanup
-[ -e $CHANGELOG ] && rm $CHANGELOG
+function main ()
+{
+  cleanup
+  if [[ ${FULL} == ${TRUE} ]]; then header; fi
+  commits
+  whitespace
+  if [[ ${FULL} == ${TRUE} ]]; then header_ref; fi
+  commit_ref
+  whitespace
+  display
+  if [[ ${FULL} == ${TRUE} ]]; then display_atom; fi
+}
 
-# Header
-echo \
-  -e \
-  "\n## [$NEXT_VERSION][] - $DATE\n" \
-  >> changelog.txt
-
-# List of commits
-git \
-  log \
-  --reverse \
-  --pretty=format:"%s ([#%h][])" \
-  develop...master | \
-  sed 's/\(^[^:]*\):/- **\1**:/g' | \
-  sed 's/\[skip ci\]//g' | \
-  sed 's/\[minor\]//g' \
-  >> $CHANGELOG
-
-# Whitespace
-echo "" >> $CHANGELOG
-
-# Header Link
-echo \
-  -e \
-  "[$NEXT_VERSION]: $REPO/compare/$PREVIOUS_VERSION...$NEXT_VERSION" \
-  >> $CHANGELOG
-
-# List of reference links
-git \
-  log \
-  --reverse \
-  --pretty=format:"[#%h]: $REPO/commit/%h" \
-  develop...master \
-  >> $CHANGELOG
-
-# Whitespace
-echo "" >> $CHANGELOG
-
-# Display $CHANGELOG
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-  cat $CHANGELOG
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    cat $CHANGELOG
-  if [ -x "$(command -v atom)" ]; then
-    atom $CHANGELOG
-  fi
-fi
+main "$@"
