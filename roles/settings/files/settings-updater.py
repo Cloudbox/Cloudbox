@@ -86,28 +86,43 @@ def dump_settings(settings, file_to_dump):
     return dumped
 
 
-def upgrade_settings(defaults, current, key=None):
-    upgraded = False
-    res = CommentedMap()
-    for k, v in defaults.items():
-        if k not in current:
-            res[k] = v
-            upgraded = True
-            log.info("Added field: \'%s%s\'.", k, '' if not key else ' to \'%s\'.' % key)
-        else:
-            res[k] = current[k]
+def _inner_upgrade(settings1, settings2, key=None, overwrite=False):
+    sub_upgraded = False
+    merged = settings2.copy()
 
-        if hasattr(v, 'items'):
-            if k in current:
-                sub_upgrade, res[k] = upgrade_settings(v, current[k], k)
-                if sub_upgrade:
-                    upgraded = True
-            else:
-                res[k] = v
-                upgraded = True
+    if isinstance(settings1, dict):
+        for k, v in settings1.items():
+            # missing k
+            if k not in settings2:
+                merged[k] = v
+                sub_upgraded = True
+                if not key:
+                    log.info("Added %r setting: %s", str(k), str(v))
+                else:
+                    log.info("Added %r to setting %r: %s", str(k), str(key), str(v))
+                continue
 
-    return upgraded, res
+            # iterate children
+            if isinstance(v, dict) or isinstance(v, list):
+                merged[k], did_upgrade = _inner_upgrade(settings1[k], settings2[k], key=k,
+                                                                overwrite=overwrite)
+                sub_upgraded = did_upgrade if did_upgrade else sub_upgraded
+            elif settings1[k] != settings2[k] and overwrite:
+                merged = settings1
+                sub_upgraded = True
+    elif isinstance(settings1, list) and key:
+        for v in settings1:
+            if v not in settings2:
+                merged.append(v)
+                sub_upgraded = True
+                log.info("Added to setting %r: %s", str(key), str(v))
+                continue
 
+    return merged, sub_upgraded
+
+def upgrade_settings(defaults, currents):
+    upgraded_settings, upgraded = _inner_upgrade(defaults, currents)
+    return upgraded, upgraded_settings
 
 ############################################################
 # MAIN
