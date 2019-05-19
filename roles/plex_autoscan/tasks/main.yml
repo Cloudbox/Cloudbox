@@ -64,8 +64,8 @@
     when: plex_account_enabled
 
   - name: "Generate 32 character SERVER_PASS"
-    shell: "pwgen 32 1"
-    register: plex_autoscan_pass
+    set_fact:
+      plex_autoscan_server_pass: "{{ lookup('password', '/dev/null chars=ascii_letters,digits length=32') }}"
 
   - name: Import default config
     template:
