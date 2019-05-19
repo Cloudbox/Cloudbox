@@ -82,7 +82,7 @@
       "Thumbs.db"
    ],
    "SERVER_IP":"0.0.0.0",
-   "SERVER_PASS":"{{ plex_autoscan_pass.stdout }}",
+   "SERVER_PASS":"{{ plex_autoscan_server_pass | default('') }}",
    "SERVER_PATH_MAPPINGS":{
       "/data/Movies/":[
          "/movies/",
