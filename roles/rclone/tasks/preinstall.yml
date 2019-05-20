@@ -11,14 +11,14 @@
 - name: "Preinstall | Display message when kernel has been updated"
   debug:
     msg: "Kernel was updated."
-  when: (preinstall_kernel_restart)
+  when: (preinstall_kernel_restart is defined) and (preinstall_kernel_restart)
 
 - name: "Preinstall | Display message when cloudbox folder location has been migrated"
   debug:
     msg:
       - "Cloudbox folder was migrated to a new home location."
       - "Re-login with the '{{ user }}' account and run the Cloudbox installer from the '{{ cloudbox_folder_path }}/' path."
-  when: (preinstall_user_relogin)
+  when: (preinstall_user_relogin is defined) and (preinstall_user_relogin)
 
 - name: "Preinstall | Cloudbox pre-install has completed!"
   debug:
@@ -40,4 +40,4 @@
         - "Failed to reboot automatically."
         - "You will need to restart the server yourself for changes to take effect."
 
-  when: (preinstall_kernel_restart)
+  when: (preinstall_kernel_restart is defined) and (preinstall_kernel_restart)
