@@ -50,6 +50,15 @@
     when: file0.stat.exists
 
   # settings-updater.py tasks
+  - name: "Check if 'settings-updater.log' exists."
+    stat:
+      path: "{{ playbook_dir }}/settings-updater.log"
+    register: settings_updater_log
+
+  - name: "Reset ownership of 'settings-updater.log'"
+    file: "path='{{ playbook_dir }}/settings-updater.log' state=file owner={{ user }} group={{ user }}"
+    when: (settings_updater_log.stat.exists)
+
   - name: "Run 'settings-updater.py' for '{{ item }}'."
     script: "roles/settings/files/settings-updater.py '{{ playbook_dir }}' 'defaults/{{ item }}.default' '{{ item }}'"
     become: yes
