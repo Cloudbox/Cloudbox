@@ -173,12 +173,6 @@
   shell: pip install glances[action,browser,cloud,cpuinfo,docker,folders,gpu,graph,ip,raid,snmp,web]
   tags: glances
 
-- name: Install yyq
-  import_role:
-    name: yyq
-  tags: yyq
-  ignore_errors: yes
-
 - name: Install z
   import_role:
     name: z
