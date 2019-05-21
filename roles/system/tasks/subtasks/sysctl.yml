@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: Sysctl Tasks                                   #
+# Title:         System: SYSCTL Tasks                                   #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Sysctl Tuning
+- name: SYSCTL Tuning
   ignore_errors: yes
   sysctl:
     name: "{{ item.name }}"
@@ -73,5 +73,20 @@
     - { name: fs.inotify.max_user_watches, value: 131072 }
     # Set net.core.netdev_budget
     - { name: net.core.netdev_budget, value: 50000 }
+
+
+- name: Check to see if '/proc/sys/net/core/netdev_budget_usecs' exists
+  stat:
+    path: "/proc/sys/net/core/netdev_budget_usecs"
+  register: netdev_budget_usecs
+
+- name: "SYSCTL Tuning - 'netdev_budget_usecs'"
+  ignore_errors: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  loop:
     # Set netdev_budget_usecs
     - { name: net.core.netdev_budget_usecs, value: 5000 }
+  when: netdev_budget_usecs.stat.exists
