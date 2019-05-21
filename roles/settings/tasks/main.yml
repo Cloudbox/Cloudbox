@@ -30,12 +30,12 @@
   register: cloudbox_yml
 
 - name: "Settings: Ansible Config"
-  include_tasks: "ansible_config.yml"
+  include_tasks: "subtasks/ansible_config.yml"
   with_items:
     - "ansible.cfg"
 
 - name: "Setting: Settings Migrator"
-  include_tasks: "settings_migrator.yml"
+  include_tasks: "subtasks/settings_migrator.yml"
   with_items:
     - "backup_config.yml"
 
@@ -46,7 +46,7 @@
     exit_is_necessary: false
 
 - name: "Setting: Settings Updater"
-  include_tasks: "settings_updater.yml"
+  include_tasks: "subtasks/settings_updater.yml"
   with_items:
     - "accounts.yml"
     - "settings.yml"
@@ -54,4 +54,4 @@
     - "backup_config.yml"
 
 - name: "Settings: Exit After Changes"
-  include_tasks: "exit.yml"
+  include_tasks: "subtasks/exit.yml"

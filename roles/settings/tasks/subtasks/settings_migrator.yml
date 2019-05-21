@@ -1,0 +1,45 @@
+#########################################################################
+# Title:         Settings: Settings Migrator                            #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Settings Migrator | Cloudbox Settings Migrator Block
+  block:
+
+  # Decryption Tasks
+  - name: "Settings Migrator | Check '{{ item }}' for encryption."
+    shell: "head -1 {{ playbook_dir }}/{{ item }} | grep -q \\$ANSIBLE_VAULT"
+    register: encryption_check
+    ignore_errors: yes
+    failed_when: encryption_check.rc > 1
+
+  - name: "Settings Migrator | Set 'file_is_encrypted' variable."
+    set_fact:
+      file_is_encrypted: "{{ ((encryption_check.rc == 0) | default(false,true)) }}"
+
+  - name: "Settings Migrator | Decrypt '{{ item }}' when encrypted."
+    shell: "ansible-vault decrypt {{ playbook_dir }}/{{ item }}"
+    become: yes
+    become_user: "{{ cloudbox_yml.stat.pw_name }}"
+    when: file_is_encrypted
+
+  - name: Settings Migrator | Migrations for 'backup_config.yml'
+    block:
+
+    #  Move 'vault_service' to 'restore_service'
+    - name: Settings Migrator | backup_config.yml | Migration 01
+      include_tasks: "settings_migrator/backup_config_yml/migration_01.yml"
+
+    when: (item == "backup_config.yml")
+
+  always:
+  - name: "Settings Migrator | Re-encrypt '{{ item }}' if previously encrypted."
+    shell: "ansible-vault encrypt {{ playbook_dir }}/{{ item }}"
+    become: yes
+    become_user: "{{ cloudbox_yml.stat.pw_name }}"
+    when: file_is_encrypted
