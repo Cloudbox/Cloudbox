@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Pre-Tasks - Variables Task                   #
+# Title:         Pre-Tasks: Role Variables Task                         #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,15 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Role Vars | Set 'use_nzbs'"
+- name: "Role Variables | Set 'use_nzbs'"
   set_fact:
     use_nzbs: "{{ true if ( (nzbs_downloads_path is defined) | default(false,true) ) else false }}"
 
-- name: "Role Vars | Set 'use_torrents'"
+- name: "Role Variables | Set 'use_torrents'"
   set_fact:
     use_torrents: "{{ true if ( (torrents_downloads_path is defined) | default(false,true) ) else false }}"
 
-- name: "Role Vars | Set 'use_remote'"
+- name: "Role Variables | Set 'use_remote'"
   set_fact:
     use_remote: "{{ true if not(
         (rclone is undefined)
@@ -33,6 +33,6 @@
       )
       else false }}"
 
-- name: "Role Vars | Set 'use_nvidia'"
+- name: "Role Variables | Set 'use_nvidia'"
   set_fact:
     use_nvidia: "{{ true if ( gpu.nvidia | default(false) ) else false }}"

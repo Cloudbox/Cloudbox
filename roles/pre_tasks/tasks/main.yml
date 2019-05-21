@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Pre-Tasks Role                               #
+# Title:         Cloudbox: Pre-Tasks                                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -16,12 +16,12 @@
   import_tasks: "subtasks/clean_paths.yml"
   tags: always
 
-- name: Set Cloudbox vars
-  import_tasks: "subtasks/vars.yml"
+- name: Set Cloudbox Variables
+  import_tasks: "subtasks/variables.yml"
   tags: always
 
-- name: Set Cloudbox role vars
-  import_tasks: "subtasks/role_vars.yml"
+- name: Set Cloudbox Role Variables
+  import_tasks: "subtasks/role_variables.yml"
   tags: always
 
 # Sub-Domain Tasks
