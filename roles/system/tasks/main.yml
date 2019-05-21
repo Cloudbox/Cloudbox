@@ -8,13 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: apt tasks
+- name: APT tasks
   include_tasks: "subtasks/apt.yml"
 
 - name: Network tasks
   import_tasks: "subtasks/network.yml"
 
-- name: sysctl tasks
+- name: SYSCTL tasks
   include_tasks: "subtasks/sysctl.yml"
 
 - name: Mounts tasks
