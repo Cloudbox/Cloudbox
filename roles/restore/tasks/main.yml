@@ -81,7 +81,7 @@
   with_fileglob:
   - "{{ local.destination }}/opt/*.tar"
   loop_control:
-    label: "{{ item | basename }}"
+    label: "'{{ item | basename }}' --> '/opt/{{ (item | basename | splitext)[0] }}'"
   register: unarchive
 
 - name: "Set '/opt' ownership and permissions"
