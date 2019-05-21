@@ -88,6 +88,21 @@
       - "{{ playbook_dir }}/*.txt"
     ignore_errors: yes
 
+  - name: "Look for '.ansible_vault' file in current home folder"
+    stat:
+      path: "{{ playbook_dir | dirname }}/.ansible_vault"
+    register: ansible_vault
+
+  - name: "Copy '.ansible_vault' to new home folder."
+    copy:
+      src: "{{ playbook_dir | dirname }}/.ansible_vault"
+      dest: "{{ new_home_path }}"
+      owner: "{{ user }}"
+      group: "{{ user }}"
+      mode: 0664
+      force: yes
+    when: (ansible_vault.stat.exists)
+
   - name: "Quit playbook after creation of new cloudbox folder location"
     fail:
       msg:
