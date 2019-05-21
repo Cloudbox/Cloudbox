@@ -42,7 +42,7 @@
   register: organizr_version
   when: function_php.stat.exists
 
-- name: Move older version 'organizr' to `organizrv1`
+- name: Move older version 'organizr' to 'organizrv1'
   shell: |
     mv /opt/organizr /opt/organizrv1
     chown -R {{ user }}:{{ user }} /opt/organizrv1
