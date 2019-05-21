@@ -1,9 +1,12 @@
 ---
-user: seed
-passwd: password123
-domain: testcloudbox.ml
-email: your@email.com
-cloudflare_api_token:
+user:
+  name: seed
+  pass: password123
+  domain: testcloudbox.ml
+  email: your@email.com
+cloudflare:
+  email:
+  api:
 plex:
   user:
   pass:
