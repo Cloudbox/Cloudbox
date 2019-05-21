@@ -32,10 +32,6 @@
   - name: Migration 1
     block:
 
-    - name: Install yyq
-      import_role:
-        name: yyq
-
     - name: "Set variables"
       set_fact:
         vault_service_defined: "{{ true if not(
