@@ -17,7 +17,7 @@
   debug:
     msg:
       - "Cloudbox folder was migrated to a new home location."
-      - "Re-login with the '{{ user }}' account and run the Cloudbox installer from the '{{ cloudbox_folder_path }}/' path."
+      - "Re-login with the '{{ user }}' account and run the Cloudbox installer from the '{{ new_home_path }}/cloudbox/' path."
   when: (preinstall_user_relogin is defined) and (preinstall_user_relogin)
 
 - name: "Preinstall | Cloudbox pre-install has completed!"
