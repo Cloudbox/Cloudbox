@@ -38,7 +38,7 @@
     state: absent
   when: (function_php.stat.exists) and (organizr_version.stdout is version('2.0', '<'))
 
-- name: Move older version 'organizr' to `organizrv1`
+- name: Move older version 'organizr' to 'organizrv1'
   shell: |
     mv /opt/organizr /opt/organizrv1
     chown -R {{ user }}:{{ user }} /opt/organizrv1
