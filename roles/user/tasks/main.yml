@@ -47,9 +47,9 @@
     state: present
   when: etc_sudoers.stat.exists
 
-- name: Create 'cloudbox_folder_path' variable
+- name: Create 'new_home_path' variable
   set_fact:
-    cloudbox_folder_path: "/home/{{ user }}/cloudbox"
+    new_home_path: "/home/{{ user }}"
 
 - name: "Do following tasks when not in the user's cloudbox folder"
   block:
@@ -66,7 +66,7 @@
   - name: "Clone Cloudbox project"
     git:
       repo: "https://github.com/cloudbox/cloudbox"
-      dest: "{{ cloudbox_folder_path }}/"
+      dest: "{{ new_home_path }}/cloudbox/"
       version: "{{ git_branch.stdout }}"
       recursive: yes
       force: yes
@@ -77,7 +77,7 @@
   - name: "Copy config files to cloudbox folder"
     copy:
       src: "{{ item }}"
-      dest: "{{ cloudbox_folder_path }}/"
+      dest: "{{ new_home_path }}/cloudbox/"
       owner: "{{ user }}"
       group: "{{ user }}"
       force: yes
@@ -94,7 +94,7 @@
         - "Cloudbox folder was migrated to a home location."
         - "Please re-login with the '{{ user }}' account and rerun the {{
             ('restore' in ansible_run_tags) | ternary('restore tag','Cloudbox Installer') }}
-            from the '{{ cloudbox_folder_path }}/' path."
+            from the '{{ new_home_path }}/cloudbox/' path."
     when: ('preinstall' not in ansible_run_tags)
 
   - name: "Set preinstall variables"
@@ -102,7 +102,7 @@
       preinstall_user_relogin: true
     when: ('preinstall' in ansible_run_tags)
 
-  when: (playbook_dir != cloudbox_folder_path) and not (continuous_integration)
+  when: (playbook_dir != (new_home_path + '/cloudbox')) and not (continuous_integration)
 
-- name: "Reset ownership of '/home/{{ user }}/' path"
-  file: "path=/home/{{ user }} state=directory owner={{ user }} group={{ user }} recurse=yes follow=no"
+- name: "Reset ownership of '{{ new_home_path }}/' path"
+  file: "path={{ new_home_path }} state=directory owner={{ user }} group={{ user }} recurse=yes follow=no"
