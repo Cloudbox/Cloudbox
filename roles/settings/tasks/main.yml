@@ -14,6 +14,16 @@
     version: 0.15.35
     executable: pip3
 
+- name: "Check to see if yyq is installed"
+  stat:
+    path: "/usr/local/bin/yyq"
+  register: yyq_binary
+
+- name: Install yyq
+  import_role:
+    name: yyq
+  when: (not yyq_binary.stat.exists)
+
 - name: "Get 'cloudbox.yml' info."
   stat:
     path: "{{ playbook_dir }}/cloudbox.yml"
