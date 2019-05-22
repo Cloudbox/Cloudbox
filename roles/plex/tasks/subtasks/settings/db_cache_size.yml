@@ -1,5 +1,5 @@
 ##########################################################################
-# Title:         Plex - DB Cache Size Settings                           #
+# Title:         Plex: DB Cache Size Settings                            #
 # Author(s):     desimaniac                                              #
 # URL:           https://github.com/cloudbox/cloudbox                    #
 # --                                                                     #
@@ -15,7 +15,9 @@
     timeout: 600
 
 - name: Get Current Plex DB Cache Size
-  shell: sqlite3 "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" "PRAGMA default_cache_size;"
+  shell: |
+    sqlite3 "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" \
+      "PRAGMA default_cache_size;"
   args:
     executable: /bin/bash
   register: current_db_cache_size

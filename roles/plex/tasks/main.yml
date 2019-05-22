@@ -175,7 +175,7 @@
   wait_for:
     timeout: 15
 
-# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
+# Sometimes docker will set transcodes folder to root after a restore.
 - name: "Ensure transcodes folder has the correct permissions"
   file:
     path: "{{ plex.transcodes }}"
@@ -198,11 +198,11 @@
     name: sub-zero
 
 - name: "Forced Automatic Quality Settings"
-  import_tasks: "subtasks/forced_quality_settings.yml"
-  tags: plex_forced_quality_settings
+  import_tasks: "subtasks/settings/forced_quality.yml"
+  tags: plex_forced_quality
   when: (not continuous_integration)
 
 - name: "DB Cache Size Settings"
-  import_tasks: "subtasks/db_cache_size_settings.yml"
-  tags: plex_db_cache_size_settings
+  import_tasks: "subtasks/settings/db_cache_size.yml"
+  tags: plex_db_cache_size
   when: (not continuous_integration)
