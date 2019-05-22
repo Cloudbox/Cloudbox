@@ -74,14 +74,14 @@
       path: "/opt/plexdrive5"
       state: directory
       mode: 0775
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       recurse: yes
 
   - name: "Legacy | Copy '/opt/plexdrive/.' to '/opt/plexdrive5/'"
     shell: "cp -r -n /opt/plexdrive/. /opt/plexdrive5/"
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
 
   when: (opt_plexdrive.stat.exists) and (not opt_plexdrive5.stat.exists)
 

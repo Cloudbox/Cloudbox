@@ -16,7 +16,7 @@
   when: cloudflare_enabled
 
 - name: "Create drive_strm directories"
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - "/opt/drive_strm"
     - "/opt/scripts/drive_strm"
@@ -55,8 +55,8 @@
     template:
       src: config.json.j2
       dest: /opt/drive_strm/config.json
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       force: yes
 
@@ -155,8 +155,8 @@
   copy:
     src: "drive_strm_rebuild.sh"
     dest: "/opt/scripts/drive_strm/drive_strm_rebuild.sh"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: no
 
@@ -168,7 +168,7 @@
     rm ${APP_PATH}/*.db*
     jq -c '.page_token = "1"' ${APP_PATH}/token.json | jq . > ${APP_PATH}/tmp.$$.json && mv ${APP_PATH}/tmp.$$.json ${APP_PATH}/token.json
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
   when: ('drive_strm_rebuild' in ansible_run_tags)
 
 - name: "Create and start container"
@@ -180,10 +180,10 @@
       - "7294:7294/tcp"
     user: "{{ uid }}:{{ gid }}"
     env:
-      VIRTUAL_HOST: "strm.{{ domain }}"
+      VIRTUAL_HOST: "strm.{{ user.domain }}"
       VIRTUAL_PORT: 7294
-      LETSENCRYPT_HOST: "strm.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "strm.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       HTTPS_METHOD: noredirect
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

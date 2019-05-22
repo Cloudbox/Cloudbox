@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Create aliases directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/aliases
 
@@ -20,28 +20,28 @@
     version: HEAD
     force: yes
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
 
 - name: Ensure bash_profile exists
   file:
-    path: "/home/{{ user }}/.bash_profile"
+    path: "/home/{{ user.name }}/.bash_profile"
     state: touch
 
 - name: Ensure zshenv exists
   file:
-    path: "/home/{{ user }}/.zshenv"
+    path: "/home/{{ user.name }}/.zshenv"
     state: touch
 
 - name: Add aliases to bash_profile
   lineinfile:
-    dest: "/home/{{ user }}/.bash_profile"
+    dest: "/home/{{ user.name }}/.bash_profile"
     regexp: "aliases"
     line: "eval \"$(find /opt/aliases -type f -path '*bash/*.sh' | while read af; do echo \"source $af\"; done)\""
     state: present
 
 - name: Add aliases to zshenv
   lineinfile:
-    dest: "/home/{{ user }}/.zshenv"
+    dest: "/home/{{ user.name }}/.zshenv"
     regexp: "aliases"
     line: "eval \"$(find /opt/aliases -type f -path '*zsh/*.sh' | while read af; do echo \"source $af\"; done)\""
     state: present

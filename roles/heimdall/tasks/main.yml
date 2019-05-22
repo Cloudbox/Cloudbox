@@ -18,11 +18,11 @@
 
 - name: Create htpasswd
   htpasswd:
-    path: "/opt/nginx-proxy/htpasswd/{{ item }}.{{ domain }}"
-    name: "{{ user }}"
-    password: "{{ passwd }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    path: "/opt/nginx-proxy/htpasswd/{{ item }}.{{ user.domain }}"
+    name: "{{ user.name }}"
+    password: "{{ user.pass }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0664
   with_items:
     - heimdall
@@ -33,7 +33,7 @@
     state: absent
 
 - name: Create heimdall directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/heimdall
 
@@ -47,11 +47,11 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "heimdall.{{ domain }}"
+      VIRTUAL_HOST: "heimdall.{{ user.domain }}"
       VIRTUAL_PORT: 443
       VIRTUAL_PROTO: https
-      LETSENCRYPT_HOST: "heimdall.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "heimdall.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/heimdall:/config"

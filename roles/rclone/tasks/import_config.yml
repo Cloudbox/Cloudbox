@@ -20,31 +20,31 @@
 
   - name: "Import Config | Check if a previous 'rclone.conf' exists"
     stat:
-      path: "/home/{{ user }}/.config/rclone/rclone.conf"
+      path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
     register: rclone_conf_default_path
 
   - name: "Import Config | Backup previous 'rclone.conf' (if it exists)"
     copy:
-      src: "/home/{{ user }}/.config/rclone/rclone.conf"
-      dest: "/home/{{ user }}/.config/rclone/rclone.conf.bak"
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      src: "/home/{{ user.name }}/.config/rclone/rclone.conf"
+      dest: "/home/{{ user.name }}/.config/rclone/rclone.conf.bak"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       force: yes
     when: (rclone_conf_default_path.stat.exists)
 
   - name: "Import Config | Remove previous 'rclone.conf' (if it exists)"
     file:
-      path: "/home/{{ user }}/.config/rclone/rclone.conf"
+      path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
       state: absent
     when: (rclone_conf_default_path.stat.exists)
 
   - name: "Import Config | Import 'rclone.conf' from '{{ playbook_dir }}'"
     copy:
       src: "{{ playbook_dir }}/rclone.conf"
-      dest: "/home/{{ user }}/.config/rclone/rclone.conf"
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      dest: "/home/{{ user.name }}/.config/rclone/rclone.conf"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       force: yes
 
@@ -59,7 +59,7 @@
 
 - name: "Import Config | Check if 'rclone.conf' exists at default location"
   stat:
-    path: "/home/{{ user }}/.config/rclone/rclone.conf"
+    path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
   register: rclone_conf_default_path_2
 
 - name: "Import Config | Do the following block when 'rclone.conf' is not at default location"
@@ -72,9 +72,9 @@
   - name: "Import Config | Copy 'rclone.conf' to default location if found elsewhere"
     copy:
       src: "{{ rclone_conf_current_location.stdout_lines | last }}"
-      dest: "/home/{{ user }}/.config/rclone/rclone.conf"
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      dest: "/home/{{ user.name }}/.config/rclone/rclone.conf"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       force: yes
     when: (rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') == -1)
@@ -87,11 +87,11 @@
 
   - name: "Import Config | Create blank 'rclone.conf' if not found elsewhere"
     file:
-      path: "/home/{{ user }}/.config/rclone/rclone.conf"
+      path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
       state: touch
       mode: 0775
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
     when: (rclone_conf_current_location.stdout.find('Configuration file doesn\'t exist') != -1)
 
   when: not (rclone_conf_default_path_2.stat.exists)

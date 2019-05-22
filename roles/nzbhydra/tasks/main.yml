@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create nzbhydra directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/nzbhydra
     - /opt/nzbhydra/hydra/
@@ -41,8 +41,8 @@
   copy:
     src: "/opt/nzbhydra/{{ item.src }}"
     dest: "/opt/nzbhydra/hydra/{{ item.dest }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: no
   with_items:
@@ -71,10 +71,10 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "nzbhydra.{{ domain }}"
+      VIRTUAL_HOST: "nzbhydra.{{ user.domain }}"
       VIRTUAL_PORT: 5075
-      LETSENCRYPT_HOST: "nzbhydra.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "nzbhydra.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbhydra:/config"

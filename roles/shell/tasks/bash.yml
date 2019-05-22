@@ -10,29 +10,29 @@
 ---
 - name: Check if '.bashrc' exists
   stat:
-    path: "/home/{{ user }}/.bashrc"
+    path: "/home/{{ user.name }}/.bashrc"
   register: bashrc
 
-- name: "Copy '/etc/skel/.bashrc' to '/home/{{ user }}/.bashrc'"
+- name: "Copy '/etc/skel/.bashrc' to '/home/{{ user.name }}/.bashrc'"
   copy:
     src: "/etc/skel/.bashrc"
-    dest: "/home/{{ user }}/.bashrc"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    dest: "/home/{{ user.name }}/.bashrc"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: no
   when: not bashrc.stat.exists
 
 - name: Set default editor to nano in '.bashrc'
   lineinfile:
-    dest: "/home/{{ user }}/.bashrc"
+    dest: "/home/{{ user.name }}/.bashrc"
     regexp: "^export EDITOR="
     line: "export EDITOR=nano"
     state: present
 
 - name: Set bash as default shell
   user:
-    name: "{{ user }}"
+    name: "{{ user.name }}"
     shell: /bin/bash
   register: default_shell
 

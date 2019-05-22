@@ -31,8 +31,8 @@
       state: present
       no_extra_spaces: yes
     loop:
-      - { option: 'User', value: "{{ user }}" }
-      - { option: 'Group', value: "{{ user }}" }
+      - { option: 'User', value: "{{ user.name }}" }
+      - { option: 'Group', value: "{{ user.name }}" }
     when: outer_item != "mergerfs.service"
 
   - name: "Services | Remove ownership in existing '{{ outer_item }}'"

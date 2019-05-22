@@ -2,7 +2,7 @@
 # Show debug messages.
 DEBUG = false
 # Plex server url (e.g. http://ip:32400 or https://plex.reverse-proxy.com)
-SERVER_URL = https://plex.{{ domain }}
+SERVER_URL = https://plex.{{ user.domain }}
 # Plex token for server.
 SERVER_TOKEN = {{ plex_auth_token | default('') }}
 # Name of server (does not matter, its used in the logs).

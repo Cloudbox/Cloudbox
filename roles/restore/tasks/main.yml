@@ -8,8 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Check if user '{{ user }}' exists"
-  shell: "id -un {{ user }} >/dev/null 2>&1;"
+- name: "Check if user '{{ user.name }}' exists"
+  shell: "id -un {{ user.name }} >/dev/null 2>&1;"
   register: user_check
   failed_when: (user_check.rc > 1)
 
@@ -27,7 +27,7 @@
   import_tasks: "variables.yml"
 
 - name: Create common directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt
     - /mnt/local
@@ -36,7 +36,7 @@
   import_tasks: "btrfs.yml"
 
 - name: "Create backup location '{{ local.destination }}'"
-  file: path={{ local.destination }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes
+  file: path={{ local.destination }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes
 
 - name: Check if previous backup exists locally
   find:
@@ -59,8 +59,8 @@
   copy:
     src: "{{ local.destination }}/backup_excludes_list.txt"
     dest: "{{ playbook_dir }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: (backup_excludes_list.stat.exists)
@@ -91,7 +91,7 @@
 - name: Cleanup backup location
   shell: "rm -rf {{ local.destination }}/*"
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
   when: not (local.enable)
 
 - debug:

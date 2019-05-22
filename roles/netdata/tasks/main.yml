@@ -18,11 +18,11 @@
 
 - name: Create htpasswd
   htpasswd:
-    path: "/opt/nginx-proxy/htpasswd/{{ item }}.{{ domain }}"
-    name: "{{ user }}"
-    password: "{{ passwd }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    path: "/opt/nginx-proxy/htpasswd/{{ item }}.{{ user.domain }}"
+    name: "{{ user.name }}"
+    password: "{{ user.pass }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0664
   with_items:
     - netdata
@@ -42,10 +42,10 @@
     published_ports:
       - "127.0.0.1:19999:19999"
     env:
-      VIRTUAL_HOST: "netdata.{{ domain }}"
+      VIRTUAL_HOST: "netdata.{{ user.domain }}"
       VIRTUAL_PORT: 19999
-      LETSENCRYPT_HOST: "netdata.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "netdata.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"

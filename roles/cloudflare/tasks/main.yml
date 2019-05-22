@@ -21,13 +21,13 @@
 
 - name: Set 'record' variable
   set_fact:
-    record: "{{ (subdomain == domain) | ternary(domain,subdomain + '.' + domain) }}"
+    record: "{{ (subdomain == user.domain) | ternary(user.domain,subdomain + '.' + user.domain) }}"
 
 - name: Set DNS Record
   cloudflare_dns:
-    account_api_token: "{{ cloudflare_api_token }}"
-    account_email: "{{ email }}"
-    zone: "{{ domain }}"
+    account_api_token: "{{ cloudflare.api }}"
+    account_email: "{{ cloudflare.email }}"
+    zone: "{{ user.domain }}"
     state: present
     solo: true
     proxied: no

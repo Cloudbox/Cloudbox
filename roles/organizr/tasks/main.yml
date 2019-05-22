@@ -22,7 +22,7 @@
   vars:
     subdomain: "{{ item }}"
   with_items:
-    - "{{ domain }}"
+    - "{{ user.domain }}"
     - "www"
   when: (cloudflare_enabled) and (organizr.direct_domain|default(false,true))
 
@@ -45,7 +45,7 @@
 - name: Move older version 'organizr' to 'organizrv1'
   shell: |
     mv /opt/organizr /opt/organizrv1
-    chown -R {{ user }}:{{ user }} /opt/organizrv1
+    chown -R {{ user.name }}:{{ user.name }} /opt/organizrv1
   when: (function_php.stat.exists) and (organizr_version.stdout is version('2.0', '<'))
 # END - Migration Tasks
 
@@ -57,7 +57,7 @@
   ignore_errors: yes
 
 - name: Create Organizr directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/organizr
 
@@ -71,10 +71,10 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain,'organizr.' + domain) }}"
+      VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(user.domain + ',' + 'www.' + user.domain,'organizr.' + user.domain) }}"
       VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(domain + ',' + 'www.' + domain,'organizr.' + domain) }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(user.domain + ',' + 'www.' + user.domain,'organizr.' + user.domain) }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/organizr:/config"
@@ -97,8 +97,8 @@
   get_url:
     url:  "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
     dest: "/opt/organizr/www/Dashboard/css/themes/"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0664
     force: yes
     validate_certs: no

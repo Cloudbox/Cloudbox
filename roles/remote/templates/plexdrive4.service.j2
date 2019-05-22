@@ -14,8 +14,8 @@ Description=Plexdrive 4 Mount
 After=network-online.target mongodb.service
 
 [Service]
-User={{ user }}
-Group={{ user }}
+User={{ user.name }}
+Group={{ user.name }}
 Type=simple
 ExecStartPre=/bin/sleep 10
 ExecStart=/opt/plexdrive4/plexdrive \

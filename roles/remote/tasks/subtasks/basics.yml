@@ -9,6 +9,6 @@
 #########################################################################
 ---
 - name: Basics | Create remote directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /mnt/remote

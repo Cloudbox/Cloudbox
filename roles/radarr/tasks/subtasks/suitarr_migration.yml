@@ -29,11 +29,11 @@
     mkdir /opt/radarr
     mv /tmp/app /opt/radarr/
     find /opt/radarr/* -type d -empty -delete
-    chown -R {{ user }}:{{ user }} /opt/radarr
+    chown -R {{ user.name }}:{{ user.name }} /opt/radarr
   when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Suitarr Migration | Move 'Radarr' subfolder to 'app' subfolder
   shell: |
     mv /opt/radarr/Radarr /opt/radarr/app
-    chown -R {{ user }}:{{ user }} /opt/radarr
+    chown -R {{ user.name }}:{{ user.name }} /opt/radarr
   when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)

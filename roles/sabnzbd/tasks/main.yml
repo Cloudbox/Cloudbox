@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create sabnzbd directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/sabnzbd
     - "{{ downloads.nzbs }}"
@@ -57,10 +57,10 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "sabnzbd.{{ domain }}"
+      VIRTUAL_HOST: "sabnzbd.{{ user.domain }}"
       VIRTUAL_PORT: 8080
-      LETSENCRYPT_HOST: "sabnzbd.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "sabnzbd.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       LC_ALL: "C"
       TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"

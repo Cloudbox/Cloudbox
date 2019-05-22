@@ -71,8 +71,8 @@
       src: "{{ subzero_download_url.stdout | default('https://github.com/pannal/Sub-Zero.bundle/releases/download/2.6.4.2911/Sub-Zero.bundle-2.6.4.2911.zip',true) }}"
       dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
       copy: no
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       validate_certs: no
     ignore_errors: yes

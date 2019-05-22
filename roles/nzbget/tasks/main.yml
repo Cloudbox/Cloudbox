@@ -25,7 +25,7 @@
   import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create nzbget directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/nzbget
     - "{{ downloads.nzbs }}"
@@ -59,10 +59,10 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "nzbget.{{ domain }}"
+      VIRTUAL_HOST: "nzbget.{{ user.domain }}"
       VIRTUAL_PORT: 6789
-      LETSENCRYPT_HOST: "nzbget.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "nzbget.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       LC_ALL: "C"
       TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"

@@ -17,7 +17,7 @@
   block:
 
   - name: Btrfs | Create '{{ outer_item }}' path
-    file: "path={{ outer_item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+    file: "path={{ outer_item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
 
   - name: Btrfs | Set no-cow on '{{ outer_item }}'
     shell: "chattr +C {{ outer_item }}"

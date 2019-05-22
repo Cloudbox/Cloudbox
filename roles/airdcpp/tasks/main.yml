@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create airdcpp directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/airdcpp
     - /mnt/local/downloads/airdcpp
@@ -46,8 +46,8 @@
   copy:
     src: WebServer.xml
     dest: /opt/airdcpp/WebServer.xml
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not webserver_xml.stat.exists
@@ -56,8 +56,8 @@
   copy:
     src: DCPlusPlus.xml
     dest: /opt/airdcpp/DCPlusPlus.xml
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not dcplusplus_xml.stat.exists
@@ -75,10 +75,10 @@
       - "21249:21249"
     user: "{{ uid }}:{{ gid }}"
     env:
-      VIRTUAL_HOST: "airdcpp.{{ domain }}"
+      VIRTUAL_HOST: "airdcpp.{{ user.domain }}"
       VIRTUAL_PORT: 5600
-      LETSENCRYPT_HOST: "airdcpp.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "airdcpp.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/airdcpp:/.airdcpp"

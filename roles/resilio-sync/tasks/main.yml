@@ -24,9 +24,9 @@
 # START - Folder Migration Tasks
 - name: Remove previously used subdomain
   cloudflare_dns:
-    account_api_token: "{{ cloudflare_api_token }}"
-    account_email: "{{ email }}"
-    zone: "{{ domain }}"
+    account_api_token: "{{ cloudflare.api }}"
+    account_email: "{{ cloudflare.email }}"
+    zone: "{{ user.domain }}"
     state: absent
     type: A
     record: "resilio"
@@ -54,7 +54,7 @@
 # FINISH - Folder Migration Tasks
 
 - name: Create 'resilio-sync' directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/resilio-sync
 
@@ -68,10 +68,10 @@
       - "55555:55555"
     user: "{{ uid }}:{{ gid }}"
     env:
-      VIRTUAL_HOST: "resiliosync.{{ domain }}"
+      VIRTUAL_HOST: "resiliosync.{{ user.domain }}"
       VIRTUAL_PORT: 8888
-      LETSENCRYPT_HOST: "resiliosync.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "resiliosync.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/resilio-sync:/mnt/sync"

@@ -9,9 +9,9 @@
 #########################################################################
 ---
 - name: Rclone Cache | Reset permissions for 'rclone.conf'
-  file: "path={{ item }} state=file mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=file mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
-    - "/home/{{ user }}/.config/rclone/rclone.conf"
+    - "/home/{{ user.name }}/.config/rclone/rclone.conf"
 
 - name: Import Plex Auth Token role
   import_role:
@@ -29,7 +29,7 @@
 
 - name: Rclone Cache | Enable cache in 'rclone.conf'
   blockinfile:
-    path: "/home/{{ user }}/.config/rclone/rclone.conf"
+    path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
     state: present
     create: no
     marker: "### {mark} CLOUDBOX - RCLONE CACHE MOUNT ###"
@@ -37,8 +37,8 @@
       [cache]
       type = cache
     insertbefore: '^\[{{ rclone.remote }}\]'
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0755
 
 - name: Rclone Cache | Test rclone remote
@@ -46,7 +46,7 @@
     rclone lsd {{ rclone.remote }}: \
       --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
   register: rclone_test
   failed_when: (rclone_test.rc|int > 5)
 

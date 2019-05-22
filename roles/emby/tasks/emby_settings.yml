@@ -47,11 +47,11 @@
     xpath: /ServerConfiguration/EnableHttps
     value: "true"
 
-- name: "Set 'WanDdns' to emby.{{ domain }}"
+- name: "Set 'WanDdns' to emby.{{ user.domain }}"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/WanDdns
-    value: "emby.{{ domain }}"
+    value: "emby.{{ user.domain }}"
 
 - name: "Set 'EnableAnonymousUsageReporting' to 'false'"
   xml:

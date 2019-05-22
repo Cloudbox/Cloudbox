@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create NowShowing directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/nowshowing
 
@@ -36,10 +36,10 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "nowshowing.{{ domain }}"
+      VIRTUAL_HOST: "nowshowing.{{ user.domain }}"
       VIRTUAL_PORT: 6878
-      LETSENCRYPT_HOST: "nowshowing.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "nowshowing.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nowshowing:/config"

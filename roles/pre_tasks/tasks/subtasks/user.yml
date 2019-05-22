@@ -8,17 +8,17 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "User | Check if user '{{ user }}' exists"
-  shell: "id -un {{ user }} >/dev/null 2>&1;"
+- name: "User | Check if user '{{ user.name }}' exists"
+  shell: "id -un {{ user.name }} >/dev/null 2>&1;"
   register: user_check
   failed_when: user_check.rc > 1
 
-- name: "User | Set user variables when '{{ user }}' exists"
+- name: "User | Set user variables when '{{ user.name }}' exists"
   block:
 
-  - name: "User | Get '{{ user }}' info"
+  - name: "User | Get '{{ user.name }}' info"
     user:
-      name: "{{ user }}"
+      name: "{{ user.name }}"
     register: user_info
 
   - name: "User | Get 'video' gid"

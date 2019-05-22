@@ -82,8 +82,8 @@
   file:
     path: /opt/motd/activity.log
     state: touch
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
 
 - name: Set 'cloudbox-motd.py' as executable
@@ -95,7 +95,7 @@
   copy: "src=/opt/motd/motd/ dest=/etc/update-motd.d/ force=yes mode=0775"
 
 - name: Set directory permissions
-  file: "path=/opt/motd state=directory owner={{ user }} group={{ user }} recurse=yes"
+  file: "path=/opt/motd state=directory owner={{ user.name }} group={{ user.name }} recurse=yes"
 
 - name: Create symlink to dynamic motd
   file:

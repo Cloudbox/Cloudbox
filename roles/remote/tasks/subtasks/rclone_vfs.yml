@@ -9,9 +9,9 @@
 #########################################################################
 ---
 - name: Rclone VFS | Reset permissions for 'rclone.conf'
-  file: "path={{ item }} state=file mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=file mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
-    - "/home/{{ user }}/.config/rclone/rclone.conf"
+    - "/home/{{ user.name }}/.config/rclone/rclone.conf"
 
 - name: Rclone VFS | Import 'rclone_vfs.service'
   template:
@@ -45,7 +45,7 @@
     rclone lsd {{ rclone.remote }}: \
       --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
   register: rclone_test
   failed_when: (rclone_test.rc|int > 5)
 

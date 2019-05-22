@@ -199,12 +199,12 @@ use=web					# via web
 # CloudFlare (www.cloudflare.com)
 #
 protocol=cloudflare,        \
-zone={{ domain }},            \
+zone={{ user.domain }},            \
 ttl=1,                      \
-login={{ email }},     \
-password={{ cloudflare_api_token }}             \
+login={{ cloudflare.email }},     \
+password={{ cloudflare.api }}             \
 {% for subdomain in subdomains -%}
-{{ subdomain }}.{{ domain }}{% if not loop.last %},{% endif %}
+{{ subdomain }}.{{ user.domain }}{% if not loop.last %},{% endif %}
 {%- endfor %}
 
 ##

@@ -17,7 +17,7 @@
   when: cloudflare_enabled
 
 - name: Create emby directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/emby
     - /opt/emby/config
@@ -29,8 +29,8 @@
   copy:
     src: "dlna.xml"
     dest: "/opt/emby/config/dlna.xml"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: no
 
@@ -60,10 +60,10 @@
       UID: "{{ uid }}"
       GID: "{{ gid }}"
       GIDLIST: "{{ vgid }}"
-      VIRTUAL_HOST: "emby.{{ domain }}"
+      VIRTUAL_HOST: "emby.{{ user.domain }}"
       VIRTUAL_PORT: 8096
-      LETSENCRYPT_HOST: "emby.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "emby.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       HTTPS_METHOD: noredirect
       NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia | default(false) else omit }}"
       NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia | default(false) else omit }}"
@@ -93,8 +93,8 @@
 - name: "Ensure transcodes folder has the correct permissions"
   file:
     path: "{{ plex.transcodes }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     recurse: yes
 

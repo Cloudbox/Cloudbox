@@ -22,23 +22,23 @@
 - name: Uninstall Legacy Rclone | Import 'rclone.conf' to proper place.
   block:
 
-  - name: Uninstall Legacy Rclone | Check if '/home/{{ user }}/.config/rclone/rclone.conf' exists
+  - name: Uninstall Legacy Rclone | Check if '/home/{{ user.name }}/.config/rclone/rclone.conf' exists
     stat:
-      path: "/home/{{ user }}/.config/rclone/rclone.conf"
+      path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
     register: home_rclone_conf
 
-  - name: Uninstall Legacy Rclone | Delete '/home/{{ user }}/.config/rclone/rclone.conf' if it is symlinked
+  - name: Uninstall Legacy Rclone | Delete '/home/{{ user.name }}/.config/rclone/rclone.conf' if it is symlinked
     file:
-      path: "/home/{{ user }}/.config/rclone/rclone.conf"
+      path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
       state: absent
     when: (home_rclone_conf.stat.islnk is defined) and (home_rclone_conf.stat.islnk)
 
-  - name: Uninstall Legacy Rclone | Copy '/opt/rclone/rclone.conf' to '/home/{{ user }}/.config/rclone/rclone.conf'
+  - name: Uninstall Legacy Rclone | Copy '/opt/rclone/rclone.conf' to '/home/{{ user.name }}/.config/rclone/rclone.conf'
     copy:
       src: "/opt/rclone/rclone.conf"
-      dest: "/home/{{ user }}/.config/rclone/rclone.conf"
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      dest: "/home/{{ user.name }}/.config/rclone/rclone.conf"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       force: no
     when: (not home_rclone_conf.stat.exists) or ((home_rclone_conf.stat.islnk is defined) and (home_rclone_conf.stat.islnk))

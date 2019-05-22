@@ -12,14 +12,14 @@
   group: "name={{ item }} state=present"
   with_items:
     - docker
-    - "{{ user }}"
+    - "{{ user.name }}"
 
-- name: "Create user '{{ user }}'"
+- name: "Create user '{{ user.name }}'"
   user:
-    name: "{{ user }}"
-    group: "{{ user }}"
-    groups: "{{ user }},sudo,video,docker"
-    password: "{{ passwd | string | password_hash('sha512') }}"
+    name: "{{ user.name }}"
+    group: "{{ user.name }}"
+    groups: "{{ user.name }},sudo,video,docker"
+    password: "{{ user.pass | string | password_hash('sha512') }}"
     update_password: on_create
     append: yes
   register: user_info
@@ -49,14 +49,14 @@
 
 - name: Create 'new_home_path' variable
   set_fact:
-    new_home_path: "/home/{{ user }}"
+    new_home_path: "/home/{{ user.name }}"
 
 - name: "Do following tasks when not in the user's cloudbox folder"
   block:
 
   - name: "Delete previous cloudbox folder if it exists"
     file:
-      path: "/home/{{ user }}/cloudbox"
+      path: "/home/{{ user.name }}/cloudbox"
       state: absent
 
   - name: "Get current git branch"
@@ -71,15 +71,15 @@
       recursive: yes
       force: yes
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
     ignore_errors: yes
 
   - name: "Copy config files to cloudbox folder"
     copy:
       src: "{{ item }}"
       dest: "{{ new_home_path }}/cloudbox/"
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       force: yes
     with_fileglob:
       - "{{ playbook_dir }}/*.yml"
@@ -97,8 +97,8 @@
     copy:
       src: "{{ playbook_dir | dirname }}/.ansible_vault"
       dest: "{{ new_home_path }}"
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0664
       force: yes
     when: (ansible_vault.stat.exists)
@@ -107,7 +107,7 @@
     fail:
       msg:
         - "Cloudbox folder was migrated to a home location."
-        - "Please re-login with the '{{ user }}' account and rerun the {{
+        - "Please re-login with the '{{ user.name }}' account and rerun the {{
             ('restore' in ansible_run_tags) | ternary('restore tag','Cloudbox Installer') }}
             from the '{{ new_home_path }}/cloudbox/' path."
     when: ('preinstall' not in ansible_run_tags)
@@ -120,4 +120,4 @@
   when: (playbook_dir != (new_home_path + '/cloudbox')) and not (continuous_integration)
 
 - name: "Reset ownership of '{{ new_home_path }}/' path"
-  file: "path={{ new_home_path }} state=directory owner={{ user }} group={{ user }} recurse=yes follow=no"
+  file: "path={{ new_home_path }} state=directory owner={{ user.name }} group={{ user.name }} recurse=yes follow=no"

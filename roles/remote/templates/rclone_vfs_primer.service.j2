@@ -15,15 +15,15 @@ Requires=rclone_vfs.service
 After=rclone_vfs.service
 
 [Service]
-User={{ user }}
-Group={{ user }}
+User={{ user.name }}
+Group={{ user.name }}
 Type=oneshot
 ExecStartPre=/bin/sleep 10
 ExecStart=/usr/bin/rclone rc vfs/refresh \
   dir=Media \
   recursive=true \
   --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36' \
-  --config /home/{{ user }}/.config/rclone/rclone.conf \
+  --config /home/{{ user.name }}/.config/rclone/rclone.conf \
   --timeout=1h \
   -vvv \
   --rc-addr=localhost:5572
