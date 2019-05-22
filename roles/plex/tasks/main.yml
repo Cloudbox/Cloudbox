@@ -45,62 +45,33 @@
 - name: "Check if 'Preferences.xml' exists"
   stat:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
-  register: plex_prefs
+  register: preferences_xml
 
-- name: "Get Plex server claim code"
-  uri:
-    url: https://plex.tv/api/claim/token.json
-    user: "{{ plex.user }}"
-    password: "{{ plex.pass }}"
-    force_basic_auth: yes
-  register: plex_claim
-  when: plex_account_enabled and not (
-      (plex_prefs.stat.exists)
-      or
-      (continuous_integration)
-    )
+- name: Check 'Preferences.xml' for Plex Token
+  block:
 
-- name: "Set 'plex_claim_code' variable"
-  set_fact:
-    plex_claim_code: "{{ plex_claim.json.token }}"
-  when: plex_account_enabled and not (
-      (plex_prefs.stat.exists)
-      or
-      (continuous_integration)
-    )
+  - name: Get 'Preferences.xml' XML data
+    xml:
+      path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+      xpath: /Preferences
+      content: attribute
+      attribute: PlexOnlineToken
+    register: preferences_xml_resp
 
-- name: "Ask user for Plex server claim code"
-  pause:
-    prompt: "Please visit 'https://plex.tv/claim', login with your Plex account, copy the Claim Code, paste it below, and press ENTER."
-  register: plex_claim_code_prompt
-  when: not (
-      (plex_prefs.stat.exists)
-      or
-      (plex_account_enabled)
-      or
-      (continuous_integration)
-    )
+  - name: Set 'claimed_plex_server' variable
+    set_fact:
+      claimed_plex_server: "{{ (preferences_xml_resp.matches[0].Preferences.PlexOnlineToken is defined)
+        and (preferences_xml_resp.matches[0].Preferences.PlexOnlineToken | trim | length > 0) }}"
 
-- name: "Set 'plex_claim_code' variable"
-  set_fact:
-    plex_claim_code: "{{ plex_claim_code_prompt.user_input }}"
-  when: not (
-      (plex_prefs.stat.exists)
-      or
-      (plex_account_enabled)
-      or
-      (continuous_integration)
-    )
+  when:
+    - (not continuous_integration)
+    - (preferences_xml.stat.exists)
 
-- name: "Display Plex server claim code"
-  debug: msg="Using Plex Claim Code{{ ':' }} {{ plex_claim_code }}"
-  when: not (
-      (plex_claim_code is undefined)
-      or
-      (plex_claim_code is none)
-      or
-      (plex_claim_code | trim | length == 0)
-    )
+- name: Claim Plex Server
+  import_tasks: subtasks/claim_server.yml
+  when:
+    - (not continuous_integration)
+    - (not preferences_xml.stat.exists) or (preferences_xml.stat.exists and not claimed_plex_server)
 
 - name: "Grab lazyman IP address"
   set_fact:
