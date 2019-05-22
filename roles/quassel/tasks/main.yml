@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create quassel directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/quassel
     - /opt/scripts/quassel
@@ -40,8 +40,8 @@
   copy:
     src: "clear_backlog.py"
     dest: "/opt/scripts/quassel/clear_backlog.py"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not quassel_clear_backlog.stat.exists

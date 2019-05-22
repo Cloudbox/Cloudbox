@@ -11,22 +11,22 @@
 # https://github.com/advertine/ansible-cloudflare-purge
 - name: List Cloudflare zones
   uri:
-    url: 'https://api.cloudflare.com/client/v4/zones?name={{ domain }}'
+    url: 'https://api.cloudflare.com/client/v4/zones?name={{ user.domain }}'
     method: 'GET'
     headers:
       Content-Type: "application/json"
-      X-Auth-Email: '{{ email }}'
-      X-Auth-Key: '{{ cloudflare_api_token }}'
+      X-Auth-Email: '{{ cloudflare.email }}'
+      X-Auth-Key: '{{ cloudflare.api }}'
     return_content: yes
   register: cf_zones
 
-- name: Purge Cloudflare cache for '{{ domain }}'
+- name: Purge Cloudflare cache for '{{ user.domain }}'
   uri:
     url: 'https://api.cloudflare.com/client/v4/zones/{{ cf_zones.json.result[0].id }}/purge_cache'
     method: 'POST'
     headers:
-      X-Auth-Email: '{{ email }}'
-      X-Auth-Key: '{{ cloudflare_api_token }}'
+      X-Auth-Email: '{{ cloudflare.email }}'
+      X-Auth-Key: '{{ cloudflare.api }}'
     body_format: json
     body: { purge_everything: true }
     return_content: yes
@@ -35,5 +35,5 @@
 
 - name: Print result of cache purge
   debug:
-    msg: "Purging of Cloudflare cache for '{{ domain }}' was successful."
+    msg: "Purging of Cloudflare cache for '{{ user.domain }}' was successful."
   when: (cf_purge.json.success is defined) and (cf_purge.json.success)

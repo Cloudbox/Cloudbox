@@ -17,7 +17,7 @@
   when: cloudflare_enabled
 
 - name: "Create Plex directories"
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - "/opt/plex"
     - "/opt/plex/Library"
@@ -137,17 +137,18 @@
     env:
       PLEX_UID: "{{ uid }}"
       PLEX_GID: "{{ gid }}"
-      PLEX_CLAIM: "{{ plex_claim_code | default (omit) }}"
+      PLEX_CLAIM: "{{ (plex_claim_code) | default(omit) }}"
       CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://plex.{{ domain }}:80/,https://plex.{{ domain }}:443/"
-      VIRTUAL_HOST: "plex.{{ domain }}"
+      ADVERTISE_IP: "http://plex.{{ user.domain }}:80/,https://plex.{{ user.domain }}:443/"
+      VIRTUAL_HOST: "plex.{{ user.domain }}"
       VIRTUAL_PORT: 32400
-      LETSENCRYPT_HOST: "plex.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "plex.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       HTTPS_METHOD: noredirect
       HEALTHCHECK_MOUNT: /mnt/unionfs
-      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia | default(false) else omit }}"
-      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia | default(false) else omit }}"
+      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia) | default(false) else omit }}"
+      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia) | default(false) else omit }}"
+      TZ: "{{ tz }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
@@ -159,7 +160,7 @@
       - "/tmp:/tmp"
       - "/dev/shm:/dev/shm"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
-    etc_hosts: "{{ plex_default_hosts | combine(plex_custom_hosts|default([])) }}"
+    etc_hosts: "{{ (plex_default_hosts) | combine(plex_custom_hosts|default([])) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
@@ -178,8 +179,8 @@
 - name: "Ensure transcodes folder has the correct permissions"
   file:
     path: "{{ plex.transcodes }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     recurse: yes
 

@@ -15,8 +15,8 @@
   copy:
     src: nginx.conf
     dest: /opt/rutorrent/nginx/nginx.conf
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
 

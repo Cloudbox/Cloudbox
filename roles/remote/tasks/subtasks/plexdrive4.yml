@@ -14,7 +14,7 @@
     state: present
 
 - name: Plexdrive 4 | Create directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/plexdrive4
 
@@ -23,8 +23,8 @@
     url:  https://github.com/dweidenfeld/plexdrive/releases/download/4.1.0-beta-1498656614/plexdrive-linux-amd64
     dest: /opt/plexdrive4/plexdrive
     mode: 0775
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
 
 - name: Plexdrive 4 | Import 'plexdrive4.service'
   template:

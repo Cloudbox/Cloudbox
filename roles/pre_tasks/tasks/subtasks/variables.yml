@@ -16,13 +16,25 @@
 - name: "Variables | Set 'cloudflare_enabled' variable"
   set_fact:
     cloudflare_enabled: "{{ true if not(
-        (cloudflare_api_token is undefined)
+        (cloudflare is undefined)
         or
-        (cloudflare_api_token is none)
+        (cloudflare is none)
         or
-        (cloudflare_api_token | trim | length == 0)
+        (cloudflare | trim | length == 0)
+        or
+        (cloudflare.email is undefined)
+        or
+        (cloudflare.email is none)
+        or
+        (cloudflare.email | trim | length == 0)
+        or
+        (cloudflare.api is undefined)
+        or
+        (cloudflare.api is none)
+        or
+        (cloudflare.api | trim | length == 0)
       )
-      else false }}"
+        else false }}"
 
 - name: "Variables | Set 'localhost_ip' variable"
   set_fact:

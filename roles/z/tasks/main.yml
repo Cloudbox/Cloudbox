@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Create z directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/z
 
@@ -19,12 +19,12 @@
     dest: "/opt/z"
     force: yes
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
   ignore_errors: yes
 
 - name: "Check if '.zshrc' file exists"
   stat:
-    path: "/home/{{ user }}/.zshrc"
+    path: "/home/{{ user.name }}/.zshrc"
   register: dot_zshrc
 
 - name: "'.zshrc' tasks"
@@ -32,14 +32,14 @@
 
   - name: "Add entry to '.zshrc' file 1/2"
     lineinfile:
-      dest: "/home/{{ user }}/.zshrc"
+      dest: "/home/{{ user.name }}/.zshrc"
       regexp: '^# Include Z'
       line: '# Include Z'
       state: present
 
   - name: "Add entry to '.zshrc' file 2/2"
     lineinfile:
-      dest: "/home/{{ user }}/.zshrc"
+      dest: "/home/{{ user.name }}/.zshrc"
       insertafter: '^# Include Z'
       line: '. /opt/z/z.sh'
       state: present
@@ -48,7 +48,7 @@
 
 - name: "Check if '.bashrc' file exists"
   stat:
-    path: "/home/{{ user }}/.bashrc"
+    path: "/home/{{ user.name }}/.bashrc"
   register: dot_bashrc
 
 - name: "'.bashrc' tasks"
@@ -56,14 +56,14 @@
 
   - name: "Add entry to '.bashrc' file 1/2"
     lineinfile:
-      dest: "/home/{{ user }}/.bashrc"
+      dest: "/home/{{ user.name }}/.bashrc"
       regexp: '^# Include Z'
       line: '# Include Z'
       state: present
 
   - name: "Add entry to '.bashrc' file 2/2"
     lineinfile:
-      dest: "/home/{{ user }}/.bashrc"
+      dest: "/home/{{ user.name }}/.bashrc"
       insertafter: '^# Include Z'
       line: '. /opt/z/z.sh'
       state: present

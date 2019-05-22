@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Create nfs server directories
-  file: 'path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}'
+  file: 'path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}'
   with_items:
     - /opt/hetzner_nfs
     - /mnt/feeder
@@ -18,8 +18,8 @@
   template:
     src: client/hosts.deny.j2
     dest: /etc/hosts.deny
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: '{{ user.name }}'
+    group: '{{ user.name }}'
     mode: 0644
     force: yes
 
@@ -27,8 +27,8 @@
   template:
     src: client/hosts.allow.j2
     dest: /etc/hosts.allow
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: '{{ user.name }}'
+    group: '{{ user.name }}'
     mode: 0644
     force: yes
 
@@ -43,8 +43,8 @@
   template:
     src: client/init_vlan.sh.j2
     dest: /opt/hetzner_nfs/init_vlan.sh
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: '{{ user.name }}'
+    group: '{{ user.name }}'
     mode: 0775
     force: yes
 
@@ -57,8 +57,8 @@
   template:
     src: client/nfs_vlan.service.j2
     dest: /etc/systemd/system/nfs_vlan.service
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: '{{ user.name }}'
+    group: '{{ user.name }}'
     mode: 0775
     force: yes
   when: not nfs_vlan_service.stat.exists

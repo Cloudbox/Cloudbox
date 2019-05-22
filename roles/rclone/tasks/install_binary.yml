@@ -16,10 +16,10 @@
       - man-db
 
 - name: Install Binary | Create rclone directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
-    - "/home/{{ user }}/.config"
-    - "/home/{{ user }}/.config/rclone"
+    - "/home/{{ user.name }}/.config"
+    - "/home/{{ user.name }}/.config/rclone"
 
 - name: Install Binary | Cleanup rclone tmp path
   shell: rm -rf /tmp/rclone-*-linux-amd64

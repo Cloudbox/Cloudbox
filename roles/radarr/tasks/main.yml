@@ -26,7 +26,7 @@
   import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create radarr directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/radarr
 
@@ -63,10 +63,10 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "radarr.{{ domain }}"
+      VIRTUAL_HOST: "radarr.{{ user.domain }}"
       VIRTUAL_PORT: 7878
-      LETSENCRYPT_HOST: "radarr.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "radarr.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and sickbeard_mp4_automator and dev_dri.stat.exists) | default(false) else omit }}"

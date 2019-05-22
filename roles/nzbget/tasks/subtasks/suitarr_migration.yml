@@ -29,11 +29,11 @@
     mkdir /opt/nzbget
     mv /tmp/app /opt/nzbget/
     find /opt/nzbget/* -type d -empty -delete
-    chown -R {{ user }}:{{ user }} /opt/nzbget
+    chown -R {{ user.name }}:{{ user.name }} /opt/nzbget
   when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Suitarr Migration | Move 'NZBGet' subfolder to 'app' subfolder
   shell: |
     mv /opt/nzbget/NZBGet /opt/nzbget/app
-    chown -R {{ user }}:{{ user }} /opt/nzbget
+    chown -R {{ user.name }}:{{ user.name }} /opt/nzbget
   when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)

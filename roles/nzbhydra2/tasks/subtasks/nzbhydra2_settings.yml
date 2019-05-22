@@ -52,8 +52,8 @@
     line: "{{ item.line }}"
     state: present
   with_items:
-    - {line: '    password: "{noop}{{ passwd }}"'}
-    - {line: '    username: "{{ user }}"'}
+    - {line: '    password: "{noop}{{ user.pass }}"'}
+    - {line: '    username: "{{ user.name }}"'}
     - {line: '    showIndexerSelection: true'}
     - {line: '    maySeeStats: true'}
     - {line: '    maySeeDetailsDl: true'}
@@ -87,8 +87,8 @@
     line: "{{ item.line }}"
     state: present
   with_items:
-    - {line: '    password: "{{ passwd }}"'}
-    - {line: '    username: "{{ user }}"'}
+    - {line: '    password: "{{ user.pass }}"'}
+    - {line: '    username: "{{ user.name }}"'}
     - {line: '    url: "http://nzbget:6789"'}
     - {line: '    downloaderType: "NZBGET"'}
     - {line: '    nzbAddingType: "UPLOAD"'}

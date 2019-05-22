@@ -10,7 +10,7 @@
 ---
 - name: Darkerr | Darkerr theme location block
   blockinfile:
-    path: "/opt/nginx-proxy/vhost.d/sonarr4k.{{ domain }}_location"
+    path: "/opt/nginx-proxy/vhost.d/sonarr4k.{{ user.domain }}_location"
     marker: "### {mark} CLOUDBOX - DARKERR THEME ###"
     block: |
       # https://github.com/iFelix18/Darkerr
@@ -22,8 +22,8 @@
         <link rel="stylesheet" type="text/css" href="//rawgit.com/iFelix18/Darkerr/master/hidden_searchbar.css">
        </head>';
       sub_filter_once on;
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0664
     create: yes
     state: "{{ (darkerr.enable | default(false,true)) | ternary('present','absent') }}"

@@ -41,7 +41,7 @@
   tags: feederbox
 
 ## Add cloudbox_type subdomain
-- name: "Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ domain }}'"
+- name: "Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ user.domain }}'"
   import_tasks: "subtasks/add_subdomain.yml"
   when: cloudflare_enabled
   tags:
@@ -50,7 +50,7 @@
     - feederbox
 
 ## Remove cloudbox subdomain for Mediabox/Feederbox setups.
-- name: "Cloudflare: Remove 'cloudbox' subdomain from '{{ domain }}'"
+- name: "Cloudflare: Remove 'cloudbox' subdomain from '{{ user.domain }}'"
   import_tasks: "subtasks/remove_subdomain.yml"
   when: cloudflare_enabled
   tags:

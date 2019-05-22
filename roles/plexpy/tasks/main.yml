@@ -28,7 +28,7 @@
   when: (not continuous_integration)
 
 - name: Create plexpy directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/plexpy
     - /opt/scripts/plexpy
@@ -43,10 +43,10 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "plexpy.{{ domain }}"
+      VIRTUAL_HOST: "plexpy.{{ user.domain }}"
       VIRTUAL_PORT: 8181
-      LETSENCRYPT_HOST: "plexpy.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "plexpy.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       ADVANCED_GIT_BRANCH: nightly
       TZ: "{{ tz }}"
     volumes:

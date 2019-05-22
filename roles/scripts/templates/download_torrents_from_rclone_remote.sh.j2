@@ -18,7 +18,7 @@ if ! /usr/bin/screen -list | /bin/grep -q "torrents_download"; then
 
 	/usr/bin/screen -dmS torrents_download /usr/bin/rclone copy \
 		--user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36' \
-		--config=/home/{{ user }}/.config/rclone/rclone.conf \
+		--config=/home/{{ user.name }}/.config/rclone/rclone.conf \
 		--verbose=1 \
 		--transfers=8 \
 		--stats=60s \

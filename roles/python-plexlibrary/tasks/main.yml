@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Create python-plexlibrary directories
-  file: "path={{ item }} state=directory owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - "/opt/python-plexlibrary"
 
@@ -20,7 +20,7 @@
     version: master
     force: yes
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
 
 - name: Install pip requirements
   pip:
@@ -36,17 +36,17 @@
   copy:
     src: "/opt/python-plexlibrary/config-template.yml"
     dest: "/opt/python-plexlibrary/config.yml"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: no
   when: not python_plexlibrary_config.stat.exists
 
 - name: Add plex url to config file
   shell: |
-    yyq w -i /opt/python-plexlibrary/config.yml plex.baseurl 'https://plex.{{ domain }}:443'
+    yyq w -i /opt/python-plexlibrary/config.yml plex.baseurl 'https://plex.{{ user.domain }}:443'
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
 
 - name: Import Plex Auth Token role
   import_role:
@@ -57,15 +57,15 @@
   shell: |
     yyq w -i /opt/python-plexlibrary/config.yml plex.token '{{ plex_auth_token }}'
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
   when: plex_account_enabled
 
 - name: "Copy example recipes to '/opt/python-plexlibrary' folder"
   copy:
     src: "{{ item }}"
     dest: "/opt/python-plexlibrary/recipes/examples/cloudbox/"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0664
     force: yes
   with_fileglob:
@@ -75,8 +75,8 @@
   copy:
     src: "plexlibrary.sh"
     dest: "/opt/python-plexlibrary/plexlibrary.sh"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
 
@@ -105,7 +105,7 @@
 - name: "Schedule cron task for daily update."
   cron:
     name: "Python-PlexLibrary"
-    user: "{{ user }}"
+    user: "{{ user.name }}"
     job: "/opt/python-plexlibrary/plexlibrary.sh"
     special_time: daily
     state: present

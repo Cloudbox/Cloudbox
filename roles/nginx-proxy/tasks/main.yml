@@ -40,13 +40,13 @@
     mv /opt/nginx-proxy/certs/htpasswd /opt/nginx-proxy/htpasswd
     mv /opt/nginx-proxy/certs/vhost.d /opt/nginx-proxy/vhost.d
     mv /opt/nginx-proxy/certs/proxy.conf /opt/nginx-proxy/proxy.conf
-    chown -R {{ user }}:{{ user }} /opt/nginx-proxy/
+    chown -R {{ user.name }}:{{ user.name }} /opt/nginx-proxy/
     chmod -R 775 /opt/nginx-proxy/
   when: (nginx_proxy_folder.stat.exists) and not (certs_folder.stat.exists)
 # END - Certs Sub-Folder Migration Tasks
 
 - name: Create nginx-proxy directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/nginx-proxy
     - /opt/nginx-proxy/certs
@@ -68,8 +68,8 @@
   copy:
     src: "proxy.conf"
     dest: "/opt/nginx-proxy/proxy.conf"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: (not proxy_conf.stat.exists) or ((proxy_conf.stat.exists) and ((proxy_conf.stat.islnk) or (proxy_conf.stat.isdir)))

@@ -22,7 +22,7 @@
     state: absent
 
 - name: Create rutorrent directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - "/opt/rutorrent"
     - "/opt/rutorrent/plugins"
@@ -62,10 +62,10 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "rutorrent.{{ domain }}"
+      VIRTUAL_HOST: "rutorrent.{{ user.domain }}"
       VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: "rutorrent.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "rutorrent.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes: "{{ default_volumes + torrents_downloads_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

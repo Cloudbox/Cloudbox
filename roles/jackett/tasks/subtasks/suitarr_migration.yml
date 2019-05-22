@@ -29,11 +29,11 @@
     mkdir /opt/jackett
     mv /tmp/app /opt/jackett/
     find /opt/jackett/* -type d -empty -delete
-    chown -R {{ user }}:{{ user }} /opt/jackett
+    chown -R {{ user.name }}:{{ user.name }} /opt/jackett
   when: (folder.stat.exists) and not (subfolder1.stat.exists or subfolder2.stat.exists)
 
 - name: Suitarr Migration | Move 'Jackett' subfolder to 'app' subfolder
   shell: |
     mv /opt/jackett/Jackett /opt/jackett/app
-    chown -R {{ user }}:{{ user }} /opt/jackett
+    chown -R {{ user.name }}:{{ user.name }} /opt/jackett
   when: (folder.stat.exists) and (subfolder1.stat.exists) and (not subfolder2.stat.exists)

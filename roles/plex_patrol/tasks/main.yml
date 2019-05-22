@@ -14,7 +14,7 @@
     state: absent
 
 - name: Create plex_patrol directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/plex_patrol
 
@@ -32,8 +32,8 @@
   template:
     src: settings.ini.j2
     dest: /opt/plex_patrol/settings.ini
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not plex_patrol_config.stat.exists

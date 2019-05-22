@@ -28,7 +28,7 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
     regexp: '(^host_whitelist\s?=.*,)'
     backrefs: yes
-    line: '\1 sabnzbd.{{ domain }}'
+    line: '\1 sabnzbd.{{ user.domain }}'
     state: present
 
 - name: Remove url_base
@@ -44,7 +44,7 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
     insertafter: '^warn_dupl_jobs\s?=.*'
     regexp: '^username\s?=.*'
-    line: "username = {{ user }}"
+    line: "username = {{ user.name }}"
     state: present
 
 - name: Set Password
@@ -52,7 +52,7 @@
     path: "/opt/sabnzbd/app/sabnzbd.ini"
     insertafter: '^rss_filenames\s?=.*'
     regexp: '^password\s?=.*'
-    line: "password = {{ passwd }}"
+    line: "password = {{ user.pass }}"
     state: present
 
 - name: Set Form Auth

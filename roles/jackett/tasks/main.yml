@@ -25,7 +25,7 @@
   import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create jackett directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/jackett
 
@@ -42,10 +42,10 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "jackett.{{ domain }}"
+      VIRTUAL_HOST: "jackett.{{ user.domain }}"
       VIRTUAL_PORT: 9117
-      LETSENCRYPT_HOST: "jackett.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "jackett.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"
     volumes:
       - "/opt/jackett:/config"

@@ -8,16 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# Set 'user' variable
-- name: "Get 'cloudbox.yml' info."
-  stat:
-    path: "{{ playbook_dir }}/backup.yml"
-  register: backup_yml
-
-- name: Set 'user' variable
-  set_fact:
-    user: "{{ backup_yml.stat.pw_name }}"
-
 # Remove trailing forward slashes from backup paths
 - name: Remove trailing forward slashes from backup paths
   set_fact:

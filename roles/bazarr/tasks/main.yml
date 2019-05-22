@@ -25,7 +25,7 @@
   import_tasks: "subtasks/suitarr_migration.yml"
 
 - name: Create bazarr directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/bazarr
 
@@ -42,10 +42,10 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
-      VIRTUAL_HOST: "bazarr.{{ domain }}"
+      VIRTUAL_HOST: "bazarr.{{ user.domain }}"
       VIRTUAL_PORT: 6767
-      LETSENCRYPT_HOST: "bazarr.{{ domain }}"
-      LETSENCRYPT_EMAIL: "{{ email }}"
+      LETSENCRYPT_HOST: "bazarr.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"
     volumes:
       - "/opt/bazarr:/config"

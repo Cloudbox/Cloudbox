@@ -147,10 +147,10 @@
 - name: Settings | Static | Create '.htpasswd'
   htpasswd:
     path: /opt/rutorrent/nginx/.htpasswd
-    name: "{{ user }}"
-    password: "{{ passwd }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    name: "{{ user.name }}"
+    password: "{{ user.pass }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
 
 ## plugins.ini
@@ -159,7 +159,7 @@
   copy:
     src: plugins.ini
     dest: "/opt/rutorrent/rutorrent/settings/plugins.ini"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes

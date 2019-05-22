@@ -64,8 +64,8 @@
       src: "{{ webtools_download_url.stdout | default('https://github.com/ukdtom/WebTools.bundle/releases/download/3.0.0/WebTools.bundle.zip',true) }}"
       dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
       copy: no
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       validate_certs: no
     ignore_errors: yes

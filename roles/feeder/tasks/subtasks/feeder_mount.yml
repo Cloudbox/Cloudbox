@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Create feeder directories
-  file: 'path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }}'
+  file: 'path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}'
   with_items:
     - /mnt/feeder
 
@@ -28,8 +28,8 @@
     state: present
     no_extra_spaces: yes
   loop:
-    - { option: 'User', value: "{{ user }}" }
-    - { option: 'Group', value: "{{ user }}" }
+    - { option: 'User', value: "{{ user.name }}" }
+    - { option: 'Group', value: "{{ user.name }}" }
 
 - name: Start 'feeder.service'
   systemd:

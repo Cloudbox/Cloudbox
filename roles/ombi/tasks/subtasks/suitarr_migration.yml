@@ -24,5 +24,5 @@
     mkdir /opt/ombi
     mv /tmp/app /opt/ombi/
     find /opt/ombi/* -type d -empty -delete
-    chown -R {{ user }}:{{ user }} /opt/ombi
+    chown -R {{ user.name }}:{{ user.name }} /opt/ombi
   when: (folder.stat.exists) and not (subfolder.stat.exists)

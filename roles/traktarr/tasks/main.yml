@@ -18,7 +18,7 @@
   when: traktarr_service.stat.exists
 
 - name: Create traktarr directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/traktarr
 
@@ -29,7 +29,7 @@
     version: HEAD
     force: yes
   become: yes
-  become_user: "{{ user }}"
+  become_user: "{{ user.name }}"
 
 - name: Install pip requirements
   pip:
@@ -89,8 +89,8 @@
   template:
     src: config.json.j2
     dest: /opt/traktarr/config.json
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not traktarr_config.stat.exists
@@ -98,12 +98,12 @@
 - name: Set traktarr.py as executable
   file:
     path: /opt/traktarr/traktarr.py
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: a+x
 
 - name: Set directory permissions
-  file: "path=/opt/traktarr state=directory owner={{ user }} group={{ user }} recurse=yes"
+  file: "path=/opt/traktarr state=directory owner={{ user.name }} group={{ user.name }} recurse=yes"
 
 - name: "Create /usr/local/bin symlink"
   file:

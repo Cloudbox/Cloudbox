@@ -19,11 +19,11 @@
   set_fact:
     public_ip: "{{ public_ip_lookup.stdout }}"
 
-- name: "Add Subdomain | Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ domain }}'"
+- name: "Add Subdomain | Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ user.domain }}'"
   cloudflare_dns:
-    account_api_token: "{{ cloudflare_api_token }}"
-    account_email: "{{ email }}"
-    zone: "{{ domain }}"
+    account_api_token: "{{ cloudflare.api }}"
+    account_email: "{{ cloudflare.email }}"
+    zone: "{{ user.domain }}"
     state: present
     solo: true
     proxied: no

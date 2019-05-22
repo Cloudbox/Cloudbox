@@ -5,8 +5,8 @@ Description=Cloudplow
 After=network-online.target
 
 [Service]
-User={{ user }}
-Group={{ user }}
+User={{ user.name }}
+Group={{ user.name }}
 Type=simple
 WorkingDirectory=/opt/cloudplow/
 ExecStart=/usr/bin/python3 /opt/cloudplow/cloudplow.py run --loglevel=INFO

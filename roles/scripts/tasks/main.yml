@@ -25,7 +25,7 @@
       - yq
 
 - name: Create script directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/scripts
     - /opt/scripts/docker
@@ -43,8 +43,8 @@
   get_url:
     url:  "https://raw.githubusercontent.com/l3uddz/arrpush/master/arrpush.py"
     dest: "/opt/scripts/torrents/arrpush.py"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
     validate_certs: no
@@ -54,8 +54,8 @@
   copy:
     src: "TorrentCleanup.py"
     dest: "/opt/scripts/torrents/TorrentCleanup.py"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
 
@@ -63,8 +63,8 @@
   get_url:
     url:  "https://raw.githubusercontent.com/l3uddz/plex_trash_fixer/master/plex_trash_fixer.py"
     dest: "/opt/scripts/plex/plex_trash_fixer.py"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
     validate_certs: no
@@ -74,8 +74,8 @@
   copy:
     src: "plex_token.sh"
     dest: "/opt/scripts/plex/plex_token.sh"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
 
@@ -83,8 +83,8 @@
   template:
     src: "revoke_certs.sh.j2"
     dest: "/opt/scripts/nginx-proxy/revoke_certs.sh"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
 
@@ -92,8 +92,8 @@
   copy:
     src: "plex_autoscan_url.sh"
     dest: "/opt/scripts/plex_autoscan/plex_autoscan_url.sh"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
 
@@ -110,8 +110,8 @@
   copy:
     src: "restart_containers.sh"
     dest: "/opt/scripts/docker/restart_containers.sh"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not restart_containers.stat.exists
@@ -129,8 +129,8 @@
   copy:
     src: "frontail_custom_preset.json"
     dest: "/opt/scripts/frontail/frontail_custom_preset.json"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not frontail_preset.stat.exists
@@ -148,8 +148,8 @@
   template:
     src: "sync_torrents_to_rclone_remote.sh.j2"
     dest: "/opt/scripts/rclone/sync_torrents_to_rclone_remote.sh"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not sync_torrents_to_rclone_remote.stat.exists
@@ -167,8 +167,8 @@
   template:
     src: "download_torrents_from_rclone_remote.sh.j2"
     dest: "/opt/scripts/rclone/download_torrents_from_rclone_remote.sh"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
   when: not download_torrents_from_rclone_remote.stat.exists

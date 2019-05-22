@@ -1,7 +1,7 @@
 {
   "autoscan": {
     "api_key": "YOUR_SERVER_PASS",
-    "url": "http://plex.{{ domain }}:3468"
+    "url": "http://plex.{{ user.domain }}:3468"
   },
   "motd": {
     "banner_title": "{{ ( cloudbox_type | default('Cloudbox',true) ) | capitalize }}",
@@ -16,13 +16,13 @@
     "title_color": "LBLU"
   },
   "nzbget": {
-    "url": "https://{{ user }}:{{ passwd }}@nzbget.{{ domain }}"
+    "url": "https://{{ user.name }}:{{ user.pass }}@nzbget.{{ user.domain }}"
   },
   "plexpy": {
-      "url": "https://plexpy.{{ domain }}",
+      "url": "https://plexpy.{{ user.domain }}",
       "api_key": "SET_YOUR_API_KEY"
   },
   "rtorrent": {
-    "url": "https://{{ user }}:{{ passwd }}@rutorrent.{{ domain }}"
+    "url": "https://{{ user.name }}:{{ user.pass }}@rutorrent.{{ user.domain }}"
   }
 }

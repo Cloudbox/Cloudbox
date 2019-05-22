@@ -45,8 +45,8 @@
     file:
       path: "{{ playbook_dir }}/backup.lock"
       state: touch
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
 
   - name: Check if previous backup exists locally
@@ -67,14 +67,14 @@
   - name: "Moving '{{ local.destination }}' to '{{ local.destination }}.old'"
     shell: "mv '{{ local.destination }}' '{{ local.destination }}.old'"
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
     when: dir_files.matched|int != 0
 
   - name: "Create backup folders."
-    file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
     with_items:
-      - "/home/{{ user }}/logs"
-      - "/home/{{ user }}/logs/backup"
+      - "/home/{{ user.name }}/logs"
+      - "/home/{{ user.name }}/logs/backup"
       - "{{ local.destination }}"
       - "{{ local.destination }}/opt"
       - "/opt/systemd-backup"
@@ -85,8 +85,8 @@
     copy:
       src: "{{ item }}"
       dest: "{{ local.destination }}"
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       force: yes
     with_items:
@@ -95,7 +95,7 @@
      - "{{ playbook_dir }}/settings.yml"
      - "{{ playbook_dir }}/adv_settings.yml"
      - "{{ playbook_dir }}/backup_config.yml"
-     - "/home/{{ user }}/.config/rclone/rclone.conf"
+     - "/home/{{ user.name }}/.config/rclone/rclone.conf"
     ignore_errors: yes
 
   # Backup the excludes list if it exists
@@ -108,8 +108,8 @@
     copy:
       src: "{{ playbook_dir }}/backup_excludes_list.txt"
       dest: "{{ local.destination }}"
-      owner: "{{ user }}"
-      group: "{{ user }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
       mode: 0775
       force: yes
     when: (backup_excludes_list.stat.exists)
@@ -151,7 +151,7 @@
     ignore_errors: yes
 
   - name: "Reset permissions of folders"
-    file: "path={{ item }} state=directory mode=0775 owner={{ user }} group={{ user }} recurse=yes"
+    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
     with_items:
       - "/opt/systemd-backup"
       - "/opt/crontab-backup"
@@ -345,7 +345,7 @@
       path: "{{ local.destination }}.old"
       state: absent
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
     when: (dir_files2.matched|int != 0)
 
   - name: "Get size of '{{ local.destination }}'"
@@ -403,7 +403,7 @@
       timeout: 10
 
   - name: "Reset folder ownership of '{{ local.destination }}/'"
-    shell: "chown -R {{ user }}:{{ user }} {{ local.destination }}/"
+    shell: "chown -R {{ user.name }}:{{ user.name }} {{ local.destination }}/"
     args:
       warn: no
 
@@ -411,7 +411,7 @@
   - name: "Reset permissions and mod dates to files in '{{ local.destination }}/'"
     shell: find '{{ local.destination }}' -type f  -exec touch {} +
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
     args:
       executable: /bin/bash
       warn: no
@@ -424,7 +424,7 @@
         --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36' \
         | sed -e 's/^[ \t]*//' | cut -d ' ' -f 2,3 | cut -d '.' -f 1 | sed s/' '/_/g | sed s/':'/./g
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
     register: rclone_timestamp
     ignore_errors: yes
     when: (rclone.enable)
@@ -437,7 +437,7 @@
         '{{ rclone.destination }}/{{ item }}' '{{ rclone.destination }}/archived/{{ (rclone_timestamp.stdout) if (rclone_timestamp is defined) else 'old' }}/{{ item }}' \
         2>/dev/null
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
     register: rclone_move
     failed_when: rclone_move.rc > 3
     ignore_errors: yes
@@ -465,10 +465,10 @@
         --drive-chunk-size=128M \
         --stats=30s \
         -v \
-        --log-file='/home/{{ user }}/logs/backup/cloudbox_backup_rclone.log' \
+        --log-file='/home/{{ user.name }}/logs/backup/cloudbox_backup_rclone.log' \
         '{{ local.destination }}' '{{ rclone.destination }}'
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
     when: (rclone.enable)
 
   - name: "Pushover Message: Rclone uploaded backup to '{{ rclone.destination }}'"
@@ -485,7 +485,7 @@
       set_remote_user: yes
       compress: no
     become: yes
-    become_user: "{{ user }}"
+    become_user: "{{ user.name }}"
     when: (rsync.enable)
 
   - name: "Pushover Message: Rsync uploaded backup to '{{ rsync.destination }}'"
@@ -535,7 +535,7 @@
     when: (use_snapshot) and (snapshot_type == 'btrfs')
 
   - name: "Reset folder ownership of '{{ local.destination }}/'"
-    shell: "chown -R {{ user }}:{{ user }} {{ local.destination }}/"
+    shell: "chown -R {{ user.name }}:{{ user.name }} {{ local.destination }}/"
     args:
       warn: no
 
@@ -588,6 +588,6 @@
       state: absent
 
   - name: "Reset logs folder ownership."
-    shell: "chown -R {{ user }}:{{ user }} '/home/{{ user }}/logs/'"
+    shell: "chown -R {{ user.name }}:{{ user.name }} '/home/{{ user.name }}/logs/'"
     args:
       warn: no
