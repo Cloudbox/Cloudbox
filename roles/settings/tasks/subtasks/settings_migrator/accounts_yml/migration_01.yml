@@ -1,0 +1,60 @@
+#########################################################################
+# Title:         Settings Migrator | accounts.yml | Migration 01        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Settings Migrator | accounts.yml | Migration 01 | Set variables"
+  set_fact:
+    old_settings: "{{ true if not(
+        (passwd is undefined)
+        or
+        (passwd is none)
+        or
+        (passwd | trim | length == 0)
+      )
+        else false }}"
+    new_settings: "{{ true if not(
+        (user.name is undefined)
+        or
+        (user.name is none)
+        or
+        (user.name | trim | length == 0)
+        or
+        (user.pass is undefined)
+        or
+        (user.pass is none)
+        or
+        (user.pass | trim | length == 0)
+      )
+        else false }}"
+
+- name: Settings Migrator | accounts.yml | Migration 01 | Add 'user' key
+  shell: |
+    yyq d -i {{ playbook_dir }}/{{ item }} user
+    yyq w -i {{ playbook_dir }}/{{ item }} user.name {{ user }}
+    yyq d -i {{ playbook_dir }}/{{ item }} passwd
+    yyq w -i {{ playbook_dir }}/{{ item }} user.pass {{ passwd }}
+    yyq d -i {{ playbook_dir }}/{{ item }} domain
+    yyq w -i {{ playbook_dir }}/{{ item }} user.domain {{ domain }}
+    yyq d -i {{ playbook_dir }}/{{ item }} email
+    yyq w -i {{ playbook_dir }}/{{ item }} user.email {{ email }}
+  become: yes
+  become_user: "{{ cloudbox_yml.stat.pw_name }}"
+  when: (old_settings) and not (new_settings)
+
+- name: Settings Migrator | accounts.yml | Migration 01 | Remove 'null' values
+  replace:
+    path: "{{ playbook_dir }}/{{ item }}"
+    regexp: 'null'
+    replace: ''
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664
+
+- name: Settings Migrator | accounts.yml | Migration 01 | Re-import Variables
+  include_vars: "{{ playbook_dir }}/{{ item }}"

@@ -37,6 +37,7 @@
 - name: "Setting: Settings Migrator"
   include_tasks: "subtasks/settings_migrator.yml"
   with_items:
+    - "accounts.yml"
     - "backup_config.yml"
 
 - name: Initialize empty lists and vars
