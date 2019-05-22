@@ -23,7 +23,7 @@
   file: "path='/tmp/restore_service' state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
 
 - name: Restore Service | Encrypt config file(s)
-  shell: "openssl enc -aes-256-cbc -salt -md md5 -in {{ item }} -out /tmp/restore_service/{{ item | basename }}.enc -k '{{ restore_service_password }}'"
+  shell: "openssl enc -aes-256-cbc -salt -md md5 -in '{{ item }}' -out '/tmp/restore_service/{{ (item | basename) | regex_replace('^\\.', '') }}.enc' -k '{{ restore_service_password }}'"
   args:
     warn: no
   become: yes
@@ -35,6 +35,7 @@
    - "{{ playbook_dir }}/settings.yml"
    - "{{ playbook_dir }}/adv_settings.yml"
    - "{{ playbook_dir }}/backup_config.yml"
+   - "/home/{{ user.name }}/.ansible_vault"
    - "/home/{{ user.name }}/.config/rclone/rclone.conf"
 
 - name: "Restore Service | Validate config file(s) for encryption."
@@ -74,7 +75,7 @@
   block:
 
   - name: Restore Service | Upload encrypted config file(s)
-    shell: "curl -F 'file=@{{ item }}' http://restore.cloudbox.works/save/{{ restore_service_username }}/{{ (item | basename | splitext)[0] }}"
+    shell: "curl -F 'file=@{{ item }}' 'http://restore.cloudbox.works/save/{{ restore_service_username }}/{{ (item | basename | splitext)[0] }}'"
     args:
       warn: no
     with_fileglob:
