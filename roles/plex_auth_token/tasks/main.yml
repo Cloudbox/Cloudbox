@@ -22,10 +22,14 @@
     status_code: 201
   register: plex_token_raw
 
+- name: Display 'Plex Pass' status
+  debug:
+    msg: "Plex Pass is {{ ('plexpass' in plex_token_raw.json.user.roles.roles) | ternary('enabled','disabled') }}."
+
 - name: Set plex_auth_token variable
   set_fact:
     plex_auth_token: "{{ plex_token_raw.json.user.authToken | regex_replace('\n', '') }}"
 
 - name: Display Plex Auth Token
   debug:
-    msg: "Your Plex Auth Token is: {{ plex_auth_token }}"
+    msg: "Plex Auth Token: {{ plex_auth_token }}"
