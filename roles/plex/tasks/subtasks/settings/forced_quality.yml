@@ -1,5 +1,5 @@
 ##########################################################################
-# Title:         Plex - Forced Automatic Quality Settings                #
+# Title:         Plex: Forced Automatic Quality Settings                 #
 # Author(s):     desimaniac                                              #
 # URL:           https://github.com/cloudbox/cloudbox                    #
 # --                                                                     #
@@ -18,9 +18,11 @@
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
     state: present
 
-# 'forceAutoAdjustQuality' in Preferences.xml - Forces clients to use automatic quality for media unless the quality is set higher than the quality of the video.
+# 'forceAutoAdjustQuality' in Preferences.xml
+# Forces clients to use automatic quality for media unless the quality is set higher than the quality of the video.
 
-- name: "Set 'forceAutoAdjustQuality' in 'Preferences.xml' to '{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('Enabled','Disabled') }}'."
+- name: "Set 'forceAutoAdjustQuality' in 'Preferences.xml' to
+    '{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('Enabled','Disabled') }}'."
   xml:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
     xpath: /Preferences
@@ -30,9 +32,11 @@
   register: x
   ignore_errors: yes
 
-# 'AllowHighOutputBitrates' in Preferences.xml - Forces transcode quality to upscale. But can cause high bandwidth usage for clients.
+# 'AllowHighOutputBitrates' in Preferences.xml
+# Forces transcode quality to upscale. But can cause high bandwidth usage for clients.
 
-- name: "Set 'AllowHighOutputBitrates' in 'Preferences.xml' to '{{ (plex.force_high_output_bitrates|default(false,true)) | ternary('Enabled','Disabled') }}'."
+- name: "Set 'AllowHighOutputBitrates' in 'Preferences.xml' to
+    '{{ (plex.force_high_output_bitrates|default(false,true)) | ternary('Enabled','Disabled') }}'."
   xml:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
     xpath: /Preferences
