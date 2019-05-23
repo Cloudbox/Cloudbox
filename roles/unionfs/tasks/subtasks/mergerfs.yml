@@ -19,14 +19,14 @@
   register: mergerfs_download_url
   ignore_errors: yes
 
-- name: "MergerFS | Set 'mergerfs_default_download_url'"
+- name: "MergerFS | Set 'mergerfs_download_url_backup' variable"
   set_fact:
-    mergerfs_default_download_url: https://github.com/trapexit/mergerfs/releases/download/2.25.1/mergerfs_2.25.1.{{ ansible_distribution|lower
+    mergerfs_download_url_backup: https://github.com/trapexit/mergerfs/releases/download/2.27.1/mergerfs_2.27.1.{{ ansible_distribution|lower
      }}-{{ ansible_distribution_release|lower }}_amd64.deb
 
 - name: "MergerFS | Install mergerfs"
   apt:
-    deb: "{{ mergerfs_download_url.stdout | default('{{ mergerfs_default_download_url }}') }}"
+    deb: "{{ mergerfs_download_url.stdout | default('{{ mergerfs_download_url_backup }}') }}"
     state: present
 
 - name: "MergerFS | Import 'mergerfs.service'"
