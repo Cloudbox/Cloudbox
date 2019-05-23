@@ -164,13 +164,17 @@
     mode: 0775
     recurse: yes
 
-- name: "Install WebTools Plugin"
+- name: "Install Trakt.tv Plugin"
   import_role:
-    name: webtools-plugin
+    name: trakttv-plugin
 
 - name: "Install Sub-Zero Plugin"
   import_role:
     name: sub-zero-plugin
+
+- name: "Install WebTools Plugin"
+  import_role:
+    name: webtools-plugin
 
 - name: "Forced Automatic Quality Settings"
   import_tasks: "subtasks/settings/forced_quality.yml"
