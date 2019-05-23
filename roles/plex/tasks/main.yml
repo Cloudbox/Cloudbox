@@ -57,11 +57,19 @@
       content: attribute
       attribute: PlexOnlineToken
     register: preferences_xml_resp
+    ignore_errors: yes
 
-  - name: Set 'claimed_plex_server' variable
+  - name: "Remove 'Preferences.xml' file when malformed"
+    file:
+      path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+      state: absent
+    when: (preferences_xml_resp is failed)
+
+  - name: Set 'plex_server_claimed' variable
     set_fact:
-      claimed_plex_server: "{{ (preferences_xml_resp.matches[0].Preferences.PlexOnlineToken is defined)
-        and (preferences_xml_resp.matches[0].Preferences.PlexOnlineToken | trim | length > 0) }}"
+      plex_server_claimed: "{{ (preferences_xml_resp is succeeded) and
+        (preferences_xml_resp.matches[0].Preferences.PlexOnlineToken is defined) and
+        (preferences_xml_resp.matches[0].Preferences.PlexOnlineToken | trim | length > 0) }}"
 
   when:
     - (not continuous_integration)
@@ -71,7 +79,7 @@
   import_tasks: subtasks/claim_server.yml
   when:
     - (not continuous_integration)
-    - (not preferences_xml.stat.exists) or (preferences_xml.stat.exists and not claimed_plex_server)
+    - (not preferences_xml.stat.exists) or (preferences_xml.stat.exists and not plex_server_claimed)
 
 - name: "Grab lazyman IP address"
   set_fact:
