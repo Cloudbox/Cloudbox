@@ -208,9 +208,3 @@
     name: nethogs
   tags: nethogs
   ignore_errors: yes
-
-- name: Cloudflare Cache Purge Task
-  import_tasks: "cloudflare_cache_purge.yml"
-  when: cloudflare_enabled
-  tags: cloudflare-cache-purge
-  ignore_errors: yes
