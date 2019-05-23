@@ -15,9 +15,10 @@
 
 - name: "Clone 'sickbeard_mp4_automator' repo"
   git:
-    repo: "https://github.com/mdhiggins/sickbeard_mp4_automator"
+    repo: "https://github.com/mdhiggins/sickbeard_mp4_automator.git"
     dest: "/opt/scripts/sickbeard_mp4_automator"
-    version: master
+    clone: yes
+    version: HEAD
     force: yes
   become: yes
   become_user: "{{ user.name }}"

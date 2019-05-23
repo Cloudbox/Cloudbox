@@ -20,9 +20,10 @@
 
 - name: Pull nethogs repo from github
   git:
-    repo: "https://github.com/raboof/nethogs"
+    repo: "https://github.com/raboof/nethogs.git"
     dest: "/var/tmp/nethogs"
     clone: yes
+    version: HEAD
     force: yes
   register: diff
 

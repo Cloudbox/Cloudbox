@@ -15,8 +15,10 @@
 
 - name: Clone z repo
   git:
-    repo: "https://github.com/rupa/z"
+    repo: "https://github.com/rupa/z.git"
     dest: "/opt/z"
+    clone: yes
+    version: HEAD
     force: yes
   become: yes
   become_user: "{{ user.name }}"

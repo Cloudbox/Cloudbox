@@ -15,10 +15,13 @@
 
 - name: Clone plex_dupefinder
   git:
-    repo: https://github.com/l3uddz/plex_dupefinder/
+    repo: https://github.com/l3uddz/plex_dupefinder.git
     dest: /opt/plex_dupefinder
+    clone: yes
     version: HEAD
     force: yes
+  become: yes
+  become_user: "{{ user.name }}"
 
 - name: Install pip requirements
   pip:
@@ -42,7 +45,7 @@
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
-    force: yes
+    force: no
   when: not plex_dupefinder_config.stat.exists
 
 - name: Set plexdupes.py as executable
@@ -51,9 +54,6 @@
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: a+x
-
-- name: Set directory permissions
-  file: "path=/opt/plex_dupefinder state=directory owner={{ user.name }} group={{ user.name }} recurse=yes"
 
 - name: "Create /usr/local/bin symlink"
   file:

@@ -15,6 +15,8 @@
   git:
     repo: https://github.com/robbyrussell/oh-my-zsh.git
     dest: "/home/{{ user.name }}/.oh-my-zsh"
+    clone: yes
+    version: HEAD
     force: yes
   become: yes
   become_user: "{{ user.name }}"

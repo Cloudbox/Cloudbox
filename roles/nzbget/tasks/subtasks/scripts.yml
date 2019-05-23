@@ -31,8 +31,10 @@
 
 - name: Scripts | Download unzip.py script
   git:
-    repo: "https://github.com/Prinz23/nzbgetpp"
+    repo: "https://github.com/Prinz23/nzbgetpp.git"
     dest: "/opt/scripts/nzbget/nzbgetpp/"
+    clone: yes
+    version: HEAD
     force: yes
   become: yes
   become_user: "{{ user.name }}"

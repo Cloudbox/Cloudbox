@@ -15,8 +15,9 @@
 
 - name: Clone aliases
   git:
-    repo: https://github.com/Cloudbox/aliases
+    repo: https://github.com/Cloudbox/aliases.git
     dest: /opt/aliases
+    clone: yes
     version: HEAD
     force: yes
   become: yes

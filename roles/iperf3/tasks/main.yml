@@ -13,8 +13,10 @@
 
 - name: "Clone iperf3 repo"
   git:
-    repo: "https://github.com/esnet/iperf/"
+    repo: "https://github.com/esnet/iperf.git"
     dest: "/var/tmp/iperf3"
+    clone: yes
+    version: HEAD
     force: yes
   register: diff
 
