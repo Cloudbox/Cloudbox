@@ -24,7 +24,7 @@
 
 - name: Clone traktarr
   git:
-    repo: https://github.com/l3uddz/traktarr/
+    repo: https://github.com/l3uddz/traktarr.git
     dest: /opt/traktarr
     version: HEAD
     force: yes

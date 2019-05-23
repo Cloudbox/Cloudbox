@@ -15,7 +15,7 @@
 
 - name: Clone python-plexlibrary
   git:
-    repo: "https://github.com/adamgot/python-plexlibrary/"
+    repo: "https://github.com/adamgot/python-plexlibrary.git"
     dest: "/opt/python-plexlibrary"
     version: master
     force: yes

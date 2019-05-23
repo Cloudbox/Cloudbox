@@ -31,14 +31,15 @@
   when: cloudplow_service.stat.exists
 
 - name: Create cloudplow directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
   with_items:
     - /opt/cloudplow
 
 - name: Clone cloudplow
   git:
-    repo: https://github.com/l3uddz/cloudplow/
+    repo: https://github.com/l3uddz/cloudplow.git
     dest: /opt/cloudplow
+    clone: yes
     version: HEAD
     force: yes
   become: yes

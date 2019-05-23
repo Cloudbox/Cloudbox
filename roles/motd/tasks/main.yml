@@ -33,6 +33,11 @@
     - /etc/motd
     - /etc/motd.dynamic
 
+- name: Create motd directories
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
+  with_items:
+    - /opt/motd
+
 - name: Check if MOTD news service
   stat:
     path: "/etc/default/motd-news"
@@ -58,8 +63,11 @@
   git:
     repo: https://github.com/cloudbox/motd.git
     dest: /opt/motd
+    clone: yes
     version: HEAD
     force: yes
+  become: yes
+  become_user: "{{ user.name }}"
 
 - name: Install pip requirements
   pip:
@@ -75,7 +83,10 @@
   template:
     src: config.json.j2
     dest: /opt/motd/config.json
-    force: yes
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: no
   when: (not motd_config.stat.exists)
 
 - name: Touch '/opt/motd/activity.log' file
@@ -89,13 +100,12 @@
 - name: Set 'cloudbox-motd.py' as executable
   file:
     path: /opt/motd/cloudbox-motd.py
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: a+x
 
 - name: Import dynamic motd files
   copy: "src=/opt/motd/motd/ dest=/etc/update-motd.d/ force=yes mode=0775"
-
-- name: Set directory permissions
-  file: "path=/opt/motd state=directory owner={{ user.name }} group={{ user.name }} recurse=yes"
 
 - name: Create symlink to dynamic motd
   file:
