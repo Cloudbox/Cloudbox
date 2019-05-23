@@ -163,18 +163,17 @@
     mode: 0775
     recurse: yes
 
-- name: "Wait for 'Plug-ins' folder to be created by Plex"
-  wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
-    state: present
-
-- name: "Install WebTools"
+- name: "Install Trakt.tv Plugin"
   import_role:
-    name: webtools-plugin
+    name: trakttv-plugin
 
 - name: "Install Sub-Zero Plugin"
   import_role:
     name: sub-zero-plugin
+
+- name: "Install WebTools Plugin"
+  import_role:
+    name: webtools-plugin
 
 - name: "Forced Automatic Quality Settings"
   import_tasks: "subtasks/settings/forced_quality.yml"

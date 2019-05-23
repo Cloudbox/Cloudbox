@@ -1,0 +1,64 @@
+#########################################################################
+# Title:         Cloudbox: Trakt.tv Plugin                              #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Stop Plex container
+  docker_container:
+    name: plex
+    state: stopped
+
+- name: Remove Previous Trakt.tv Plugin
+  file:
+    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Trakttv.bundle"
+    state: absent
+
+- name: Get latest version available for Trakt.tv Plugin
+  shell: curl -s https://api.github.com/repos/trakt/Plex-Trakt-Scrobbler/releases/latest | jq -r .tag_name
+  args:
+    warn: no
+  register: trakttv_latest_version
+  ignore_errors: yes
+
+- name: Get latest Trakt.tv Plugin URL
+  shell: |
+    curl -s https://api.github.com/repos/trakt/Plex-Trakt-Scrobbler/releases/latest \
+    | jq -r ".assets[] | select(.name | test(\"linux_x86_64\")) | .browser_download_url"
+  args:
+    warn: no
+  register: trakttv_download_url
+  ignore_errors: yes
+
+- name: Set 'trakttv_download_url_backup' variable
+  set_fact:
+    trakttv_download_url_backup: https://github.com/trakt/Plex-Trakt-Scrobbler/releases/download/v1.3.3/trakt_for_plex-1.3.3-7f0f38e-linux_x86_64.zip
+
+- name: Install Trakt.tv Plugin
+  unarchive:
+    src: "{{ trakttv_download_url.stdout | default('{{ trakttv_download_url_backup }}',true) }}"
+    dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+    copy: no
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    validate_certs: no
+  register: trakttv_install
+  ignore_errors: yes
+
+- name: Display Trakt.tv Plugin version
+  debug:
+    msg: "Trakt.tv Plugin version {{ trakttv_latest_version.stdout }} installed."
+  when:
+    - (trakttv_latest_version is defined) and (trakttv_latest_version is succeeded)
+    - (trakttv_download_url is defined) and (trakttv_download_url is succeeded)
+    - (trakttv_install is defined) and (trakttv_install is succeeded)
+
+- name: Start Plex container
+  docker_container:
+    name: plex
+    state: started
