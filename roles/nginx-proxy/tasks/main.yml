@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Nginx-Proxy Role                             #
-# Author(s):     l3uddz                                                 #
+# Title:         Cloudbox: Nginx-Proxy                                  #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Images: jwilder/nginx-proxy                                    #
 #                jrcs/letsencrypt-nginx-proxy-companion                 #
@@ -73,6 +73,12 @@
     mode: 0775
     force: yes
   when: (not proxy_conf.stat.exists) or ((proxy_conf.stat.exists) and ((proxy_conf.stat.islnk) or (proxy_conf.stat.isdir)))
+
+- name: Cloudflare Tasks
+  import_tasks: "subtasks/cloudflare.yml"
+  when: cloudflare_enabled
+  tags: cloudflare-tasks
+  ignore_errors: yes
 
 - name: Create and start container
   docker_container:
