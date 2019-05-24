@@ -1,0 +1,22 @@
+#########################################################################
+# Title:         Settings Migrator | Global | Migration 01              #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Settings Migrator | Global | Migration 01 |
+    Replace '{% raw -%}{{ user }}{%- endraw %}' with '{% raw -%}{{ user.name }}{%- endraw %}'
+  replace:
+    path: "{{ playbook_dir }}/{{ item }}"
+    regexp: '{% raw -%}{{\s*user\s*}}{%- endraw %}'
+    replace: '{% raw -%}{{ user.name }}{%- endraw %}'
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664
+
+- name: Settings Migrator | Global | Migration 01 | Re-import Variables
+  include_vars: "{{ playbook_dir }}/{{ item }}"

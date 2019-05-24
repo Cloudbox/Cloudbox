@@ -28,14 +28,21 @@
     become_user: "{{ cloudbox_yml.stat.pw_name }}"
     when: file_is_encrypted
 
+  - name: Settings Migrator | Global Migrations for all files
+    block:
+
+    # Replace {{ user }} with {{ user.name }}
+    - name: Settings Migrator | Global | Migration 01
+      include_tasks: "settings_migrator/global/migration_01.yml"
+
   - name: Settings Migrator | Migrations for 'accounts.yml'
     block:
 
-    #  Move 'user,passwd,domain,email' to 'user' key
+    # Move 'user,passwd,domain,email' to 'user' key
     - name: Settings Migrator | accounts.yml | Migration 01
       include_tasks: "settings_migrator/accounts_yml/migration_01.yml"
 
-    #  Move 'cloudflare_api_token' to 'cloudflare' key
+    # Move 'cloudflare_api_token' to 'cloudflare' key
     - name: Settings Migrator | accounts.yml | Migration 02
       include_tasks: "settings_migrator/accounts_yml/migration_02.yml"
 

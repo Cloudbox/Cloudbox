@@ -38,6 +38,8 @@
   include_tasks: "subtasks/settings_migrator.yml"
   with_items:
     - "accounts.yml"
+    - "settings.yml"
+    - "adv_settings.yml"
     - "backup_config.yml"
 
 - name: Initialize empty lists and vars
