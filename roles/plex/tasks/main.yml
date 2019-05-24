@@ -25,8 +25,7 @@
     - "/opt/plex/Library/Application Support/Plex Media Server"
     - "/opt/plex/Library/Logs"
     - "/opt/plex/Library/Logs/Plex Media Server"
-    - "{{ plex.transcodes }}/1"
-    - "{{ plex.transcodes }}/2"
+    - "{{ plex.transcodes }}/plex"
 
 - name: "Stop and remove any existing container"
   docker_container:
@@ -47,7 +46,7 @@
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
   register: preferences_xml
 
-- name: Check 'Preferences.xml' for Plex Token
+- name: "'Preferences.xml' Tasks"
   block:
 
   - name: Get 'Preferences.xml' XML data
@@ -55,15 +54,30 @@
       path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
       xpath: /Preferences
       content: attribute
-      attribute: PlexOnlineToken
     register: preferences_xml_resp
     ignore_errors: yes
 
-  - name: "Remove 'Preferences.xml' file when malformed"
+  - name: "Remove 'Preferences.xml' if malformed"
     file:
       path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
       state: absent
     when: (preferences_xml_resp is failed)
+
+  - name: Set 'transcoder_path_fix' variable
+    set_fact:
+      transcoder_path_fix: "{{ (preferences_xml_resp is succeeded) and
+        (preferences_xml_resp.matches[0].Preferences.TranscoderTempDirectory is defined) and
+        (preferences_xml_resp.matches[0].Preferences.TranscoderTempDirectory | trim == '/transcodes') }}"
+
+  - name: "Fix 'TranscoderTempDirectory'"
+    xml:
+      path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+      xpath: /Preferences
+      attribute: TranscoderTempDirectory
+      value: "/transcode"
+      state: present
+    ignore_errors: yes
+    when: (transcoder_path_fix)
 
   - name: Set 'plex_server_claimed' variable
     set_fact:
@@ -136,12 +150,11 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex:/config"
       - "/opt/scripts:/scripts"
-      - "{{ plex.transcodes }}/1:/transcode"
-      - "{{ plex.transcodes }}/2:/transcodes"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
       - "/tmp:/tmp"
       - "/dev/shm:/dev/shm"
+      - "{{ plex.transcodes }}/plex:/transcode"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
     etc_hosts: "{{ (plex_default_hosts) | combine(plex_custom_hosts|default([])) }}"
     labels:
