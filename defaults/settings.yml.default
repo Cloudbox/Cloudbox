@@ -8,4 +8,4 @@ plex:
 rclone:
   version: latest
   remote: google
-shell: zsh
+shell: bash
