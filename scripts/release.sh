@@ -4,11 +4,10 @@
 # Variables
 ################################
 
-readonly CHANGELOG="changelog.txt"
-readonly DATE=$(date +"%Y-%m-%d")
 readonly REPO="cloudbox/cloudbox"
 readonly TAG=$(git describe --abbrev=0 --tags \
   | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{$NF=sprintf("%0*d", length($NF), ($NF+1)); print}')
+readonly CHANGELOG_SCRIPT="scripts/changelog.sh"
 
 ################################
 # Main
@@ -19,7 +18,7 @@ set -e
 
 NAME="${TAG}"
 
-BODY=$(bash scripts/changelog.sh -s)
+BODY=$(bash "$CHANGELOG_SCRIPT" -s)
 
 payload=$(
   jq --null-input \
@@ -37,9 +36,6 @@ response=$(
        --data "$payload" \
        "https://api.github.com/repos/${REPO}/releases"
 )
-
-upload_url="$(echo "$response" | jq -r .upload_url | sed -e "s/{?name,label}//")"
-
 
 # Modifications by desimaniac @ github.com
 #
