@@ -22,8 +22,7 @@
     - /opt/emby
     - /opt/emby/config
     - /opt/emby/config/users
-    - "{{ plex.transcodes }}/3"
-    - "{{ plex.transcodes }}/4"
+    - "{{ plex.transcodes }}/emby"
 
 - name: "Import 'dlna.xml' config"
   copy:
@@ -48,7 +47,7 @@
   stat:
     path: "/dev/dri"
   register: dev_dri
-    
+
 - name: Create and start container
   docker_container:
     name: emby
@@ -70,10 +69,11 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/emby:/config"
-      - "{{ plex.transcodes }}/3:/transcode"
-      - "{{ plex.transcodes }}/4:/transcodes"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"
+      - "/tmp:/tmp"
+      - "/dev/shm:/dev/shm"
+      - "{{ plex.transcodes }}/emby:/transcode"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
