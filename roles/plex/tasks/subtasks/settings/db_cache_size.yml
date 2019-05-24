@@ -62,7 +62,7 @@
     args:
       executable: /bin/bash
 
-  - name: Get Current Plex DB Cache Size
+  - name: Get New Plex DB Cache Size
     shell: |
       sqlite3 "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" \
         "PRAGMA default_cache_size;"
@@ -70,7 +70,7 @@
       executable: /bin/bash
     register: new_db_cache_size
 
-  - name: Display Current Plex DB Cache Size
+  - name: Display New Plex DB Cache Size
     debug:
       msg: "Plex DB cache size is now set to '{{ new_db_cache_size.stdout | int }}'."
 
