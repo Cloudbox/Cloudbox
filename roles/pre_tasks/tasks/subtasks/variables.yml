@@ -36,10 +36,6 @@
       )
         else false }}"
 
-- name: "Variables | Set 'localhost_ip' variable"
-  set_fact:
-    localhost_ip: "127.0.0.1"
-
 - name: "Variables | Set 'plex_account_enabled' variable"
   set_fact:
     plex_account_enabled: "{{ true if not(

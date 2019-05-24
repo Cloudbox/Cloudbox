@@ -85,6 +85,10 @@
   set_fact:
     lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
 
+- name: "Set 'localhost_ip' variable"
+  set_fact:
+    localhost_ip: "127.0.0.1"
+
 - name: "Set Plex host variables"
   set_fact:
     plex_default_hosts:
