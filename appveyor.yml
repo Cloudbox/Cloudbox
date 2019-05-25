@@ -12,6 +12,7 @@ skip_commits:
     - '*.md'
     - 'defaults/*'
     - 'roles/*/files/*'
+    - 'roles/settings/*'
   message: /\[minor\]/
 
 image: ubuntu
