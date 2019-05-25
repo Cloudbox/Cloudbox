@@ -6,7 +6,7 @@
     - ['adv_settings.yml', 'defaults/adv_settings.yml.default']
     - ['backup_config.yml', 'defaults/backup_config.yml.default']
   roles:
-    - { role: sanity_check }
+    - { role: sanity_check, tags: ['sanity_check'] }
     - { role: settings, tags: ['always', 'settings'] }
     - { role: pre_tasks }
     - { role: backup, tags: ['backup'] }
