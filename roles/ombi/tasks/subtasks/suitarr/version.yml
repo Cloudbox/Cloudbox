@@ -1,0 +1,36 @@
+#########################################################################
+# Title:         Cloudbox: Ombi | Suitarr | Version Check Tasks         #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Suitarr | Version Check | Fetch AppVeyor job info
+  uri:
+    url: "https://ci.appveyor.com/api/projects/tidusjar/requestplex/branch/develop"
+  register: request
+
+- name: Suitarr | Version Check | Check for available artificats
+  uri:
+    url: "https://ci.appveyor.com/api/buildjobs/{{ request.json.build.jobs[0].jobId }}/artifacts"
+  register: request2
+
+- name: Suitarr | Version Check | Set 'ombi_unstable_status' variable
+  set_fact:
+    ombi_unstable_status: "{{ (request2.json | length > 0) }}"
+
+- name: Suitarr | Version Check | Tasks for when artifact is unavailable
+  block:
+
+  - name: Suitarr | Version Check | Set 'ombi_version' to 'stable'
+    set_fact:
+      ombi_version: stable
+
+  - name: Suitarr | Version Check | Print new 'ombi_version' branch
+    debug:
+      msg: "The '{{ suitarr.version }}' version is unavailable. Using '{{ ombi_version }}' version instead."
+
+  when: (not ombi_unstable_status)
