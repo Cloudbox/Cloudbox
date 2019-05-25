@@ -1,14 +1,14 @@
-#########################################################################
-# Title:         Settings Migrator | backup_config.yml | Migration 01   #
-# Author(s):     desimaniac                                             #
-# URL:           https://github.com/cloudbox/cloudbox                   #
-# --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.works          #
-#########################################################################
-#                   GNU General Public License v3.0                     #
-#########################################################################
+###########################################################################
+# Title:         Settings Migrator | 'backup_config.yml' | Migration 01   #
+# Author(s):     desimaniac                                               #
+# URL:           https://github.com/cloudbox/cloudbox                     #
+# --                                                                      #
+#         Part of the Cloudbox project: https://cloudbox.works            #
+###########################################################################
+#                   GNU General Public License v3.0                       #
+###########################################################################
 ---
-- name: "Settings Migrator | backup_config.yml | Migration 01 | Set variables"
+- name: "Settings Migrator | 'backup_config.yml' | Migration 01 | Set variables"
   set_fact:
     old_settings: "{{ true if not(
         (vault_service is undefined)
@@ -51,7 +51,7 @@
       )
         else false }}"
 
-- name: Settings Migrator | backup_config.yml | Migration 01 | Add 'restore_service' key
+- name: Settings Migrator | 'backup_config.yml' | Migration 01 | Add 'restore_service' key
   shell: |
     yyq w -i {{ playbook_dir }}/{{ item }} restore_service.user {{ vault_service.user }}
     yyq w -i {{ playbook_dir }}/{{ item }} restore_service.pass {{ vault_service.pass }}
@@ -60,7 +60,7 @@
   become_user: "{{ cloudbox_yml.stat.pw_name }}"
   when: (old_settings) and not (new_settings)
 
-- name: Settings Migrator | backup_config.yml | Migration 01 | Remove 'null' values
+- name: Settings Migrator | 'backup_config.yml' | Migration 01 | Remove 'null' values
   replace:
     path: "{{ playbook_dir }}/{{ item }}"
     regexp: 'null'
@@ -69,5 +69,5 @@
     group: "{{ cloudbox_yml.stat.gid }}"
     mode: 0664
 
-- name: Settings Migrator | backup_config.yml | Migration 01 | Re-import Variables
+- name: Settings Migrator | 'backup_config.yml' | Migration 01 | Re-import Variables
   include_vars: "{{ playbook_dir }}/{{ item }}"
