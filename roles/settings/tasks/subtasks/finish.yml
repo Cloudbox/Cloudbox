@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Settings: Exit After Changes                           #
+# Title:         Settings: Finish                                       #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -12,37 +12,45 @@
 - name: Exit | Display Messages Block
   block:
 
-  - name: "Exit | Check 'settings-updater.py' for new settings."
+  - name: "Exit | Check 'settings-updater.py' for new settings"
     debug:
-      msg: "The 'settings_updater.py' script updated the following file{{ files_updated_successfully | pluralize }}: '{{ files_updated_successfully | join(', ') | trim }}'. Please check {{ files_updated_successfully | pluralize('this file','these files') }} for the newly added settings. You can also review the log file, 'settings-updater.log'."
+      msg:
+        - "The 'settings_updater.py' script updated the following
+            file{{ files_updated_successfully | pluralize }}: '{{ files_updated_successfully | join(', ') | trim }}'"
+        - "Please check {{ files_updated_successfully | pluralize('this file','these files') }} for the newly added settings"
+        - "You can also review the log file, 'settings-updater.log'"
     when: files_updated_successfully | length > 0
 
-  - name: "Exit | Check 'settings-updater.py' run status for errors."
+  - name: "Exit | Check 'settings-updater.py' run status for errors"
     debug:
-      msg: "The 'settings_updater.py' script exited with an error when updating the following file{{ files_updated_unsuccessfully | pluralize }}: '{{ files_updated_unsuccessfully | join(', ') | trim }}'. Please check 'settings-updater.log' for details."
+      msg:
+        - "The 'settings_updater.py' script exited with an error when updating the following
+            file{{ files_updated_unsuccessfully | pluralize }}: '{{ files_updated_unsuccessfully | join(', ') | trim }}'"
+        - "Please check 'settings-updater.log' for details"
     when: files_updated_unsuccessfully | length > 0
 
-  - name: "Exit | Exit so that user can check updated files and/or 'settings-updater.log'."
+  - name: "Exit | Exit so that user can check updated files and/or 'settings-updater.log'"
     fail:
       msg: "Cloudbox Installer will now exit."
 
   when: exit_is_necessary
 
 # Make sure accounts.yml has been filled in by user
-- name: "Exit | Get stats on 'accounts.yml' for hash check."
+- name: "Exit | Get stats on 'accounts.yml' for hash check"
   stat:
     path: "{{ playbook_dir }}/accounts.yml"
   register: accounts_yml
 
-- name: "Exit | Get stats on 'accounts.yml.default' for hash check."
+- name: "Exit | Get stats on 'accounts.yml.default' for hash check"
   stat:
     path: "{{ playbook_dir }}/defaults/accounts.yml.default"
   register: accounts_yml_default
 
-- name: "Exit | Ensure that 'accounts.yml' is configured."
+# Sanity Checks
+- name: "Exit | Ensure that 'accounts.yml' is configured"
   assert:
     that:
       - accounts_yml.stat.exists
       - accounts_yml.stat.checksum != accounts_yml_default.stat.checksum
       - '"{{ user.domain }}" != "testcloudbox.yml"'
-    msg: "You must configure 'accounts.yml' before running the Cloudbox installer."
+    msg: "You must configure 'accounts.yml' before running the Cloudbox installer"

@@ -8,12 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Ansible Config | Check if '{{ item }}' exists."
+- name: "Ansible Config | Check if '{{ item }}' exists"
   stat:
     path: "{{ playbook_dir }}/{{ item }}"
   register: file
 
-- name: "Ansible Config | Copy '{{ item }}.default' to '{{ item }}'."
+- name: "Ansible Config | Copy '{{ item }}.default' to '{{ item }}'"
   copy:
     src: "{{ playbook_dir }}/defaults/{{ item }}.default"
     dest: "{{ playbook_dir }}/{{ item }}"
@@ -23,7 +23,7 @@
     force: yes
   when: not file.stat.exists
 
-- name: "Ansible Config | Add hash_behaviour into '{{ item }}'."
+- name: "Ansible Config | Add hash_behaviour into '{{ item }}'"
   lineinfile:
     path: "{{ playbook_dir }}/{{ item }}"
     regexp: '^hash_behaviour\s?=.*'

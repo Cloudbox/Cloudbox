@@ -12,12 +12,12 @@
   block:
 
   # Check for and import settings files.
-  - name: "Settings Updater | Check if '{{ item }}' exists."
+  - name: "Settings Updater | Check if '{{ item }}' exists"
     stat:
       path: "{{ playbook_dir }}/{{ item }}"
     register: file0
 
-  - name: "Copy '{{ item }}.default' to '{{ item }}'."
+  - name: "Copy '{{ item }}.default' to '{{ item }}'"
     copy:
       src: "{{ playbook_dir }}/defaults/{{ item }}.default"
       dest: "{{ playbook_dir }}/{{ item }}"
@@ -31,17 +31,17 @@
   - name: Settings Updater | Decryption Block
     block:
 
-    - name: "Settings Updater | Check '{{ item }}' for encryption."
+    - name: "Settings Updater | Check '{{ item }}' for encryption"
       shell: "head -1 {{ playbook_dir }}/{{ item }} | grep -q \\$ANSIBLE_VAULT"
       register: encryption_check
       ignore_errors: yes
       failed_when: encryption_check.rc > 1
 
-    - name: "Settings Updater | Set 'file_is_encrypted' variable."
+    - name: "Settings Updater | Set 'file_is_encrypted' variable"
       set_fact:
         file_is_encrypted: "{{ ((encryption_check.rc == 0) | default(false,true)) }}"
 
-    - name: "Settings Updater | Decrypt '{{ item }}' when encrypted."
+    - name: "Settings Updater | Decrypt '{{ item }}' when encrypted"
       shell: "ansible-vault decrypt {{ playbook_dir }}/{{ item }}"
       become: yes
       become_user: "{{ cloudbox_yml.stat.pw_name }}"
@@ -50,7 +50,7 @@
     when: file0.stat.exists
 
   # settings-updater.py tasks
-  - name: "Settings Updater | Check if 'settings-updater.log' exists."
+  - name: "Settings Updater | Check if 'settings-updater.log' exists"
     stat:
       path: "{{ playbook_dir }}/settings-updater.log"
     register: settings_updater_log
@@ -64,8 +64,8 @@
       mode: 0664
     when: (settings_updater_log.stat.exists)
 
-  - name: "Settings Updater | Run 'settings-updater.py' for '{{ item }}'."
-    script: "roles/settings/files/settings-updater.py '{{ playbook_dir }}' 'defaults/{{ item }}.default' '{{ item }}'"
+  - name: "Settings Updater | Run 'settings-updater.py' for '{{ item }}'"
+    script: "'roles/settings/files/settings-updater.py' '{{ playbook_dir }}' 'defaults/{{ item }}.default' '{{ item }}'"
     become: yes
     become_user: "{{ cloudbox_yml.stat.pw_name }}"
     register: settings_updater
@@ -88,7 +88,7 @@
     when: (settings_updater.rc == 2) or (settings_updater.rc == 1)
 
   always:
-  - name: "Settings Updater | Re-encrypt '{{ item }}' if previously encrypted."
+  - name: "Settings Updater | Re-encrypt '{{ item }}' if previously encrypted"
     shell: "ansible-vault encrypt {{ playbook_dir }}/{{ item }}"
     become: yes
     become_user: "{{ cloudbox_yml.stat.pw_name }}"

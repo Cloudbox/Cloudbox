@@ -1,0 +1,30 @@
+#########################################################################
+# Title:         Settings: Start                                        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Install ruamel.yaml"
+  pip:
+    name: ruamel.yaml
+    version: 0.15.35
+    executable: pip3
+
+- name: "Check to see if yyq is installed"
+  stat:
+    path: "/usr/local/bin/yyq"
+  register: yyq_binary
+
+- name: Install yyq
+  import_role:
+    name: yyq
+  when: (not yyq_binary.stat.exists)
+
+- name: "Get 'cloudbox.yml' info"
+  stat:
+    path: "{{ playbook_dir }}/cloudbox.yml"
+  register: cloudbox_yml

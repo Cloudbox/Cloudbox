@@ -8,26 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Install ruamel.yaml"
-  pip:
-    name: ruamel.yaml
-    version: 0.15.35
-    executable: pip3
-
-- name: "Check to see if yyq is installed"
-  stat:
-    path: "/usr/local/bin/yyq"
-  register: yyq_binary
-
-- name: Install yyq
-  import_role:
-    name: yyq
-  when: (not yyq_binary.stat.exists)
-
-- name: "Get 'cloudbox.yml' info."
-  stat:
-    path: "{{ playbook_dir }}/cloudbox.yml"
-  register: cloudbox_yml
+- name: "Settings: Start"
+  include_tasks: "subtasks/start.yml"
 
 - name: "Settings: Ansible Config"
   include_tasks: "subtasks/ansible_config.yml"
@@ -56,5 +38,5 @@
     - "adv_settings.yml"
     - "backup_config.yml"
 
-- name: "Settings: Exit After Changes"
-  include_tasks: "subtasks/exit.yml"
+- name: "Settings: Finish"
+  include_tasks: "subtasks/finish.yml"
