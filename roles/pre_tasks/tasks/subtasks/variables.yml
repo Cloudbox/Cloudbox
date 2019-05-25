@@ -98,7 +98,7 @@
 
 - name: Variables | Set 'suitarr_default_version' variable
   set_fact:
-    suitarr_default_version: "unstable"
+    suitarr_default_version: "stable"
 
 - name: Variables | Check if 'suitarr.version' was specified
   set_fact:
