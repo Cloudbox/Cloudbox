@@ -1,0 +1,37 @@
+#########################################################################
+# Title:         Cloudbox: Settings | Main 2                            #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Settings | Copy"
+  include_tasks: "subtasks/copy.yml"
+  vars:
+    file: "{{ outer_item }}"
+
+- name: "Settings | Decrypt"
+  include_tasks: "subtasks/decrypt.yml"
+  vars:
+    file: "{{ outer_item }}"
+  when: (outer_item != "ansible.cfg")
+
+- name: "Settings | Migrator"
+  include_tasks: "subtasks/migrator.yml"
+  vars:
+    file: "{{ outer_item }}"
+
+- name: "Settings | Updater"
+  include_tasks: "subtasks/updater.yml"
+  vars:
+    file: "{{ outer_item }}"
+  when: (outer_item != "ansible.cfg")
+
+- name: "Settings | Re-encrypt"
+  include_tasks: "subtasks/reencrypt.yml"
+  vars:
+    file: "{{ outer_item }}"
+  when: (outer_item != "ansible.cfg")

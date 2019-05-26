@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Settings Role                                #
+# Title:         Cloudbox: Settings | Re-encrypt                        #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,14 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Settings | Start"
-  include_tasks: "subtasks/start.yml"
-
-- name: "Settings | Main 2"
-  include_tasks: "main2.yml"
-  loop: "{{ config_files }}"
-  loop_control:
-    loop_var: outer_item
-
-- name: "Settings | Finish"
-  include_tasks: "subtasks/finish.yml"
+- name: "Re-encrypt | Re-encrypt '{{ file }}' if previously encrypted"
+  shell: "ansible-vault encrypt {{ playbook_dir }}/{{ file }}"
+  become: yes
+  become_user: "{{ cloudbox_yml.stat.pw_name }}"
+  when: file_is_encrypted

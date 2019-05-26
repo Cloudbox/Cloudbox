@@ -1,0 +1,74 @@
+########################################################################################
+# Title:         Cloudbox: Settings | Migrator | 'backup_config.yml' | Migration 02    #
+# Author(s):     desimaniac                                                            #
+# URL:           https://github.com/cloudbox/cloudbox                                  #
+# --                                                                                   #
+#                 Part of the Cloudbox project: https://cloudbox.works                 #
+########################################################################################
+#                            GNU General Public License v3.0                           #
+########################################################################################
+
+---
+- name: "Migrator | 'backup_config.yml' | Migration 01 | Set variables"
+  set_fact:
+    old_settings: "{{ true if not(
+        (vault_service is undefined)
+        or
+        (vault_service is none)
+        or
+        (vault_service | trim | length == 0)
+        or
+        (vault_service.user is undefined)
+        or
+        (vault_service.user is none)
+        or
+        (vault_service.user | trim | length == 0)
+        or
+        (vault_service.pass is undefined)
+        or
+        (vault_service.pass is none)
+        or
+        (vault_service.pass | trim | length == 0)
+      )
+        else false }}"
+    new_settings: "{{ true if not(
+        (restore_service is undefined)
+        or
+        (restore_service is none)
+        or
+        (restore_service | trim | length == 0)
+        or
+        (restore_service.user is undefined)
+        or
+        (restore_service.user is none)
+        or
+        (restore_service.user | trim | length == 0)
+        or
+        (restore_service.pass is undefined)
+        or
+        (restore_service.pass is none)
+        or
+        (restore_service.pass | trim | length == 0)
+      )
+        else false }}"
+
+- name: Migrator | 'backup_config.yml' | Migration 01 | Add 'restore_service' key
+  shell: |
+    yyq w -i {{ playbook_dir }}/{{ file }} restore_service.user {{ vault_service.user }}
+    yyq w -i {{ playbook_dir }}/{{ file }} restore_service.pass {{ vault_service.pass }}
+    yyq d -i {{ playbook_dir }}/{{ file }} vault_service
+  become: yes
+  become_user: "{{ cloudbox_yml.stat.pw_name }}"
+  when: (old_settings) and not (new_settings)
+
+- name: Migrator | 'backup_config.yml' | Migration 01 | Remove 'null' values
+  replace:
+    path: "{{ playbook_dir }}/{{ file }}"
+    regexp: 'null'
+    replace: ''
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664
+
+- name: Migrator | 'backup_config.yml' | Migration 01 | Re-import Variables
+  include_vars: "{{ playbook_dir }}/{{ file }}"

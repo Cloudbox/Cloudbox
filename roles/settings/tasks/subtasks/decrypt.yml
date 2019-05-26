@@ -1,0 +1,26 @@
+#########################################################################
+# Title:         Cloudbox: Settings | Decrypt                           #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Decrypt | Check '{{ file }}' for encryption"
+  shell: "head -1 {{ playbook_dir }}/{{ file }} | grep -q \\$ANSIBLE_VAULT"
+  register: encryption_check
+  ignore_errors: yes
+  changed_when: no
+  failed_when: encryption_check.rc > 1
+
+- name: "Decrypt | Set 'file_is_encrypted' variable"
+  set_fact:
+    file_is_encrypted: "{{ ((encryption_check.rc == 0) | default(false,true)) }}"
+
+- name: "Decrypt | Decrypt '{{ file }}' when encrypted"
+  shell: "ansible-vault decrypt {{ playbook_dir }}/{{ file }}"
+  become: yes
+  become_user: "{{ cloudbox_yml.stat.pw_name }}"
+  when: file_is_encrypted
