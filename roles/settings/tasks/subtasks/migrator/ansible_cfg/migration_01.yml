@@ -1,0 +1,21 @@
+########################################################################################
+# Title:         Cloudbox: Settings | Migrator | 'ansible.cfg' | Migration 01          #
+# Author(s):     desimaniac                                                            #
+# URL:           https://github.com/cloudbox/cloudbox                                  #
+# --                                                                                   #
+#                 Part of the Cloudbox project: https://cloudbox.works                 #
+########################################################################################
+#                            GNU General Public License v3.0                           #
+########################################################################################
+---
+- name: "Migrator | 'ansible.cfg' | Add 'hash_behaviour = merge'"
+  ini_file:
+    path: "{{ playbook_dir }}/{{ file }}"
+    section: defaults
+    option: "hash_behaviour"
+    value: "merge"
+    state: present
+    no_extra_spaces: no
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664

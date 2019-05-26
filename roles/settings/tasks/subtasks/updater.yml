@@ -1,0 +1,33 @@
+#########################################################################
+# Title:         Cloudbox: Settings | Updater                           #
+# Author(s):     desimaniac, l3uddz                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Updater | Run 'settings-updater.py' for '{{ file }}'"
+  script: "'roles/settings/files/settings-updater.py' '{{ playbook_dir }}' 'defaults/{{ file }}.default' '{{ file }}'"
+  become: yes
+  become_user: "{{ cloudbox_yml.stat.pw_name }}"
+  register: settings_updater
+  ignore_errors: yes
+  changed_when: no
+  failed_when: settings_updater.rc == 1
+
+- name: Updater | Build 'files_updated_successfully' list
+  set_fact:
+    files_updated_successfully: "{{ files_updated_successfully }} + [ '{{ file }}' ]"
+  when: settings_updater.rc == 2
+
+- name: Updater | Build 'files_updated_unsuccessfully' list
+  set_fact:
+    files_updated_unsuccessfully: "{{ files_updated_unsuccessfully }} + [ '{{ file }}' ]"
+  when: settings_updater.rc == 1
+
+- name: Updater | Set 'exit_is_necessary' variable
+  set_fact:
+    exit_is_necessary: true
+  when: (settings_updater.rc == 2) or (settings_updater.rc == 1)

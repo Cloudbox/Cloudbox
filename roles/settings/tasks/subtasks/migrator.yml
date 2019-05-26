@@ -1,0 +1,49 @@
+#########################################################################
+# Title:         Cloudbox: Settings | Migrator                          #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Migrator | Migrations for all config files
+  block:
+
+  # Replace {{ user }} with {{ user.name }}
+  - name: Migrator | All | Migration 01
+    include_tasks: "migrator/all/migration_01.yml"
+
+  when: (file != "ansible.cfg")
+
+- name: Migrator | Migrations for 'ansible.cfg'
+  block:
+
+  # Add 'hash_behaviour = merge'
+  - name: Migrator | 'ansible.cfg' | Migration 01
+    include_tasks: "migrator/ansible_cfg/migration_01.yml"
+
+  when: (file == "ansible.cfg")
+
+- name: Migrator | Migrations for 'accounts.yml'
+  block:
+
+  # Move 'user,passwd,domain,email' to 'user' key
+  - name: Migrator | 'accounts.yml' | Migration 01
+    include_tasks: "migrator/accounts_yml/migration_01.yml"
+
+  # Move 'cloudflare_api_token' to 'cloudflare' key
+  - name: Migrator | 'accounts.yml' | Migration 02
+    include_tasks: "migrator/accounts_yml/migration_02.yml"
+
+  when: (file == "accounts.yml")
+
+- name: Migrator | Migrations for 'backup_config.yml'
+  block:
+
+  #  Move 'vault_service' to 'restore_service'
+  - name: Migrator | 'backup_config.yml' | Migration 01
+    include_tasks: "migrator/backup_config_yml/migration_01.yml"
+
+  when: (file == "backup_config.yml")

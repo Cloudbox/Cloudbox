@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Settings: Start                                        #
+# Title:         Cloudbox: Settings | Start                             #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,23 +8,52 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Install ruamel.yaml"
+- name: "Start | Install ruamel.yaml"
   pip:
     name: ruamel.yaml
     version: 0.15.35
     executable: pip3
 
-- name: "Check to see if yyq is installed"
+- name: "Start | Check to see if yyq is installed"
   stat:
     path: "/usr/local/bin/yyq"
   register: yyq_binary
 
-- name: Install yyq
+- name: Start | Install yyq
   import_role:
     name: yyq
   when: (not yyq_binary.stat.exists)
 
-- name: "Get 'cloudbox.yml' info"
+- name: "Start | Get 'cloudbox.yml' info"
   stat:
     path: "{{ playbook_dir }}/cloudbox.yml"
   register: cloudbox_yml
+
+- name: "Start | Create list of config files"
+  set_fact:
+    config_files:
+      - "ansible.cfg"
+      - "accounts.yml"
+      - "settings.yml"
+      - "adv_settings.yml"
+      - "backup_config.yml"
+
+- name: Start | Initialize vars with empty lists
+  set_fact:
+    files_updated_successfully: []
+    files_updated_unsuccessfully: []
+    exit_is_necessary: false
+
+- name: "Start | Check if 'settings-updater.log' exists"
+  stat:
+    path: "{{ playbook_dir }}/settings-updater.log"
+  register: settings_updater_log
+
+- name: "Start | Reset ownership of 'settings-updater.log'"
+  file:
+    path: "{{ playbook_dir }}/settings-updater.log"
+    state: file
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664
+  when: (settings_updater_log.stat.exists)

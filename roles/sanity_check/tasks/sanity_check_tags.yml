@@ -18,6 +18,7 @@
     ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" \
       | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
   register: t
+  changed_when: no
   when:
    - not continuous_integration
    - "'cloudbox_mod' not in playbook_dir"
