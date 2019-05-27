@@ -12,6 +12,7 @@
   docker_container:
     name: plex
     state: stopped
+  when: ('trakttv-plugin' in ansible_run_tags)
 
 - name: Remove Previous Trakt.tv Plugin
   file:
@@ -62,3 +63,4 @@
   docker_container:
     name: plex
     state: started
+  when: ('trakttv-plugin' in ansible_run_tags)
