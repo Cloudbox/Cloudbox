@@ -170,11 +170,11 @@
 
 - name: "Install WebTools"
   import_role:
-    name: webtools
+    name: webtools-plugin
 
-- name: "Install Sub-Zero"
+- name: "Install Sub-Zero Plugin"
   import_role:
-    name: sub-zero
+    name: sub-zero-plugin
 
 - name: "Forced Automatic Quality Settings"
   import_tasks: "subtasks/settings/forced_quality.yml"
