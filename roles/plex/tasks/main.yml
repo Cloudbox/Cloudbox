@@ -167,10 +167,6 @@
     restart_policy: unless-stopped
     state: started
 
-- name: "Wait 15 seconds"
-  wait_for:
-    timeout: 15
-
 # Sometimes docker will set transcodes folder to root after a restore.
 - name: "Ensure transcodes folder has the correct permissions"
   file:
@@ -180,24 +176,6 @@
     mode: 0775
     recurse: yes
 
-- name: "Install Trakt.tv Plugin"
-  import_role:
-    name: trakttv-plugin
-
-- name: "Install Sub-Zero Plugin"
-  import_role:
-    name: sub-zero-plugin
-
-- name: "Install WebTools Plugin"
-  import_role:
-    name: webtools-plugin
-
-- name: "Forced Automatic Quality Settings"
-  import_tasks: "subtasks/settings/forced_quality.yml"
-  tags: plex_forced_quality
-  when: (not continuous_integration)
-
-- name: "DB Cache Size Settings"
-  import_tasks: "subtasks/settings/db_cache_size.yml"
-  tags: plex_db_cache_size
+- name: Extra Tasks
+  import_tasks: "subtasks/extra.yml"
   when: (not continuous_integration)

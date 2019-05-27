@@ -53,6 +53,7 @@
     docker_container:
       name: plex
       state: stopped
+    when: ('sub-zero-plugin' in ansible_run_tags) or ('reinstall-sub-zero-plugin' in ansible_run_tags)
 
   - name: Remove outdated Sub-Zero Plugin
     file:
@@ -101,6 +102,7 @@
     docker_container:
       name: plex
       state: started
+    when: ('sub-zero-plugin' in ansible_run_tags) or ('reinstall-sub-zero-plugin' in ansible_run_tags)
 
   when: (not subzero_bundle.stat.exists) or ((subzero_bundle.stat.exists) and (subzero_outdated)) or ('reinstall-sub-zero-plugin' in ansible_run_tags)
 

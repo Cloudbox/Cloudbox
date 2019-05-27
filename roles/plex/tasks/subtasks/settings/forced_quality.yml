@@ -1,5 +1,5 @@
 ##########################################################################
-# Title:         Plex: Forced Automatic Quality Settings                 #
+# Title:         Cloudbox: Plex | Forced Automatic Quality Settings      #
 # Author(s):     desimaniac                                              #
 # URL:           https://github.com/cloudbox/cloudbox                    #
 # --                                                                     #
@@ -51,4 +51,4 @@
     name: plex
     state: started
     restart: yes
-  when: x.changed or y.changed
+  when: ('plex_forced_quality' in ansible_run_tags) and (x.changed or y.changed)

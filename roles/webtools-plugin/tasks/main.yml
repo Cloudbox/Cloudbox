@@ -46,6 +46,7 @@
     docker_container:
       name: plex
       state: stopped
+    when: ('webtools-plugin' in ansible_run_tags) or ('reinstall-webtools-plugin' in ansible_run_tags)
 
   - name: Remove outdated WebTools Plugin
     file:
@@ -88,6 +89,7 @@
     docker_container:
       name: plex
       state: started
+    when: ('webtools-plugin' in ansible_run_tags) or ('reinstall-webtools-plugin' in ansible_run_tags)
 
   when: (not webtools_bundle.stat.exists) or ((webtools_bundle.stat.exists) and (webtools_outdated)) or ('reinstall-webtools-plugin' in ansible_run_tags)
 

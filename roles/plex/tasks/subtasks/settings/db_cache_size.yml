@@ -1,5 +1,5 @@
 ##########################################################################
-# Title:         Plex: DB Cache Size Settings                            #
+# Title:         Cloudbox: Plex | DB Cache Size Settings                 #
 # Author(s):     desimaniac                                              #
 # URL:           https://github.com/cloudbox/cloudbox                    #
 # --                                                                     #
@@ -50,6 +50,7 @@
     docker_container:
       name: plex
       state: stopped
+    when: ('plex_db_cache_size' in ansible_run_tags)
 
   - name: Display Desired Plex DB Cache Size
     debug:
@@ -78,5 +79,6 @@
     docker_container:
       name: plex
       state: started
+    when: ('plex_db_cache_size' in ansible_run_tags)
 
   when: ( current_db_cache_size.stdout | int ) != ( desired_db_cache_size | regex_replace(',', '') | int )
