@@ -24,39 +24,41 @@
   import_tasks: "subtasks/role_variables.yml"
   tags: always
 
-# Sub-Domain Tasks
-- name: "Set Cloudbox Type to 'cloudbox'"
-  set_fact:
-    cloudbox_type: "cloudbox"
-  tags: cloudbox
-
-- name: "Set Cloudbox Type to 'mediabox'"
-  set_fact:
-    cloudbox_type: "mediabox"
-  tags: mediabox
-
-- name: "Set Cloudbox Type to 'feederbox'"
-  set_fact:
-    cloudbox_type: "feederbox"
-  tags: feederbox
-
-## Add cloudbox_type subdomain
-- name: "Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ user.domain }}'"
-  import_tasks: "subtasks/add_subdomain.yml"
-  when: cloudflare_enabled
-  tags:
-    - cloudbox
-    - mediabox
-    - feederbox
-
-## Remove cloudbox subdomain for Mediabox/Feederbox setups.
-- name: "Cloudflare: Remove 'cloudbox' subdomain from '{{ user.domain }}'"
-  import_tasks: "subtasks/remove_subdomain.yml"
-  when: cloudflare_enabled
-  tags:
-    - mediabox
-    - feederbox
-
 - name: APT Tasks
   import_tasks: "subtasks/apt.yml"
   tags: always
+
+- name: Sub Domain Tasks
+  block:
+
+  - name: "Set Cloudbox Type to 'cloudbox'"
+    set_fact:
+      cloudbox_type: "cloudbox"
+    tags: cloudbox
+
+  - name: "Set Cloudbox Type to 'mediabox'"
+    set_fact:
+      cloudbox_type: "mediabox"
+    tags: mediabox
+
+  - name: "Set Cloudbox Type to 'feederbox'"
+    set_fact:
+      cloudbox_type: "feederbox"
+    tags: feederbox
+
+  ## Add cloudbox_type subdomain
+  - name: "Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ user.domain }}'"
+    import_tasks: "subtasks/add_subdomain.yml"
+    tags:
+      - cloudbox
+      - mediabox
+      - feederbox
+
+  ## Remove cloudbox subdomain for Mediabox/Feederbox setups.
+  - name: "Cloudflare: Remove 'cloudbox' subdomain from '{{ user.domain }}'"
+    import_tasks: "subtasks/remove_subdomain.yml"
+    tags:
+      - mediabox
+      - feederbox
+
+  when: (cloudflare_enabled) and ('pre_tasks' not in ansible_run_tags)
