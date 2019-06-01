@@ -24,6 +24,105 @@ Links:
 
 ## [Unreleased][]
 
+## [1.4.5][] - 2019-06-01
+
+- **Settings**: Use most recent upgrader used in other l3uddz projects (#300) ([#04377e2f][])
+- **Plex**: Reorganized Role [ansible] ([#9a38c16c][])
+- **Plex Autoscan**: Use Ansible password plugin to generate server pass. ([#e42f526e][])
+- **Scripts**: 'Plex Autoscan URL Script' update. ([#75960e0b][])
+- **ruTorrent**: Create themes and plugins folder. ([#fe5f3e9a][])
+- **Preinstall**: Check if variables are defined before testing. [ansible] ([#097cbaf6][])
+- **Common**: YYQ is already installed in Settings role. ([#086a3dde][])
+- **Settings**: YYQ is now only installed when needed. ([#e6297e80][])
+- **Preinstall**: Updated variable used for new home path. [ansible] ([#239559b7][])
+- **Settings**: Reset ownership of 'settings-updater.log' if it exists. ([#047ec684][])
+- **User**: Also copies '.ansible_vault' file during home folder migration. ([#0d855dc0][])
+- **Changelog**: Updated Tag links ([#ce8d18f5][])
+- **Changelog**: Minor touchups to scripts. ([#1cb65c7c][])
+- **Restore**: Shows more details during tarball extraction. ([#85e82bab][])
+- **System**: Minor touchups to role. ([#bdfaf389][])
+- **Settings**: Reorganized Role  [ansible] ([#61c4022c][])
+- **PreTasks**: Renamed subtasks. [ansible] ([#4bc99888][])
+- **Organizr**: Replaced backticks with single quotes. [ansible] ([#c4e77f07][])
+- **Settings**: New layout for `accounts.yml`. ([#55d38466][])
+- **Settings**: Migrate users to new `accounts.yml` layout. ([#91da506b][])
+- **Settings**: Updated new variables globally. [ansible] ([#4b1572a8][])
+- **Plex Auth Token**: Display Plex Pass status as well. ([#5cbe5853][])
+- **Plex**: Reorganized tasks. [ansible] ([#8a5810fe][])
+- **Plex**: Reclaim server when `PlexOnlineToken` is missing. ([#5fd7a1fc][])
+- **Nginx-Proxy**: Cloudflare Tasks. ([#89ab1ed9][])
+- **Restore**: Restore service now supports backing up and restoring of .ansible_vault file ([#eff176b0][])
+- **Plex**: Recreate `Preferences.xml` file when it is malformed. ([#6217bfbc][])
+- **Git**: Updated git clone repo addresses ([#6ff0765e][])
+- **UnionFS**: Updated backup download URL for MergerFS. ([#637b9a66][])
+- **Plex**: Updated plugin roles and tags. ([#65287630][])
+- **Trakktv**: New role for Trak.tv plugin. ([#9588b355][])
+- **Settings**: Settings Migrator - Replace {{ user }} with {{ user.name }} ([#c14d0b52][])
+- **Plex**: Define 'localhost_ip' here. [ansible] ([#f8b20355][])
+- **Plex**: Fix transcode path if set to non-default `/transcodes`. ([#d4a89bea][])
+- **Emby**: Tweaked mounts. ([#b63561b2][])
+- **Plex**: Tweaked task titles. [ansible] ([#e8ed6030][])
+- **Shell**: Set default shell to bash.  ([#22662094][])
+- **Settings**: Reorganized Role [ansible] ([#f8ef5cdb][])
+- **AppVeyor**: Ignore Settings Role changes. ([#c0889cc0][])
+- **Ombi**: Revert to `stable` version when `unstable` one isn't available. ([#8b8e1547][])
+- **Sanity Check**: Added tag [ansible] ([#9a137ace][])
+- **Suitarr**: Set default version to `stable`. ([#959c9d09][])
+- **Settings**: Reorganized Role (again) [ansible] ([#f892eae5][])
+- **Settings**: Will now add a space after colon in YAML files. ([#82a77790][])
+- **PreTasks**: Added tag [ansible] ([#8afba1be][])
+- **PreTasks**: If timezone fetch fails, revert to fallback timezones. ([#3463334a][])
+- **Plex**: Only stop/start plex container once during extra tasks. ([#7f2e853b][])
+
+[1.4.5]: https://github.com/cloudbox/cloudbox/compare/1.4.4...1.4.5
+[#04377e2f]: https://github.com/cloudbox/cloudbox/commit/04377e2f
+[#9a38c16c]: https://github.com/cloudbox/cloudbox/commit/9a38c16c
+[#e42f526e]: https://github.com/cloudbox/cloudbox/commit/e42f526e
+[#75960e0b]: https://github.com/cloudbox/cloudbox/commit/75960e0b
+[#fe5f3e9a]: https://github.com/cloudbox/cloudbox/commit/fe5f3e9a
+[#097cbaf6]: https://github.com/cloudbox/cloudbox/commit/097cbaf6
+[#086a3dde]: https://github.com/cloudbox/cloudbox/commit/086a3dde
+[#e6297e80]: https://github.com/cloudbox/cloudbox/commit/e6297e80
+[#239559b7]: https://github.com/cloudbox/cloudbox/commit/239559b7
+[#047ec684]: https://github.com/cloudbox/cloudbox/commit/047ec684
+[#0d855dc0]: https://github.com/cloudbox/cloudbox/commit/0d855dc0
+[#ce8d18f5]: https://github.com/cloudbox/cloudbox/commit/ce8d18f5
+[#1cb65c7c]: https://github.com/cloudbox/cloudbox/commit/1cb65c7c
+[#85e82bab]: https://github.com/cloudbox/cloudbox/commit/85e82bab
+[#bdfaf389]: https://github.com/cloudbox/cloudbox/commit/bdfaf389
+[#61c4022c]: https://github.com/cloudbox/cloudbox/commit/61c4022c
+[#4bc99888]: https://github.com/cloudbox/cloudbox/commit/4bc99888
+[#c4e77f07]: https://github.com/cloudbox/cloudbox/commit/c4e77f07
+[#55d38466]: https://github.com/cloudbox/cloudbox/commit/55d38466
+[#91da506b]: https://github.com/cloudbox/cloudbox/commit/91da506b
+[#4b1572a8]: https://github.com/cloudbox/cloudbox/commit/4b1572a8
+[#5cbe5853]: https://github.com/cloudbox/cloudbox/commit/5cbe5853
+[#8a5810fe]: https://github.com/cloudbox/cloudbox/commit/8a5810fe
+[#5fd7a1fc]: https://github.com/cloudbox/cloudbox/commit/5fd7a1fc
+[#89ab1ed9]: https://github.com/cloudbox/cloudbox/commit/89ab1ed9
+[#eff176b0]: https://github.com/cloudbox/cloudbox/commit/eff176b0
+[#6217bfbc]: https://github.com/cloudbox/cloudbox/commit/6217bfbc
+[#6ff0765e]: https://github.com/cloudbox/cloudbox/commit/6ff0765e
+[#637b9a66]: https://github.com/cloudbox/cloudbox/commit/637b9a66
+[#65287630]: https://github.com/cloudbox/cloudbox/commit/65287630
+[#9588b355]: https://github.com/cloudbox/cloudbox/commit/9588b355
+[#c14d0b52]: https://github.com/cloudbox/cloudbox/commit/c14d0b52
+[#f8b20355]: https://github.com/cloudbox/cloudbox/commit/f8b20355
+[#d4a89bea]: https://github.com/cloudbox/cloudbox/commit/d4a89bea
+[#b63561b2]: https://github.com/cloudbox/cloudbox/commit/b63561b2
+[#e8ed6030]: https://github.com/cloudbox/cloudbox/commit/e8ed6030
+[#22662094]: https://github.com/cloudbox/cloudbox/commit/22662094
+[#f8ef5cdb]: https://github.com/cloudbox/cloudbox/commit/f8ef5cdb
+[#c0889cc0]: https://github.com/cloudbox/cloudbox/commit/c0889cc0
+[#8b8e1547]: https://github.com/cloudbox/cloudbox/commit/8b8e1547
+[#9a137ace]: https://github.com/cloudbox/cloudbox/commit/9a137ace
+[#959c9d09]: https://github.com/cloudbox/cloudbox/commit/959c9d09
+[#f892eae5]: https://github.com/cloudbox/cloudbox/commit/f892eae5
+[#82a77790]: https://github.com/cloudbox/cloudbox/commit/82a77790
+[#8afba1be]: https://github.com/cloudbox/cloudbox/commit/8afba1be
+[#3463334a]: https://github.com/cloudbox/cloudbox/commit/3463334a
+[#7f2e853b]: https://github.com/cloudbox/cloudbox/commit/7f2e853b
+
 ## [1.4.4][] - 2019-05-18
 
 - **Plex Autoscan**: Minor update to default config. ([#1af78d5e][])
