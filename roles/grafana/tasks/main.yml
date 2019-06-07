@@ -16,12 +16,12 @@
     subdomain: grafana
 
 - name: Stop and remove any existing containers
-  docker_container: "name={{item}} state=absent"
+  docker_container: "name={{ item }} state=absent"
   with_items:
     - grafana
 
 - name: Create required directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/grafana
 
@@ -32,15 +32,15 @@
     pull: yes
     published_ports:
       - "127.0.0.1:3001:3000"
-    user: "{{uid}}:{{gid}}"
+    user: "{{ uid }}:{{ gid }}"
     env:
-      GF_SERVER_ROOT_URL: "https://grafana.{{domain}}"
-      GF_SECURITY_ADMIN_PASSWORD: "{{passwd}}"
+      GF_SERVER_ROOT_URL: "https://grafana.{{ user.domain }}"
+      GF_SECURITY_ADMIN_PASSWORD: "{{ user.pass }}"
       GF_INSTALL_PLUGINS: "grafana-piechart-panel,grafana-worldmap-panel"
-      VIRTUAL_HOST: "grafana.{{domain}}"
+      VIRTUAL_HOST: "grafana.{{ user.domain }}"
       VIRTUAL_PORT: 3000
-      LETSENCRYPT_HOST: "grafana.{{domain}}"
-      LETSENCRYPT_EMAIL: "{{email}}"
+      LETSENCRYPT_HOST: "grafana.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/grafana:/var/lib/grafana"

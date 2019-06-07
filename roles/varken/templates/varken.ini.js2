@@ -18,9 +18,9 @@ username =
 password =
 
 [tautulli-1]
-url = plexpy.{{domain}}
-fallback_ip = {{ip}}
-apikey = {{plexpy_api_key}}
+url = plexpy.{{ user.domain }}
+fallback_ip = {{ ip }}
+apikey = {{ plexpy_api_key }}
 ssl = false
 verify_ssl = false
 get_activity = true
@@ -29,8 +29,8 @@ get_stats = true
 get_stats_run_seconds = 3600
 
 [sonarr-1]
-url = sonarr.{{domain}}
-apikey = {{sonarr_api_key}}
+url = sonarr.{{ user.domain }}
+apikey = {{ sonarr_api_key }}
 ssl = false
 verify_ssl = false
 missing_days = 7
@@ -41,8 +41,8 @@ queue = true
 queue_run_seconds = 300
 
 [radarr-1]
-url = radarr.{{domain}}
-apikey = {{radarr_api_key}}
+url = radarr.{{ user.domain }}
+apikey = {{ radarr_api_key }}
 ssl = false
 verify_ssl = false
 queue = true
@@ -51,8 +51,8 @@ get_missing = true
 get_missing_run_seconds = 300
 
 [ombi-1]
-url = {{ ombi.subdomain|default('ombi',true) }}.{{domain}}
-apikey = {{ombi_api_key}}
+url = {{ ombi.subdomain|default('ombi',true) }}.{{ user.domain }}
+apikey = {{ ombi_api_key }}
 ssl = false
 verify_ssl = false
 get_request_type_counts = true

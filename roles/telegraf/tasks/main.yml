@@ -10,12 +10,12 @@
 #########################################################################
 ---
 - name: Stop and remove any existing containers
-  docker_container: "name={{item}} state=absent"
+  docker_container: "name={{ item }} state=absent"
   with_items:
     - telegraf
 
 - name: Create required directories
-  file: "path={{item}} state=directory mode=0775 owner={{user}} group={{user}}"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/telegraf
 
@@ -28,8 +28,8 @@
   copy:
     src: "telegraf.conf"
     dest: "/opt/telegraf/telegraf.conf"
-    owner: "{{uid}}"
-    group: "{{gid}}"
+    owner: "{{ uid }}"
+    group: "{{ gid }}"
     mode: 0775
   when: not telegraf_conf.stat.exists
 
@@ -43,8 +43,8 @@
       - "8092:8092/udp"
       - "8094:8094/tcp"
     env:
-      PUID: "{{uid}}"
-      PGID: "{{gid}}"
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
     volumes:
       - "/opt/telegraf:/etc/telegraf:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

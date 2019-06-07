@@ -78,7 +78,7 @@
   template:
     src: varken.ini.js2
     dest: /opt/varken/varken.ini
-    owner: "{{user}}"
-    group: "{{user}}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
     mode: 0775
     force: yes
