@@ -50,8 +50,8 @@
 - name: Migrator | 'accounts.yml' | Migration 01 | Remove 'null' values
   replace:
     path: "{{ playbook_dir }}/{{ file }}"
-    regexp: 'null'
-    replace: ''
+    regexp: '(\s*.*):\s*null'
+    replace: '\1: '
     owner: "{{ cloudbox_yml.stat.uid }}"
     group: "{{ cloudbox_yml.stat.gid }}"
     mode: 0664
