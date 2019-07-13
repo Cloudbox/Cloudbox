@@ -73,7 +73,7 @@
       rclone_version_specified0: >-
         {{ ('%.2f'|format(rclone.version|float))
         if ((rclone.version | type_debug == 'float') or (rclone.version | type_debug == 'int'))
-        else ( '%.2f'|format((rclone.version | regex_replace('(^v\\.|^v)', '')) | float) ) }}
+        else (rclone.version | regex_replace('(^v\\.|^v)', '')) }}
 
   - name: Build URL | Check if version '{{ rclone_version_specified0 }}' is available
     shell: |
