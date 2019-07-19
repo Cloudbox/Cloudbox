@@ -61,7 +61,6 @@
       VIRTUAL_PORT: 8080
       LETSENCRYPT_HOST: "sabnzbd.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      LC_ALL: "C"
       TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) }}"
     labels:
