@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Hetzner: Update GRUB Handler                           #
+# Title:         Hetzner: Reload GRUB Handler                           #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -9,7 +9,7 @@
 #########################################################################
 ---
 # https://github.com/debops/ansible-grub
-- name: Update GRUB
-  command: update-grub
+- name: Reload GRUB
+  command: grub-mkconfig -o /boot/grub/grub.cfg
   register: grub_register_update
   failed_when: ('error' in grub_register_update.stderr)
