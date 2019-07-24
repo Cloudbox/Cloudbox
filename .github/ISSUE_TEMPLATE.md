@@ -16,4 +16,4 @@ Use https://github.com/Cloudbox/Cloudbox/issues/new?template=bug_report.md
 
 ## Feature Request
 
-Use https://github.com/Sonarr/Sonarr/issues/new?template=feature_request.md
+Use https://github.com/Cloudbox/Cloudbox/issues/new?template=feature_request.md
