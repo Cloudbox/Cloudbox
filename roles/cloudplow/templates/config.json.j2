@@ -22,7 +22,7 @@
         "url": "https://plex.{{ user.domain }}",
         "token": "{{ plex_auth_token | default('') }}",
         "poll_interval": 60,
-        "verbose_notifications": false,
+        "notifications": false,
         "max_streams_before_throttle": 1,
         "rclone": {
             "throttle_speeds": {
