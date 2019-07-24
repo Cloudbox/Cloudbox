@@ -10,6 +10,7 @@ skip_tags: true
 skip_commits:
   files:
     - '*.md'
+    - '.github/*'
     - 'defaults/*'
     - 'roles/*/files/*'
     - 'roles/settings/*'
