@@ -26,14 +26,19 @@
 - name: Variables
   import_tasks: "variables.yml"
 
+- name: BTRFS Tasks
+  include_tasks: "btrfs.yml"
+  loop:
+    - /opt
+    - /mnt/local
+  loop_control:
+    loop_var: outer_item
+
 - name: Create common directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt
     - /mnt/local
-
-- name: Btrfs Task
-  import_tasks: "btrfs.yml"
 
 - name: "Create backup location '{{ local.destination }}'"
   file: path={{ local.destination }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes

@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Restore: Btrfs Task                                    #
+# Title:         Restore: BTRFS Task                                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,16 +8,23 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Determine '/' filesystem type"
-  set_fact:
-    root_fstype: "{{ item.fstype }}"
-  when: "(item.mount == '/')"
-  with_items:
-    - "{{ ansible_mounts }}"
+- name: BTRFS | Check if '{{ outer_item }}' exists
+  stat:
+    path: "{{ outer_item }}"
+  register: outer_item_stat
 
-- name: Set no-cow on '/opt' and '/mnt/local' if '/' is btrfs
-  shell: "chattr +C {{ item }}"
-  when: (root_fstype is defined) and (root_fstype == 'btrfs')
-  with_items:
-    - /opt
-    - /mnt/local
+- name: BTRFS | Do following tasks when '{{ outer_item }}' does not exist
+  block:
+
+  - name: BTRFS | Create '{{ outer_item }}' path
+    file: "path={{ outer_item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+
+  - name: BTRFS | Check file system on '{{ outer_item }}'
+    shell: stat -f -c %T "{{ outer_item }}"
+    register: outer_item_file_system
+
+  - name: BTRFS | Set NOCOW on '{{ outer_item }} if BTRFS'
+    shell: "chattr +C {{ outer_item }}"
+    when: ('btrfs' in outer_item_file_system.stdout)
+
+  when: (not outer_item_stat.stat.exists)
