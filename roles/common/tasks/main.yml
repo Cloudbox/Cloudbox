@@ -8,21 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Btrfs | Determine '/' filesystem type"
-  set_fact:
-    root_fstype: "{{ item.fstype }}"
-  when: "(item.mount == '/')"
-  with_items:
-    - "{{ ansible_mounts }}"
-
-- name: Btrfs Task
+- name: BTRFS Tasks
   include_tasks: "btrfs.yml"
   loop:
     - /opt
     - /mnt/local
   loop_control:
     loop_var: outer_item
-  when: (root_fstype is defined) and (root_fstype == 'btrfs')
 
 - name: Create common directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
