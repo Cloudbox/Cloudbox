@@ -114,23 +114,19 @@
       "mlb-ws-mf.media.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
       "playback.svcs.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
 
+- name: "Set Plex ports variable"
+  set_fact:
+    plex_ports: "{{ (web_tools_ports + plex_main_ports) if (plex.open_port and not plex.all_ports)
+      else (web_tools_ports + plex_main_ports + plex_extra_ports) if (plex.open_port and plex.all_ports)
+      else (web_tools_ports + plex_extra_ports) if (not plex.open_port and plex.all_ports)
+      else web_tools_ports }}"
+
 - name: "Create and start container"
   docker_container:
     name: plex
     image: "cloudb0x/plex:{{ plex.tag }}"
     pull: yes
-    published_ports:
-      - "{{ (( plex.open_port | default(false,true)) | ternary('', '127.0.0.1:')) + '32400:32400/tcp' }}"
-      - "3005:3005/tcp"
-      - "8324:8324/tcp"
-      - "32469:32469/tcp"
-      - "1900:1900/udp"
-      - "32410:32410/udp"
-      - "32412:32412/udp"
-      - "32413:32413/udp"
-      - "32414:32414/udp"
-      - "33400:33400/tcp"
-      - "33443:33443/tcp"
+    published_ports: "{{ plex_ports }}"
     env:
       PLEX_UID: "{{ uid }}"
       PLEX_GID: "{{ gid }}"

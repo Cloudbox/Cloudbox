@@ -6,6 +6,7 @@ mounts:
   remote: rclone_vfs
 plex:
   open_port: no
+  all_ports: no
   force_auto_adjust_quality: no
   force_high_output_bitrates: no
   db_cache_size: default
