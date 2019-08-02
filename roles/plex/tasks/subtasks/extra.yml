@@ -8,42 +8,50 @@
 #                   GNU General Public License v3.0                      #
 ##########################################################################
 ---
-- name: Wait for 'Preferences.xml' to be created by Plex
+- name: Extra | Wait for 'Preferences.xml' to be created
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
     state: present
 
-- name: Wait for Plex DB to be created
+- name: Extra | Wait for Plex DB to be created
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
     state: present
 
-- name: Stop Plex Container
+- name: Extra | Wait for Plex Media Server executable to be created
+  shell: docker exec plex bash -c "ls '/usr/lib/plexmediaserver/Plex Media Server'"
+  register: pms_check
+  until: pms_check.stderr.find("No such file or directory") == -1
+  retries: 600
+  changed_when: pms_check.rc == 0
+  failed_when: pms_check.rc == 1 or pms_check.rc > 2
+
+- name: Extra | Stop Plex Container
   docker_container:
     name: plex
     state: stopped
 
-- name: "DB Cache Size Settings"
+- name: "Extra | DB Cache Size Settings"
   import_tasks: "subtasks/settings/db_cache_size.yml"
   tags: plex_db_cache_size
 
-- name: "Forced Automatic Quality Settings"
+- name: "Extra | Forced Automatic Quality Settings"
   import_tasks: "subtasks/settings/forced_quality.yml"
   tags: plex_forced_quality
 
-- name: "Install Trakt.tv Plugin"
+- name: "Extra | Install Trakt.tv Plugin"
   import_role:
     name: trakttv-plugin
 
-- name: "Install Sub-Zero Plugin"
+- name: "Extra | Install Sub-Zero Plugin"
   import_role:
     name: sub-zero-plugin
 
-- name: "Install WebTools Plugin"
+- name: "Extra | Install WebTools Plugin"
   import_role:
     name: webtools-plugin
 
-- name: Start Plex Container
+- name: Extra | Start Plex Container
   docker_container:
     name: plex
     state: started
