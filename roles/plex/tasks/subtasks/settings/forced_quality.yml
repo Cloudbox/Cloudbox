@@ -10,10 +10,10 @@
 #   Based on the work by Michael Zemsky (https://github.com/zmike808)    #
 ##########################################################################
 ---
-- name: Install lxml pip module
+- name: Settings | Forced Quality | Install lxml pip module
   pip: "name=lxml state=present"
 
-- name: Wait for 'Preferences.xml' to be created by Plex
+- name: Settings | Forced Quality | Wait for 'Preferences.xml' to be created by Plex
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
     state: present
@@ -21,7 +21,7 @@
 # 'forceAutoAdjustQuality' in Preferences.xml
 # Forces clients to use automatic quality for media unless the quality is set higher than the quality of the video.
 
-- name: "Set 'forceAutoAdjustQuality' in 'Preferences.xml' to
+- name: "Settings | Forced Quality | Set 'forceAutoAdjustQuality' in 'Preferences.xml' to
     '{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('Enabled','Disabled') }}'."
   xml:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
@@ -35,7 +35,7 @@
 # 'AllowHighOutputBitrates' in Preferences.xml
 # Forces transcode quality to upscale. But can cause high bandwidth usage for clients.
 
-- name: "Set 'AllowHighOutputBitrates' in 'Preferences.xml' to
+- name: "Settings | Forced Quality | Set 'AllowHighOutputBitrates' in 'Preferences.xml' to
     '{{ (plex.force_high_output_bitrates|default(false,true)) | ternary('Enabled','Disabled') }}'."
   xml:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
@@ -46,7 +46,7 @@
   register: y
   ignore_errors: yes
 
-- name: Restart plex container
+- name: Settings | Forced Quality | Restart plex container
   docker_container:
     name: plex
     state: started
