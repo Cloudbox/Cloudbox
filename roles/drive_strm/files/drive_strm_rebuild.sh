@@ -29,11 +29,8 @@ docker stop ${DOCKER_CONTAINER} >/dev/null
 # Remove STRM files
 rm -rf ${STRM_PATH}/*
 
-# Remove STRM db files
+# Remove Drive STRM db files
 rm ${APP_PATH}/*.db*
-
-# Reset page_token
-jq -c '.page_token = "1"' ${APP_PATH}/token.json >> ${APP_PATH}/tmp.$$.json && mv ${APP_PATH}/tmp.$$.json ${APP_PATH}/token.json
 
 # Start Docker container
 docker start ${DOCKER_CONTAINER} >/dev/null
