@@ -1,0 +1,47 @@
+#########################################################################
+# Title:         Docker: Binary Tasks                                   #
+# Author(s):     desimaniac, l3uddz                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Binary | Uninstall 'docker-py' pip module
+  pip:
+    name: docker-py
+    state: absent
+  ignore_errors: yes
+
+- name: Binary | Add official gpg signing key
+  apt_key:
+    id: 0EBFCD88
+    url: https://download.docker.com/linux/ubuntu/gpg
+
+- name: Binary | Add official repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ 'edge' if docker.repo is defined and docker.repo | lower == 'edge' else 'stable' }}"
+    filename: docker
+    update_cache: yes
+
+- name: Binary | Set docker package variables
+  set_fact:
+    docker_ce_package_name: "{{ 'docker-ce' if (docker.version is defined and docker.version | lower == 'latest') else 'docker-ce=*' + docker.version + '*~' + ansible_distribution | lower + '-' + ansible_distribution_release | lower }}"
+    docker_ce_cli_package_name: "{{ 'docker-ce-cli' if (docker.version is defined and docker.version | lower == 'latest') else 'docker-ce-cli=*' + docker.version + '*~' + ansible_distribution | lower + '-' + ansible_distribution_release | lower }}"
+
+- name: Binary | Set docker package state variable
+  set_fact:
+    docker_package_state: "{{ 'latest' if (docker.version is defined and docker.version | lower == 'latest') else 'present' }}"
+
+- name: Binary | Install 'docker-ce' and 'docker-ce-cli'
+  include_tasks: "binary2.yml"
+  loop:
+    - {name: 'docker-ce', friendly_name: 'Docker CE', package: '{{ docker_ce_package_name }}', file_path: '/usr/bin/dockerd'}
+    - {name: 'docker-ce-cli', friendly_name: 'Docker CE CLI', package: '{{ docker_ce_cli_package_name }}', file_path: '/usr/bin/docker'}
+
+- name: Binary | Install 'docker' pip module
+  pip:
+    name: docker
+    state: latest
+  ignore_errors: yes

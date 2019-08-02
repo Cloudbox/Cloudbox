@@ -1,6 +1,9 @@
 ---
 system:
   timezone: auto
+docker:
+  repo: edge
+  version: latest
 mounts:
   unionfs: mergerfs
   remote: rclone_vfs
