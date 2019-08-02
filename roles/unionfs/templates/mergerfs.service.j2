@@ -17,10 +17,9 @@ After=network-online.target
 Type=forking
 GuessMainPID=no
 ExecStart=/usr/bin/mergerfs \
-  -o category.create=ff,minfreespace=0,allow_other \
-  -o dropcacheonclose=true,security_capability=false,xattr=nosys \
-  -o statfs_ignore=ro,use_ino,auto_cache,umask=0002,noatime \
-  -o rw,suid,dev,exec,async,sync_read,auto_cache \
+  -o category.create=ff,async_read=false,cache.files=partial \
+  -o dropcacheonclose=true,use_ino,minfreespace=0 \
+  -o xattr=nosys,statfs_ignore=ro,allow_other,umask=002,noatime \
   /mnt/local=RW:/mnt/remote=NC /mnt/unionfs
 ExecStop=/bin/fusermount -u /mnt/unionfs
 
