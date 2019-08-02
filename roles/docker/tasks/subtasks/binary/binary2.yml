@@ -1,0 +1,40 @@
+#########################################################################
+# Title:         Docker: Binary Tasks 2                                 #
+# Author(s):     desimaniac, l3uddz                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Binary | Reset 'temp_version' variable
+  set_fact:
+    temp_version: ''
+
+- name: Binary | Release '{{ item.name }}' from hold
+  dpkg_selections:
+    name: "{{ item.name }}"
+    selection: install
+
+- name: Binary | Install '{{ item.name }}'
+  apt:
+    name: "{{ item.package }}"
+    state: "{{ docker_package_state }}"
+    update_cache: yes
+    force: yes
+
+- name: Binary | Put '{{ item.name }}' into hold
+  dpkg_selections:
+    name: "{{ item.name }}"
+    selection: hold
+
+- name: Binary | Get '{{ item.name }}' version
+  shell: "{{ item.file_path }} --version | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
+  register: temp_version
+  ignore_errors: yes
+
+- name: Binary | Display '{{ item.name }}' version
+  debug:
+    msg: "{{ item.friendly_name }} version {{ temp_version.stdout }} installed."
+  when: temp_version is defined
