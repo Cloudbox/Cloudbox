@@ -32,6 +32,17 @@
     path: "/opt/drive_strm/config.json"
   register: config_json
 
+- name: Rebuild Drive STRMs
+  shell: |
+    APP_PATH="/opt/drive_strm"
+    STRM_PATH="/mnt/strm"
+    rm -rf ${STRM_PATH}/* &> /dev/null || true
+    rm ${APP_PATH}/*.db* &> /dev/null || true
+  become: yes
+  become_user: "{{ user.name }}"
+  when: ('drive_strm_rebuild' in ansible_run_tags) or
+    (not config_json.stat.exists)
+
 - name: Do the following tasks when 'config.json' does not exist.
   block:
 
@@ -60,24 +71,21 @@
       mode: 0775
       force: yes
 
-  - name: "Remove existing 'token.json'"
-    file:
-      path: "/opt/drive_strm/token.json"
-      state: absent
-
   when: not config_json.stat.exists
 
-- name: "Check if '/opt/drive_strm/token.json' exists"
+- name: "Check if '/opt/drive_strm/vault.db' exists"
   stat:
-    path: "/opt/drive_strm/token.json"
-  register: existing_token_json
+    path: "/opt/drive_strm/vault.db"
+  register: existing_vault_db
 
-- name: "Do the following tasks when 'token.json' does not exist"
+- name: "Do the following tasks when 'vault.db' does not exist"
   block:
 
     - name: "Pull Docker image"
       docker_image:
         name: "cloudb0x/drive_strm:latest"
+        pull: yes
+        force: yes
 
     - name: "Retrieve authorization link"
       docker_container:
@@ -118,7 +126,7 @@
         prompt: "Please visit the above link, retrive the authorization code, and enter it below"
       register: authorization_code
 
-    - name: "Generate 'token.json'"
+    - name: "Generate 'vault.db'"
       docker_container:
         name: drive_strm
         image: "cloudb0x/drive_strm:latest"
@@ -139,17 +147,17 @@
         purge_networks: yes
         state: started
 
-    - name: "Check if '/opt/drive_strm/token.json' exists"
+    - name: "Check if '/opt/drive_strm/vault.db' exists"
       stat:
-        path: "/opt/drive_strm/token.json"
+        path: "/opt/drive_strm/vault.db"
       register: new_token_json
 
-    - name: "Failed to generate 'token.json'"
+    - name: "Failed to generate 'vault.db'"
       fail:
-        msg: "Failed to generate 'token.json'"
+        msg: "Failed to generate 'vault.db'"
       when: not new_token_json.stat.exists
 
-  when: not existing_token_json.stat.exists
+  when: not existing_vault_db.stat.exists
 
 - name: Import 'drive_strm_rebuild.sh' script
   copy:
@@ -158,18 +166,7 @@
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
-    force: no
-
-- name: Rebuild strms
-  shell: |
-    APP_PATH="/opt/drive_strm"
-    STRM_PATH="/mnt/strm"
-    rm -rf ${STRM_PATH}/*
-    rm ${APP_PATH}/*.db*
-    jq -c '.page_token = "1"' ${APP_PATH}/token.json | jq . > ${APP_PATH}/tmp.$$.json && mv ${APP_PATH}/tmp.$$.json ${APP_PATH}/token.json
-  become: yes
-  become_user: "{{ user.name }}"
-  when: ('drive_strm_rebuild' in ansible_run_tags)
+    force: yes
 
 - name: "Create and start container"
   docker_container:

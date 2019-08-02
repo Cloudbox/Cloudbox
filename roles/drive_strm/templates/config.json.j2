@@ -1,7 +1,4 @@
 {
-  "core": {
-    "debug": false
-  },
   "google": {
     "allowed": {
         "file_paths": [
@@ -20,9 +17,11 @@
         "mime_types": true,
         "mime_types_list": ["video"]
     },
-    "client_id": "{{ client_id.user_input | default('',true) }}",
-    "client_secret": "{{ client_secret.user_input | default('',true) }}",
+    "client_id": "{{ (client_id.user_input | default('',true)) | trim }}",
+    "client_secret": "{{ (client_secret.user_input | default('',true)) | trim }}",
+    "maindrive": true,
     "teamdrive": false,
+    "teamdrives": [],
     "poll_interval": 120
   },
   "server": {
@@ -33,6 +32,8 @@
   "strm": {
     "access_url": "https://strm.{{ user.domain }}/",
     "root_path": "/strm",
+    "remove_empty_dirs": true,
+    "empty_dir_depth": 4,
     "show_transcodes": false,
     "chunk_size": 250000
   }
