@@ -39,6 +39,8 @@
 
 ./radarr4k/app/logs/*
 
+./snapshots/*
+
 ./sonarr/app/logs/*
 
 ./sonarr4k/app/logs/*
