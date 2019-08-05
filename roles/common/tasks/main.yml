@@ -50,6 +50,7 @@
   apt_repository:
     repo: "{{ item }}"
     state: present
+    update_cache: yes
   with_items:
     - 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse'
     - 'deb-src http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse'
@@ -61,6 +62,7 @@
   apt_repository:
     repo: "{{ item }}"
     state: present
+    update_cache: yes
   with_items:
     - deb https://deb.debian.org/debian {{ ansible_distribution_release }} main contrib non-free
     - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }} main contrib non-free
@@ -71,10 +73,6 @@
     - deb https://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib non-free
     - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib non-free
   when: ansible_distribution == 'Debian'
-
-- name: Update APT packages list
-  apt:
-    update_cache: yes
 
 - name: Fetch pci info
   shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
@@ -113,6 +111,12 @@
       - "apache2-utils"
       - "jq"
       - "lib32z1"
+  ignore_errors: yes
+
+- name: Install extra packages
+  apt:
+    state: present
+    name:
       - "run-one"
   ignore_errors: yes
 
