@@ -80,6 +80,7 @@
       dest: "{{ new_home_path }}/cloudbox/"
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
+      decrypt: no
       force: yes
     with_fileglob:
       - "{{ playbook_dir }}/*.yml"
