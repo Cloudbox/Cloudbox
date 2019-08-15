@@ -22,8 +22,14 @@
 - name: Restore Service | Create '/tmp/restore_service' path
   file: "path='/tmp/restore_service' state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
 
-- name: Restore Service | Encrypt config file(s)
-  shell: "openssl enc -aes-256-cbc -salt -md md5 -in '{{ item }}' -out '/tmp/restore_service/{{ (item | basename) | regex_replace('^\\.', '') }}.enc' -k '{{ restore_service_password }}'"
+- name: Restore Service | Cleanup '/tmp/restore_service_temp' path
+  file: "path='/tmp/restore_service_temp' state=absent"
+
+- name: Restore Service | Create '/tmp/restore_service_temp' path
+  file: "path='/tmp/restore_service_temp' state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+
+- name: Restore Service | Copy Files to '/tmp/restore_service_temp' path
+  shell: cp '{{ item }}' '/tmp/restore_service_temp/'
   args:
     warn: no
   become: yes
@@ -37,6 +43,16 @@
    - "{{ playbook_dir }}/backup_config.yml"
    - "/home/{{ user.name }}/.ansible_vault"
    - "/home/{{ user.name }}/.config/rclone/rclone.conf"
+
+- name: Restore Service | Encrypt config file(s)
+  shell: "openssl enc -aes-256-cbc -salt -md md5 -in '{{ item }}' -out '/tmp/restore_service/{{ (item | basename) | regex_replace('^\\.', '') }}.enc' -k '{{ restore_service_password }}'"
+  args:
+    warn: no
+  become: yes
+  become_user: "{{ user.name }}"
+  ignore_errors: yes
+  with_fileglob:
+    - "/tmp/restore_service_temp/*"
 
 - name: "Restore Service | Validate config file(s) for encryption."
   shell: "head -c 10 {{ item }} | grep -q Salted"
