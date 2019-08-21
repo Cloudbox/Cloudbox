@@ -44,6 +44,15 @@
 
   when: (file == "accounts.yml")
 
+- name: Migrator | Migrations for 'accounts.yml'
+  block:
+
+  # Rename 'plex' dict items
+  - name: Migrator | 'adv_settings.yml' | Migration 01
+    include_tasks: "migrator/adv_settings_yml/migration_01.yml"
+
+  when: (file == "adv_settings.yml")
+
 - name: Migrator | Migrations for 'backup_config.yml'
   block:
 

@@ -8,6 +8,36 @@
 #                   GNU General Public License v3.0                      #
 ##########################################################################
 ---
+################################
+# Subdomain
+################################
+
+plex_subdomain: "plex"
+
+################################
+# Folders
+################################
+
+plex_folders:
+  - "/opt/plex"
+  - "/opt/plex/Library"
+  - "/opt/plex/Library/Application Support"
+  - "/opt/plex/Library/Application Support/Plex Media Server"
+  - "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+  - "/opt/plex/Library/Logs"
+  - "/opt/plex/Library/Logs/Plex Media Server"
+  - "{{ plex.transcodes }}/plex"
+
+################################
+# Docker Image
+################################
+
+plex_docker_image: "cloudb0x/plex:{{ plex.tag }}"
+
+################################
+# Docker Ports
+################################
+
 plex_main_ports:
   - "32400:32400/tcp"
 
@@ -24,3 +54,42 @@ plex_extra_ports:
 web_tools_ports:
   - "33400:33400/tcp"
   - "33443:33443/tcp"
+
+plex_docker_ports: "{{ (web_tools_ports + plex_main_ports) if (plex.open_main_ports and not plex.open_extra_ports)
+  else (web_tools_ports + plex_main_ports + plex_extra_ports) if (plex.open_main_ports and plex.open_extra_ports)
+  else (web_tools_ports + plex_extra_ports) if (not plex.open_main_ports and plex.open_extra_ports)
+  else web_tools_ports }}"
+
+################################
+# Docker Volumes
+################################
+
+plex_docker_volumes:
+  - "/etc/localtime:/etc/localtime:ro"
+  - "/opt/plex:/config"
+  - "/opt/scripts:/scripts"
+  - "/mnt/unionfs/Media:/data"
+  - "/mnt:/mnt"
+  - "/tmp:/tmp"
+  - "/dev/shm:/dev/shm"
+  - "{{ plex.transcodes }}/plex:/transcode"
+
+################################
+# Docker Hosts
+################################
+
+localhost_ip: "127.0.0.1"
+
+lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
+
+plex_default_hosts:
+  "metric.plex.tv": "{{ localhost_ip }}"
+  "metrics.plex.tv": "{{ localhost_ip }}"
+  "analytics.plex.tv": "{{ localhost_ip }}"
+
+plex_custom_hosts:
+  "mf.svc.nhl.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
+  "mlb-ws-mf.media.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
+  "playback.svcs.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
+
+plex_docker_hosts: "{{ plex_default_hosts | combine(plex_custom_hosts) }}"
