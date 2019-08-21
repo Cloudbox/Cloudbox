@@ -35,4 +35,4 @@
 
 - name: "Role Variables | Set 'use_nvidia'"
   set_fact:
-    use_nvidia: "{{ true if ( gpu.nvidia | default(false) ) else false }}"
+    use_nvidia: "{{ true if ( gpu.nvidia.enabled | default(false) ) else false }}"
