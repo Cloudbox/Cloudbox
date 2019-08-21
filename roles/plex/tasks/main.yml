@@ -105,8 +105,8 @@
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       HTTPS_METHOD: noredirect
       HEALTHCHECK_MOUNT: /mnt/unionfs
-      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia) | default(false) else omit }}"
-      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia) | default(false) else omit }}"
+      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia.enabled) | default(false) else omit }}"
+      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
       TZ: "{{ tz }}"
     volumes: "{{ plex_docker_volumes }}"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
