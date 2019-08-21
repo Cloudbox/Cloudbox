@@ -51,7 +51,7 @@
       X-Auth-Key: '{{ cloudflare.api }}'
     body_format: json
     body:
-      priority: 1
+      priority: 10
       status: active
       targets:
       - target: url
@@ -60,6 +60,8 @@
           value: "*{{ user.domain }}/.well-known/*"
       actions:
       - id: ssl
+        value: 'off'
+      - id: browser_check
         value: 'off'
     status_code: 200,400
   register: cf_page_rule
