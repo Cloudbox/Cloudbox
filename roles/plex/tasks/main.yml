@@ -2,7 +2,6 @@
 # Title:         Cloudbox: Plex Role                                    #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  cloudb0x/plex                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,19 +12,12 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: plex
+    subdomain: "{{ plex_subdomain }}"
   when: cloudflare_enabled
 
 - name: "Create Plex directories"
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - "/opt/plex"
-    - "/opt/plex/Library"
-    - "/opt/plex/Library/Application Support"
-    - "/opt/plex/Library/Application Support/Plex Media Server"
-    - "/opt/plex/Library/Logs"
-    - "/opt/plex/Library/Logs/Plex Media Server"
-    - "{{ plex.transcodes }}/plex"
+  with_items: "{{ plex_folders }}"
 
 - name: "Stop and remove any existing container"
   docker_container:
@@ -34,7 +26,7 @@
 
 - name: "Pull Plex Docker image"
   docker_image:
-    name: "cloudb0x/plex:{{ plex.tag }}"
+    name: "{{ plex_docker_image }}"
 
 - name: "Check if '/dev/dri' exists"
   stat:
@@ -95,38 +87,12 @@
     - (not continuous_integration)
     - (not preferences_xml.stat.exists) or (preferences_xml.stat.exists and not plex_server_claimed)
 
-- name: "Grab lazyman IP address"
-  set_fact:
-    lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
-
-- name: "Set 'localhost_ip' variable"
-  set_fact:
-    localhost_ip: "127.0.0.1"
-
-- name: "Set Plex host variables"
-  set_fact:
-    plex_default_hosts:
-      "metric.plex.tv": "{{ localhost_ip }}"
-      "metrics.plex.tv": "{{ localhost_ip }}"
-      "analytics.plex.tv": "{{ localhost_ip }}"
-    plex_custom_hosts:
-      "mf.svc.nhl.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
-      "mlb-ws-mf.media.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
-      "playback.svcs.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
-
-- name: "Set Plex ports variable"
-  set_fact:
-    plex_ports: "{{ (web_tools_ports + plex_main_ports) if (plex.open_port and not plex.all_ports)
-      else (web_tools_ports + plex_main_ports + plex_extra_ports) if (plex.open_port and plex.all_ports)
-      else (web_tools_ports + plex_extra_ports) if (not plex.open_port and plex.all_ports)
-      else web_tools_ports }}"
-
 - name: "Create and start container"
   docker_container:
     name: plex
-    image: "cloudb0x/plex:{{ plex.tag }}"
+    image: "{{ plex_docker_image }}"
     pull: yes
-    published_ports: "{{ plex_ports }}"
+    published_ports: "{{ plex_docker_ports }}"
     env:
       PLEX_UID: "{{ uid }}"
       PLEX_GID: "{{ gid }}"
@@ -142,17 +108,9 @@
       NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia) | default(false) else omit }}"
       NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia) | default(false) else omit }}"
       TZ: "{{ tz }}"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/plex:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt/unionfs/Media:/data"
-      - "/mnt:/mnt"
-      - "/tmp:/tmp"
-      - "/dev/shm:/dev/shm"
-      - "{{ plex.transcodes }}/plex:/transcode"
+    volumes: "{{ plex_docker_volumes }}"
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
-    etc_hosts: "{{ (plex_default_hosts) | combine(plex_custom_hosts|default([])) }}"
+    etc_hosts: "{{ plex_docker_hosts }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
