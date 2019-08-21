@@ -51,6 +51,10 @@
   - name: Migrator | 'adv_settings.yml' | Migration 01
     include_tasks: "migrator/adv_settings_yml/migration_01.yml"
 
+  # Rebuild 'gpu.nvidia' dict
+  - name: Migrator | 'adv_settings.yml' | Migration 02
+    include_tasks: "migrator/adv_settings_yml/migration_02.yml"
+
   when: (file == "adv_settings.yml")
 
 - name: Migrator | Migrations for 'backup_config.yml'

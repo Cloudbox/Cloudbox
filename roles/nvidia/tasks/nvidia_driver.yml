@@ -8,10 +8,16 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Install 'build-essential'
+  apt:
+    name: build-essential
+    update_cache: yes
+    state: present
+
 - name: Download Nvidia drivers
   get_url:
-    url:  "https://download.nvidia.com/XFree86/Linux-x86_64/410.78/NVIDIA-Linux-x86_64-410.78.run"
-    dest: /tmp/NVIDIA-Linux-x86_64-410.78.run
+    url:  "https://download.nvidia.com/XFree86/Linux-x86_64/{{ gpu.nvidia.driver }}/NVIDIA-Linux-x86_64-{{ gpu.nvidia.driver }}.run"
+    dest: "/tmp/NVIDIA-Linux-x86_64-{{ gpu.nvidia.driver }}.run"
     mode: 0775
     owner: root
     group: root
@@ -19,14 +25,8 @@
     validate_certs: no
   register: driver_download
 
-- name: Install 'build-essential'
-  apt:
-    name: build-essential
-    update_cache: yes
-    state: present
-
 - name: Install Nvidia drivers
-  shell: /tmp/NVIDIA-Linux-x86_64-410.78.run --silent
+  shell: "/tmp/NVIDIA-Linux-x86_64-{{ gpu.nvidia.driver }}.run --silent"
   register: driver_install
   ignore_errors: yes
 
