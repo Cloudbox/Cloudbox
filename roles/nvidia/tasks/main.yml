@@ -38,9 +38,9 @@
     shell: ubuntu-drivers devices
     register: ubuntu_devices
 
-  # Install Nvidia Drivers
+  # Configure Nvidia Kernel
 
-  - name: Nvidia Kernel and Driver Tasks
+  - name: Nvidia Kernel Tasks
     block:
 
     - name: Check if 'blacklist-nouveau.conf' exists
@@ -52,8 +52,16 @@
       include_tasks: "nvidia_kernel.yml"
       when: (not blacklist_nouveau_conf.stat.exists)
 
+    when: '("manual_install: True" not in ubuntu_devices.stdout)'
+
+  # Install Nvidia Driver
+
+  - name: Nvidia Driver Tasks
+    block:
+
     - name: "Nvidia Driver Task"
       include_tasks: "nvidia_driver.yml"
+      when: (gpu.nvidia.driver | lower != 'ignore')
 
     when: '("manual_install: True" not in ubuntu_devices.stdout)'
 
