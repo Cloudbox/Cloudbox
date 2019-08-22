@@ -42,3 +42,5 @@
 ./sonarr/app/logs/*
 
 ./sonarr4k/app/logs/*
+
+./snapshots/*
