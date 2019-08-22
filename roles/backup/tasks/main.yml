@@ -246,9 +246,13 @@
       debug:
         msg: "Creating snapshot of '/opt/' in '{{ backup_root_path }}/' ..."
 
-    - name: Snapshot | Create btrfs snapshot
+    - name: Snapshot | Create root btrfs snapshot
       shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
-      when: (snapshot_type == 'btrfs')
+      when: (misc.snapshot) and ((root_fstype is defined) and (root_fstype == 'btrfs'))
+
+    - name: Snapshot | Create opt btrfs snapshot
+      shell: 'btrfs subvolume snapshot /opt /opt/snapshots/opt'
+      when: (misc.snapshot) and ((opt_fstype is defined) and (opt_fstype == 'btrfs'))
 
     - name: Snapshot | Display location of '/opt/' folder in snapshot
       debug:
@@ -531,9 +535,24 @@
       msg: "Backup Completed Successfully."
 
   rescue:
-  - name: Snapshot | Delete btrfs snapshot
-    shell: btrfs subvolume delete /btrfs/snapshots/root &> /dev/null || true
-    when: (use_snapshot) and (snapshot_type == 'btrfs')
+  
+  - name: Snapshot | Check if root btrfs snapshot is mounted
+    stat:
+      path: "/btrfs/snapshots/root"
+    register: root_btrfs_snapshot_mounted
+
+  - name: Snapshot | Check if opt btrfs snapshot is mounted
+    stat:
+      path: "/opt/snapshots/opt"
+    register: opt_btrfs_snapshot_mounted
+
+  - name: Snapshot | Delete root btrfs snapshot
+    command: "btrfs subvolume delete /btrfs/snapshots/root"
+    when: (root_btrfs_snapshot_mounted.stat.isdir is defined) and (root_btrfs_snapshot_mounted.stat.isdir)
+
+  - name: Snapshot | Delete opt btrfs snapshot
+    command: "btrfs subvolume delete /opt/snapshots/opt"
+    when: (opt_btrfs_snapshot_mounted.stat.isdir is defined) and (opt_btrfs_snapshot_mounted.stat.isdir)
 
   - name: "Reset folder ownership of '{{ local.destination }}/'"
     shell: "chown -R {{ user.name }}:{{ user.name }} {{ local.destination }}/"

@@ -21,28 +21,61 @@
   with_items:
     - "{{ ansible_mounts }}"
 
+- name: "Snapshot | Determine '/opt' filesystem type"
+  set_fact:
+    opt_fstype: "{{ item.fstype }}"
+  when: "(item.mount == '/opt')"
+  with_items:
+    - "{{ ansible_mounts }}"
+
 - name: Snapshot | Btrfs specific tasks
   block:
 
-  - name: "Snapshot | Set btrfs variables"
+  - name: "Snapshot | Set btrfs variables for /"
     set_fact:
       snapshot_type: "btrfs"
       backup_root_path: "/btrfs/snapshots/root"
+      when: root_fstype == 'btrfs'
       # variable(s) below will be used for other types of snap-shotting as well.
       use_snapshot: true
 
-  - name: Snapshot | Check if btrfs snapshot is mounted
+  - name: "Snapshot | Set btrfs variables for /opt"
+    set_fact:
+      snapshot_type: "btrfs"
+      backup_root_path: "/opt/snapshots"
+      when: opt_fstype == 'btrfs'
+      # variable(s) below will be used for other types of snap-shotting as well.
+      use_snapshot: true
+
+  - name: Snapshot | Check if root btrfs snapshot is mounted
     stat:
       path: "/btrfs/snapshots/root"
-    register: btrfs_snapshot_mounted
+    register: root_btrfs_snapshot_mounted
 
-  - name: Snapshot | Delete old btrfs snapshot
+  - name: Snapshot | Check if opt btrfs snapshot is mounted
+    stat:
+      path: "/opt/snapshots/opt"
+    register: opt_btrfs_snapshot_mounted
+
+  - name: Snapshot | Delete old root btrfs snapshot
     command: "btrfs subvolume delete /btrfs/snapshots/root"
-    when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
+    when: (root_btrfs_snapshot_mounted.stat.isdir is defined) and (root_btrfs_snapshot_mounted.stat.isdir)
 
-  - name: Snapshot | Create brfs snapshot directory
+  - name: Snapshot | Delete old opt btrfs snapshot
+    command: "btrfs subvolume delete /opt/snapshots/opt"
+    when: (opt_btrfs_snapshot_mounted.stat.isdir is defined) and (opt_btrfs_snapshot_mounted.stat.isdir)
+
+  - name: Snapshot | Create root brfs snapshot directory
     file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
     with_items:
       - /btrfs/snapshots
+    when: (misc.snapshot) and ((root_fstype is defined) and (root_fstype == 'btrfs'))
+  
+  - name: Snapshot | Create opt brfs snapshot directory
+    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+    with_items:
+      - /opt/snapshots
+    when: (misc.snapshot) and ((opt_fstype is defined) and (opt_fstype == 'btrfs'))
 
-  when: (misc.snapshot) and ((root_fstype is defined) and (root_fstype == 'btrfs'))
+
+  when: (misc.snapshot) and (((root_fstype is defined) and (root_fstype == 'btrfs')) or ((opt_fstype is defined) and (opt_fstype == 'btrfs')))
