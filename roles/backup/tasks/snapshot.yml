@@ -17,16 +17,24 @@
 - name: "Snapshot | Determine '/' filesystem type"
   set_fact:
     root_fstype: "{{ item.fstype }}"
-  when: (misc.snapshot) and "(item.mount == '/')"
+  when: (misc.snapshot) and (item.mount == '/')
   with_items:
     - "{{ ansible_mounts }}"
 
 - name: "Snapshot | Determine '/opt' filesystem type"
   set_fact:
     opt_fstype: "{{ item.fstype }}"
-  when: (misc.snapshot) and "(item.mount == '/opt')"
+  when: (misc.snapshot) and (item.mount == '/opt')
   with_items:
     - "{{ ansible_mounts }}"
+
+- debug:
+    msg: "root_fstype: {{ root_fstype }}"
+  ignore_errors: yes
+
+- debug:
+    msg: "opt_fstype: {{ opt_fstype }}"
+  ignore_errors: yes
 
 # BTRFS
 
