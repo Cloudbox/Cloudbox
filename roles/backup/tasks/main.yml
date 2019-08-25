@@ -244,15 +244,15 @@
 
     - name: Snapshot | Display snapshot source and destination
       debug:
-        msg: "Creating snapshot of '{{ backup_snapshot_source_path}}' at '{{ backup_root_path }}' ..."
+        msg: "Creating snapshot of '{{ backup_snapshot_source_path}}' at '{{ backup_snapshot_destination_path }}' ..."
 
     - name: Snapshot | Create BTRFS snapshot
-      shell: 'btrfs subvolume snapshot {{ backup_snapshot_source_path}} {{ backup_root_path }}'
+      shell: 'btrfs subvolume snapshot {{ backup_snapshot_source_path}} {{ backup_snapshot_destination_path }}'
       when: (snapshot_type == 'btrfs')
 
     - name: Snapshot | Display new backup source location in snapshot
       debug:
-        msg: "Backup will now archive folders from '{{ backup_root_path }}'"
+        msg: "Backup will now archive folders from '{{ backup_snapshot_destination_path }}'"
 
     when: (use_snapshot)
 
@@ -327,7 +327,7 @@
       label: "'{{ item }}' --> '{{ local.destination }}/opt/{{ item | basename }}.tar'"
 
   - name: Snapshot | Delete BTRFS snapshot
-    shell: btrfs subvolume delete {{ backup_root_path }} &> /dev/null || true
+    shell: btrfs subvolume delete {{ backup_snapshot_destination_path }} &> /dev/null || true
     when: (use_snapshot) and (snapshot_type == 'btrfs')
 
   - name: Check if tarball files were created
@@ -537,11 +537,11 @@
 
     - name: Snapshot | Check if BTRFS snapshot is mounted
       stat:
-        path: "{{ backup_root_path }}"
+        path: "{{ backup_snapshot_destination_path }}"
       register: btrfs_snapshot_mounted
 
     - name: Snapshot | Delete existing BTRFS snapshot
-      command: "btrfs subvolume delete {{ backup_root_path }} &> /dev/null || true"
+      command: "btrfs subvolume delete {{ backup_snapshot_destination_path }} &> /dev/null || true"
       when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
 
     when: (use_snapshot) and (snapshot_type == 'btrfs')
