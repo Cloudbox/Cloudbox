@@ -242,17 +242,17 @@
       wait_for:
         timeout: 5
 
-    - name: Snapshot | Display snapshot destination
+    - name: Snapshot | Display snapshot source and destination
       debug:
-        msg: "Creating snapshot of '/opt/' in '{{ backup_root_path }}/' ..."
+        msg: "Creating snapshot of '{{ backup_snapshot_source_path}}' at '{{ backup_snapshot_destination_path }}' ..."
 
-    - name: Snapshot | Create btrfs snapshot
-      shell: 'btrfs subvolume snapshot / /btrfs/snapshots/root'
+    - name: Snapshot | Create BTRFS snapshot
+      shell: 'btrfs subvolume snapshot {{ backup_snapshot_source_path}} {{ backup_snapshot_destination_path }}'
       when: (snapshot_type == 'btrfs')
 
-    - name: Snapshot | Display location of '/opt/' folder in snapshot
+    - name: Snapshot | Display new backup source location in snapshot
       debug:
-        msg: "Backup will now archive folders from '{{ backup_root_path }}/opt/'"
+        msg: "Backup will now archive folders from '{{ backup_snapshot_destination_path }}'"
 
     when: (use_snapshot)
 
@@ -315,6 +315,7 @@
         --ignore-failed-read \
         --warning=no-file-changed \
         --warning=no-file-removed \
+        --exclude='./snapshots' \
         --exclude-from '{{ backup_excludes_list_path }}' \
         -cf '{{ local.destination }}/opt/{{ item | basename }}.tar' -C '{{ item | dirname }}' './{{ item | basename }}' \
         2> /dev/null
@@ -325,8 +326,8 @@
     loop_control:
       label: "'{{ item }}' --> '{{ local.destination }}/opt/{{ item | basename }}.tar'"
 
-  - name: Snapshot | Delete btrfs snapshot
-    shell: btrfs subvolume delete /btrfs/snapshots/root &> /dev/null || true
+  - name: Snapshot | Delete BTRFS snapshot
+    shell: btrfs subvolume delete {{ backup_snapshot_destination_path }} &> /dev/null || true
     when: (use_snapshot) and (snapshot_type == 'btrfs')
 
   - name: Check if tarball files were created
@@ -531,8 +532,18 @@
       msg: "Backup Completed Successfully."
 
   rescue:
-  - name: Snapshot | Delete btrfs snapshot
-    shell: btrfs subvolume delete /btrfs/snapshots/root &> /dev/null || true
+  - name: Snapshot | Rescue Tasks
+    block:
+
+    - name: Snapshot | Check if BTRFS snapshot is mounted
+      stat:
+        path: "{{ backup_snapshot_destination_path }}"
+      register: btrfs_snapshot_mounted
+
+    - name: Snapshot | Delete existing BTRFS snapshot
+      command: "btrfs subvolume delete {{ backup_snapshot_destination_path }} &> /dev/null || true"
+      when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
+
     when: (use_snapshot) and (snapshot_type == 'btrfs')
 
   - name: "Reset folder ownership of '{{ local.destination }}/'"
