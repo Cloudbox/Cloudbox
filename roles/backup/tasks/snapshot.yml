@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Backup: Snapshot                                       #
+# Title:         Cloudbox: Backup | Snapshot                            #
 # Author(s):     desimaniac, RXWatcher1                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -11,7 +11,7 @@
 - name: Snapshot | Set default variables
   set_fact:
     snapshot_type: ""
-    backup_root_path: ""
+    backup_opt_path: "/opt/"
     use_snapshot: false
 
 - name: "Snapshot | Determine '/' filesystem type"
@@ -42,14 +42,14 @@
     set_fact:
       backup_snapshot_source_path: "/"
       backup_snapshot_destination_path: "/btrfs/snapshots/root"
-      backup_root_path: "/btrfs/snapshots/root"
+      backup_opt_path: "/btrfs/snapshots/root/opt/"
     when: (root_fstype is defined) and (root_fstype == 'btrfs')
 
   - name: "Snapshot | Set '/opt' BTRFS variables"
     set_fact:
       backup_snapshot_source_path: "/opt"
       backup_snapshot_destination_path: "/opt/snapshots/opt"
-      backup_root_path: "/opt/snapshots"
+      backup_opt_path: "/opt/snapshots/opt/"
     when: (opt_fstype is defined) and (opt_fstype == 'btrfs')
 
   - name: Snapshot | Check if BTRFS snapshot is mounted
@@ -57,8 +57,21 @@
       path: "{{ backup_snapshot_destination_path }}"
     register: btrfs_snapshot_mounted
 
-  - name: Snapshot | Delete existing BTRFS snapshot
-    command: "btrfs subvolume delete {{ backup_snapshot_destination_path }} &> /dev/null || true"
+  - name: Snapshot | Delete BTRFS snapshot
+    block:
+
+    - name: Snapshot | Delete existing BTRFS snapshot (1/2)
+      command: "btrfs subvolume delete {{ backup_snapshot_destination_path }}"
+      register: snapshot_deletion
+      ignore_errors: yes
+
+    - name: Snapshot | Delete existing BTRFS snapshot (2/2)
+      file:
+        path: "{{ backup_snapshot_destination_path }}"
+        state: absent
+      ignore_errors: yes
+      when: (snapshot_deletion is failed)
+
     when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
 
   - name: Snapshot | Create BTRFS snapshot directory
