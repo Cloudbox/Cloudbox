@@ -252,7 +252,7 @@
 
     - name: Snapshot | Display new backup source location in snapshot
       debug:
-        msg: "Backup will now archive folders from '{{ backup_snapshot_destination_path }}'"
+        msg: "Backup will now archive folders from '{{ backup_opt_path }}'"
 
     when: (use_snapshot)
 
@@ -291,9 +291,9 @@
 
     when: (use_snapshot)
 
-  - name: "Get list of all folders in '{{ backup_root_path }}/opt/'"
+  - name: "Get list of all folders in '{{ backup_opt_path }}'"
     find:
-      paths: "{{ backup_root_path }}/opt"
+      paths: "{{ backup_opt_path }}"
       recurse: no
       file_type: directory
     register: opt_folders_temp
@@ -309,7 +309,7 @@
     loop_control:
       label: "{{ item.path }}"
 
-  - name: "Archiving '{{ backup_root_path }}/opt/' folders into '{{ local.destination }}/'"
+  - name: "Archiving '{{ backup_opt_path }}' folders into '{{ local.destination }}/'"
     shell: |
       tar \
         --ignore-failed-read \
@@ -326,8 +326,31 @@
     loop_control:
       label: "'{{ item }}' --> '{{ local.destination }}/opt/{{ item | basename }}.tar'"
 
-  - name: Snapshot | Delete BTRFS snapshot
-    shell: btrfs subvolume delete {{ backup_snapshot_destination_path }} &> /dev/null || true
+  - name: Snapshot | Cleanup Tasks
+    block:
+
+    - name: Snapshot | Check if BTRFS snapshot is mounted
+      stat:
+        path: "{{ backup_snapshot_destination_path }}"
+      register: btrfs_snapshot_mounted
+
+    - name: Snapshot | Delete BTRFS snapshot
+      block:
+
+      - name: Snapshot | Delete existing BTRFS snapshot (1/2)
+        command: "btrfs subvolume delete {{ backup_snapshot_destination_path }}"
+        register: snapshot_deletion
+        ignore_errors: yes
+
+      - name: Snapshot | Delete existing BTRFS snapshot (2/2)
+        file:
+          path: "{{ backup_snapshot_destination_path }}"
+          state: absent
+        ignore_errors: yes
+        when: (snapshot_deletion is failed)
+
+      when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
+
     when: (use_snapshot) and (snapshot_type == 'btrfs')
 
   - name: Check if tarball files were created
@@ -532,7 +555,7 @@
       msg: "Backup Completed Successfully."
 
   rescue:
-  - name: Snapshot | Rescue Tasks
+  - name: Snapshot | Cleanup Tasks
     block:
 
     - name: Snapshot | Check if BTRFS snapshot is mounted
@@ -540,8 +563,21 @@
         path: "{{ backup_snapshot_destination_path }}"
       register: btrfs_snapshot_mounted
 
-    - name: Snapshot | Delete existing BTRFS snapshot
-      command: "btrfs subvolume delete {{ backup_snapshot_destination_path }} &> /dev/null || true"
+    - name: Snapshot | Delete BTRFS snapshot
+      block:
+
+      - name: Snapshot | Delete existing BTRFS snapshot (1/2)
+        command: "btrfs subvolume delete {{ backup_snapshot_destination_path }}"
+        register: snapshot_deletion
+        ignore_errors: yes
+
+      - name: Snapshot | Delete existing BTRFS snapshot (2/2)
+        file:
+          path: "{{ backup_snapshot_destination_path }}"
+          state: absent
+        ignore_errors: yes
+        when: (snapshot_deletion is failed)
+
       when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
 
     when: (use_snapshot) and (snapshot_type == 'btrfs')
