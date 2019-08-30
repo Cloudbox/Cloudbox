@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Remote: Service Tasks                                  #
+# Title:         Cloudbox: Remote | Service Tasks                       #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -21,8 +21,16 @@
       name: "{{ outer_item }}"
       state: stopped
       enabled: no
+    ignore_errors: yes
 
-  - name: "Services | Update ownership in existing '{{ outer_item }}'"
+  - name: "Services | Remove 'Service' section in existing '{{ outer_item }}'"
+    ini_file:
+      path: "/etc/systemd/system/{{ outer_item }}"
+      section: Service
+      state: absent
+    when: (outer_item is regex('.*\.timer'))
+
+  - name: "Services | Update 'User/Group' in existing '{{ outer_item }}'"
     ini_file:
       path: "/etc/systemd/system/{{ outer_item }}"
       section: Service
@@ -33,6 +41,7 @@
     loop:
       - { option: 'User', value: "{{ user.name }}" }
       - { option: 'Group', value: "{{ user.name }}" }
+    when: (outer_item is not regex('.*\.timer'))
 
   - name: "Services | Enable cache in 'rclone.conf'"
     blockinfile:
@@ -50,12 +59,14 @@
       path: "/etc/systemd/system/{{ outer_item }}"
       regexp: "rc-addr=localhost:[0-9]*"
       replace: 'rc-addr=localhost:5572'
+    when: (outer_item is not regex('.*\.timer'))
 
   - name: "Services | Remove 'RemainAfterExit=yes' '{{ outer_item }}'"
     lineinfile:
       path: "/etc/systemd/system/{{ outer_item }}"
       regexp: '^RemainAfterExit\=yes'
       state: absent
+    when: (outer_item is not regex('.*\.timer'))
 
   - name: "Services | Systemd daemon-reload"
     systemd: daemon_reload=yes
