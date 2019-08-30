@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: Service Tasks                                 #
+# Title:         Cloudbox: UnionFS | Service Tasks                      #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -21,8 +21,9 @@
       name: "{{ outer_item }}"
       state: stopped
       enabled: no
+    ignore_errors: yes
 
-  - name: "Services | Update ownership in existing '{{ outer_item }}'"
+  - name: "Services | Update 'User/Group' in existing '{{ outer_item }}'"
     ini_file:
       path: "/etc/systemd/system/{{ outer_item }}"
       section: Service

@@ -8,10 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# Stop Containers
+# Variables
 
-- name: Container Stop Tasks
-  import_tasks: "subtasks/containers_stop.yml"
+- name: Variables Task
+  import_tasks: "subtasks/variables.yml"
+
+# Stop Docker Containers
+
+- name: Docker Containers Stop Tasks
+  import_tasks: "subtasks/docker/containers_stop.yml"
   when: (('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)) and (not use_remote)
 
 # Existing Setup
@@ -23,31 +28,30 @@
   include_tasks: "subtasks/services.yml"
   loop_control:
     loop_var: outer_item
-  loop:
-    - "unionfs.service"
-    - "mergerfs.service"
+  loop: "{{ service_files }}"
 
-- name: Mount Tasks
-  import_tasks: "subtasks/mounts.yml"
+- name: Mount Path Tasks
+  import_tasks: "subtasks/mount_path.yml"
 
 # New Setup
+
+- name: Fuse Tasks
+  import_tasks: "subtasks/fuse.yml"
+  when: (not use_remote)
 
 - name: Basic Tasks
   import_tasks: "subtasks/basics.yml"
 
-- name: MergerFS Tasks
-  import_tasks: "subtasks/mergerfs.yml"
-  when: (mounts.unionfs | lower == "mergerfs")
+# Mount UnionFS
 
-- name: UnionFS Tasks
-  import_tasks: "subtasks/unionfs.yml"
-  when: (mounts.unionfs | lower == "unionfs")
+- name: Mount UnionFS Tasks
+  include_tasks: "subtasks/mounts/{{ unionfs_mount_type }}.yml"
 
-- name: Docker Tasks
-  import_tasks: "subtasks/docker.yml"
+- name: Docker Daemon Tasks
+  import_tasks: "subtasks/docker/daemon.yml"
 
-# Start Containers
+# Start Docker Containers
 
-- name: Container Start Tasks
-  import_tasks: "subtasks/containers_start.yml"
+- name: Docker Containers Start Tasks
+  import_tasks: "subtasks/docker/containers_start.yml"
   when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)

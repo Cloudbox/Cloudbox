@@ -1,6 +1,6 @@
+# /etc/systemd/system/docker.service.d/override.conf
 #########################################################################
 # Title:         Cloudbox: Docker Config Override                       #
-# Location:      /etc/systemd/system/docker.service.d/override.conf     #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -10,7 +10,7 @@
 #########################################################################
 
 [Unit]
-After={{ 'mergerfs' if (mounts.unionfs|lower) == 'mergerfs' else 'unionfs' }}.service
+After={{ 'unionfs' if (mounts.unionfs|lower) == 'unionfs' else 'mergerfs' }}.service
 
 [Service]
 ExecStartPre=/bin/sleep 120
