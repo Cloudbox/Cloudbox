@@ -1,0 +1,54 @@
+##########################################################################
+# Title:         Cloudbox: UnionFS | Variable Tasks                      #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# UnionFS Mount Types
+################################
+
+- name: Variables | Set 'unionfs_mount_type' to 'mergerfs'
+  set_fact:
+    unionfs_mount_type: "mergerfs"
+  when: (mounts.unionfs | lower == "mergerfs")
+
+- name: Variables | Set 'unionfs_mount_type' to 'unionfs'
+  set_fact:
+    unionfs_mount_type: "unionfs"
+  when: (mounts.unionfs | lower == "unionfs")
+
+- name: Variables | Fail when no valid remote mount type is specified.
+  fail:
+    msg: "'{{ mounts.unionfs }}' is not a valid unionfs mount type."
+  when: unionfs_mount_type is undefined
+
+################################
+# Service Files List
+################################
+
+- name: Variables | Set 'service_files_list' variable
+  set_fact:
+    service_files_list:
+      - "mergerfs.service"
+      - "unionfs.service"
+
+- name: Variables | Set 'service_files_stat' variable
+  stat:
+    path: "/etc/systemd/system/{{ item }}"
+  register: service_files_stat
+  loop: "{{ service_files_list }}"
+
+- name: Variables | Create empty 'service_files' list
+  set_fact:
+    service_files: []
+
+- name: Variables | Build 'service_files' list
+  set_fact:
+    service_files: "{{ service_files + [ item.item ] }}"
+  when: item.stat.exists
+  loop: "{{ service_files_stat.results }}"

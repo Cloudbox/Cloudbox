@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: Mount Tasks                                   #
+# Title:         Cloudbox: UnionFS | Mount Path Tasks                   #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,36 +8,36 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Mounts | Force unmount '/mnt/unionfs'"
+- name: "Mount Path | Force unmount '/mnt/unionfs'"
   shell: "/bin/umount -f '/mnt/unionfs' 2>/dev/null || :"
   ignore_errors: yes
 
-- name: "Mounts | Check if '/mnt/unionfs' exists"
+- name: "Mount Path | Check if '/mnt/unionfs' exists"
   stat:
     path: "/mnt/unionfs"
   register: mnt_unionfs
   ignore_errors: yes
 
-- name: "Mounts | Tasks for '/mnt/unionfs' path"
+- name: "Mount Path | Tasks for '/mnt/unionfs' path"
   block:
 
-  - name: "Mounts | Remove empty directories in '/mnt/unionfs'"
+  - name: "Mount Path | Remove empty directories in '/mnt/unionfs'"
     shell: "find '/mnt/unionfs' -type d -empty -delete"
     ignore_errors: yes
 
-  - name: "Mounts | Recursively find '/mnt/unionfs' files"
+  - name: "Mount Path | Recursively find '/mnt/unionfs' files"
     find:
       paths: '/mnt/unionfs'
       hidden: yes
       recurse: yes
     register: mnt_unionfs_files
 
-  - name: "Mounts | Backup non-empty '/mnt/unionfs' path"
+  - name: "Mount Path | Backup non-empty '/mnt/unionfs' path"
     shell: "mv /mnt/unionfs /mnt/unionfs_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
     when: (mnt_unionfs_files.matched|int > 0)
 
-  - name: "Mounts | Remove '/mnt/unionfs'"
+  - name: "Mount Path | Remove '/mnt/unionfs'"
     file:
       path: "/mnt/unionfs"
       state: absent

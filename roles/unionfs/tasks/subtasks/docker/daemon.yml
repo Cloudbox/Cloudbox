@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: Docker Tasks                                  #
+# Title:         Cloudbox: UnionFS | Docker | Daemon Tasks              #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,13 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Docker | Create override directory"
+- name: "Docker | Daemon | Create override directory"
   file:
     path: /etc/systemd/system/docker.service.d
     state: directory
     mode: 0775
 
-- name: "Docker | Import override file"
+- name: "Docker | Daemon | Import override file"
   template:
     src: override.conf.j2
     dest: /etc/systemd/system/docker.service.d/override.conf
@@ -22,26 +22,26 @@
     force: no
   register: import
 
-- name: "Docker | Edit override file"
+- name: "Docker | Daemon | Edit override file"
   ini_file:
     path: /etc/systemd/system/docker.service.d/override.conf
     section: Unit
     option: "After"
-    value: "{{ 'mergerfs' if (mounts.unionfs|lower) == 'mergerfs' else 'unionfs' }}.service"
+    value: "{{ 'unionfs' if (mounts.unionfs|lower) == 'unionfs' else 'mergerfs' }}.service"
     state: present
     no_extra_spaces: yes
   register: edit
 
-- name: Restart Docker Service
+- name: Docker | Daemon | Restart Docker Service
   block:
 
-  - name: "Docker | Systemd daemon-reload"
+  - name: "Docker | Daemon | Systemd daemon-reload"
     systemd: name=docker state=reloaded daemon_reload=yes
 
-  - name: "Docker | Restart docker service"
+  - name: "Docker | Daemon | Restart docker service"
     systemd: name=docker state=restarted
 
-  - name: "Docker | Wait for 30 seconds before commencing"
+  - name: "Docker | Daemon | Wait for 30 seconds before commencing"
     wait_for:
       timeout: 30
 

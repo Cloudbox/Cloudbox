@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         UnionFS: MergerFS Role                                 #
+# Title:         Cloudbox: UnionFS | MergerFS Tasks                     #
 # Author(s):     EnorMOZ, desimaniac                                    #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -21,7 +21,7 @@
 
 - name: "MergerFS | Set 'mergerfs_download_url_backup' variable"
   set_fact:
-    mergerfs_download_url_backup: https://github.com/trapexit/mergerfs/releases/download/2.27.1/mergerfs_2.27.1.{{ ansible_distribution|lower
+    mergerfs_download_url_backup: https://github.com/trapexit/mergerfs/releases/download/2.28.1/mergerfs_2.28.1.{{ ansible_distribution|lower
      }}-{{ ansible_distribution_release|lower }}_amd64.deb
 
 - name: "MergerFS | Install mergerfs"
