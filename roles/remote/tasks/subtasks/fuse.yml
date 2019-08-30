@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Remote: Fuse Tasks                                     #
+# Title:         Cloudbox: Remote | Fuse Tasks                          #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -14,4 +14,4 @@
     state: present
 
 - name: "Fuse | Import 'fuse.conf'"
-  copy: src=fuse.conf dest=/etc/fuse.conf force=yes mode=0775
+  copy: src=fuse.conf dest=/etc/fuse.conf force=no mode=0775

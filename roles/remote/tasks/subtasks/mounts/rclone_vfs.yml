@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Remote: Rclone VFS Tasks                               #
+# Title:         Cloudbox: Remote | Rclone VFS Tasks                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
 # --                                                                    #
@@ -40,7 +40,7 @@
 - name: Rclone VFS | Systemd daemon-reload 'rclone_vfs_primer.service'
   systemd: name=rclone_vfs_primer.service state=stopped enabled=no daemon_reload=yes
 
-- name: Rclone VFS | Test rclone remote
+- name: "Rclone VFS | Test Rclone remote '{{ rclone.remote }}:'"
   shell: |
     rclone lsd {{ rclone.remote }}: \
       --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
