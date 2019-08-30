@@ -64,5 +64,7 @@
 
   - name: Rclone VFS | Start 'rclone_vfs_primer.service'
     systemd: name=rclone_vfs_primer.service state=started enabled=yes
+    async: 900
+    poll: 0
 
   when: (rclone_test.rc|int == 0)
