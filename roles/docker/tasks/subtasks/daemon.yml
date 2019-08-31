@@ -1,0 +1,38 @@
+#########################################################################
+# Title:         Cloudbox: Docker | Daemon Tasks                        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Daemon | Import 'daemon.json'"
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    mode: 0775
+    force: yes
+
+- name: "Daemon | Create override directory"
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: 0775
+
+- name: "Daemon | Import override file"
+  template:
+    src: override.conf.j2
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    mode: 0775
+    force: no
+
+- name: "Daemon | Edit override file"
+  ini_file:
+    path: /etc/systemd/system/docker.service.d/override.conf
+    section: Unit
+    option: "After"
+    value: "{{ 'unionfs' if (mounts.unionfs|lower) == 'unionfs' else 'mergerfs' }}.service"
+    state: present
+    no_extra_spaces: yes

@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Docker - Btrfs - Pseudo File System Tasks              #
+# Title:         Cloudbox: Docker | BTRFS | Psuedo-File-System Tasks    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -10,40 +10,40 @@
 ---
 # https://gist.github.com/hopeseekr/cd2058e71d01deca5bae9f4e5a555440
 
-- name: Install common pip modules
+- name: BTRFS | Psuedo-File-System | Install common pip modules
   pip:
     state: present
     name:
       - jmespath
 
-- name: "Btrfs | Pseudo File System | Determine if '/var/lib/docker' is mounted"
+- name: "BTRFS | Psuedo-File-System | Determine if '/var/lib/docker' is mounted"
   set_fact:
     var_lib_docker_mount_exists: "{{ true if ( ansible_mounts | json_query('[?mount == `/var/lib/docker`]') ) else false }}"
 
-- name: Btrfs | Pseudo File System | Tasks when '/var/lib/docker' is not mounted
+- name: BTRFS | Psuedo-File-System | Tasks when '/var/lib/docker' is not mounted
   block:
 
-  - name: Btrfs | Pseudo File System | Create '/media/docker-volume.img'
+  - name: BTRFS | Psuedo-File-System | Create '/media/docker-volume.img'
     shell: fallocate -l 20G /media/docker-volume.img
 
-  - name: Btrfs | Pseudo File System | Create pseudo filesystem
+  - name: BTRFS | Psuedo-File-System | Create pseudo filesystem
     filesystem:
       fstype: ext4
       dev: /media/docker-volume.img
 
-  - name: Btrfs | Pseudo File System | Stop docker service
+  - name: BTRFS | Psuedo-File-System | Stop docker service
     systemd:
       name: docker
       state: stopped
 
-  - name: Btrfs | Pseudo File System | Wait for 30 seconds before commencing
+  - name: BTRFS | Psuedo-File-System | Wait for 30 seconds before commencing
     wait_for:
       timeout: 30
 
-  - name: Btrfs | Pseudo File System | Remove '/var/lib/docker' if it exists
+  - name: BTRFS | Psuedo-File-System | Remove '/var/lib/docker' if it exists
     shell: rm -rf /var/lib/docker
 
-  - name: Btrfs | Pseudo File System | Mount pseudo filesystem
+  - name: BTRFS | Psuedo-File-System | Mount pseudo-file-system
     mount:
       name: /var/lib/docker
       src: /media/docker-volume.img

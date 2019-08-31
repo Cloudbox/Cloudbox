@@ -39,7 +39,7 @@
     ignore_errors: yes
     when: (docker_running_containers.stdout | trim | length > 0)
 
-  - name: Btrfs Tasks
+  - name: Import BTRFS Cleanup Tasks
     include_tasks: "subtasks/btrfs/cleanup.yml"
     when: ('btrfs' in var_lib_file_system.stdout)
 
@@ -53,16 +53,12 @@
 - name: "Import Docker Binary tasks"
   include_tasks: "subtasks/binary/binary.yml"
 
-- name: Btrfs psuedo file system tasks
+- name: Import BTRFS Psuedo-File-System Tasks
   include_tasks: "subtasks/btrfs/pseudo_file_system.yml"
   when: ('btrfs' in var_lib_file_system.stdout)
 
-- name: Import 'daemon.json'
-  template:
-    src: daemon.json.j2
-    dest: /etc/docker/daemon.json
-    mode: 0775
-    force: yes
+- name: "Import Daemon Tasks"
+  import_tasks: "subtasks/daemon.yml"
 
 - name: Start docker service
   systemd:
