@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: Time Zone Tasks                                #
+# Title:         Cloudbox: System | Time Zone Tasks                     #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,22 +8,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Remove '/etc/localtime'
+- name: Time Zone | Remove '/etc/localtime'
   file:
     path: "/etc/localtime"
     state: absent
 
-- name: Install tzdata
+- name: Time Zone | Install tzdata
   apt:
     name: tzdata
     state: present
 
-- name: Set time zone
+- name: Time Zone | Set time zone
   timezone:
     name: "{{ tz }}"
   notify: update tzdata
 
-- name: Import '/etc/timezone'
+- name: Time Zone | Import '/etc/timezone'
   template:
     src: "etc/timezone.j2"
     dest: "/etc/timezone"

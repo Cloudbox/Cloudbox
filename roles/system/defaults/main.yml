@@ -1,0 +1,15 @@
+##########################################################################
+# Title:         Cloudbox: Settings | Default Variables                  #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Continuous Integration
+################################
+
+continuous_integration: false
