@@ -121,4 +121,6 @@
   become: yes
   become_user: "{{ user.name }}"
   ignore_errors: yes
+  async: 60
+  poll: 0
   tags: plex_autoscan_update_sections
