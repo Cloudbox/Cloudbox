@@ -49,6 +49,7 @@
 
 - name: Docker Daemon Tasks
   import_tasks: "subtasks/docker/daemon.yml"
+  when: ('mounts' in ansible_run_tags) or ('mounts_override' in ansible_run_tags)
 
 # Start Docker Containers
 

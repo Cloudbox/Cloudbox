@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Docker - Btrfs - Cleanup Tasks                         #
+# Title:         Cloudbox: Docker | BTRFS | Cleanup Tasks               #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -10,22 +10,22 @@
 ---
 # https://gist.github.com/hopeseekr/cd2058e71d01deca5bae9f4e5a555440
 
-- name: Btrfs | Cleanup | Check to see if '/var/lib/docker/' exists
+- name: BTRFS | Cleanup | Check to see if '/var/lib/docker/' exists
   stat:
     path: "/var/lib/docker/"
   register: var_lib_docker
 
-- name: Btrfs | Cleanup | Tasks when '/var/lib/docker' exists
+- name: BTRFS | Cleanup | Tasks when '/var/lib/docker' exists
   block:
 
-  - name: Btrfs | Cleanup | Check filesystem of '/var/lib/docker' path
+  - name: BTRFS | Cleanup | Check filesystem of '/var/lib/docker' path
     shell: stat -f -c %T /var/lib/docker
     register: var_lib_docker_file_system
 
-  - name: Btrfs | Cleanup | Tasks when '/var/lib/docker' is btrfs
+  - name: BTRFS | Cleanup | Tasks when '/var/lib/docker' is btrfs
     block:
 
-    - name: Btrfs | Cleanup | Remove all docker containers, images, and volumes
+    - name: BTRFS | Cleanup | Remove all docker containers, images, and volumes
       shell: |
         docker container stop $(docker ps -aq) &> /dev/null || true
         docker container rm $(docker ps -aq) &> /dev/null || true
@@ -34,22 +34,22 @@
         docker volume rm $(docker volume ls -q) &> /dev/null || true
         docker volume prune -f &> /dev/null || true
 
-    - name: Btrfs | Cleanup | Stop docker service
+    - name: BTRFS | Cleanup | Stop docker service
       systemd:
         name: docker
         state: stopped
 
-    - name: Btrfs | Cleanup | Wait for 30 seconds before commencing
+    - name: BTRFS | Cleanup | Wait for 30 seconds before commencing
       wait_for:
         timeout: 30
 
-    - name: Btrfs | Cleanup | Remove '/var/lib/docker' btrfs subvolumes
+    - name: BTRFS | Cleanup | Remove '/var/lib/docker' btrfs subvolumes
       shell: |
         for subvolume in /var/lib/docker/btrfs/subvolumes/*; do
             btrfs subvolume delete $subvolume &> /dev/null || true
         done
 
-    - name: Btrfs | Cleanup | Remove '/var/lib/docker' path
+    - name: BTRFS | Cleanup | Remove '/var/lib/docker' path
       shell: rm -rf /var/lib/docker
 
     when: ('btrfs' in var_lib_docker_file_system.stdout)

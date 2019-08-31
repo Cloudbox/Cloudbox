@@ -1,17 +1,16 @@
+# /etc/systemd/system/docker.service.d/override.conf
 #########################################################################
-# Title:         Cloudbox: Docker | Housekeeping Tasks                  #
-# Author(s):     desimaniac                                             #
+# Title:         Cloudbox: Docker Config Override                       #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
----
-- name: Housekeeping | Remove all unused docker images
-  shell: docker image prune -af &> /dev/null || true
-  ignore_errors: yes
 
-- name: Housekeeping | Remove all unused docker volumes
-  shell: docker volume prune -f &> /dev/null || true
-  ignore_errors: yes
+[Unit]
+After={{ 'unionfs' if (mounts.unionfs|lower) == 'unionfs' else 'mergerfs' }}.service
+
+[Service]
+ExecStartPre=/bin/sleep 120
