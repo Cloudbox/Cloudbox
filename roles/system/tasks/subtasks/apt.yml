@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: APT Tasks                                      #
+# Title:         Cloudbox: System | APT Tasks                           #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,58 +8,64 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set env variables
+- name: APT | Set env variables
   set_fact:
     env_vars:
       DEBIAN_FRONTEND: noninteractive
       DEBIAN_PRIORITY: critical
 
-- name: Fix any potential dpkg issues
+- name: APT | Fix any potential dpkg issues
   shell: dpkg --configure --pending
 
-- name: Kill existing apt and apt-get
+- name: APT | Kill existing apt and apt-get
   shell: "killall apt apt-get >/dev/null 2>&1 || :"
   ignore_errors: yes
 
-- name: Fix any potential apt issues
+- name: APT | Fix any potential apt issues
   shell: apt-get install --fix-broken --quiet --yes
+  args:
+    warn: false
   environment: "{{ env_vars }}"
   ignore_errors: yes
 
-- name: Install required packages
+- name: APT | Install required packages
   apt:
     state: present
     name:
       - apt-utils
       - byobu
 
-- name: APT update
+- name: APT | APT update
   apt:
     update_cache: yes
   ignore_errors: yes
 
 # https://serverfault.com/a/839563
 # https://raymii.org/s/tutorials/Silent-automatic-apt-get-upgrade.html
-- name: APT upgrade
+- name: APT | APT upgrade
   shell: apt-get upgrade --quiet --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   environment: "{{ env_vars }}"
+  args:
+    warn: false
   when: not continuous_integration
   ignore_errors: yes
 
 # https://serverfault.com/a/839563
 # https://raymii.org/s/tutorials/Silent-automatic-apt-get-upgrade.html
-- name: APT dist-upgrade
+- name: APT | APT dist-upgrade
   shell: apt-get dist-upgrade --quiet --yes --allow-unauthenticated -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   environment: "{{ env_vars }}"
+  args:
+    warn: false
   when: not continuous_integration
   ignore_errors: yes
 
-- name: Remove useless packages from the cache
+- name: APT | Remove useless packages from the cache
   apt:
     autoclean: yes
   ignore_errors: yes
 
-- name: Remove dependencies that are no longer required
+- name: APT | Remove dependencies that are no longer required
   apt:
     autoremove: yes
   ignore_errors: yes

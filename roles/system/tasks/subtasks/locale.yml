@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: Locale Tasks                                   #
+# Title:         Cloudbox: System | Locale Tasks                        #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,29 +8,31 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Install 'locales'"
+- name: "Locale | Install 'locales'"
   apt:
     name: locales
     state: present
 
-- name: "Generate 'locales'"
+- name: "Locale | Generate 'locales'"
   locale_gen:
     name: "en_US.UTF-8"
     state: present
   notify: update locales
 
-- name: "Uncomment 'LANG='"
+- name: "Locale | Uncomment '#LANG='"
   replace:
     path: "/etc/default/locale"
     regexp: '^#(LANG=.*)'
     replace: '\1'
+  ignore_errors: yes
 
-- name: "Set Default 'locale'"
+- name: "Locale | Set Default 'locale'"
   ini_file:
     path: "/etc/default/locale"
     section: null
     option: "LANG"
     value: "en_US.UTF-8"
     state: present
+    create: yes
     no_extra_spaces: yes
   notify: update locales

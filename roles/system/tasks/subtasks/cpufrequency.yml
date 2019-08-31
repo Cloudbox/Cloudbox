@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: CPU Frequency Tasks                            #
+# Title:         Cloudbox: System | CPU Frequency Tasks                 #
 # Author(s):     l3uddz, EnorMOZ, desimaniac                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,12 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install 'cpufrequtils'
+- name: CPU Frequency | Install 'cpufrequtils'
   apt:
     name: cpufrequtils
     state: present
 
-- name: Install 'linux-tools' for Ubuntu
+- name: CPU Frequency | Install 'linux-tools' for Ubuntu
   apt:
     state: present
     name:
@@ -21,48 +21,45 @@
       - linux-tools-generic
   when: ansible_distribution == 'Ubuntu'
 
-- name: Install 'linux-tools' for Debian
+- name: CPU Frequency | Install 'linux-tools' for Debian
   apt:
     name: linux-tools
     state: present
   when: ansible_distribution == 'Debian'
 
-- name: "Install linux-tools-{{ ansible_kernel }}"
+- name: "CPU Frequency | Install 'linux-tools-{{ ansible_kernel }}'"
   shell: "apt-get install -qq $(apt-cache search -n linux-tools-{{ ansible_kernel }} | awk '{print $1}' | tail -n 1)"
+  args:
+    warn: false
   ignore_errors: yes
 
-- name: Check /etc/default/cpufrequtils exists
-  stat:
-    path: /etc/default/cpufrequtils
-  register: cpufrequtils_file
-
-- name: Create /etc/default/cpufrequtils
-  file:
-    path: /etc/default/cpufrequtils
-    state: touch
-  when: not cpufrequtils_file.stat.exists
-
-- name: Set CPU frequency scaling governor to performance
-  lineinfile:
+- name: CPU Frequency | Ensure 'cpufrequtils' is enabled
+  ini_file:
     path: "/etc/default/cpufrequtils"
-    regexp: '^GOVENOR\s?='
-    line: 'GOVENOR="performance"'
+    section: null
+    option: 'ENABLE'
+    value: '"true"'
     state: present
+    create: yes
+    no_extra_spaces: yes
 
-- name: Set CPU frequency scaling governor to performance
-  lineinfile:
+- name: CPU Frequency | Set 'GOVERNOR' to performance
+  ini_file:
     path: "/etc/default/cpufrequtils"
-    regexp: '^GOVERNOR\s?='
-    line: 'GOVERNOR="performance"'
+    section: null
+    option: 'GOVERNOR'
+    value: '"performance"'
     state: present
+    create: yes
+    no_extra_spaces: yes
 
-- name: Ensure governor is enabled
-  lineinfile:
+- name: CPU Frequency | Remove mispelled 'GOVENOR' entry
+  ini_file:
     path: "/etc/default/cpufrequtils"
-    regexp: '^ENABLE\s?='
-    line: 'ENABLE="true"'
-    state: present
+    section: null
+    option: 'GOVENOR'
+    state: absent
 
-- name: Disable ondemand CPU frequency scaling daemon
+- name: CPU Frequency | Disable “ondemand” CPU scaling daemon
   shell: "update-rc.d ondemand disable"
   when: ansible_distribution_version == "16.04"

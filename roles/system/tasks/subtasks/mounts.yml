@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: Mounts Tasks                                   #
+# Title:         Cloudbox: System | Mounts Tasks                        #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,10 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- debug:
-    msg: "System mounts: are {{ ansible_mounts }}"
+- name: System | Display system mounts
+  debug:
+    msg: "{{ ansible_mounts }}"
 
-- name: Set noatime,nobarrier opts for / mount
+- name: System | Set opts for '/' ext4 mount
   mount:
     path: /
     opts: defaults,noatime,nobarrier

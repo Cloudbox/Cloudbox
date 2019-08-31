@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         System: Network Tasks                                  #
+# Title:         Cloudbox: System | Network Tasks                       #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,21 +8,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install common packages
+- name: Network | Install common packages
   apt:
     state: present
     name:
       - vnstat
       - pciutils
 
-- block:
+- name: Network | Network Tasks Block
+  block:
 
-  - name: Check for '/etc/vnstat.conf'
+  - name: Network | Check for '/etc/vnstat.conf'
     stat:
       path: "/etc/vnstat.conf"
     register: vnstat_conf
 
-  - name: Set vnstat to proper default interface
+  - name: Network | Set vnstat to proper default interface
     lineinfile:
       path: "/etc/vnstat.conf"
       regexp: '(Interface)\s?.*'
@@ -31,7 +32,7 @@
       backrefs: yes
     when: (vnstat_conf.stat.exists)
 
-  - name: Import rc.local if missing
+  - name: Network | Import 'rc.local' if missing
     copy:
       src: "etc/rc.local"
       dest: "/etc/rc.local"
@@ -40,11 +41,11 @@
       mode: 0755
       force: no
 
-  - name: Get nic info
+  - name: Network | Get NIC Info
     shell: lspci
     register: nic
 
-  - name: Disable TSO / TX
+  - name: Network | Disable TSO / TX
     blockinfile:
       path: "/etc/rc.local"
       state: present

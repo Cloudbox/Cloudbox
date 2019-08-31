@@ -14,7 +14,7 @@
 - name: Network tasks
   import_tasks: "subtasks/network.yml"
 
-- name: SYSCTL tasks
+- name: sysctl tasks
   include_tasks: "subtasks/sysctl.yml"
 
 - name: Mounts tasks
@@ -34,6 +34,7 @@
 
 - name: Set Time Zone task
   import_tasks: "subtasks/timezone.yml"
+  when: tz is defined
   tags: set-timezone
 
 - name: Set Locale task
