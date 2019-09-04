@@ -1,0 +1,34 @@
+#########################################################################
+# Title:         Cloudbox: Cloudplow | Services | Cloudplow Tasks       #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Services | Cloudplow | Populate Service Facts
+  service_facts:
+
+- name: Services | Cloudplow | Get 'cloudplow.service' state
+  set_fact:
+    cloudplow_service_running: "{{ (services['cloudplow.service'] is defined) and (services['cloudplow.service']['state'] == 'running') }}"
+
+- name: Services | Cloudplow | Stop 'cloudplow.service'
+  systemd:
+    name: cloudplow
+    state: stopped
+  when: (cloudplow_service_running)
+
+- name: Services | Cloudplow | Update 'User/Group' in 'cloudplow.service'
+  ini_file:
+    path: "/etc/systemd/system/cloudplow.service"
+    section: Service
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    state: present
+    no_extra_spaces: yes
+  loop:
+    - { option: 'User', value: "{{ user.name }}" }
+    - { option: 'Group', value: "{{ user.name }}" }

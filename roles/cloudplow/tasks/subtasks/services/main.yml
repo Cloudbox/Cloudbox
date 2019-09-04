@@ -1,0 +1,34 @@
+#########################################################################
+# Title:         Cloudbox: Cloudplow | Services Task                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Services | Check if 'unionfs_cleaner.service' exists
+  stat:
+    path: "/etc/systemd/system/unionfs_cleaner.service"
+  register: unionfs_cleaner_service
+
+- name: Services | Existing 'unionfs_cleaner.service' Tasks
+  import_tasks: "unionfs_cleaner.yml"
+  when: unionfs_cleaner_service.stat.exists
+
+- name: Services | Check 'cloudplow.service' exists
+  stat:
+    path: "/etc/systemd/system/cloudplow.service"
+  register: cloudplow_service
+
+- name: Services | Existing 'cloudplow.service' Tasks
+  import_tasks: "cloudplow.yml"
+  when: cloudplow_service.stat.exists
+
+- name:  Services | Import 'cloudplow.service' file
+  template:
+    src: cloudplow.service.j2
+    dest: /etc/systemd/system/cloudplow.service
+    force: no
+  when: not cloudplow_service.stat.exists
