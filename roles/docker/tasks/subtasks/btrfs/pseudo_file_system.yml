@@ -23,7 +23,13 @@
 - name: BTRFS | Psuedo-File-System | Tasks when '/var/lib/docker' is not mounted
   block:
 
-  - name: BTRFS | Psuedo-File-System | Create '/media/docker-volume.img'
+  - name: BTRFS | Psuedo-File-System | Create blank '/media/docker-volume.img'
+    shell: touch /media/docker-volume.img
+
+  - name: BTRFS | Psuedo-File-System | Set NOCOW on '/media/docker-volume.img'
+    shell: chattr +C /media/docker-volume.img
+
+  - name: BTRFS | Psuedo-File-System | Set size on '/media/docker-volume.img'
     shell: fallocate -l 20G /media/docker-volume.img
 
   - name: BTRFS | Psuedo-File-System | Create pseudo filesystem
