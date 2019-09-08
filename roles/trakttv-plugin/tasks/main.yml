@@ -8,11 +8,19 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Gather list of running Docker containers
+  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+  register: docker_running_containers
+
+- name: Convert to list
+  set_fact:
+    docker_running_containers: "{{ (docker_running_containers.stdout).split() }}"
+
 - name: Stop Plex container
   docker_container:
     name: plex
     state: stopped
-  when: ('trakttv-plugin' in ansible_run_tags)
+  when: ('plex' in docker_running_containers) and ('trakttv-plugin' in ansible_run_tags)
 
 - name: Remove Previous Trakt.tv Plugin
   file:
@@ -39,9 +47,18 @@
   set_fact:
     trakttv_download_url_backup: https://github.com/trakt/Plex-Trakt-Scrobbler/releases/download/v1.3.3/trakt_for_plex-1.3.3-7f0f38e-linux_x86_64.zip
 
+- name: Set 'trakttv_download_url' variable
+  set_fact:
+    trakttv_download_url: "{{ trakttv_download_url.stdout | default('{{ trakttv_download_url_backup }}',true) }}"
+
+- name: Create 'plug-ins' directory
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+
 - name: Install Trakt.tv Plugin
   unarchive:
-    src: "{{ trakttv_download_url.stdout | default('{{ trakttv_download_url_backup }}',true) }}"
+    src: "{{ trakttv_download_url }}"
     dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
     copy: no
     owner: "{{ user.name }}"
@@ -54,13 +71,15 @@
 - name: Display Trakt.tv Plugin version
   debug:
     msg: "Trakt.tv Plugin version {{ trakttv_latest_version.stdout }} installed."
-  when:
-    - (trakttv_latest_version is defined) and (trakttv_latest_version is succeeded)
-    - (trakttv_download_url is defined) and (trakttv_download_url is succeeded)
-    - (trakttv_install is defined) and (trakttv_install is succeeded)
+  when: (trakttv_install is success)
+
+- name: Post-Unsuccessfull Trakt.tv Plugin Install
+  debug:
+    msg: "Trakt.tv Plugin install failed."
+  when: (trakttv_install is failed)
 
 - name: Start Plex container
   docker_container:
     name: plex
     state: started
-  when: ('trakttv-plugin' in ansible_run_tags)
+  when: ('plex' in docker_running_containers) and ('trakttv-plugin' in ansible_run_tags)
