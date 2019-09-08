@@ -39,13 +39,13 @@
   import_tasks: "subtasks/settings/forced_quality.yml"
   tags: plex_forced_quality
 
-- name: "Extra | Install Trakt.tv Plugin"
-  import_role:
-    name: trakttv-plugin
-
 - name: "Extra | Install Sub-Zero Plugin"
   import_role:
     name: sub-zero-plugin
+
+- name: "Extra | Install Trakt.tv Plugin"
+  import_role:
+    name: trakttv-plugin
 
 - name: "Extra | Install WebTools Plugin"
   import_role:

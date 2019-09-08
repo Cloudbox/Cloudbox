@@ -174,4 +174,4 @@
 
 - name: Extra Tasks
   import_tasks: "subtasks/extra.yml"
-  when: (not continuous_integration)
+  ignore_errors: yes
