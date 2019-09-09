@@ -16,7 +16,7 @@
   with_items:
     - /opt/cloudplow
 
-- name: Clone cloudplow repo
+- name: Clone cloudplow repo 'HEAD'
   git:
     repo: https://github.com/l3uddz/cloudplow.git
     dest: /opt/cloudplow
@@ -25,6 +25,19 @@
     force: yes
   become: yes
   become_user: "{{ user.name }}"
+  ignore_errors: yes
+  register: cloudplow_clone_status
+
+- name: Clone cloudplow repo 'master'
+  git:
+    repo: https://github.com/l3uddz/cloudplow.git
+    dest: /opt/cloudplow
+    clone: yes
+    version: master
+    force: yes
+  become: yes
+  become_user: "{{ user.name }}"
+  when: cloudplow_clone_status is failed
 
 - name: Install pip requirements
   pip:
