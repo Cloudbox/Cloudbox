@@ -1,0 +1,55 @@
+#########################################################################
+# Title:         Cloudbox: Plex Autoscan | Services Task                #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Services | Check if 'plex_autoscan.service' exists
+  stat:
+    path: "/etc/systemd/system/plex_autoscan.service"
+  register: plex_autoscan_service
+
+- name: Services | Existing 'plex_autoscan.service' Tasks
+  block:
+
+  - name: Services | Populate Service Facts
+    service_facts:
+
+  - name: Services | Get 'plex_autoscan.service' state
+    set_fact:
+      plex_autoscan_service_running: "{{ (services['plex_autoscan.service'] is defined) and (services['plex_autoscan.service']['state'] == 'running') }}"
+
+  - name: Services | Stop 'plex_autoscan.service'
+    systemd:
+      name: plex_autoscan
+      state: stopped
+    when: plex_autoscan_service_running
+
+  - name: Services | Update 'User/Group' in 'plex_autoscan.service'
+    ini_file:
+      path: "/etc/systemd/system/plex_autoscan.service"
+      section: Service
+      option: "{{ item.option }}"
+      value: "{{ item.value }}"
+      state: present
+      no_extra_spaces: yes
+    loop:
+      - { option: 'User', value: "{{ user.name }}" }
+      - { option: 'Group', value: "{{ user.name }}" }
+
+  when: plex_autoscan_service.stat.exists
+
+- name: Services | New 'plex_autoscan.service' Tasks
+  block:
+
+  - name: Import 'plex_autoscan.service'
+    template:
+      src: plex_autoscan.service.j2
+      dest: /etc/systemd/system/plex_autoscan.service
+      force: yes
+
+  when: not plex_autoscan_service.stat.exists
