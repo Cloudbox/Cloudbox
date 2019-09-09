@@ -21,7 +21,7 @@
 - name: Time Zone | Set time zone
   timezone:
     name: "{{ tz }}"
-  notify: update tzdata
+  notify: Handers | Update 'tzdata'
 
 - name: Time Zone | Import '/etc/timezone'
   template:
@@ -29,4 +29,4 @@
     dest: "/etc/timezone"
     mode: 0644
     force: yes
-  notify: update tzdata
+  notify: Handers | Update 'tzdata'

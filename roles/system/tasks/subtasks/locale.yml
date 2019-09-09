@@ -17,7 +17,7 @@
   locale_gen:
     name: "en_US.UTF-8"
     state: present
-  notify: update locales
+  notify: Handers | Update 'locales'
 
 - name: "Locale | Uncomment '#LANG='"
   replace:
@@ -35,4 +35,4 @@
     state: present
     create: yes
     no_extra_spaces: yes
-  notify: update locales
+  notify: Handers | Update 'locales'
