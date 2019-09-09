@@ -40,9 +40,6 @@
 
 # New Setup
 
-- name: Fuse Tasks
-  import_tasks: "subtasks/fuse.yml"
-
 - name: Basic Tasks
   import_tasks: "subtasks/basics.yml"
 

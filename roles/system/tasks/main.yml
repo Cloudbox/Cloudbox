@@ -18,7 +18,7 @@
   include_tasks: "subtasks/sysctl.yml"
 
 - name: Mounts tasks
-  include_tasks: "subtasks/mounts.yml"
+  import_tasks: "subtasks/mounts.yml"
 
 - name: Check if intel_pstate directory exists.
   stat:
