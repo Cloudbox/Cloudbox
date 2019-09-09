@@ -8,35 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Check if plex_autoscan.service exists
-  stat:
-    path: "/etc/systemd/system/plex_autoscan.service"
-  register: plex_autoscan_service
-
-- name: Service Tasks
-  block:
-
-  - name: Populate Service Facts
-    service_facts:
-
-  - name: Get plex_autoscan service state
-    set_fact:
-      plex_autoscan_service_running: "{{ (services['plex_autoscan.service'] is defined) and (services['plex_autoscan.service']['state'] == 'running') }}"
-
-  - name: Stop plex_autoscan service
-    systemd:
-      name: plex_autoscan
-      state: stopped
-    when: plex_autoscan_service_running
-
-  when: plex_autoscan_service.stat.exists
+- name: Import Services Task
+  import_tasks: "subtasks/services.yml"
 
 - name: Create plex_autoscan directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
     - /opt/plex_autoscan
 
-- name: Clone plex_autoscan
+- name: Clone plex_autoscan repo
   git:
     repo: https://github.com/l3uddz/plex_autoscan.git
     dest: /opt/plex_autoscan
@@ -51,7 +31,7 @@
     requirements: /opt/plex_autoscan/requirements.txt
     executable: pip2
 
-- name: Check config exists
+- name: Check if 'config.json' exists
   stat:
     path: "/opt/plex_autoscan/config/config.json"
   register: plex_autoscan_config
@@ -64,11 +44,11 @@
       name: plex_auth_token
     when: plex_account_enabled
 
-  - name: "Generate 32 character SERVER_PASS"
+  - name: "Generate 32 character 'SERVER_PASS'"
     set_fact:
       plex_autoscan_server_pass: "{{ lookup('password', '/dev/null chars=ascii_letters,digits length=32') }}"
 
-  - name: Import default config
+  - name: Import default 'config.json'
     template:
       src: config.json.j2
       dest: /opt/plex_autoscan/config/config.json
@@ -79,7 +59,7 @@
 
   when: not plex_autoscan_config.stat.exists
 
-- name: Set 'PLEX_LD_LIBRARY_PATH' in config.json
+- name: Set 'PLEX_LD_LIBRARY_PATH' in 'config.json'
   shell: |
     CONFIG_PATH="/opt/plex_autoscan/config"
     jq -c '.PLEX_LD_LIBRARY_PATH = "/usr/lib/plexmediaserver/lib"' ${CONFIG_PATH}/config.json | jq . > \
@@ -88,35 +68,21 @@
   become_user: "{{ user.name }}"
   when: plex_autoscan_config.stat.exists
 
-- name: Set scan.py as executable
+- name: Set 'scan.py' as executable
   file:
     path: /opt/plex_autoscan/scan.py
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: a+x
 
-- name: Import plex_autoscan service
-  template:
-    src: plex_autoscan.service.j2
-    dest: /etc/systemd/system/plex_autoscan.service
-    force: yes
-  when: not plex_autoscan_service.stat.exists
-
-- name: Start plex_autoscan service
-  systemd:
-    name: plex_autoscan
-    state: started
-    enabled: yes
-    daemon_reload: yes
-
-- name: Update config.json
+- name: Pull updates from 'config.py'
   command: "/opt/plex_autoscan/scan.py sections"
   become: yes
   become_user: "{{ user.name }}"
   ignore_errors: yes
   tags: plex_autoscan_update_sections
 
-- name: Configure PLEX_SECTION_PATH_MAPPINGS
+- name: Update 'PLEX_SECTION_PATH_MAPPINGS' in 'config.json'
   command: "/opt/plex_autoscan/scan.py update_sections"
   become: yes
   become_user: "{{ user.name }}"
@@ -124,3 +90,10 @@
   async: 60
   poll: 0
   tags: plex_autoscan_update_sections
+
+- name: Start 'plex_autoscan.service'
+  systemd:
+    name: plex_autoscan
+    state: started
+    enabled: yes
+    daemon_reload: yes
