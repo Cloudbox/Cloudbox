@@ -74,11 +74,11 @@
       - "Cloudbox Restore Service will now be skipped."
   when: (unencrypted_files_list | trim | length > 0)
 
-- name: "Restore Service | Pushover Message: Config files were not encrypted successfully encrypted"
+- name: "Restore Service | Notify | Cloudbox Backup: Config files were not encrypted successfully encrypted"
   include_role:
-    name: pushover
+    name: notify
   vars:
-    message: "The following config file(s) were NOT encrypted successfully: '{{ unencrypted_files_list | trim }}'. Restore Service will now be skipped."
+    message: "Cloudbox Backup: The following config file(s) were NOT encrypted successfully: '{{ unencrypted_files_list | trim }}'. Restore Service will now be skipped."
   when: (unencrypted_files_list | trim | length > 0)
 
 - name: Restore Service | Print error message when config file(s) were encrypted successfully
@@ -107,11 +107,11 @@
       msg: "The following encrypted config file(s) were too large to upload to the Cloudbox Restore Service: '{{ files_too_large_to_upload_list | trim }}'"
     when: (files_too_large_to_upload_list | trim | length > 0)
 
-  - name: "Restore Service | Pushover Message: Config files were too large to upload to the Cloudbox Restore Service"
+  - name: "Restore Service | Notify | Cloudbox Backup: Config files were too large to upload to the Cloudbox Restore Service"
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "The following encrypted config file(s) were too large to upload to the Cloudbox Restore Service: '{{ files_too_large_to_upload_list | trim }}'"
+      message: "Cloudbox Backup: The following encrypted config file(s) were too large to upload to the Cloudbox Restore Service: '{{ files_too_large_to_upload_list | trim }}'"
     when: (files_too_large_to_upload_list | trim | length > 0)
 
   - name: Restore Service | Set 'files_uploaded_list' variable
@@ -123,11 +123,11 @@
       msg: "The following encrypted config file(s) were successfully uploaded to the Cloudbox Restore Service: '{{ files_uploaded_list | trim }}'"
     when: (files_uploaded_list | trim | length > 0)
 
-  - name: "Restore Service | Pushover Message: Config files were successfully encrypted and uploaded to the Cloudbox Restore Service"
+  - name: "Restore Service | Notify | Cloudbox Backup: Config files were successfully encrypted and uploaded to the Cloudbox Restore Service"
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "Config files uploaded to the Cloudbox Restore Service."
+      message: "Cloudbox Backup: Config files uploaded to the Cloudbox Restore Service."
     when: (files_uploaded_list | trim | length > 0)
 
   when:
