@@ -157,6 +157,7 @@
       - lxml
       - apprise
       - jmespath
+      - apprise
   ignore_errors: yes
 
 - name: Uninstall apt glances

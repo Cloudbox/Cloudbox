@@ -1,0 +1,20 @@
+#########################################################################
+# Title:         Cloudbox: Notify | Apprise                             #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Apprise | Install 'apprise' pip module
+  pip:
+    name: apprise
+    state: present
+
+- name: Apprise | Send Notification
+  shell: apprise -b '{{ message }}' '{{ apprise }}'
+  become: yes
+  becomes: "{{ user.name }}"
+  ignore_errors: yes

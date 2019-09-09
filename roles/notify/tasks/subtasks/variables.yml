@@ -1,0 +1,63 @@
+#########################################################################
+# Title:         Cloudbox: Notify | Variables                           #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Config Variables
+################################
+
+- name: Variables | Set 'apprise_account_enabled' variable
+  set_fact:
+    apprise_account_enabled: "{{ true if not(
+        (apprise is undefined)
+        or
+        (apprise is none)
+        or
+        (apprise | trim | length == 0)
+      )
+      else false }}"
+
+- name: Variables | Set 'pushover_account_enabled' variable
+  set_fact:
+    pushover_account_enabled: "{{ true if not(
+        (pushover is undefined)
+        or
+        (pushover is none)
+        or
+        (pushover | trim | length == 0)
+        or
+        (pushover.app_token is undefined)
+        or
+        (pushover.app_token is none)
+        or
+        (pushover.app_token | trim | length == 0)
+        or
+        (pushover.user_key is undefined)
+        or
+        (pushover.user_key is none)
+        or
+        (pushover.user_key | trim | length == 0)
+      )
+      else false }}"
+
+################################
+# Notification Services List
+################################
+
+- name: Variables | Create empty 'notification_services' list
+  set_fact:
+    notification_services: []
+
+- name: Variables | Build 'notification_services' list
+  set_fact:
+    notification_services: "{{ notification_services + [ item.service ] }}"
+  when: item.enabled
+  loop:
+    - { service: 'apprise', enabled: '{{ apprise_account_enabled }}' }
+    - { service: 'pushover', enabled: '{{ pushover_account_enabled }}' }
