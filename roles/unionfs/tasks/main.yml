@@ -35,10 +35,6 @@
 
 # New Setup
 
-- name: Fuse Tasks
-  import_tasks: "subtasks/fuse.yml"
-  when: (not use_remote)
-
 - name: Basic Tasks
   import_tasks: "subtasks/basics.yml"
 
