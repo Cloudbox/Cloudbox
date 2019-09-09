@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: System | Mounts Tasks                        #
+# Title:         Cloudbox: System | Mount Tasks                         #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,11 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: System | Display system mounts
+- name: Mounts | Display system mounts
   debug:
     msg: "{{ ansible_mounts }}"
+    verbosity: 1
 
-- name: System | Set opts for '/' ext4 mount
+- name: Mounts | Set opts for '/' ext4 mount
   mount:
     path: /
     opts: defaults,noatime,nobarrier
@@ -22,3 +23,15 @@
   with_items:
     - "{{ ansible_mounts }}"
   when: (item.mount == '/') and (item.fstype == 'ext4')
+
+- name: Mounts | Install 'fuse'
+  apt:
+    name: fuse
+    state: present
+
+- name: Mounts | Import 'fuse.conf'
+  copy:
+    src: etc/fuse.conf
+    dest: /etc/fuse.conf
+    mode: 0775
+    force: yes
