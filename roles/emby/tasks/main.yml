@@ -24,20 +24,6 @@
     - /opt/emby/config/users
     - "{{ plex.transcodes }}/emby"
 
-- name: "Import 'dlna.xml' config"
-  copy:
-    src: "dlna.xml"
-    dest: "/opt/emby/config/dlna.xml"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    force: no
-
-- name: "Check if 'system.xml' exists"
-  stat:
-    path: "/opt/emby/config/system.xml"
-  register: emby_system_xml
-
 - name: Stop and remove any existing container
   docker_container:
     name: emby
@@ -99,9 +85,4 @@
     recurse: yes
 
 - name: Settings Tasks
-  include_tasks: "emby_settings.yml"
-  when: not (
-        (emby_system_xml.exists)
-        or
-        (continuous_integration)
-    )
+  include_tasks: "subtasks/settings.yml"

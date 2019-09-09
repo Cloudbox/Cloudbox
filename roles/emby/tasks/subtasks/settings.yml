@@ -1,77 +1,85 @@
 #########################################################################
-# Title:         Cloudbox: Emby - Settings Tasks                        #
+# Title:         Cloudbox: Emby | Settings Task                         #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  emby/embyserver                                        #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Wait for 'system.xml' to be created"
+- name: "Settings | Wait for 'system.xml' to be created"
   wait_for:
     path: "/opt/emby/config/system.xml"
     state: present
 
-- name: "Wait 10 seconds before stopping container"
+- name: "Settings | Wait 10 seconds before stopping container"
   wait_for:
     timeout: 10
 
-- name: "Stop container to customize 'system.xml'"
+- name: "Settings | Stop emby container"
   docker_container:
     name: emby
     state: stopped
 
-- name: "Set 'EnableUPnP' to 'false'"
+- name: "Settings | Import 'dlna.xml'"
+  copy:
+    src: "dlna.xml"
+    dest: "/opt/emby/config/dlna.xml"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: no
+
+- name: "Settings | Set 'EnableUPnP' to 'false'"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/EnableUPnP
     value: "false"
 
-- name: "Set 'PublicPort' to '80'"
+- name: "Settings | Set 'PublicPort' to '80'"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/PublicPort
     value: "80"
 
-- name: "Set 'PublicHttpsPort' to '443'"
+- name: "Settings | Set 'PublicHttpsPort' to '443'"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/PublicHttpsPort
     value: "443"
 
-- name: "Set 'EnableHttps' to 'true'"
+- name: "Settings | Set 'EnableHttps' to 'true'"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/EnableHttps
     value: "true"
 
-- name: "Set 'WanDdns' to 'emby.{{ user.domain }}'"
+- name: "Settings | Set 'WanDdns' to 'emby.{{ user.domain }}'"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/WanDdns
     value: "emby.{{ user.domain }}"
 
-- name: "Set 'EnableAnonymousUsageReporting' to 'false'"
+- name: "Settings | Set 'EnableAnonymousUsageReporting' to 'false'"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/EnableAnonymousUsageReporting
     value: "false"
 
-- name: "Set 'RequireHttps' to 'false'"
+- name: "Settings | Set 'RequireHttps' to 'false'"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/RequireHttps
     value: "false"
 
-- name: "Set 'IsBehindProxy' to 'true'"
+- name: "Settings | Set 'IsBehindProxy' to 'true'"
   xml:
     path: "/opt/emby/config/system.xml"
     xpath: /ServerConfiguration/IsBehindProxy
     value: "true"
 
-- name: Start container to apply changes
+- name: "Settings | Start emby container"
   docker_container:
     name: emby
     state: started
