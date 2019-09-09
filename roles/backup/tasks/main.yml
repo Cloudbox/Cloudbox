@@ -35,11 +35,11 @@
   - name: Snapshot
     import_tasks: "snapshot.yml"
 
-  - name: "Pushover Message: Started Cloudbox backup task"
+  - name: "Notify | Cloudbox Backup: Started Cloudbox backup task"
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "Started Cloudbox {{ use_snapshot | ternary('(snapshot-enabled) ','') }}backup task."
+      message: "Cloudbox Backup: Started {{ use_snapshot | ternary('(snapshot-enabled) ','') }}backup task."
 
   - name: "Create 'backup.lock'."
     file:
@@ -172,11 +172,11 @@
     ignore_errors: yes
     when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
-  - name: "Pushover Message: Stopped Docker containers"
+  - name: "Notify | Cloudbox Backup: Stopped Docker containers"
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "Stopped Docker containers."
+      message: "Cloudbox Backup: Stopped Docker containers."
     when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
   # Stop Plexdrive 4
@@ -294,11 +294,11 @@
       ignore_errors: yes
       when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
-    - name: "Snapshot | Pushover Message: Started Docker containers"
+    - name: "Snapshot | Notify | Cloudbox Backup: Started Docker containers"
       include_role:
-        name: pushover
+        name: notify
       vars:
-        message: "Started Docker containers."
+        message: "Cloudbox Backup: Started Docker containers."
       when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
     when: (use_snapshot)
@@ -393,11 +393,11 @@
     set_fact:
       backup_size: "{{ (backup_new.stdout|int) | filesizeformat }}"
 
-  - name: "Pushover Message: Backup created. Total size = {{ backup_size }}."
+  - name: "Notify | Cloudbox Backup: Backup created with total size of {{ backup_size }}."
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "Backup created. Total size = {{ backup_size }}."
+      message: "Cloudbox Backup: Backup created with total size of {{ backup_size }}."
     ignore_errors: yes
 
   # Start Plexdrive and Docker containers when snapshot is not enabled
@@ -426,11 +426,11 @@
       ignore_errors: yes
       when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
-    - name: "Pushover Message: Started Docker containers"
+    - name: "Notify | Cloudbox Backup: Started Docker containers"
       include_role:
-        name: pushover
+        name: notify
       vars:
-        message: "Started Docker containers."
+        message: "Cloudbox Backup: Started Docker containers."
       when: (cloudbox_managed_containers.stdout | trim | length > 0)
 
     when: (not use_snapshot)
@@ -508,11 +508,11 @@
     become_user: "{{ user.name }}"
     when: (rclone.enable)
 
-  - name: "Pushover Message: Rclone uploaded backup to '{{ rclone.destination }}'"
+  - name: "Notify | Cloudbox Backup: Rclone uploaded backup to '{{ rclone.destination }}'"
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "Rclone uploaded backup to '{{ rclone.destination }}'."
+      message: "Cloudbox Backup: Rclone uploaded backup to '{{ rclone.destination }}'."
     when: (rclone.enable)
 
   - name: "Use rsync to upload backup to '{{ rsync.destination }}'"
@@ -525,11 +525,11 @@
     become_user: "{{ user.name }}"
     when: (rsync.enable)
 
-  - name: "Pushover Message: Rsync uploaded backup to '{{ rsync.destination }}'"
+  - name: "Notify | Cloudbox Backup: Rsync uploaded backup to '{{ rsync.destination }}'"
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "Rsync uploaded backup to '{{ rsync.destination }}'."
+      message: "Cloudbox Backup: Rsync uploaded backup to '{{ rsync.destination }}'."
     when: (rsync.enable)
 
   - name: Get Current Time
@@ -544,11 +544,11 @@
     set_fact:
       total_time: "{{ (((end_time|int) - (start_time|int)) / 60) | int | abs }}"
 
-  - name: "Pushover Message: Finished Cloudbox backup task in {{ total_time }} minutes"
+  - name: "Notify | Cloudbox Backup: Finished Cloudbox backup task in {{ total_time }} minutes"
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "Finished Cloudbox {{ use_snapshot | ternary('(snapshot-enabled) ','') }}backup task in {{ total_time }} minutes."
+      message: "Cloudbox Backup: Finished Cloudbox {{ use_snapshot | ternary('(snapshot-enabled) ','') }}backup task in {{ total_time }} minutes."
 
   - name: "Start 'cloudplow' service"
     systemd:
@@ -635,11 +635,11 @@
     debug:
       msg: 'Backup terminated due to an error'
 
-  - name: "Pushover Message: Backup terminated due to an error"
+  - name: "Notify | Cloudbox Backup: Backup terminated due to an error"
     include_role:
-      name: pushover
+      name: notify
     vars:
-      message: "Backup terminated due to an error."
+      message: "Cloudbox Backup: Backup terminated due to an error."
 
   always:
   - name: "Remove 'backup.lock'"
