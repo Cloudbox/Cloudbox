@@ -8,8 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: update locales
+- name: Handers | Update 'locales'
   command: dpkg-reconfigure --frontend noninteractive locales
 
-- name: update tzdata
+- name: Handers | Update 'tzdata'
   command: dpkg-reconfigure --frontend noninteractive tzdata
