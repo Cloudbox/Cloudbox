@@ -31,6 +31,7 @@
    },
    "PLEX_ANALYZE_DIRECTORY":true,
    "PLEX_ANALYZE_TYPE":"basic",
+   "PLEX_FIX_MISMATCHED":true,
    "PLEX_DATABASE_PATH":"/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db",
    "PLEX_EMPTY_TRASH":true,
    "PLEX_EMPTY_TRASH_CONTROL_FILES":[
@@ -57,14 +58,20 @@
    "PLEX_TOKEN":"{{ plex_auth_token | default('') }}",
    "PLEX_CHECK_BEFORE_SCAN":true,
    "PLEX_WAIT_FOR_EXTERNAL_SCANNERS":false,
-   "RCLONE_RC_CACHE_EXPIRE":{
-      "ENABLED":false,
-      "FILE_EXISTS_TO_REMOTE_MAPPINGS": {
-        "Media": [
-          "/mnt/unionfs/Media"
-        ]
-      },
-      "RC_URL":"http://localhost:5572"
+   "RCLONE": {
+     "BINARY": "/usr/bin/rclone",
+     "CONFIG": "/home/{{ user.name }}/.config/rclone/rclone.conf",
+     "CRYPT_MAPPINGS": {
+     },
+     "RC_CACHE_REFRESH": {
+       "ENABLED": false,
+       "FILE_EXISTS_TO_REMOTE_MAPPINGS": {
+         "Media/": [
+           "/mnt/unionfs/Media/"
+         ]
+       },
+       "RC_URL": "http://localhost:5572"
+     }
    },
    "RUN_COMMAND_BEFORE_SCAN":"",
    "RUN_COMMAND_AFTER_SCAN": "",
