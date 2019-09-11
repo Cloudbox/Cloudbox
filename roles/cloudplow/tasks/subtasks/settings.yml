@@ -1,0 +1,79 @@
+#########################################################################
+# Title:         Cloudbox: Cloudplow | Settings Task                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Settings | Install required packages
+  apt:
+    state: present
+    name:
+      - jq
+      - moreutils
+
+- name: Settings | Import Plex Auth Token role
+  import_role:
+    name: plex_auth_token
+  when: plex_account_enabled
+
+- name: Settings | Check if 'config.json' exists
+  stat:
+    path: "/opt/cloudplow/config.json"
+  register: cloudplow_config
+
+- name: Settings | New 'config.json' tasks
+  block:
+
+  - name: Settings | Import default 'config.json'
+    template:
+      src: config.json.j2
+      dest: /opt/cloudplow/config.json
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: yes
+
+  when: not cloudplow_config.stat.exists
+
+- name: Settings | Existing 'config.json' tasks
+  block:
+
+  - name: Settings | Update Rclone config path 'config.json'
+    shell: |
+      CONFIG_PATH="/opt/cloudplow/config.json"
+      jq '.core.rclone_config_path = "/home/{{ user.name }}/.config/rclone/rclone.conf"' ${CONFIG_PATH} | sponge ${CONFIG_PATH}
+    become: yes
+    become_user: "{{ user.name }}"
+
+  - name: Settings | Update NZBGet credentials in 'config.json'
+    shell: |
+      CONFIG_PATH="/opt/cloudplow/config.json"
+      jq '.nzbget.url = "https://{{ user.name }}:{{ user.pass }}@nzbget.{{ user.domain }}"' ${CONFIG_PATH} | sponge ${CONFIG_PATH}
+    become: yes
+    become_user: "{{ user.name }}"
+
+  - name: Settings | Update Plex URL in 'config.json'
+    shell: |
+      CONFIG_PATH="/opt/cloudplow/config.json"
+      jq '.plex.url = "https://plex.{{ user.domain }}"' ${CONFIG_PATH} | sponge ${CONFIG_PATH}
+    become: yes
+    become_user: "{{ user.name }}"
+
+  - name: Settings | Update Plex Token in 'config.json'
+    shell: |
+      CONFIG_PATH="/opt/cloudplow/config.json"
+      jq '.plex.token = "{{ plex_auth_token | default('') }}"' ${CONFIG_PATH} | sponge ${CONFIG_PATH}
+    become: yes
+    become_user: "{{ user.name }}"
+
+  when: cloudplow_config.stat.exists
+
+- name: Settings | Upgrade 'config.json'
+  shell: "/opt/cloudplow/cloudplow.py update_config"
+  become: yes
+  become_user: "{{ user.name }}"
+  ignore_errors: yes
