@@ -51,13 +51,15 @@
   ignore_errors: yes
 
 - name: Import 'TorrentCleanup.py'
-  copy:
-    src: "TorrentCleanup.py"
+  get_url:
+    url:  "https://raw.githubusercontent.com/l3uddz/TorrentCleanup/master/TorrentCleanup.py"
     dest: "/opt/scripts/torrents/TorrentCleanup.py"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
     force: yes
+    validate_certs: no
+  ignore_errors: yes
 
 - name: Import 'plex_trash_fixer.py'
   get_url:
