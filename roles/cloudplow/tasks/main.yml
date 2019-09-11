@@ -44,26 +44,6 @@
     requirements: /opt/cloudplow/requirements.txt
     executable: pip3
 
-- name: Check if 'config.json' exists
-  stat:
-    path: "/opt/cloudplow/config.json"
-  register: cloudplow_config
-
-- name: Import Plex Auth Token role
-  import_role:
-    name: plex_auth_token
-  when: plex_account_enabled and not cloudplow_config.stat.exists
-
-- name: Import default config
-  template:
-    src: config.json.j2
-    dest: /opt/cloudplow/config.json
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    force: yes
-  when: not cloudplow_config.stat.exists
-
 - name: Set 'cloudplow.py' as executable
   file:
     path: /opt/cloudplow/cloudplow.py
@@ -71,14 +51,14 @@
     group: "{{ user.name }}"
     mode: a+x
 
-- name: Set directory permissions
-  file: "path=/opt/cloudplow state=directory owner={{ user.name }} group={{ user.name }} recurse=yes"
-
 - name: "Create '/usr/local/bin/cloudplow' symlink"
   file:
     src: "/opt/cloudplow/cloudplow.py"
     dest: "/usr/local/bin/cloudplow"
     state: link
+
+- name: Import Settings Task
+  import_tasks: "subtasks/settings.yml"
 
 - name: Start 'cloudplow.service'
   systemd:
