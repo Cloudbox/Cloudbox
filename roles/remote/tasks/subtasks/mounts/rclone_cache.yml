@@ -53,3 +53,11 @@
 - name: Rclone Cache | Start 'rclone_cache.service'
   systemd: name=rclone_cache.service state=started enabled=yes
   when: (rclone_test.rc|int == 0)
+
+- name: "Rclone Cache | Display error message when rclone remote is not configured properly"
+  fail:
+    msg:
+      - "Rclone remote '{{ rclone.remote }}:' is not setup properly."
+      - "{{ rclone_test.stderr }}"
+  when: (rclone_test.rc|int != 0)
+  ignore_errors: yes

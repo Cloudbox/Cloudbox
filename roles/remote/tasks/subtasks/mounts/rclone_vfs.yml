@@ -49,7 +49,7 @@
   register: rclone_test
   failed_when: (rclone_test.rc|int > 5)
 
-- name: Rclone VFS | Start up services when rclone remote is configured
+- name: Rclone VFS | Start up services when rclone remote is configured properly
   block:
 
   - name: Rclone VFS | Start 'rclone_vfs.service'
@@ -68,3 +68,11 @@
     poll: 0
 
   when: (rclone_test.rc|int == 0)
+
+- name: "Rclone VFS | Display error message when rclone remote is not configured properly"
+  fail:
+    msg:
+      - "Rclone remote '{{ rclone.remote }}:' is not setup properly."
+      - "{{ rclone_test.stderr }}"
+  when: (rclone_test.rc|int != 0)
+  ignore_errors: yes
