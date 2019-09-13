@@ -1,0 +1,25 @@
+#########################################################################
+# Title:         Cloudbox: Community | Migration Task                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Migration | Check if 'community' folder exists in '/home'
+  stat:
+    path: "/home/{{ user.name }}/community"
+  register: folder_home
+
+- name: Migration | Check if 'community' folder exists in '/opt'
+  stat:
+    path: /opt/community
+  register: folder_opt
+
+- name: Migration | Move 'community' folder from '/home' folder to '/opt'
+  shell: |
+    mv {{ folder_home.stat.path }} /opt/
+    chown -R {{ user.name }}:{{ user.name }} /opt/community
+  when: (folder_home.stat.exists and folder_home.stat.isdir) and not (folder_opt.stat.exists)
