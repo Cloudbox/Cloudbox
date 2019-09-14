@@ -35,7 +35,7 @@
     - { role: nzbget, tags: ['cloudbox', 'feederbox', 'nzbget'], when: ['use_nzbs'] }
     - { role: rutorrent, tags: ['cloudbox', 'feederbox', 'rutorrent'], when: ['use_torrents'] }
     - { role: jackett, tags: ['cloudbox', 'feederbox', 'jackett'], when: ['use_torrents'] }
-    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'], when: ['use_nzbs or use_torrents'] }
+    - { role: nzbhydra2, tags: ['cloudbox', 'feederbox', 'nzbhydra2'], when: ['use_nzbs'] }
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
