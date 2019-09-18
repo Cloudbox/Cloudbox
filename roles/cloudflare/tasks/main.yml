@@ -8,8 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Cloudflare Zone Task
-  import_tasks: "subtasks/cloudflare_zone.yml"
+- name: Variables Task
+  import_tasks: "subtasks/variables.yml"
   ignore_errors: yes
 
 - name: Purge Cache Task

@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Cloudflare | Cloudflare Zone Task            #
+# Title:         Cloudbox: Cloudflare | Variables Task                  #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -10,7 +10,7 @@
 ---
 # https://github.com/advertine/ansible-cloudflare-purge
 
-- name: Cloudflare Zone | List Cloudflare Zones
+- name: Variables | Fetch Cloudflare Zones
   uri:
     url: 'https://api.cloudflare.com/client/v4/zones?name={{ user.domain }}'
     method: 'GET'
@@ -21,6 +21,21 @@
     return_content: yes
   register: cf_zones
 
-- name: Cloudflare Zone | Set 'cloudflare_zone' Variable
+- name: Variables | Set 'cloudflare_zone' Variable
   set_fact:
     cloudflare_zone: "{{ cf_zones.json.result[0].id }}"
+
+- name: Variables | Fetch Cloudflare Page Rules
+  shell: |
+    curl -X GET "https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone }}/pagerules?status=active&order=status&direction=desc&match=all" \
+    -H "X-Auth-Email: {{ cloudflare.email }}" \
+    -H "X-Auth-Key: {{ cloudflare.api  }}" \
+    -H "Content-Type: application/json" \
+    | jq -r '.result[] | select(.targets[].constraint.value | contains("{{ user.domain }}/.well-known")) | .id'
+  args:
+    warn: no
+  register: cf_page_rules
+
+- name: Variables | Set 'cloudflare_page_rules' Variable
+  set_fact:
+    cloudflare_page_rules: "{{ cf_page_rules.stdout_lines }}"

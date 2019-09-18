@@ -8,29 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Page Rules | Create Cloudflare Page Rule for Lets Encrypt
-  uri:
-    url: 'https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone }}/pagerules'
-    method: POST
-    headers:
-      X-Auth-Email: '{{ cloudflare.email }}'
-      X-Auth-Key: '{{ cloudflare.api }}'
-    body_format: json
-    body:
-      priority: 10
-      status: active
-      targets:
-      - target: url
-        constraint:
-          operator: matches
-          value: "*{{ user.domain }}/.well-known/acme-challenge/*"
-      actions:
-      - id: browser_check
-        value: 'off'
-    status_code: 200,400
-  register: cf_page_rule
+# Delete any existing CF Page Rules for Lets Encrypt
 
-- name: Page Rules | Print result of Cloudflare Page Rule Creation
-  debug:
-    msg: "Successfully created Let's Encrypt Cloudflare page rule for '{{ user.domain }}'"
-  when: (cf_page_rule.json.success is defined) and (cf_page_rule.json.success)
+- name: Page Rules | Destroy Page Rules Task
+  import_tasks: "page_rules/destroy.yml"
+  when: (cloudflare_page_rules | length > 0)
+
+# Create new CF Page Rule for Lets Encrypt
+
+- name: Page Rules | Create Page Rules Task
+  import_tasks: "page_rules/create.yml"
