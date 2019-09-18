@@ -11,14 +11,14 @@
 ---
 - name: "Set DNS Record on CloudFlare"
   include_role:
-    name: cloudflare
+    name: cloudflare-dns
   vars:
     subdomain: organizr
   when: (cloudflare_enabled) and not (organizr.direct_domain|default(false,true))
 
 - name: "Set DNS Record on CloudFlare"
   include_role:
-    name: cloudflare
+    name: cloudflare-dns
   vars:
     subdomain: "{{ item }}"
   with_items:

@@ -12,7 +12,7 @@
 ---
 - name: "Set DNS Record on CloudFlare"
   include_role:
-    name: cloudflare
+    name: cloudflare-dns
   vars:
     subdomain: radarr
   when: cloudflare_enabled

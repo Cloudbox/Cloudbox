@@ -11,7 +11,7 @@
 ---
 - name: "Set DNS Record on CloudFlare"
   include_role:
-    name: cloudflare
+    name: cloudflare-dns
   vars:
     subdomain: "{{ plexrequests.subdomain|default('plexrequests',true) }}"
   when: cloudflare_enabled
