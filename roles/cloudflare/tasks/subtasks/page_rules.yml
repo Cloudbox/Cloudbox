@@ -1,0 +1,36 @@
+#########################################################################
+# Title:         Cloudbox: Cloudflare | Page Rules Task                 #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create Cloudflare Page Rule for Lets Encrypt
+  uri:
+    url: 'https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone }}/pagerules'
+    method: POST
+    headers:
+      X-Auth-Email: '{{ cloudflare.email }}'
+      X-Auth-Key: '{{ cloudflare.api }}'
+    body_format: json
+    body:
+      priority: 10
+      status: active
+      targets:
+      - target: url
+        constraint:
+          operator: matches
+          value: "*{{ user.domain }}/.well-known/acme-challenge/*"
+      actions:
+      - id: browser_check
+        value: 'off'
+    status_code: 200,400
+  register: cf_page_rule
+
+- name: Print result of Cloudflare Page Rule Creation
+  debug:
+    msg: "Successfully created Let's Encrypt Cloudflare page rule for '{{ user.domain }}'"
+  when: (cf_page_rule.json.success is defined) and (cf_page_rule.json.success)

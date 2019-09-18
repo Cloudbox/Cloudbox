@@ -74,12 +74,6 @@
     force: yes
   when: (not proxy_conf.stat.exists) or ((proxy_conf.stat.exists) and ((proxy_conf.stat.islnk) or (proxy_conf.stat.isdir)))
 
-- name: Cloudflare Tasks
-  import_tasks: "subtasks/cloudflare.yml"
-  when: cloudflare_enabled
-  tags: cloudflare-tasks
-  ignore_errors: yes
-
 - name: Create and start container
   docker_container:
     name: nginx-proxy

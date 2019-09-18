@@ -1,0 +1,21 @@
+#########################################################################
+# Title:         Cloudbox: Cloudflare Role                              #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Cloudflare Zone Task
+  import_tasks: "subtasks/cloudflare_zone.yml"
+  ignore_errors: yes
+
+- name: Purge Cache Task
+  import_tasks: "subtasks/purge_cache.yml"
+  ignore_errors: yes
+
+- name: Page Rules Task
+  import_tasks: "subtasks/page_rules.yml"
+  ignore_errors: yes

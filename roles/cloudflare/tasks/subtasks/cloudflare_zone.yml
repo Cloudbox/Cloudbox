@@ -1,0 +1,25 @@
+#########################################################################
+# Title:         Cloudbox: Cloudflare | Cloudflare Zone Task            #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# https://github.com/advertine/ansible-cloudflare-purge
+- name: List Cloudflare Zones
+  uri:
+    url: 'https://api.cloudflare.com/client/v4/zones?name={{ user.domain }}'
+    method: 'GET'
+    headers:
+      Content-Type: "application/json"
+      X-Auth-Email: '{{ cloudflare.email }}'
+      X-Auth-Key: '{{ cloudflare.api }}'
+    return_content: yes
+  register: cf_zones
+
+- name: Set 'cloudflare_zone' Variable
+  set_fact:
+    cloudflare_zone: "{{ cf_zones.json.result[0].id }}"

@@ -25,6 +25,7 @@
     - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts', 'mounts_override'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
     - { role: nginx-proxy, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nginx-proxy'] }
+    - { role: cloudflare, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'cloudflare'], when: ['cloudflare_enabled'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
     - { role: plexpy, tags: ['cloudbox', 'mediabox', 'plexpy'] }
     - { role: ombi, tags: ['cloudbox', 'mediabox', 'ombi'] }
