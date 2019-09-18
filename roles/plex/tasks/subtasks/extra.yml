@@ -33,11 +33,11 @@
 
 - name: "Extra | DB Cache Size Settings"
   import_tasks: "subtasks/settings/db_cache_size.yml"
-  tags: plex_db_cache_size
+  tags: plex-db-cache-size
 
 - name: "Extra | Forced Automatic Quality Settings"
   import_tasks: "subtasks/settings/forced_quality.yml"
-  tags: plex_forced_quality
+  tags: plex-forced-quality
 
 - name: "Extra | Install Sub-Zero Plugin"
   import_role:

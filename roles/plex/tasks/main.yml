@@ -133,3 +133,4 @@
 - name: Extra Tasks
   import_tasks: "subtasks/extra.yml"
   ignore_errors: yes
+  tags: plex-extra-tasks
