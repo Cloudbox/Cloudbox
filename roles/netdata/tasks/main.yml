@@ -11,7 +11,7 @@
 ---
 - name: "Set DNS Record on CloudFlare"
   include_role:
-    name: cloudflare
+    name: cloudflare-dns
   vars:
     subdomain: netdata
   when: cloudflare_enabled
