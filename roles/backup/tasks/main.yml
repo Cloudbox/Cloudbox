@@ -157,27 +157,56 @@
       - "/opt/systemd-backup"
       - "/opt/crontab-backup"
 
-  - name: Populate Service Facts
-    service_facts:
-
   # Stop Containers
 
   - name: "Gather list of running Docker containers"
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' --filter label=com.github.cloudbox.cloudbox_managed=true | xargs echo -n"
-    register: cloudbox_managed_containers
+    register: docker_containers
     ignore_errors: yes
 
-  - name: "Stop all running Docker containers"
-    shell: "docker stop {{ cloudbox_managed_containers.stdout }}"
-    ignore_errors: yes
-    when: (cloudbox_managed_containers.stdout | trim | length > 0)
+  - name: Set 'docker_containers' variable
+    set_fact:
+      docker_containers: "{{ docker_containers.stdout if (docker_containers is success) else '' }}"
 
-  - name: "Notify | Cloudbox Backup: Stopped Docker containers"
-    include_role:
-      name: notify
-    vars:
-      message: "Cloudbox Backup: Stopped Docker containers."
-    when: (cloudbox_managed_containers.stdout | trim | length > 0)
+  - name: Docker container tasks
+    block:
+
+    - name: Convert Docker container string into a list
+      set_fact:
+        docker_containers: "{{ (docker_containers).split() | sort }}"
+
+    - name: Create list of torrent apps
+      set_fact:
+        torrent_apps:
+          - deluge
+          - delugevpn
+          - qbittorrent
+          - rutorrent
+
+    - name: Filter out torrent apps from Docker container list
+      set_fact:
+        docker_containers: "{{ docker_containers | difference(torrent_apps) }}"
+
+    - name: Convert Docker container list back to string
+      set_fact:
+        docker_containers: "{{ docker_containers | join(' ') }}"
+
+    - name: "Stop all running Docker containers"
+      shell: "docker stop {{ docker_containers }}"
+      ignore_errors: yes
+
+    - name: "Notify | Cloudbox Backup: Stopped Docker containers"
+      include_role:
+        name: notify
+      vars:
+        message: "Cloudbox Backup: Stopped Docker containers."
+
+    when: (docker_containers | trim | length > 0)
+
+  # Services
+
+  - name: Populate Service Facts
+    service_facts:
 
   # Stop Plexdrive 4
 
@@ -290,16 +319,16 @@
         timeout: 5
 
     - name: "Snapshot | Start all previously running Docker containers"
-      shell: 'docker start {{ cloudbox_managed_containers.stdout }}'
+      shell: 'docker start {{ docker_containers }}'
       ignore_errors: yes
-      when: (cloudbox_managed_containers.stdout | trim | length > 0)
+      when: (docker_containers | trim | length > 0)
 
     - name: "Snapshot | Notify | Cloudbox Backup: Started Docker containers"
       include_role:
         name: notify
       vars:
         message: "Cloudbox Backup: Started Docker containers."
-      when: (cloudbox_managed_containers.stdout | trim | length > 0)
+      when: (docker_containers | trim | length > 0)
 
     when: (use_snapshot)
 
@@ -422,16 +451,16 @@
         timeout: 5
 
     - name: "Start all previously running Docker containers"
-      shell: 'docker start {{ cloudbox_managed_containers.stdout }}'
+      shell: 'docker start {{ docker_containers }}'
       ignore_errors: yes
-      when: (cloudbox_managed_containers.stdout | trim | length > 0)
+      when: (docker_containers | trim | length > 0)
 
     - name: "Notify | Cloudbox Backup: Started Docker containers"
       include_role:
         name: notify
       vars:
         message: "Cloudbox Backup: Started Docker containers."
-      when: (cloudbox_managed_containers.stdout | trim | length > 0)
+      when: (docker_containers | trim | length > 0)
 
     when: (not use_snapshot)
 
@@ -619,9 +648,9 @@
         timeout: 5
 
     - name: "Start all previously running Docker containers"
-      shell: 'docker start {{ cloudbox_managed_containers.stdout }}'
+      shell: 'docker start {{ docker_containers }}'
       ignore_errors: yes
-      when: (cloudbox_managed_containers.stdout | trim | length > 0)
+      when: (docker_containers | trim | length > 0)
 
     when: (not use_snapshot)
 
