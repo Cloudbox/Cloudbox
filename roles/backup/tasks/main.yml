@@ -171,23 +171,26 @@
   - name: Docker container tasks
     block:
 
-    - name: Convert Docker container string into a list
+    - name: Convert Docker containers string into a list
       set_fact:
         docker_containers: "{{ (docker_containers).split() | sort }}"
 
-    - name: Create list of torrent apps
+    - name: Create lists of ignored apps
       set_fact:
+        reverse_proxy_apps:
+          - nginx-proxy
+          - letsencrypt
         torrent_apps:
           - deluge
           - delugevpn
           - qbittorrent
           - rutorrent
 
-    - name: Filter out torrent apps from Docker container list
+    - name: Filter out ignored apps from Docker containers list
       set_fact:
-        docker_containers: "{{ docker_containers | difference(torrent_apps) }}"
+        docker_containers: "{{ docker_containers | difference(reverse_proxy_apps+torrent_apps) }}"
 
-    - name: Convert Docker container list back to string
+    - name: Convert Docker containers list back to string
       set_fact:
         docker_containers: "{{ docker_containers | join(' ') }}"
 
