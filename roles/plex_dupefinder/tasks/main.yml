@@ -50,13 +50,13 @@
 
 - name: Set plexdupes.py as executable
   file:
-    path: /opt/plex_dupefinder/plexdupes.py
+    path: /opt/plex_dupefinder/plex_dupefinder.py
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: a+x
 
 - name: "Create /usr/local/bin symlink"
   file:
-    src: "/opt/plex_dupefinder/plexdupes.py"
-    dest: "/usr/local/bin/plexdupes"
+    src: "/opt/plex_dupefinder/plex_dupefinder.py"
+    dest: "/usr/local/bin/plex_dupefinder"
     state: link
