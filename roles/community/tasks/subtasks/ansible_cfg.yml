@@ -1,0 +1,42 @@
+#########################################################################
+# Title:         Cloudbox: Community | ansible.cfg Tasks                #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: ansible.cfg | Check if '/home/{{ user.name }}/.ansible_vault' file exists
+  stat:
+    path: "/home/{{ user.name }}/.ansible_vault"
+  register: ansible_vault
+
+- name: ansible.cfg | Encryption check block
+  block:
+
+  - name: ansible.cfg | Check 'accounts.yml' for encryption
+    shell: "head -1 {{ playbook_dir }}/accounts.yml | grep -q \\$ANSIBLE_VAULT"
+    register: encryption_check
+    ignore_errors: yes
+    changed_when: no
+    failed_when: encryption_check.rc > 1
+
+  - name: ansible.cfg | Set 'file_is_encrypted' variable
+    set_fact:
+      file_is_encrypted: "{{ ((encryption_check.rc == 0) | default(false,true)) }}"
+
+  when: ansible_vault.stat.exists
+
+- name: ansible.cfg | Set 'add_vault_password_option' variable
+  set_fact:
+    add_vault_password_file_option: "{{ ansible_vault.stat.exists and file_is_encrypted }}"
+
+- name: ansible.cfg | Add 'vault_password_file' option into 'ansible.cfg'
+  ini_file:
+    path: "/opt/community/ansible.cfg"
+    section: "defaults"
+    option: "vault_password_file"
+    value: "$HOME/.ansible_vault"
+    state: "{{ add_vault_password_file_option | ternary('present','absent') }}"

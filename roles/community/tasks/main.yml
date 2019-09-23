@@ -39,6 +39,12 @@
   become_user: "{{ user.name }}"
   when: community_clone_status is failed
 
+- name: Create symlink to folder in '/home'
+  file:
+    src: /opt/community/
+    dest: "/home/{{ user.name }}/community"
+    state: link
+
 - name: Import default files when missing
   copy:
     src: "{{ item }}"
@@ -50,8 +56,5 @@
   with_fileglob:
     - /opt/community/defaults/*.*
 
-- name: Create symlink to folder in '/home'
-  file:
-    src: /opt/community/
-    dest: "/home/{{ user.name }}/community"
-    state: link
+- name: ansible.cfg Tasks
+  import_tasks: "subtasks/ansible_cfg.yml"
