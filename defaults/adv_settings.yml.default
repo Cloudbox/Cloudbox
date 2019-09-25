@@ -35,7 +35,7 @@ gpu:
   intel: yes
   nvidia:
     enabled: no
-    driver: 410.78
+    driver: 418.30
 hetzner_nfs:
   vlan_id: 4000
   mount_client: 3
