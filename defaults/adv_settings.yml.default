@@ -28,8 +28,6 @@ nginx:
   subdomain: web
 ombi:
   subdomain: ombi
-plexrequests:
-  subdomain: plexrequests
 sickbeard_mp4_automator: no
 gpu:
   intel: yes

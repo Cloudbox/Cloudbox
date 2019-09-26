@@ -48,7 +48,6 @@
     - { role: webtools-plugin, tags: ['webtools-plugin', 'reinstall-webtools-plugin'] }
     - { role: subliminal, tags: ['subliminal'] }
     - { role: watchtower, tags: ['watchtower'] }
-    - { role: plexrequests, tags: ['plexrequests'] }
     - { role: resilio-sync, tags: ['resilio-sync'] }
     - { role: nextcloud, tags: ['nextcloud'] }
     - { role: mariadb, tags: ['mariadb'] }
