@@ -533,7 +533,7 @@
         --transfers=4 \
         --drive-chunk-size=128M \
         --stats=30s \
-        -v \
+        -vv \
         --log-file='/home/{{ user.name }}/logs/backup/cloudbox_backup_rclone.log' \
         '{{ local.destination }}' '{{ rclone.destination }}'
     become: yes
