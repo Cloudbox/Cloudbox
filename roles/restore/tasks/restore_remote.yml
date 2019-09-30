@@ -62,7 +62,7 @@
       --drive-chunk-size=128M \
       --exclude 'archived/**' \
       --stats=30s \
-      -v \
+      -vv \
       --log-file='{{ playbook_dir }}/restore_rclone.log' \
       '{{ rclone.destination }}/' '{{ local.destination }}'
   become: yes
