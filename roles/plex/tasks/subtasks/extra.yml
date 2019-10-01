@@ -8,6 +8,15 @@
 #                   GNU General Public License v3.0                      #
 ##########################################################################
 ---
+# Sometimes docker will set transcodes folder to root after a restore.
+- name: Extra | Ensure transcodes folder has the correct permissions
+  file:
+    path: "{{ plex.transcodes }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    recurse: yes
+
 - name: Extra | Wait for 'Preferences.xml' to be created
   wait_for:
     path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"

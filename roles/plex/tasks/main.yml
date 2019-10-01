@@ -71,15 +71,6 @@
     restart_policy: unless-stopped
     state: started
 
-# Sometimes docker will set transcodes folder to root after a restore.
-- name: "Ensure transcodes folder has the correct permissions"
-  file:
-    path: "{{ plex.transcodes }}"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    recurse: yes
-
 - name: Extra Tasks
   import_tasks: "subtasks/extra.yml"
   ignore_errors: yes
