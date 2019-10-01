@@ -55,7 +55,6 @@
     - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: traktarr, tags: ['traktarr'] }
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
-    - { role: radarr4k, tags: ['radarr4k'] }
     - { role: heimdall, tags: ['heimdall'] }
     - { role: thelounge, tags: ['thelounge'] }
     - { role: netdata, tags: ['netdata'] }
