@@ -8,10 +8,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set bash as default shell
-  import_tasks: "bash.yml"
-  when: shell|default('zsh',true) == "bash"
+- name: Set 'shell_type' variable
+  set_fact:
+    shell_type: "{{ shell | default('zsh',true) }}"
 
-- name: Set zsh as default shell
-  import_tasks: "zsh.yml"
-  when: shell|default('zsh',true) == "zsh"
+- name: Import '{{ shell_type }}' subtask
+  include_tasks: "subtasks/{{ shell_type }}.yml"

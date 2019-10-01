@@ -1,0 +1,69 @@
+#########################################################################
+# Title:         Cloudbox: Shell Role | Bash Tasks                      #
+# Author(s):     desimaniac, l3uddz                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Bash | Check if '.bashrc' exists
+  stat:
+    path: "/home/{{ user.name }}/.bashrc"
+  register: home_bashrc
+
+- name: Bash | Import '.bashrc' file
+  block:
+
+  - name: Bash | Check if default '.bashrc' exists
+    stat:
+      path: "/etc/skel/.bashrc"
+    register: default_bashrc
+
+  - name: "Bash | Copy '/etc/skel/.bashrc' to '/home/{{ user.name }}/.bashrc'"
+    copy:
+      src: "/etc/skel/.bashrc"
+      dest: "/home/{{ user.name }}/.bashrc"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: no
+    when: default_bashrc.stat.exists
+
+  - name: "Bash | Copy '.bashrc' to '/home/{{ user.name }}/.bashrc'"
+    copy:
+      src: "ubuntu/.bashrc"
+      dest: "/home/{{ user.name }}/.bashrc"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: no
+    when: not default_bashrc.stat.exists
+
+  when: not home_bashrc.stat.exists
+
+- name: Bash | Set default editor to nano in '.bashrc'
+  lineinfile:
+    dest: "/home/{{ user.name }}/.bashrc"
+    regexp: "^export EDITOR="
+    line: "export EDITOR=nano"
+    state: present
+
+- name: Bash | Set bash as default shell
+  user:
+    name: "{{ user.name }}"
+    shell: /bin/bash
+  register: default_shell
+
+- name: "Bash | Default shell set to: Bash"
+  debug:
+    msg:
+      - "Default shell set to: Bash"
+  when: (default_shell is changed)
+
+- name: "Bash | Default shell set to: Bash"
+  debug:
+    msg:
+      - "Changes will apply on session restart."
+  when: (default_shell is changed) and ('shell' in ansible_run_tags)

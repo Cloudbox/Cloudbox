@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Shell Role - Zsh Task                        #
+# Title:         Cloudbox: Shell Role | Zsh Tasks                       #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,10 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install 'zsh'
+- name: Zsh | Install 'zsh'
   apt: "name=zsh state=present"
 
-- name: Clone oh-my-zsh repo
+- name: Zsh | Clone oh-my-zsh repo
   git:
     repo: https://github.com/robbyrussell/oh-my-zsh.git
     dest: "/home/{{ user.name }}/.oh-my-zsh"
@@ -23,12 +23,12 @@
   register: cloning
   ignore_errors: yes
 
-- name: "Check if an existing .zshrc file is present"
+- name: "Zsh | Check if an existing .zshrc file is present"
   stat:
     path: "/home/{{ user.name }}/.zshrc"
   register: existing_zshrc
 
-- name: "Create /home/{{ user.name }}/.zshrc file"
+- name: "Zsh | Create /home/{{ user.name }}/.zshrc file"
   copy:
     src: /home/{{ user.name }}/.oh-my-zsh/templates/zshrc.zsh-template
     dest: /home/{{ user.name }}/.zshrc
@@ -36,14 +36,14 @@
     owner: "{{ user.name }}"
   when: (cloning is success) and (not existing_zshrc.stat.exists)
 
-- name: Set default editor to nano in .zshrc
+- name: Zsh | Set default editor to nano in .zshrc
   lineinfile:
     dest: "/home/{{ user.name }}/.zshrc"
     regexp: "^export EDITOR="
     line: "export EDITOR=nano"
     state: present
 
-- name: Set update prompt to always default true
+- name: Zsh | Set update prompt to always default true
   lineinfile:
     dest: "/home/{{ user.name }}/.zshrc"
     insertbefore: ^source\s\$ZSH\/oh-my-zsh\.sh
@@ -51,37 +51,37 @@
     state: present
 
 # Allows commmands to run with the un-expanded glob
-- name: Set option 'nomatch'
+- name: Zsh | Set option 'nomatch'
   lineinfile:
     dest: "/home/{{ user.name }}/.zshrc"
     line: "unsetopt nomatch"
     state: present
 
-- name: "Check if /bin/zsh exists"
+- name: "Zsh | Check if /bin/zsh exists"
   stat:
     path: /bin/zsh
   register: bin_zsh
 
-- name: "Create alternatives link to /bin/zsh"
+- name: "Zsh | Create alternatives link to /bin/zsh"
   alternatives:
     name: zsh
     link: /bin/zsh
     path: /bin/zsh5
   when: not bin_zsh.stat.exists
 
-- name: Set zsh as default shell
+- name: Zsh | Set zsh as default shell
   user:
     name: "{{ user.name }}"
     shell: /bin/zsh
   register: default_shell
 
-- name: "Default shell set to: ZSH"
+- name: "Zsh | Default shell set to: Zsh"
   debug:
     msg:
       - "Default shell set to: ZSH"
   when: (default_shell is changed)
 
-- name: "Default shell set to: ZSH"
+- name: "Zsh | Default shell set to: Zsh"
   debug:
     msg:
       - "Changes will apply on session restart."
