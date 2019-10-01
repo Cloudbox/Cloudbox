@@ -60,7 +60,7 @@
       - "/tmp:/tmp"
       - "/dev/shm:/dev/shm"
       - "{{ plex.transcodes }}/emby:/transcode"
-    devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
+    devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
