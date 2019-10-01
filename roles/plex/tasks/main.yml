@@ -59,7 +59,7 @@
       NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
       TZ: "{{ tz }}"
     volumes: "{{ plex_docker_volumes }}"
-    devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
+    devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and dev_dri.stat.exists) | default(false) else omit }}"
     etc_hosts: "{{ plex_docker_hosts }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
