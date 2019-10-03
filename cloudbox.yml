@@ -55,7 +55,6 @@
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
     - { role: netdata, tags: ['netdata'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
-    - { role: bazarr, tags: ['bazarr'] }
     - { role: python-plexlibrary, tags: ['python-plexlibrary'] }
     - { role: sabnzbd, tags: ['sabnzbd'] }
     - { role: nginx, tags: ['nginx'] }
