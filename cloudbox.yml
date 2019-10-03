@@ -24,6 +24,7 @@
     - { role: remote, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts', 'mounts_override'], when: ['use_remote'] }
     - { role: unionfs, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'mounts', 'mounts_override'] }
     - { role: scripts, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'scripts'] }
+    - { role: community, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'community'] }
     - { role: nginx-proxy, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nginx-proxy'] }
     - { role: cloudflare, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'cloudflare'], when: ['cloudflare_enabled'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
@@ -65,4 +66,3 @@
     - { role: organizrv1, tags: ['organizrv1'] }
     - { role: nzbthrottle, tags: ['nzbthrottle'] }
     - { role: ddclient, tags: ['ddclient'] }
-    - { role: community, tags: ['community'] }
