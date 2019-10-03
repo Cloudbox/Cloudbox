@@ -60,6 +60,5 @@
     - { role: python-plexlibrary, tags: ['python-plexlibrary'] }
     - { role: sabnzbd, tags: ['sabnzbd'] }
     - { role: nginx, tags: ['nginx'] }
-    - { role: organizrv1, tags: ['organizrv1'] }
     - { role: nzbthrottle, tags: ['nzbthrottle'] }
     - { role: ddclient, tags: ['ddclient'] }
