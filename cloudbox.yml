@@ -56,7 +56,6 @@
     - { role: traktarr, tags: ['traktarr'] }
     - { role: plex_dupefinder, tags: ['plex_dupefinder'] }
     - { role: heimdall, tags: ['heimdall'] }
-    - { role: thelounge, tags: ['thelounge'] }
     - { role: netdata, tags: ['netdata'] }
     - { role: znc, tags: ['znc'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
