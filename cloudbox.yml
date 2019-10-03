@@ -61,7 +61,6 @@
     - { role: znc, tags: ['znc'] }
     - { role: quassel, tags: ['quassel'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
-    - { role: nowshowing, tags: ['nowshowing'] }
     - { role: bazarr, tags: ['bazarr'] }
     - { role: python-plexlibrary, tags: ['python-plexlibrary'] }
     - { role: sabnzbd, tags: ['sabnzbd'] }
