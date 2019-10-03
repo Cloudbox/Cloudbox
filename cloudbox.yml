@@ -59,7 +59,6 @@
     - { role: thelounge, tags: ['thelounge'] }
     - { role: netdata, tags: ['netdata'] }
     - { role: znc, tags: ['znc'] }
-    - { role: quassel, tags: ['quassel'] }
     - { role: plex_patrol, tags: ['plex_patrol'] }
     - { role: bazarr, tags: ['bazarr'] }
     - { role: python-plexlibrary, tags: ['python-plexlibrary'] }
