@@ -55,7 +55,7 @@
 
 - name: Build URL | Set vars for current version
   set_fact:
-    rclone_version_specified: "{{ 'latest' if (github_rate_limited) else (rclone.version) }}"
+    rclone_version_specified: "latest"
     rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
   when: (not rclone_version_is_specified) or (rclone.version == 'latest') or (rclone.version == 'current') or (github_rate_limited)
 
