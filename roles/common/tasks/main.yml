@@ -66,10 +66,6 @@
     - deb-src https://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib non-free
   when: ansible_distribution == 'Debian'
 
-- name: Fetch pci info
-  shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
-  register: lscpi_resp
-
 - name: Install common packages
   apt:
     state: present
@@ -113,29 +109,37 @@
       - "run-one"
   ignore_errors: yes
 
+- name: Fetch PCI Info
+  shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"
+  register: lscpi_resp
+  when:
+    - (gpu.intel)
+
 - name: Install 'intel-gpu-tools'
   apt: "name=intel-gpu-tools state=present"
-  when: ('i915' not in lscpi_resp.stdout)
+  when:
+    - (gpu.intel)
+    - ('i915' in lscpi_resp.stdout)
 
-- name: Install unrar
+- name: Install 'unrar'
   apt:
     name: unrar
     state: present
   ignore_errors: yes
 
-- name: Check to see if unrar installed
+- name: Check to see if 'unrar' installed
   stat:
     path: "/usr/bin/unrar"
   register: unrar_binary
 
-- name: Install unrar-free if unrar was not installed
+- name: Install 'unrar-free' if 'unrar' was not installed
   apt:
     name: unrar-free
     state: present
   ignore_errors: yes
   when: (not unrar_binary.stat.exists)
 
-- name: "Import pip.conf into /home/{{ user.name }}/.config/pip/pip.conf"
+- name: "Import 'pip.conf'"
   copy:
     src: "pip.conf"
     dest: "/home/{{ user.name }}/.config/pip/pip.conf"
@@ -160,48 +164,48 @@
       - apprise
   ignore_errors: yes
 
-- name: Uninstall apt glances
+- name: Uninstall apt 'glances'
   apt:
     name: glances
     state: absent
   ignore_errors: yes
   tags: glances
 
-- name: Install pip glances
+- name: Install pip 'glances'
   shell: pip install glances[action,browser,cloud,cpuinfo,docker,folders,gpu,graph,ip,raid,snmp,web]
   tags: glances
 
-- name: Install z
+- name: Install 'z jump'
   import_role:
     name: z
   tags: z
   ignore_errors: yes
 
-- name: Install nodejs
+- name: Install 'nodejs'
   import_role:
     name: nodejs
   tags: nodejs
   ignore_errors: yes
 
-- name: Install hostess
+- name: Install 'hostess'
   import_role:
     name: hostess
   tags: hostess
   ignore_errors: yes
 
-- name: Install ngrok
+- name: Install 'ngrok'
   import_role:
     name: ngrok
   tags: ngrok
   ignore_errors: yes
 
-- name: Install iperf3
+- name: Install 'iperf3'
   import_role:
     name: iperf3
   tags: iperf3
   ignore_errors: yes
 
-- name: Install nethogs
+- name: Install 'nethogs'
   import_role:
     name: nethogs
   tags: nethogs
