@@ -31,7 +31,10 @@ install:
   - sh: git submodule update --init --recursive
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
-  - sh: sudo ansible-playbook cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
+  - sh: |
+      sudo ansible-playbook cloudbox.yml --tags "cloudbox" \
+          --skip-tags "settings" \
+          --extra-vars '{"continuous_integration":true}'
 
 # https://boblokerse.github.io/2015/11/03/GitVersion-versioning-made-easy-and-dry/
 on_finish:
