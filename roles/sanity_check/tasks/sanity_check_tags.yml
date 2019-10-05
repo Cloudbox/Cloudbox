@@ -8,10 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set 'continuous_integration' variable"
-  set_fact:
-    continuous_integration: "{{ continuous_integration | default(false,true) }}"
-
 # Source: http://blog.leifmadsen.com/blog/2017/01/04/finding-available-ansible-tags-in-playbooks-and-roles/
 - name: "Get all available tags"
   shell: |

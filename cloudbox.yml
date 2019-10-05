@@ -41,7 +41,7 @@
     - { role: sonarr, tags: ['cloudbox', 'feederbox', 'sonarr'] }
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
-    - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['sma_enabled'] }
+    - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['use_sma'] }
     - { role: feeder, tags: ['feeder_mount', 'feeder_mount_override', 'feeder_unmount'] }
     - { role: plex_auth_token, tags: ['plex_auth_token'] }
     - { role: trakttv-plugin, tags: ['trakttv-plugin'] }

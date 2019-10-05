@@ -1,0 +1,148 @@
+##########################################################################
+# Title:         Cloudbox: Global Variables                              #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Continuous Integration
+################################
+
+continuous_integration: false
+
+################################
+# Accounts
+################################
+
+cloudflare_enabled: "{{ true if not(
+    (cloudflare is undefined)
+    or
+    (cloudflare is none)
+    or
+    (cloudflare | trim | length == 0)
+    or
+    (cloudflare.email is undefined)
+    or
+    (cloudflare.email is none)
+    or
+    (cloudflare.email | trim | length == 0)
+    or
+    (cloudflare.api is undefined)
+    or
+    (cloudflare.api is none)
+    or
+    (cloudflare.api | trim | length == 0)
+  )
+    else false }}"
+
+plex_account_enabled: "{{ true if not(
+    (plex is undefined)
+    or
+    (plex is none)
+    or
+    (plex | trim | length == 0)
+    or
+    (plex.user is undefined)
+    or
+    (plex.user is none)
+    or
+    (plex.user | trim | length == 0)
+    or
+    (plex.pass is undefined)
+    or
+    (plex.pass is none)
+    or
+    (plex.pass | trim | length == 0)
+  )
+  else false }}"
+
+################################
+# Reverse Proxy
+################################
+
+reverse_proxy_is_enabled: "{{ true if not(
+    (user is undefined)
+    or
+    (user is none)
+    or
+    (user | trim | length == 0)
+    or
+    (user.domain is undefined)
+    or
+    (user.domain is none)
+    or
+    (user.domain | trim | length == 0)
+    or
+    (user.email is undefined)
+    or
+    (user.email is none)
+    or
+    (user.email | trim | length == 0)
+  )
+  else false }}"
+
+################################
+# Role Conditionals
+################################
+
+use_nzbs: "{{ true if ( (nzbs_downloads_path is defined) | default(false,true) ) else false }}"
+
+use_torrents: "{{ true if ( (torrents_downloads_path is defined) | default(false,true) ) else false }}"
+
+use_remote: "{{ true if not(
+    (rclone is undefined)
+    or
+    (rclone is none)
+    or
+    (rclone | trim | length == 0)
+    or
+    (rclone.remote is undefined)
+    or
+    (rclone.remote is none)
+    or
+    (rclone.remote | trim | length == 0)
+  )
+  else false }}"
+
+use_nvidia: "{{ true if ( gpu.nvidia.enabled | default(false) ) else false }}"
+
+use_sma: "{{ true if (
+    (sickbeard_mp4_automator is defined)
+    and
+    (sickbeard_mp4_automator)
+    )
+    else false }}"
+
+################################
+# System
+################################
+
+root_path: "/"
+
+opt_path: "{{ root_path | regex_replace('\\/$', '') + '/opt' }}"
+
+################################
+# Network
+################################
+
+host_ip_address: "0.0.0.0"
+
+################################
+# Docker Labels
+################################
+
+default_docker_labels:
+  "com.github.cloudbox.cloudbox_managed": "true"
+
+################################
+# Docker Network
+################################
+
+default_docker_networks:
+  - name: cloudbox
+    aliases:
+      - "{{ docker_network_alias }}"

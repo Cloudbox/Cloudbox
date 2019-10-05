@@ -20,10 +20,6 @@
   import_tasks: "subtasks/variables.yml"
   tags: always
 
-- name: Set Cloudbox Role Variables
-  import_tasks: "subtasks/role_variables.yml"
-  tags: always
-
 - name: APT Tasks
   import_tasks: "subtasks/apt.yml"
   tags: always

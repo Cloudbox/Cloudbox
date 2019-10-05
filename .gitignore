@@ -13,6 +13,8 @@
 /cloudbox.retry
 
 ### Cloudbox ###
+/inventories/host_vars/*
+!/inventories/host_vars/.gitkeep
 /ansible.cfg
 /accounts.yml
 /settings.yml

@@ -8,57 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# Needed again for cloudbox_mod.
-- name: "Variables | Set 'continuous_integration' variable"
-  set_fact:
-    continuous_integration: "{{ continuous_integration | default(false,true) }}"
-
-- name: "Variables | Set 'cloudflare_enabled' variable"
-  set_fact:
-    cloudflare_enabled: "{{ true if not(
-        (cloudflare is undefined)
-        or
-        (cloudflare is none)
-        or
-        (cloudflare | trim | length == 0)
-        or
-        (cloudflare.email is undefined)
-        or
-        (cloudflare.email is none)
-        or
-        (cloudflare.email | trim | length == 0)
-        or
-        (cloudflare.api is undefined)
-        or
-        (cloudflare.api is none)
-        or
-        (cloudflare.api | trim | length == 0)
-      )
-        else false }}"
-
-- name: "Variables | Set 'plex_account_enabled' variable"
-  set_fact:
-    plex_account_enabled: "{{ true if not(
-        (plex is undefined)
-        or
-        (plex is none)
-        or
-        (plex | trim | length == 0)
-        or
-        (plex.user is undefined)
-        or
-        (plex.user is none)
-        or
-        (plex.user | trim | length == 0)
-        or
-        (plex.pass is undefined)
-        or
-        (plex.pass is none)
-        or
-        (plex.pass | trim | length == 0)
-      )
-      else false }}"
-
 - name: "Variables | Set 'nzbs_downloads_path' variable"
   set_fact:
     nzbs_downloads_path:
@@ -94,7 +43,6 @@
         or
         (downloads.torrents | trim | length == 0)
       )
-
 
 - name: Variables | Set 'suitarr_default_version' variable
   set_fact:
@@ -138,15 +86,6 @@
         (suitarr | trim | length == 0)
         )
       else ((suitarr) | combine(suitarr_tmp))  }}"
-
-- name: "Variables | Set 'sma_enabled' role tag"
-  set_fact:
-    sma_enabled: "{{ true if (
-        (sickbeard_mp4_automator is defined)
-        and
-        (sickbeard_mp4_automator)
-        )
-      else false }}"
 
 - name: Variables | Check if 'system.timezone' was specified
   set_fact:
