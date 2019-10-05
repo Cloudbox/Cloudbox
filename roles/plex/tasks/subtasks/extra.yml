@@ -19,25 +19,25 @@
 
 - name: Extra | Wait for 'Preferences.xml' to be created
   wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    path: "{{ plex_preferences_xml_path }}"
     state: present
 
 - name: Extra | Wait for Plex DB to be created
   wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+    path: "{{ plex_db_path }}"
     state: present
 
 - name: Extra | Wait for Plex Media Server executable to be created
-  shell: docker exec plex bash -c "ls '/usr/lib/plexmediaserver/Plex Media Server'"
+  shell: docker exec {{ docker_name }} bash -c "ls '/usr/lib/plexmediaserver/Plex Media Server'"
   register: pms_check
   until: pms_check.stderr.find("No such file or directory") == -1
   retries: 600
-  changed_when: pms_check.rc == 0
+  changed_when: false
   failed_when: pms_check.rc == 1 or pms_check.rc > 2
 
 - name: Extra | Stop Plex Container
   docker_container:
-    name: plex
+    name: "{{ docker_name }}"
     state: stopped
 
 - name: "Extra | DB Cache Size Settings"
@@ -62,5 +62,5 @@
 
 - name: Extra | Start Plex Container
   docker_container:
-    name: plex
+    name: "{{ docker_name }}"
     state: started

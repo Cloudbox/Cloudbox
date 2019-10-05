@@ -10,7 +10,7 @@
 ---
 - name: "Preferences | Check if 'Preferences.xml' exists"
   stat:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    path: "{{ plex_preferences_xml_path }}"
   register: preferences_xml
 
 - name: "Preferences | 'Preferences.xml' Tasks"
@@ -18,7 +18,7 @@
 
   - name: Preferences | Get 'Preferences.xml' XML data
     xml:
-      path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+      path: "{{ plex_preferences_xml_path }}"
       xpath: /Preferences
       content: attribute
     register: preferences_xml_resp
@@ -26,7 +26,7 @@
 
   - name: "Preferences | Remove 'Preferences.xml' if malformed"
     file:
-      path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+      path: "{{ plex_preferences_xml_path }}"
       state: absent
     when: (preferences_xml_resp is failed)
 
@@ -38,7 +38,7 @@
 
   - name: "Preferences | Fix 'TranscoderTempDirectory'"
     xml:
-      path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+      path: "{{ plex_preferences_xml_path }}"
       xpath: /Preferences
       attribute: TranscoderTempDirectory
       value: "/transcode"

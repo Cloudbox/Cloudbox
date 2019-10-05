@@ -15,7 +15,7 @@
 
 - name: Settings | Forced Quality | Wait for 'Preferences.xml' to be created by Plex
   wait_for:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    path: "{{ plex_preferences_xml_path }}"
     state: present
 
 # 'forceAutoAdjustQuality' in Preferences.xml
@@ -24,7 +24,7 @@
 - name: "Settings | Forced Quality | Set 'forceAutoAdjustQuality' in 'Preferences.xml' to
     '{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('Enabled','Disabled') }}'."
   xml:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    path: "{{ plex_preferences_xml_path }}"
     xpath: /Preferences
     attribute: forceAutoAdjustQuality
     value: "{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('1','0') }}"
@@ -38,7 +38,7 @@
 - name: "Settings | Forced Quality | Set 'AllowHighOutputBitrates' in 'Preferences.xml' to
     '{{ (plex.force_high_output_bitrates|default(false,true)) | ternary('Enabled','Disabled') }}'."
   xml:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Preferences.xml"
+    path: "{{ plex_preferences_xml_path }}"
     xpath: /Preferences
     attribute: AllowHighOutputBitrates
     value: "{{ (plex.force_high_output_bitrates|default(false,true)) | ternary('1','0') }}"
@@ -48,7 +48,7 @@
 
 - name: Settings | Forced Quality | Restart plex container
   docker_container:
-    name: plex
+    name: "{{ docker_name }}"
     state: started
     restart: yes
   when: ('plex_forced_quality' in ansible_run_tags) and (x.changed or y.changed)

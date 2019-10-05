@@ -8,30 +8,26 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Variables Task
+  import_tasks: "subtasks/variables.yml"
+
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare-dns
   vars:
-    subdomain: "{{ plex_subdomain }}"
-  when: cloudflare_enabled
+    subdomain: "{{ _subdomain }}"
+  when:
+    - cloudflare_enabled
+    - reverse_proxy_is_enabled
 
-- name: "Create Plex directories"
+- name: "Create directories"
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items: "{{ plex_folders }}"
+  with_items: "{{ folders }}"
 
 - name: "Stop and remove any existing container"
   docker_container:
-    name: plex
+    name: "{{ docker_name }}"
     state: absent
-
-- name: "Pull Plex Docker image"
-  docker_image:
-    name: "{{ plex_docker_image }}"
-
-- name: "Check if '/dev/dri' exists"
-  stat:
-    path: "/dev/dri"
-  register: dev_dri
 
 - name: Preferences Tasks
   import_tasks: "subtasks/preferences/preferences.yml"
@@ -39,36 +35,20 @@
 
 - name: "Create and start container"
   docker_container:
-    name: plex
-    image: "{{ plex_docker_image }}"
+    name: "{{ docker_name }}"
+    image: "{{ docker_image }}"
     pull: yes
-    published_ports: "{{ plex_docker_ports }}"
-    env:
-      PLEX_UID: "{{ uid }}"
-      PLEX_GID: "{{ gid }}"
-      PLEX_CLAIM: "{{ (plex_claim_code) | default(omit) }}"
-      CHANGE_CONFIG_DIR_OWNERSHIP: false
-      ADVERTISE_IP: "http://plex.{{ user.domain }}:80/,https://plex.{{ user.domain }}:443/"
-      VIRTUAL_HOST: "plex.{{ user.domain }}"
-      VIRTUAL_PORT: 32400
-      LETSENCRYPT_HOST: "plex.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      HTTPS_METHOD: noredirect
-      HEALTHCHECK_MOUNT: /mnt/unionfs
-      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia.enabled) | default(false) else omit }}"
-      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
-      TZ: "{{ tz }}"
-    volumes: "{{ plex_docker_volumes }}"
-    devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and dev_dri.stat.exists) | default(false) else omit }}"
-    etc_hosts: "{{ plex_docker_hosts }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - plex
+    published_ports: "{{ docker_ports }}"
+    env: "{{ docker_envs }}"
+    volumes: "{{ docker_volumes }}"
+    devices: "{{ docker_devices }}"
+    etc_hosts: "{{ docker_hosts }}"
+    labels: "{{ docker_labels }}"
+    networks: "{{ docker_networks }}"
     purge_networks: yes
-    restart_policy: unless-stopped
+    restart_policy: "{{ docker_restart_policy }}"
+    capabilities: "{{ docker_capabilities }}"
+    security_opts: "{{ docker_security_opts }}"
     state: started
 
 - name: Extra Tasks
