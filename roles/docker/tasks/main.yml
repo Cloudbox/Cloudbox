@@ -11,6 +11,7 @@
 - name: Check filesystem of '/var/lib/' path
   shell: stat -f -c %T /var/lib/
   register: var_lib_file_system
+  changed_when: false
 
 - name: Check to see if docker is installed
   stat:
@@ -33,6 +34,7 @@
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
     register: docker_running_containers
     ignore_errors: yes
+    changed_when: false
 
   - name: Stop all running Docker containers
     shell: "docker stop {{ docker_running_containers.stdout }} &> /dev/null || true"

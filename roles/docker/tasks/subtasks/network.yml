@@ -11,6 +11,7 @@
 - name: Network | Get list of docker networks
   shell: docker network ls --format '{{ '{{' }} .Name{{ '}}' }}'
   register: docker_networks_list
+  changed_when: false
 
 - name: Network | Get cloudbox docker network gateway
   shell: docker network inspect cloudbox -f '{{ '{{' }}range .IPAM.Config{{ '}}' }}{{ '{{' }}.Gateway{{ '}}' }}{{ '{{' }}end{{ '}}' }}'
@@ -27,12 +28,15 @@
 
   when: ('cloudbox' not in docker_networks_list.stdout_lines)
 
+# Migrate Legacy Setups
+
 - name: "Network | Rebuild existing cloudbox docker network block"
   block:
 
   - name: Network | Get list of containers on cloudbox network
     shell: docker ps -a --filter network=cloudbox --format '{{ '{{' }}.Names{{ '}}' }}'
     register: docker_containers
+    changed_when: false
 
   - name: Network | Disconnect containers from bridge network
     shell: docker network disconnect -f bridge {{ item }}
@@ -56,6 +60,7 @@
 
   when: ('cloudbox' in docker_networks_list.stdout_lines) and (docker_gateway.stdout == '172.18.0.254')
 
-- name: Unset 'docker_networks_list' variable
+- name: Unset variables
   set_fact:
     docker_networks_list:
+    docker_containers:

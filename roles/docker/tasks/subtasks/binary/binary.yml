@@ -28,8 +28,8 @@
 - name: Binary | Install 'docker-ce' and 'docker-ce-cli'
   include_tasks: "binary2.yml"
   loop:
-    - {name: '{{ docker_ce_name }}', package: '{{ docker_ce_package }}', file_path: '{{ docker_ce_filepath }}', dpkg: '{{ docker_ce_dpkg }}'}
-    - {name: '{{ docker_ce_cli_name }}', package: '{{ docker_ce_cli_package }}', file_path: '{{ docker_ce_cli_filepath }}', dpkg: '{{ docker_ce_cli_dpkg }}'}
+    - 'docker_ce'
+    - 'docker_ce_cli'
 
 - name: Binary | Install 'docker' pip module
   pip:
