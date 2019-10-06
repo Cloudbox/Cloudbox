@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Pre-Tasks: - Remove Subdomain Task                     #
+# Title:         Cloudbox: Cloudflare | Subdomains | Remove Subdomain   #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Remove Subdomain | Cloudflare: Remove 'cloudbox' subdomain from '{{ user.domain }}'"
+- name: "Subdomains | Remove Subdomain | Cloudflare: Remove 'cloudbox' subdomain from '{{ user.domain }}'"
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
     account_email: "{{ cloudflare.email }}"

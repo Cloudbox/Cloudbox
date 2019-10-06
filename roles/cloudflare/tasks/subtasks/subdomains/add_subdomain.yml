@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Pre-Tasks: Add Subdomain Task                          #
+# Title:         Cloudbox: Cloudflare | Subdomains | Add Subdomain      #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,18 +8,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Add Subdomain | Install 'dnsutils'
+- name: Subdomains | Add Subdomain | Install 'dnsutils'
   apt: "name=dnsutils state=present"
 
-- name: Add Subdomain | Get Public IP Address
+- name: Subdomains | Add Subdomain | Get Public IP Address
   shell: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
   register: public_ip_lookup
 
-- name: Add Subdomain | Set 'public_ip' variable
+- name: Subdomains | Add Subdomain | Set 'public_ip' variable
   set_fact:
     public_ip: "{{ public_ip_lookup.stdout }}"
 
-- name: "Add Subdomain | Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ user.domain }}'"
+- name: "Subdomains | Add Subdomain | Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ user.domain }}'"
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
     account_email: "{{ cloudflare.email }}"

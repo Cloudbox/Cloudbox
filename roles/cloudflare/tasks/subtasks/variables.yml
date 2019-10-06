@@ -8,6 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Variables | Set 'cloudbox_type' variable
+  set_fact:
+    cloudbox_type: "{{ 'cloudbox' if ('cloudbox' in ansible_run_tags)
+      else 'mediabox' if ('mediabox' in ansible_run_tags)
+      else 'feederbox' if ('feederbox' in ansible_run_tags)
+      else '' }}"
+
 # https://github.com/advertine/ansible-cloudflare-purge
 
 - name: Variables | Fetch Cloudflare Zones

@@ -12,6 +12,11 @@
   import_tasks: "subtasks/variables.yml"
   ignore_errors: yes
 
+- name: Cloudbox Subdomains Task
+  import_tasks: "subtasks/subdomains.yml"
+  when: (cloudbox_type | length > 0)
+  ignore_errors: yes
+
 - name: Purge Cache Task
   import_tasks: "subtasks/purge_cache.yml"
   ignore_errors: yes

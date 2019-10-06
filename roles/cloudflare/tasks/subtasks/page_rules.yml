@@ -10,11 +10,11 @@
 ---
 # Delete any existing CF Page Rules for Lets Encrypt
 
-- name: Page Rules | Destroy Page Rules Task
-  import_tasks: "page_rules/destroy.yml"
+- name: Page Rules | Remove Page Rule Task
+  import_tasks: "page_rules/remove_page_rule.yml"
   when: (cloudflare_page_rules | length > 0)
 
 # Create new CF Page Rule for Lets Encrypt
 
-- name: Page Rules | Create Page Rules Task
-  import_tasks: "page_rules/create.yml"
+- name: Page Rules | Add Page Rule Task
+  import_tasks: "page_rules/add_page_rule.yml"

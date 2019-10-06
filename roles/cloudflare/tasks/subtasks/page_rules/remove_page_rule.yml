@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Cloudflare | Page Rules | Destroy            #
+# Title:         Cloudbox: Cloudflare | Page Rules | Remove Page Rule   #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Page Rules | Destroy | Destroy Previous Cloudflare Page Rules for Lets Encrypt
+- name: Page Rules | Remove Page Rule | Remove Previous Cloudflare Page Rules for Lets Encrypt
   uri:
     url: 'https://api.cloudflare.com/client/v4/zones/{{ cloudflare_zone }}/pagerules/{{ item }}'
     method: DELETE
@@ -20,7 +20,7 @@
   loop: "{{ cloudflare_page_rules }}"
   register: cf_page_rule_destruction
 
-- name: Page Rules | Destroy | Print result of Lets Encrypt Cloudflare Page Rule Destruction
+- name: Page Rules | Remove Page Rule | Print result of Lets Encrypt Cloudflare Page Rule Destruction
   debug:
     msg: "Successfully deleted Let's Encrypt Cloudflare page rule for '{{ user.domain }}'"
   when: (cf_page_rule_destruction.results[0].json.success is defined) and (cf_page_rule_destruction.results[0].json.success)
