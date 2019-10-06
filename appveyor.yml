@@ -10,8 +10,13 @@ skip_tags: true
 skip_commits:
   files:
     - '*.md'
+    - '.gitignore'
+    - '.gitmodules'
     - '.github/*'
     - 'defaults/*'
+    - 'filter_plugins/*'
+    - 'inventories/*'
+    - 'library/*'
     - 'roles/*/files/*'
     - 'roles/settings/*'
   message: /\[minor\]/
