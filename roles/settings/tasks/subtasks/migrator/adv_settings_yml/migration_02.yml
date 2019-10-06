@@ -12,6 +12,12 @@
 - name: "Migrator | 'adv_settings.yml' | Migration 02 | Set variables"
   set_fact:
     new_settings: "{{ true if not(
+        (gpu is undefined)
+        or
+        (gpu is none)
+        or
+        (gpu | trim | length == 0)
+        or
         (gpu.nvidia is undefined)
         or
         (gpu.nvidia is none)
@@ -29,7 +35,7 @@
 - name: Migrator | 'adv_settings.yml' | Migration 02 | Rebuild 'gpu.nvidia' dict
   shell: |
     yyq d -i {{ playbook_dir }}/{{ file }} gpu.nvidia
-    yyq w -i {{ playbook_dir }}/{{ file }} gpu.nvidia.enabled {{ gpu.nvidia }}
+    yyq w -i {{ playbook_dir }}/{{ file }} gpu.nvidia.enabled {{ gpu.nvidia if (gpu is defined and gpu.nvidia is defined) else 'no' }}
   become: yes
   become_user: "{{ cloudbox_yml.stat.pw_name }}"
   when: not new_settings
