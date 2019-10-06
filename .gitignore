@@ -13,8 +13,13 @@
 /cloudbox.retry
 
 ### Cloudbox ###
+
+# Vars
 /inventories/host_vars/*
 !/inventories/host_vars/.gitkeep
+/roles/*/vars/*
+
+# Settings
 /ansible.cfg
 /accounts.yml
 /settings.yml
@@ -22,7 +27,7 @@
 /rclone.conf
 /backup_config.yml
 /backup_excludes_list.txt
-/*.log
 
 ### Misc ###
 /changelog.txt
+/*.log
