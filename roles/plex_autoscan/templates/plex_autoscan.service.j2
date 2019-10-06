@@ -17,6 +17,8 @@ After=network-online.target
 User={{ user.name }}
 Group={{ user.name }}
 Type=simple
+Environment=LC_ALL=C.UTF-8
+Environment=LANG=C.UTF-8
 WorkingDirectory=/opt/plex_autoscan/
 ExecStart=/opt/plex_autoscan/scan.py server --loglevel=INFO
 Restart=always
