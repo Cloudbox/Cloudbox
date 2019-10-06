@@ -1,0 +1,55 @@
+#########################################################################
+# Title:         Cloudbox: Docker | Default Variables                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Docker APT Key
+################################
+
+docker_apt_key_id: 0EBFCD88
+
+docker_apt_key_url: https://download.docker.com/linux/ubuntu/gpg
+
+################################
+# Docker APT Repository
+################################
+
+docker_apt_repo_url: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ 'edge' if docker.repo is defined and docker.repo | lower == 'edge' else 'stable' }}"
+
+docker_apt_repo_filename: docker
+
+################################
+# Docker APT Package
+################################
+
+# Docker CE
+
+docker_ce_name: "Docker CE"
+
+docker_ce_package: "{{ 'docker-ce' if (docker.version is defined and docker.version | lower == 'latest') else 'docker-ce=*' + docker.version + '*~' + ansible_distribution | lower + '-' + ansible_distribution_release | lower }}"
+
+docker_ce_filepath: "/usr/bin/dockerd"
+
+docker_ce_dpkg: "docker-ce"
+
+# Docker CE CLI
+
+docker_ce_cli_name: "Docker CE CLI"
+
+docker_ce_cli_package: "{{ 'docker-ce-cli' if (docker.version is defined and docker.version | lower == 'latest') else 'docker-ce-cli=*' + docker.version + '*~' + ansible_distribution | lower + '-' + ansible_distribution_release | lower }}"
+
+docker_ce_cli_filepath: "/usr/bin/docker"
+
+docker_ce_cli_dpkg: "docker-ce-cli"
+
+# Misc
+
+docker_package_state: "{{ 'latest' if (docker.version is defined and docker.version | lower == 'latest') else 'present' }}"
+
+put_docker_dpkg_into_hold: true

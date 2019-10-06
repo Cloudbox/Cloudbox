@@ -8,26 +8,23 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Binary | Reset 'temp_version' variable
-  set_fact:
-    temp_version: ''
-
-- name: Binary | Release '{{ item.name }}' from hold
+- name: Binary | Release '{{ item.dpkg }}' from hold
   dpkg_selections:
-    name: "{{ item.name }}"
+    name: "{{ item.dpkg }}"
     selection: install
 
-- name: Binary | Install '{{ item.name }}'
+- name: Binary | Install '{{ item.package }}'
   apt:
     name: "{{ item.package }}"
     state: "{{ docker_package_state }}"
     update_cache: yes
     force: yes
 
-- name: Binary | Put '{{ item.name }}' into hold
+- name: Binary | Put '{{ item.dpkg }}' into hold
   dpkg_selections:
-    name: "{{ item.name }}"
+    name: "{{ item.dpkg }}"
     selection: hold
+  when: put_docker_dpkg_into_hold
 
 - name: Binary | Get '{{ item.name }}' version
   shell: "{{ item.file_path }} --version | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
@@ -36,5 +33,9 @@
 
 - name: Binary | Display '{{ item.name }}' version
   debug:
-    msg: "{{ item.friendly_name }} version {{ temp_version.stdout }} installed."
+    msg: "{{ item.name }} version {{ temp_version.stdout }} installed."
   when: temp_version is defined
+
+- name: Binary | Unset 'temp_version' variable
+  set_fact:
+    temp_version:
