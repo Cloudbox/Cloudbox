@@ -8,6 +8,8 @@ After=network-online.target docker.service
 User={{ user.name }}
 Group={{ user.name }}
 Type=simple
+Environment=LC_ALL=C.UTF-8
+Environment=LANG=C.UTF-8
 WorkingDirectory=/opt/traktarr/
 TimeoutStartSec=900
 ExecStart=/usr/bin/python3 /opt/traktarr/traktarr.py run
