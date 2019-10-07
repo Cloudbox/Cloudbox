@@ -121,28 +121,39 @@ use_sma: "{{ true if (
 # System
 ################################
 
-root_path: "/"
+server_root_path: "/"
 
-opt_path: "{{ root_path | regex_replace('\\/$', '') + '/opt' }}"
+server_opt_path: "{{ server_root_path | regex_replace('\\/$', '') + '/opt' }}"
 
 ################################
 # Network
 ################################
 
-host_ip_address: "0.0.0.0"
+ip_address_host: "0.0.0.0"
+
+ip_address_localhost: "127.0.0.1"
+
+ip_address_lookup_command: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
+
+################################
+# Docker Devices
+################################
+
+docker_devices_dev_dri:
+  - "/dev/dri:/dev/dri"
 
 ################################
 # Docker Labels
 ################################
 
-default_docker_labels:
+docker_labels_common:
   "com.github.cloudbox.cloudbox_managed": "true"
 
 ################################
 # Docker Network
 ################################
 
-default_docker_networks:
+docker_networks_common:
   - name: cloudbox
     aliases:
       - "{{ docker_network_alias }}"
