@@ -33,13 +33,13 @@ plex_folder: "{{ plex_name }}"
 plex_transcodes_path: "{{ plex.transcodes }}/{{ plex_folder }}"
 
 plex_folders:
-  - "{{ opt_path }}/{{ plex_folder }}"
-  - "{{ opt_path }}/{{ plex_folder }}/Library"
-  - "{{ opt_path }}/{{ plex_folder }}/Library/Application Support"
-  - "{{ opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server"
-  - "{{ opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-ins"
-  - "{{ opt_path }}/{{ plex_folder }}/Library/Logs"
-  - "{{ opt_path }}/{{ plex_folder }}/Library/Logs/Plex Media Server"
+  - "{{ server_opt_path }}/{{ plex_folder }}"
+  - "{{ server_opt_path }}/{{ plex_folder }}/Library"
+  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support"
+  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server"
+  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-ins"
+  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Logs"
+  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Logs/Plex Media Server"
   - "{{ plex_transcodes_path }}"
 
 folders: "{{ plex_folders }}"
@@ -48,9 +48,9 @@ folders: "{{ plex_folders }}"
 # Files
 ################################
 
-plex_preferences_xml_path: "{{ opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Preferences.xml"
+plex_preferences_xml_path: "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Preferences.xml"
 
-plex_db_path: "{{ opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+plex_db_path: "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 
 ################################
 # Docker Container
@@ -107,7 +107,7 @@ plex_docker_envs_standard:
   PLEX_GID: "{{ gid }}"
   PLEX_CLAIM: "{{ (plex_claim_code) | default(omit) }}"
   CHANGE_CONFIG_DIR_OWNERSHIP: false
-  ADVERTISE_IP: "http://{{ host_ip_address }}:{{ plex_standard_port }}/"
+  ADVERTISE_IP: "http://{{ ip_address_host }}:{{ plex_standard_port }}/"
   HEALTHCHECK_MOUNT: /mnt/unionfs
   NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia.enabled) | default(false) else omit }}"
   NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
@@ -132,8 +132,8 @@ docker_envs: "{{ plex_docker_envs }}"
 
 plex_docker_volumes:
   - "/etc/localtime:/etc/localtime:ro"
-  - "{{ opt_path }}/{{ plex_folder }}:/config"
-  - "{{ opt_path }}/scripts:/scripts"
+  - "{{ server_opt_path }}/{{ plex_folder }}:/config"
+  - "{{ server_opt_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media:/data"
   - "/mnt:/mnt"
   - "/tmp:/tmp"
@@ -146,9 +146,6 @@ docker_volumes: "{{ plex_docker_volumes }}"
 # Docker Devices
 ################################
 
-docker_devices_dev_dri:
-  - "/dev/dri:/dev/dri"
-
 plex_docker_devices: []
 
 docker_devices: "{{ plex_docker_devices }}"
@@ -157,14 +154,12 @@ docker_devices: "{{ plex_docker_devices }}"
 # Docker Hosts
 ################################
 
-localhost_ip: "127.0.0.1"
-
 lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
 
 plex_docker_hosts_default:
-  "metric.plex.tv": "{{ localhost_ip }}"
-  "metrics.plex.tv": "{{ localhost_ip }}"
-  "analytics.plex.tv": "{{ localhost_ip }}"
+  "metric.plex.tv": "{{ ip_address_localhost }}"
+  "metrics.plex.tv": "{{ ip_address_localhost }}"
+  "analytics.plex.tv": "{{ ip_address_localhost }}"
 
 plex_docker_hosts_custom:
   "mf.svc.nhl.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
@@ -181,7 +176,7 @@ docker_hosts: "{{ plex_docker_hosts }}"
 
 plex_docker_labels: {}
 
-docker_labels: "{{ default_docker_labels | combine(plex_docker_labels) }}"
+docker_labels: "{{ docker_labels_common | combine(plex_docker_labels) }}"
 
 ################################
 # Docker Networks
@@ -193,7 +188,7 @@ docker_network_alias: "{{ plex_docker_network_alias }}"
 
 plex_docker_networks: []
 
-docker_networks: "{{ (default_docker_networks) if not (plex_docker_networks and plex_docker_networks | length > 0) else (plex_docker_networks) }}"
+docker_networks: "{{ (docker_networks_common) if not (plex_docker_networks and plex_docker_networks | length > 0) else (plex_docker_networks) }}"
 
 ################################
 # Docker Capabilities
