@@ -12,7 +12,7 @@
   apt: "name=dnsutils state=present"
 
 - name: Get Public IP Address
-  shell: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
+  shell: "{{ ip_address_lookup_command }}"
   register: public_ip_lookup
 
 - name: Set 'public_ip' variable
