@@ -123,7 +123,7 @@ use_sma: "{{ true if (
 
 server_root_path: "/"
 
-server_opt_path: "{{ server_root_path | regex_replace('\\/$', '') + '/opt' }}"
+server_appdata_path: "{{ server_root_path | regex_replace('\\/$', '') + '/opt' }}"
 
 ################################
 # Network

@@ -33,13 +33,13 @@ plex_folder: "{{ plex_name }}"
 plex_transcodes_path: "{{ plex.transcodes }}/{{ plex_folder }}"
 
 plex_folders:
-  - "{{ server_opt_path }}/{{ plex_folder }}"
-  - "{{ server_opt_path }}/{{ plex_folder }}/Library"
-  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support"
-  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server"
-  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-ins"
-  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Logs"
-  - "{{ server_opt_path }}/{{ plex_folder }}/Library/Logs/Plex Media Server"
+  - "{{ server_appdata_path }}/{{ plex_folder }}"
+  - "{{ server_appdata_path }}/{{ plex_folder }}/Library"
+  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support"
+  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server"
+  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-ins"
+  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Logs"
+  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Logs/Plex Media Server"
   - "{{ plex_transcodes_path }}"
 
 folders: "{{ plex_folders }}"
@@ -48,9 +48,9 @@ folders: "{{ plex_folders }}"
 # Files
 ################################
 
-plex_preferences_xml_path: "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Preferences.xml"
+plex_preferences_xml_path: "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Preferences.xml"
 
-plex_db_path: "{{ server_opt_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+plex_db_path: "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 
 ################################
 # Docker Container
@@ -132,8 +132,8 @@ docker_envs: "{{ plex_docker_envs }}"
 
 plex_docker_volumes:
   - "/etc/localtime:/etc/localtime:ro"
-  - "{{ server_opt_path }}/{{ plex_folder }}:/config"
-  - "{{ server_opt_path }}/scripts:/scripts"
+  - "{{ server_appdata_path }}/{{ plex_folder }}:/config"
+  - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media:/data"
   - "/mnt:/mnt"
   - "/tmp:/tmp"
