@@ -8,20 +8,19 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# Exit playbook When settings have been updated
-- name: Finish | Display Message
-  block:
+- name: "Finish | Check 'settings-updater.py' for new settings"
+  debug:
+    msg:
+      - "The 'settings_updater.py' script updated the following
+          file{{ files_updated_successfully | pluralize }}: '{{ files_updated_successfully | difference(['ansible.cfg']) | join(', ') | trim }}'"
+      - "Please check {{ files_updated_successfully | pluralize('this file','these files') }} for the newly added settings"
+      - "You can also review the log file: 'settings-updater.log'"
+  when:
+    - files_updated_successfully | difference(['ansible.cfg']) | length > 0
 
-  - name: "Finish | Check 'settings-updater.py' for new settings"
-    debug:
-      msg:
-        - "The 'settings_updater.py' script updated the following
-            file{{ files_updated_successfully | pluralize }}: '{{ files_updated_successfully | join(', ') | trim }}'"
-        - "Please check {{ files_updated_successfully | pluralize('this file','these files') }} for the newly added settings"
-        - "You can also review the log file: 'settings-updater.log'"
-    when:
-      - files_updated_successfully | length > 0
-      - files_updated_successfully | length == 1 and 'ansible.cfg' not in files_updated_successfully
+# Exit playbook When necessary
+- name: Finish | Exit Tasks
+  block:
 
   - name: "Finish | Check 'settings-updater.py' run status for errors"
     debug:
@@ -35,7 +34,7 @@
     debug:
       msg:
         - "Settings Role updated 'ansible.cfg'"
-        - "You will need to re-run your previous tag to continue."
+        - "You will need to re-run your previous tag."
     when: ('ansible.cfg' in files_updated_successfully)
 
   - name: "Finish | Exit so that user can check updated config files"
