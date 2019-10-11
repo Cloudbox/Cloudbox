@@ -21,7 +21,7 @@ skip_commits:
     - 'roles/settings/*'
   message: /\[minor\]/
 
-image: ubuntu
+image: Ubuntu1604
 
 matrix:
   fast_finish: true
