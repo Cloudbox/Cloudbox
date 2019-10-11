@@ -1,0 +1,37 @@
+##########################################################################
+# Title:         Cloudbox: Plex Extra Tasks | Default Variables          #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+plex_name: "plex"
+
+################################
+# Folders
+################################
+
+plex_folder: "{{ plex_name }}"
+
+################################
+# Files
+################################
+
+plex_preferences_xml_path: "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Preferences.xml"
+
+plex_db_path: "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+
+################################
+# Docker Container
+################################
+
+plex_docker_name: "{{ plex_name }}"
+
+docker_name: "{{ plex_docker_name }}"

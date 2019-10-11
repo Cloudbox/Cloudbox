@@ -1,0 +1,39 @@
+#########################################################################
+# Title:         Cloudbox: Plex Extra Tasks Role                        #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Stop Plex Container
+  docker_container:
+    name: "{{ docker_name }}"
+    state: stopped
+
+- name: "DB Cache Size Settings"
+  import_tasks: "subtasks/settings/db_cache_size.yml"
+  tags: plex-db-cache-size
+
+- name: "Forced Automatic Quality Settings"
+  import_tasks: "subtasks/settings/forced_quality.yml"
+  tags: plex-forced-quality
+
+- name: "Install Sub-Zero Plugin"
+  import_role:
+    name: sub-zero-plugin
+
+- name: "Install Trakt.tv Plugin"
+  import_role:
+    name: trakttv-plugin
+
+- name: "Install WebTools Plugin"
+  import_role:
+    name: webtools-plugin
+
+- name: Start Plex Container
+  docker_container:
+    name: "{{ docker_name }}"
+    state: started

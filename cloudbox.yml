@@ -28,6 +28,7 @@
     - { role: nginx-proxy, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'nginx-proxy'] }
     - { role: cloudflare, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'cloudflare'], when: ['cloudflare_enabled'] }
     - { role: plex, tags: ['cloudbox', 'mediabox', 'plex'] }
+    - { role: plex-extra-tasks, tags: ['cloudbox', 'mediabox', 'plex-extra-tasks'] }
     - { role: plexpy, tags: ['cloudbox', 'mediabox', 'plexpy'] }
     - { role: ombi, tags: ['cloudbox', 'mediabox', 'ombi'] }
     - { role: plex_autoscan, tags: ['cloudbox', 'mediabox', 'plex_autoscan'] }

@@ -1,5 +1,5 @@
 ##########################################################################
-# Title:         Cloudbox: Plex | Extra Tasks                            #
+# Title:         Cloudbox: Plex | Post-Install Tasks                     #
 # Author(s):     desimaniac                                              #
 # URL:           https://github.com/cloudbox/cloudbox                    #
 # --                                                                     #
@@ -9,7 +9,7 @@
 ##########################################################################
 ---
 # Sometimes docker will set transcodes folder to root after a restore.
-- name: Extra | Ensure transcodes folder has the correct permissions
+- name: Post-Install | Ensure transcodes folder has the correct permissions
   file:
     path: "{{ plex.transcodes }}"
     owner: "{{ user.name }}"
@@ -17,50 +17,20 @@
     mode: 0775
     recurse: yes
 
-- name: Extra | Wait for 'Preferences.xml' to be created
+- name: Post-Install | Wait for 'Preferences.xml' to be created
   wait_for:
     path: "{{ plex_preferences_xml_path }}"
     state: present
 
-- name: Extra | Wait for Plex DB to be created
+- name: Post-Install | Wait for Plex DB to be created
   wait_for:
     path: "{{ plex_db_path }}"
     state: present
 
-- name: Extra | Wait for Plex Media Server executable to be created
+- name: Post-Install | Wait for Plex Media Server executable to be created
   shell: docker exec {{ docker_name }} bash -c "ls '/usr/lib/plexmediaserver/Plex Media Server'"
   register: pms_check
   until: pms_check.stderr.find("No such file or directory") == -1
   retries: 600
   changed_when: false
   failed_when: pms_check.rc == 1 or pms_check.rc > 2
-
-- name: Extra | Stop Plex Container
-  docker_container:
-    name: "{{ docker_name }}"
-    state: stopped
-
-- name: "Extra | DB Cache Size Settings"
-  import_tasks: "subtasks/settings/db_cache_size.yml"
-  tags: plex-db-cache-size
-
-- name: "Extra | Forced Automatic Quality Settings"
-  import_tasks: "subtasks/settings/forced_quality.yml"
-  tags: plex-forced-quality
-
-- name: "Extra | Install Sub-Zero Plugin"
-  import_role:
-    name: sub-zero-plugin
-
-- name: "Extra | Install Trakt.tv Plugin"
-  import_role:
-    name: trakttv-plugin
-
-- name: "Extra | Install WebTools Plugin"
-  import_role:
-    name: webtools-plugin
-
-- name: Extra | Start Plex Container
-  docker_container:
-    name: "{{ docker_name }}"
-    state: started

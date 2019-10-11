@@ -51,7 +51,5 @@
     security_opts: "{{ docker_security_opts }}"
     state: started
 
-- name: Extra Tasks
-  import_tasks: "subtasks/extra.yml"
-  ignore_errors: yes
-  tags: plex-extra-tasks
+- name: Post-Install Tasks
+  import_tasks: "subtasks/post-install.yml"
