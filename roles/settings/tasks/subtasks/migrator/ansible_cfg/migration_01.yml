@@ -8,7 +8,20 @@
 #                            GNU General Public License v3.0                           #
 ########################################################################################
 ---
-- name: "Migrator | 'ansible.cfg' | Add 'hash_behaviour = merge'"
+- name: "Migrator | 'ansible.cfg' | Update 'roles_path'"
+  ini_file:
+    path: "{{ playbook_dir }}/{{ file }}"
+    section: defaults
+    option: roles_path
+    value: "roles:resources/roles"
+    state: present
+    no_extra_spaces: no
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664
+  register: x
+
+- name: "Migrator | 'ansible.cfg' | Update 'hash_behaviour'"
   ini_file:
     path: "{{ playbook_dir }}/{{ file }}"
     section: defaults
@@ -19,3 +32,10 @@
     owner: "{{ cloudbox_yml.stat.uid }}"
     group: "{{ cloudbox_yml.stat.gid }}"
     mode: 0664
+  register: y
+
+- name: "Migrator | 'ansible.cfg' | Build 'files_updated_successfully' list"
+  set_fact:
+    files_updated_successfully: "{{ files_updated_successfully }} + [ '{{ file }}' ]"
+    exit_is_necessary: true
+  when: x is changed or y is changed

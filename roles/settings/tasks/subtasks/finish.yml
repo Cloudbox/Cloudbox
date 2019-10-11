@@ -19,7 +19,9 @@
             file{{ files_updated_successfully | pluralize }}: '{{ files_updated_successfully | join(', ') | trim }}'"
         - "Please check {{ files_updated_successfully | pluralize('this file','these files') }} for the newly added settings"
         - "You can also review the log file: 'settings-updater.log'"
-    when: files_updated_successfully | length > 0
+    when:
+      - files_updated_successfully | length > 0
+      - files_updated_successfully | length == 1 and 'ansible.cfg' not in files_updated_successfully
 
   - name: "Finish | Check 'settings-updater.py' run status for errors"
     debug:
@@ -29,9 +31,19 @@
         - "Please check 'settings-updater.log' for details"
     when: files_updated_unsuccessfully | length > 0
 
-  - name: "Finish | Exit so that user can check updated files and/or 'settings-updater.log'"
-    fail:
+  - name: "Finish | 'ansible.cfg' was updated."
+    debug:
+      msg:
+        - "Settings Role updated 'ansible.cfg'"
+        - "You will need to re-run your previous tag to continue."
+    when: ('ansible.cfg' in files_updated_successfully)
+
+  - name: "Finish | Exit so that user can check updated config files"
+    debug:
       msg: "Cloudbox Installer will now exit."
+
+  - name: "Finish | Exit"
+    meta: end_play
 
   when: exit_is_necessary
 
