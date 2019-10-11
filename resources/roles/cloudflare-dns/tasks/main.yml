@@ -19,10 +19,6 @@
   set_fact:
     public_ip: "{{ public_ip_lookup.stdout }}"
 
-- name: Set 'record' variable
-  set_fact:
-    record: "{{ (subdomain == user.domain) | ternary(user.domain,subdomain + '.' + user.domain) }}"
-
 - name: Set DNS Record
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
@@ -33,8 +29,12 @@
     proxied: no
     type: A
     value: "{{ public_ip }}"
-    record: "{{ subdomain }}"
+    record: "{{ record }}"
+
+- name: Set 'record_temp' variable
+  set_fact:
+    record_temp: "{{ (record == user.domain) | ternary(user.domain,record + '.' + user.domain) }}"
 
 - name: Display DNS Record
   debug:
-    msg: "DNS Record for '{{ record }}' set to '{{ public_ip }}'."
+    msg: "DNS Record for '{{ record_temp }}' set to '{{ public_ip }}'."

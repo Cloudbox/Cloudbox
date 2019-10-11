@@ -14,7 +14,7 @@
   include_role:
     name: cloudflare-dns
   vars:
-    subdomain: radarr
+    record: radarr
   when: cloudflare_enabled
 
 - name: Stop and remove any existing container

@@ -15,7 +15,7 @@
   include_role:
     name: cloudflare-dns
   vars:
-    subdomain: "{{ _subdomain }}"
+    record: "{{ subdomain }}"
   when:
     - cloudflare_enabled
     - reverse_proxy_is_enabled

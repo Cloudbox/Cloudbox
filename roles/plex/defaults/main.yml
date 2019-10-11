@@ -22,8 +22,6 @@ plex_subdomain: "{{ plex_name }}"
 
 subdomain: "{{ plex_subdomain }}"
 
-_subdomain: "{{ plex_subdomain }}"
-
 ################################
 # Folders
 ################################

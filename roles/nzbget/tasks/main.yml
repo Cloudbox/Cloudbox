@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare-dns
   vars:
-    subdomain: nzbget
+    record: nzbget
   when: cloudflare_enabled
 
 - name: Stop and remove any existing container

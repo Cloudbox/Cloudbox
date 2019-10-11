@@ -13,7 +13,7 @@
   include_role:
     name: cloudflare-dns
   vars:
-    subdomain: plexpy
+    record: plexpy
   when: cloudflare_enabled
 
 - name: Stop and remove any existing container
