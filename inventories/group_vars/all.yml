@@ -61,31 +61,6 @@ plex_account_enabled: "{{ true if not(
   else false }}"
 
 ################################
-# Reverse Proxy
-################################
-
-reverse_proxy_is_enabled: "{{ true if not(
-    (user is undefined)
-    or
-    (user is none)
-    or
-    (user | trim | length == 0)
-    or
-    (user.domain is undefined)
-    or
-    (user.domain is none)
-    or
-    (user.domain | trim | length == 0)
-    or
-    (user.email is undefined)
-    or
-    (user.email is none)
-    or
-    (user.email | trim | length == 0)
-  )
-  else false }}"
-
-################################
 # Role Conditionals
 ################################
 
@@ -134,6 +109,37 @@ ip_address_host: "0.0.0.0"
 ip_address_localhost: "127.0.0.1"
 
 ip_address_lookup_command: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
+
+################################
+# Docker Reverse Proxy
+################################
+
+reverse_proxy_is_enabled: "{{ true if not(
+    (user is undefined)
+    or
+    (user is none)
+    or
+    (user | trim | length == 0)
+    or
+    (user.domain is undefined)
+    or
+    (user.domain is none)
+    or
+    (user.domain | trim | length == 0)
+    or
+    (user.email is undefined)
+    or
+    (user.email is none)
+    or
+    (user.email | trim | length == 0)
+  )
+  else false }}"
+
+docker_envs_reverse_proxy:
+  VIRTUAL_HOST: "{{ subdomain }}.{{ user.domain }}"
+  VIRTUAL_PORT: "{{ web_port }}"
+  LETSENCRYPT_HOST: "{{ subdomain }}.{{ user.domain }}"
+  LETSENCRYPT_EMAIL: "{{ user.email }}"
 
 ################################
 # Docker Devices

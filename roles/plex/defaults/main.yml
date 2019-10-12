@@ -12,7 +12,7 @@
 # Name
 ################################
 
-plex_name: "plex"
+plex_name: plex
 
 ################################
 # Subdomain
@@ -98,28 +98,26 @@ docker_ports: "{{ plex_docker_ports + webtools_ports }}"
 # Docker Envs
 ################################
 
-plex_standard_port: "32400"
+plex_port: 32400
+
+web_port: "{{ plex_port }}"
 
 plex_docker_envs_standard:
   PLEX_UID: "{{ uid }}"
   PLEX_GID: "{{ gid }}"
   PLEX_CLAIM: "{{ (plex_claim_code) | default(omit) }}"
   CHANGE_CONFIG_DIR_OWNERSHIP: false
-  ADVERTISE_IP: "http://{{ ip_address_host }}:{{ plex_standard_port }}/"
+  ADVERTISE_IP: "http://{{ ip_address_host }}:{{ web_port }}/"
   HEALTHCHECK_MOUNT: /mnt/unionfs
   NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia.enabled) | default(false) else omit }}"
   NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
   TZ: "{{ tz }}"
 
-plex_docker_envs_nginx_proxy:
+plex_docker_envs_reverse_proxy_extras:
   ADVERTISE_IP: "http://{{ subdomain }}.{{ user.domain }}:80/,https://{{ subdomain }}.{{ user.domain }}:443/"
-  VIRTUAL_HOST: "{{ subdomain }}.{{ user.domain }}"
-  VIRTUAL_PORT: "{{ plex_standard_port }}"
-  LETSENCRYPT_HOST: "{{ subdomain }}.{{ user.domain }}"
-  LETSENCRYPT_EMAIL: "{{ user.email }}"
   HTTPS_METHOD: noredirect
 
-plex_docker_envs: "{{ (plex_docker_envs_standard | combine(plex_docker_envs_nginx_proxy)) if (reverse_proxy_is_enabled)
+plex_docker_envs: "{{ (plex_docker_envs_standard | combine(docker_envs_reverse_proxy) | combine(plex_docker_envs_reverse_proxy_extras)) if (reverse_proxy_is_enabled)
   else (plex_docker_envs_standard) }}"
 
 docker_envs: "{{ plex_docker_envs }}"
