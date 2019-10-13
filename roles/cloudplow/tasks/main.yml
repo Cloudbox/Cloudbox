@@ -8,61 +8,60 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Import Services Task
-  import_tasks: "subtasks/services/main.yml"
+- name: Remove legacy service
+  include_tasks: "{{ playbook_dir }}/resources/tasks/systemd/delete_service.yml"
+  vars:
+    _service_name: unionfs_cleaner
 
-- name: Create cloudplow directories
-  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
-  with_items:
-    - /opt/cloudplow
+- name: Stop Service
+  include_tasks: "{{ playbook_dir }}/resources/tasks/systemd/stop_service.yml"
+  vars:
+    _service_name: cloudplow
 
-- name: Clone cloudplow repo 'HEAD'
-  git:
-    repo: https://github.com/l3uddz/cloudplow.git
-    dest: /opt/cloudplow
-    clone: yes
-    version: HEAD
-    force: yes
-  become: yes
-  become_user: "{{ user.name }}"
-  ignore_errors: yes
-  register: cloudplow_clone_status
+- name: Update Service Credentials
+  include_tasks: "{{ playbook_dir }}/resources/tasks/systemd/update_service_credentials.yml"
+  vars:
+    _service_name: cloudplow
 
-- name: Clone cloudplow repo 'master'
-  git:
-    repo: https://github.com/l3uddz/cloudplow.git
-    dest: /opt/cloudplow
-    clone: yes
-    version: master
-    force: yes
-  become: yes
-  become_user: "{{ user.name }}"
-  when: cloudplow_clone_status is failed
+- name: Create directory
+  file: "path={{ folder_path }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
+
+- name: Clone git repo
+  include_tasks: "{{ playbook_dir }}/resources/tasks/git/clone_git_repo.yml"
+  vars:
+    _git_repo_url: "{{ git_repo_url }}"
+    _git_repo_dest: "{{ git_repo_dest }}"
 
 - name: Install pip requirements
   pip:
-    requirements: /opt/cloudplow/requirements.txt
-    executable: pip3
+    requirements: "{{ requirements_path }}"
+    executable: "{{ pip_executable }}"
 
-- name: Set 'cloudplow.py' as executable
+- name: Set script as executable
   file:
-    path: /opt/cloudplow/cloudplow.py
+    path: "{{ script_path }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: a+x
 
-- name: "Create '/usr/local/bin/cloudplow' symlink"
+- name: Create script alias
   file:
-    src: "/opt/cloudplow/cloudplow.py"
-    dest: "/usr/local/bin/cloudplow"
+    src: "{{ script_path }}"
+    dest: "{{ alias_path }}"
     state: link
 
 - name: Import Settings Task
   import_tasks: "subtasks/settings.yml"
 
-- name: Start 'cloudplow.service'
+- name:  Services | Import '{{ service_file }}'
+  template:
+    src: cloudplow.service.j2
+    dest: "{{ service_path }}"
+    force: no
+
+- name: Start service
   systemd:
-    name: cloudplow
+    name: "{{ service_name }}"
     state: started
     enabled: yes
     daemon_reload: yes

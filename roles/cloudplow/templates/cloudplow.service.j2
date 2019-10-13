@@ -1,4 +1,4 @@
-# /etc/systemd/system/cloudplow.service
+# {{ service_path }}
 #########################################################################
 # Title:         Cloudbox: Cloudplow Service                            #
 # Author(s):     l3uddz                                                 #
@@ -19,9 +19,9 @@ Group={{ user.name }}
 Type=simple
 Environment=LC_ALL=C.UTF-8
 Environment=LANG=C.UTF-8
-WorkingDirectory=/opt/cloudplow/
-ExecStart=/usr/bin/python3 /opt/cloudplow/cloudplow.py run --loglevel=INFO
-ExecStopPost=/bin/rm -rf /opt/cloudplow/locks
+WorkingDirectory={{ folder_path }}/
+ExecStart=/usr/bin/python3 {{ script_path }} run --loglevel=INFO
+ExecStopPost=/bin/rm -rf {{ folder_path }}/locks
 Restart=always
 RestartSec=10
 

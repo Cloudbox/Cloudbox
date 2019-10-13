@@ -1,0 +1,107 @@
+##########################################################################
+# Title:         Cloudbox: Cloudplow | Default Variables                 #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+cloudplow_name: cloudplow
+
+################################
+# Paths
+################################
+
+cloudplow_folder: "{{ cloudplow_name }}"
+
+cloudplow_path: "{{ server_appdata_path }}/{{ cloudplow_folder }}"
+
+folder_path: "{{ cloudplow_path }}"
+
+cloudplow_script_path: "{{ folder_path }}/cloudplow.py"
+
+script_path: "{{ cloudplow_script_path }}"
+
+cloupdlow_requirements_path: "{{ folder_path }}/requirements.txt"
+
+requirements_path: "{{ cloupdlow_requirements_path }}"
+
+cloudplow_pip_excutable: "pip3"
+
+pip_executable: "{{ cloudplow_pip_excutable }}"
+
+cloudplow_config_path: "{{ folder_path }}/config.json"
+
+config_path: "{{ cloudplow_config_path }}"
+
+cloudplow_alias_path: "/usr/local/bin/{{ cloudplow_name }}"
+
+alias_path: "{{ cloudplow_alias_path }}"
+
+################################
+# GitHub Repository
+################################
+
+cloudplow_git_repo_url: "https://github.com/l3uddz/cloudplow.git"
+
+git_repo_url: "{{ cloudplow_git_repo_url }}"
+
+git_repo_dest: "{{ folder_path }}"
+
+################################
+# Systemd
+################################
+
+service_name: "{{ cloudplow_name }}"
+
+service_file: "{{ service_name }}.service"
+
+service_path: "/etc/systemd/system/{{ service_file }}"
+
+################################
+# Rclone
+################################
+
+rclone_config_path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
+
+rclone_binary_path: "/usr/bin/rclone"
+
+################################
+# Plex
+################################
+
+plex_name: plex
+
+plex_subdomain: "{{ plex_name }}"
+
+plex_port: 32400
+
+plex_url_reverse_proxy: "https://{{ plex_subdomain }}.{{ user.domain }}"
+
+plex_url_localhost: "http://{{ ip_address_localhost }}:{{ plex_port }}"
+
+plex_url: "{{ plex_url_reverse_proxy if reverse_proxy_is_enabled else plex_url_localhost }}"
+
+################################
+# NZBGet
+################################
+
+nzbget_name: nzbget
+
+nzbget_subdomain: "{{ nzbget_name }}"
+
+nzbget_login: "{{ user.name }}:{{ user.pass }}"
+
+nzbget_port: 6789
+
+nzbget_url_reverse_proxy: "https://{{ nzbget_login }}@{{ nzbget_subdomain }}.{{ user.domain }}"
+
+nzbget_url_localhost: "http://{{ nzbget_login }}@{{ ip_address_localhost }}:{{ nzbget_port }}"
+
+nzbget_url: "{{ nzbget_url_reverse_proxy if reverse_proxy_is_enabled else nzbget_url_localhost }}"

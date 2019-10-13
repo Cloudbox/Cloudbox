@@ -22,16 +22,16 @@
 
 - name: Settings | Check if 'config.json' exists
   stat:
-    path: "/opt/cloudplow/config.json"
+    path: "{{ config_path }}"
   register: cloudplow_config
 
 - name: Settings | New 'config.json' tasks
   block:
 
-  - name: Settings | Import default 'config.json'
+  - name: Settings | Import 'config.json'
     template:
       src: config.json.j2
-      dest: /opt/cloudplow/config.json
+      dest: "{{ config_path }}"
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
       mode: 0775
@@ -44,36 +44,32 @@
 
   - name: Settings | Update Rclone config path 'config.json'
     shell: |
-      CONFIG_PATH="/opt/cloudplow/config.json"
-      jq '.core.rclone_config_path = "/home/{{ user.name }}/.config/rclone/rclone.conf"' ${CONFIG_PATH} | sponge ${CONFIG_PATH}
+      jq '.core.rclone_config_path = "{{ rclone_config_path }}"' "{{ config_path }}" | sponge "{{ config_path }}"
     become: yes
     become_user: "{{ user.name }}"
 
   - name: Settings | Update NZBGet credentials in 'config.json'
     shell: |
-      CONFIG_PATH="/opt/cloudplow/config.json"
-      jq '.nzbget.url = "https://{{ user.name }}:{{ user.pass }}@nzbget.{{ user.domain }}"' ${CONFIG_PATH} | sponge ${CONFIG_PATH}
+      jq '.nzbget.url = "{{ nzbget_url }}"' {{ config_path }} | sponge {{ config_path }}
     become: yes
     become_user: "{{ user.name }}"
 
   - name: Settings | Update Plex URL in 'config.json'
     shell: |
-      CONFIG_PATH="/opt/cloudplow/config.json"
-      jq '.plex.url = "https://plex.{{ user.domain }}"' ${CONFIG_PATH} | sponge ${CONFIG_PATH}
+      jq '.plex.url = "{{ plex_url }}"' {{ config_path }} | sponge {{ config_path }}
     become: yes
     become_user: "{{ user.name }}"
 
   - name: Settings | Update Plex Token in 'config.json'
     shell: |
-      CONFIG_PATH="/opt/cloudplow/config.json"
-      jq '.plex.token = "{{ plex_auth_token | default('') }}"' ${CONFIG_PATH} | sponge ${CONFIG_PATH}
+      jq '.plex.token = "{{ plex_auth_token | default('') }}"' {{ config_path }} | sponge {{ config_path }}
     become: yes
     become_user: "{{ user.name }}"
 
   when: cloudplow_config.stat.exists
 
 - name: Settings | Upgrade 'config.json'
-  shell: "/opt/cloudplow/cloudplow.py update_config"
+  shell: "{{ script_path }} update_config"
   become: yes
   become_user: "{{ user.name }}"
   ignore_errors: yes

@@ -1,8 +1,8 @@
 {
     "core": {
         "dry_run": false,
-        "rclone_binary_path": "/usr/bin/rclone",
-        "rclone_config_path": "/home/{{ user.name }}/.config/rclone/rclone.conf"
+        "rclone_binary_path": "{{ rclone_binary_path }}",
+        "rclone_config_path": "{{ rclone_config_path }}"
     },
     "hidden": {
         "/mnt/local/.unionfs-fuse": {
@@ -15,11 +15,11 @@
     },
     "nzbget": {
         "enabled": false,
-        "url": "https://{{ user.name }}:{{ user.pass }}@nzbget.{{ user.domain }}"
+        "url": "{{ nzbget_url }}"
     },
     "plex": {
         "enabled": false,
-        "url": "https://plex.{{ user.domain }}",
+        "url": "{{ plex_url }}",
         "token": "{{ plex_auth_token | default('') }}",
         "poll_interval": 60,
         "notifications": false,
