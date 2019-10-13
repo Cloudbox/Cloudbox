@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Kernel | Preinstall Tasks                    #
+# Title:         Cloudbox: Hetzner Role                                 #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,11 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Preinstall | Cloudbox pre-install has started!"
-  debug:
-    msg: "Cloudbox pre-install has started!"
+- name: "Hetzner Tasks"
+  import_tasks: "subtasks/hetzner.yml"
 
-- name: Preinstall | Set default preinstall variables
-  set_fact:
-    preinstall_kernel_restart: false
-    preinstall_user_relogin: false
+- name: "Restart Tasks"
+  include_tasks: "subtasks/restart.yml"
+  when: (reboot_is_necessary) and
+    (not continuous_integration)

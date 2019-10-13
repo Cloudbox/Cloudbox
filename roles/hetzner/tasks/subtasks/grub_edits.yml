@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Kernel - Hetzner - GRUB Edit Tasks           #
+# Title:         Cloudbox: Hetzner | GRUB Edit Tasks                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,23 +8,23 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Hetzner | GRUB Edits | Set parameters to remove
+- name: GRUB Edits | Set parameters to remove
   set_fact:
     grub_item_to_remove: "nomodeset"
 
-- name: Hetzner | GRUB Edits | Get default kernel parameters
+- name: GRUB Edits | Get default kernel parameters
   shell: grep "^GRUB_CMDLINE_LINUX_DEFAULT" {{ outer_item.item }} | awk -F"GRUB_CMDLINE_LINUX_DEFAULT=" '{print $2}' | sed 's/"//g'
   register: grub_cmdline_linux_default
 
-- name: Hetzner | GRUB Edits | Set default kernel parameters
+- name: GRUB Edits | Set default kernel parameters
   set_fact:
     grub_default_kernel_parameters: '{{ (grub_cmdline_linux_default.stdout).split() }}'
 
-- name: Hetzner | GRUB Edits | Set final kernel parameters
+- name: GRUB Edits | Set final kernel parameters
   set_fact:
     grub_final_kernel_parameters: '{{ grub_default_kernel_parameters | difference(grub_item_to_remove) }}'
 
-- name: Hetzner | GRUB Edits | Update 'GRUB_CMDLINE_LINUX_DEFAULT'
+- name: GRUB Edits | Update 'GRUB_CMDLINE_LINUX_DEFAULT'
   replace:
     path: "{{ outer_item.item }}"
     regexp: '(^GRUB_CMDLINE_LINUX_DEFAULT\s?=.*)'
@@ -32,10 +32,10 @@
   register: x
   notify: [ 'Reload GRUB' ]
 
-- name: Hetzner | GRUB Edits | Execute Handlers
+- name: GRUB Edits | Execute Handlers
   meta: flush_handlers
 
-- name: Hetzner | GRUB Edits | Set 'reboot_is_necessary' variable
+- name: GRUB Edits | Set 'reboot_is_necessary' variable
   set_fact:
     reboot_is_necessary: true
   when: x is changed

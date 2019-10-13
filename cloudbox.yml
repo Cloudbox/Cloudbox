@@ -12,6 +12,7 @@
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
     - { role: kernel, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'kernel'] }
+    - { role: hetzner, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'hetzner'] }
     - { role: user, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'user'] }
     - { role: shell, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'shell'] }
     - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'rclone'] }

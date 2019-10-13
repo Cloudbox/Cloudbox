@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Kernel | Restart Tasks                       #
+# Title:         Cloudbox: Hetzner | Restart Tasks                      #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -21,7 +21,7 @@
   - name: Restart | Success message
     debug:
       msg:
-        - "Kernel was updated."
+        - "GRUB was updated."
         - "Restarting the server to apply changes..."
 
   - name: Restart | Reboot
@@ -33,4 +33,4 @@
         - "Failed to reboot automatically."
         - "You will need to restart the server yourself for changes to take effect."
 
-  when: ('preinstall' not in ansible_run_tags)
+  when: ('hetzner' in ansible_run_tags)

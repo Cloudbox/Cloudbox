@@ -16,10 +16,6 @@
   include_tasks: "subtasks/preinstall.yml"
   when: ('preinstall' in ansible_run_tags)
 
-- name: "Hetzner Tasks"
-  import_tasks: "subtasks/hetzner.yml"
-  tags: kernel-hetzner
-
 - name: "Cron Tasks"
   include_tasks: "subtasks/cron.yml"
 
