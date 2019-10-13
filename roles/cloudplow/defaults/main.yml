@@ -84,7 +84,7 @@ plex_port: 32400
 
 plex_url_reverse_proxy: "https://{{ plex_subdomain }}.{{ user.domain }}"
 
-plex_url_localhost: "http://{{ ip_address_localhost }}:{{ plex_port }}"
+plex_url_localhost: "http://localhost:{{ plex_port }}"
 
 plex_url: "{{ plex_url_reverse_proxy if reverse_proxy_is_enabled else plex_url_localhost }}"
 
@@ -102,6 +102,6 @@ nzbget_port: 6789
 
 nzbget_url_reverse_proxy: "https://{{ nzbget_login }}@{{ nzbget_subdomain }}.{{ user.domain }}"
 
-nzbget_url_localhost: "http://{{ nzbget_login }}@{{ ip_address_localhost }}:{{ nzbget_port }}"
+nzbget_url_localhost: "http://{{ nzbget_login }}@localhost:{{ nzbget_port }}"
 
 nzbget_url: "{{ nzbget_url_reverse_proxy if reverse_proxy_is_enabled else nzbget_url_localhost }}"
