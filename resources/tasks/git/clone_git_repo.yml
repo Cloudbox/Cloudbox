@@ -1,0 +1,47 @@
+#########################################################################
+# Title:         Cloudbox: Resources | Tasks | Git | Clone Git Repo     #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Resources | Tasks | Git | Clone Git Repo | git clone repo 'HEAD'
+  git:
+    repo: "{{ _git_repo_url }}"
+    dest: "{{ _git_repo_dest }}"
+    clone: yes
+    version: HEAD
+    force: yes
+  become: yes
+  become_user: "{{ user.name }}"
+  ignore_errors: yes
+  register: clone_status
+
+- block:
+
+  - name: Resources | Tasks | Git | Clone Git Repo | git clone repo 'master' if cloning of 'HEAD' fails
+    git:
+      repo: "{{ _git_repo_url }}"
+      dest: "{{ _git_repo_dest }}"
+      clone: yes
+      version: master
+      force: yes
+    become: yes
+    become_user: "{{ user.name }}"
+    ignore_errors: yes
+    register: clone_master_status
+
+  - name: Resources | Tasks | Git | Clone Git Repo | force git clone repo when above fails
+    shell: |
+      cd "{{ _git_repo_dest }}"
+      rm -fr .git
+      git init
+      git remote add origin "{{ _github_repo }}"
+      git fetch origin
+      git reset --hard origin/master
+    when: clone_master_status is failed
+
+  when: clone_status is failed
