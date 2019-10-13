@@ -1,0 +1,46 @@
+##########################################################################
+# Title:         Cloudbox: Resources | Tasks | systemd | Disable Service #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+- name: Resources | Tasks | systemd | Disable Service | set '_service_file' variable
+  set_fact:
+    _service_file: "{{ _service_name }}.service"
+
+- name: Resources | Tasks | systemd | Disable Service | set '_service_path' variable
+  set_fact:
+    _service_path: "/etc/systemd/system/{{ _service_file }}"
+
+- name: Resources | Tasks | systemd | Disable Service | check if '{{ _service_file }}' exists
+  stat:
+    path: "{{ _service_path }}"
+  register: service_status
+
+- name: Resources | Tasks | systemd | Disable Service | existing '{{ _service_file }}' tasks
+  block:
+
+  - name: Resources | Tasks | systemd | Disable Service | populate service facts
+    service_facts:
+
+  - name: Resources | Tasks | systemd | Disable Service | get '{{ _service_file }}' state
+    set_fact:
+      service_running: "{{ (services[_service_file] is defined) and (services[_service_file]['state'] == 'running') }}"
+
+  - name: Resources | Tasks | systemd | Disable Service | stop '{{ _service_file }}'
+    systemd:
+      name: "{{ _service_name }}"
+      state: stopped
+      enabled: no
+    when: service_running
+
+  - name: Resources | Tasks | systemd | Disable Service | disable '{{ _service_file }}'
+    systemd:
+      name: "{{ _service_name }}"
+      enabled: no
+
+  when: service_status.stat.exists
