@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Plex Extra Tasks Role                        #
-# Author(s):     l3uddz, desimaniac                                     #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,42 +8,14 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Stop Plex Container
-  docker_container:
-    name: "{{ docker_name }}"
-    state: stopped
+- name: Gather list of installed Docker containers
+  shell: "docker ps -a --format '{{ '{{' }} .Names{{ '}}' }}' | sort | xargs echo -n"
+  register: docker_installed_containers_list
 
-- name: "DB Cache Size Settings"
-  import_tasks: "subtasks/settings/db_cache_size.yml"
-  tags:
-    - plex-db-cache-size
+- name: Create 'docker_installed_containers_list' variable
+  set_fact:
+    docker_installed_containers_list: "{{ (docker_installed_containers_list.stdout).split() }}"
 
-- name: "Forced Automatic Quality Settings"
-  import_tasks: "subtasks/settings/forced_quality.yml"
-  tags:
-    - plex-forced-quality
-
-- name: "Install Sub-Zero Plugin"
-  import_role:
-    name: plex-plugin-sub-zero
-  tags:
-    - plex-plugin-sub-zero
-    - plex-plugin-sub-zero-reinstall
-
-- name: "Install Trakt.tv Plugin"
-  import_role:
-    name: plex-plugin-trakttv
-  tags:
-    - plex-plugin-trakttv
-
-- name: "Install WebTools Plugin"
-  import_role:
-    name: plex-plugin-webtools
-  tags:
-    - plex-plugin-webtools
-    - plex-plugin-webtools-reinstall
-
-- name: Start Plex Container
-  docker_container:
-    name: "{{ docker_name }}"
-    state: started
+- name: "Continue when Plex Docker container exists"
+  import_tasks: "main2.yml"
+  when: ('plex' in docker_installed_containers_list)
