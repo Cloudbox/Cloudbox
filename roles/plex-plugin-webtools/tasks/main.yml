@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: WebTools Plugin                              #
+# Title:         Cloudbox: WebTools Plugin for Plex                     #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -55,7 +55,7 @@
       state: stopped
     when:
       - ('plex' in docker_running_containers)
-      - ('webtools-plugin' in ansible_run_tags) or ('reinstall-webtools-plugin' in ansible_run_tags)
+      - ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
 
   - name: Remove outdated WebTools Plugin
     file:
@@ -132,9 +132,9 @@
       state: started
     when:
       - ('plex' in docker_running_containers)
-      - ('webtools-plugin' in ansible_run_tags) or ('reinstall-webtools-plugin' in ansible_run_tags)
+      - ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
 
-  when: (not webtools_bundle.stat.exists) or ((webtools_bundle.stat.exists) and (webtools_outdated)) or ('reinstall-webtools-plugin' in ansible_run_tags)
+  when: (not webtools_bundle.stat.exists) or ((webtools_bundle.stat.exists) and (webtools_outdated)) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
 
 - name: WebTools Plugin was not updated
   debug:
@@ -142,4 +142,4 @@
   when:
     - (webtools_bundle.stat.exists)
     - (not webtools_outdated)
-    - ('reinstall-webtools-plugin' not in ansible_run_tags)
+    - ('plex-plugin-webtools-reinstall' not in ansible_run_tags)

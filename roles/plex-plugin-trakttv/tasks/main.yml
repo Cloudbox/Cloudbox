@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Trakt.tv Plugin                              #
+# Title:         Cloudbox: Trakt.tv Plugin for Plex                     #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -20,7 +20,7 @@
   docker_container:
     name: plex
     state: stopped
-  when: ('plex' in docker_running_containers) and ('trakttv-plugin' in ansible_run_tags)
+  when: ('plex' in docker_running_containers) and ('plex-plugin-trakttv' in ansible_run_tags)
 
 - name: Remove Previous Trakt.tv Plugin
   file:
@@ -82,4 +82,4 @@
   docker_container:
     name: plex
     state: started
-  when: ('plex' in docker_running_containers) and ('trakttv-plugin' in ansible_run_tags)
+  when: ('plex' in docker_running_containers) and ('plex-plugin-trakttv' in ansible_run_tags)

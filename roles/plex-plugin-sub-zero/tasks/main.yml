@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Sub-Zero Plugin                              #
+# Title:         Cloudbox: Sub-Zero Plugin for Plex                     #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -63,7 +63,7 @@
       state: stopped
     when:
       - ('plex' in docker_running_containers)
-      - ('sub-zero-plugin' in ansible_run_tags) or ('reinstall-sub-zero-plugin' in ansible_run_tags)
+      - ('plex-plugin-sub-zero' in ansible_run_tags) or ('plex-plugin-sub-zero-reinstall' in ansible_run_tags)
 
   - name: Remove outdated Sub-Zero Plugin
     file:
@@ -143,9 +143,9 @@
       state: started
     when:
       - ('plex' in docker_running_containers)
-      - ('sub-zero-plugin' in ansible_run_tags) or ('reinstall-sub-zero-plugin' in ansible_run_tags)
+      - ('plex-plugin-sub-zero' in ansible_run_tags) or ('plex-plugin-sub-zero-reinstall' in ansible_run_tags)
 
-  when: (not subzero_bundle.stat.exists) or ((subzero_bundle.stat.exists) and (subzero_outdated)) or ('reinstall-sub-zero-plugin' in ansible_run_tags)
+  when: (not subzero_bundle.stat.exists) or ((subzero_bundle.stat.exists) and (subzero_outdated)) or ('plex-plugin-sub-zero-reinstall' in ansible_run_tags)
 
 - name: Sub-Zero Plugin was not updated
   debug:
@@ -153,4 +153,4 @@
   when:
     - (subzero_bundle.stat.exists)
     - (not subzero_outdated)
-    - ('reinstall-sub-zero-plugin' not in ansible_run_tags)
+    - ('plex-plugin-sub-zero-reinstall' not in ansible_run_tags)
