@@ -30,12 +30,27 @@
   with_items:
     - /opt/radarr
 
+- name: SMA Tasks
+  block:
+
+  - name: Create directories
+    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+    with_items:
+      - /opt/radarr/script.d
+
+  - name: Import 'sma_req.sh' script
+    copy:
+      src: "sma_req.sh"
+      dest: "/opt/radarr/script.d/sma_req.sh"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: yes
+
+  when: (sickbeard_mp4_automator | default(false,true))
+
 - name: Darkerr Tasks
   import_tasks: "subtasks/darkerr.yml"
-
-- name: Set 'suitarr_image' variable
-  set_fact:
-    suitarr_image: "{{ (sickbeard_mp4_automator | default(false,true)) | ternary('andrewkhunn/radarr','hotio/radarr') }}"
 
 - name: "Check if '/dev/dri' exists"
   stat:
@@ -53,7 +68,7 @@
 - name: Create and start container
   docker_container:
     name: radarr
-    image: "{{ suitarr_image }}"
+    image: "hotio/radarr"
     pull: yes
     published_ports:
       - "127.0.0.1:7878:7878"
@@ -69,7 +84,7 @@
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"
     volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
-    devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and sickbeard_mp4_automator and dev_dri.stat.exists) | default(false) else omit }}"
+    devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and (sickbeard_mp4_automator | default(false,true)) and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
