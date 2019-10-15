@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# https://medium.com/hotels-com-technology/back-to-the-future-af4431aa6e97
+
+if [ -z "$TZ" ]
+then
+      zoneinfo="/usr/share/zoneinfo"
+      localtime="/etc/localtime"
+      for f in $(find $zoneinfo -not -wholename $zoneinfo -not -wholename *localtime* -not -wholename *right* -not -wholename *Etc/UTC*); do
+        dumped=$(zdump $f)
+        zoneTime=$(echo $dumped | cut -d" " -f2-)
+        currentTime=$(echo $(zdump $localtime) | cut -d" " -f2-)
+        if [[ "$currentTime" == "$zoneTime" ]]; then
+          tzfile=$(echo $dumped | cut -d" " -f1)
+          break
+        fi
+      done
+      TZ=$(echo $tzfile | cut -d/ -f5-)
+fi
+
+[ -z "$TZ" ] && TZ="Etc/UTC"
+
+echo "\"$TZ\""
