@@ -109,7 +109,9 @@ tz: "{{ system.timezone
           system.timezone is defined and
           'auto' not in system.timezone | lower
         else ansible_local.timezone
-          if ansible_local.timezone | trim | length > 0
+          if ansible_local is defined and
+            ansible_local.timezone is defined and
+            ansible_local.timezone | trim | length > 0
         else 'Etc/UTC' }}"
 
 ################################
