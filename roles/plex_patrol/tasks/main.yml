@@ -45,8 +45,9 @@
     pull: yes
     user: "{{ uid }}:{{ gid }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/plex_patrol:/config"
+    env:
+      TZ: "{{ tz }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:

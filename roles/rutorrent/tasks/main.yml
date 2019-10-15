@@ -45,7 +45,6 @@
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/rutorrent:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
@@ -66,6 +65,7 @@
       VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: "rutorrent.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      TZ: "{{ tz }}"
     volumes: "{{ default_volumes + torrents_downloads_path|default([]) }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

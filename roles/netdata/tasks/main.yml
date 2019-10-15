@@ -46,8 +46,8 @@
       VIRTUAL_PORT: 19999
       LETSENCRYPT_HOST: "netdata.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"

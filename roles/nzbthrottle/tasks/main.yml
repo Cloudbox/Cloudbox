@@ -45,8 +45,9 @@
     image: "daghaian/nzbthrottle"
     pull: yes
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nzbthrottle/config.json:/nzbthrottle/config.json:ro"
+    env:
+      TZ: "{{ tz }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:

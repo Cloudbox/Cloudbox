@@ -72,8 +72,8 @@
       VIRTUAL_PORT: 8888
       LETSENCRYPT_HOST: "resiliosync.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/resilio-sync:/mnt/sync"
       - "/mnt:/mnt/mounted_folders/mnt"
       - "/home:/mnt/mounted_folders/home"

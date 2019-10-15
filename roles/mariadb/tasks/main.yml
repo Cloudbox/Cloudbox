@@ -30,8 +30,8 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       MYSQL_ROOT_PASSWORD: "password321"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/mariadb:/config"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

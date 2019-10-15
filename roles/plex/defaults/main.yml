@@ -127,7 +127,6 @@ docker_envs: "{{ plex_docker_envs }}"
 ################################
 
 plex_docker_volumes:
-  - "/etc/localtime:/etc/localtime:ro"
   - "{{ server_appdata_path }}/{{ plex_folder }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media:/data"

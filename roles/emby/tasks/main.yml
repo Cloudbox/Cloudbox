@@ -52,8 +52,8 @@
       HTTPS_METHOD: noredirect
       NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia.enabled | default(false) else omit }}"
       NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia.enabled | default(false) else omit }}"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/emby:/config"
       - "/mnt/unionfs/Media:/data"
       - "/mnt:/mnt"

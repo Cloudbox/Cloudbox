@@ -83,13 +83,14 @@
       - "80:80"
       - "443:443"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy/certs:/etc/nginx/certs:ro"
       - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "/usr/share/nginx/html"
       - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
+    env:
+      TZ: "{{ tz }}"
     labels:
       "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
       "com.github.cloudbox.cloudbox_managed": "true"
@@ -107,7 +108,6 @@
     image: "jrcs/letsencrypt-nginx-proxy-companion"
     pull: yes
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nginx-proxy/certs:/etc/nginx/certs:rw"
       - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -116,6 +116,7 @@
     env:
       FILES_UID: "{{ uid }}"
       FILES_GID: "{{ gid }}"
+      TZ: "{{ tz }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:

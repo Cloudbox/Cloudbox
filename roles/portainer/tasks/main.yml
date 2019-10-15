@@ -34,7 +34,6 @@
     published_ports:
       - "127.0.0.1:9000:9000"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/portainer:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
     env:
@@ -42,6 +41,7 @@
       VIRTUAL_PORT: 9000
       LETSENCRYPT_HOST: "portainer.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      TZ: "{{ tz }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:

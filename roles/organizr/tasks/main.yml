@@ -75,8 +75,8 @@
       VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(user.domain + ',' + 'www.' + user.domain,'organizr.' + user.domain) }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      TZ: "{{ tz }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "/opt/organizr:/config"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
