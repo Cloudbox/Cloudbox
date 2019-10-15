@@ -43,18 +43,18 @@
 
   - name: Gather list of running Docker containers
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
-    register: docker_running_containers
+    register: docker_running_containers_list
 
-  - name: Convert 'docker_running_containers' to list
+  - name: Set 'docker_running_containers_list' variable
     set_fact:
-      docker_running_containers: "{{ (docker_running_containers.stdout).split() }}"
+      docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
 
   - name: Stop Plex container
     docker_container:
       name: plex
       state: stopped
     when:
-      - ('plex' in docker_running_containers)
+      - ('plex' in docker_running_containers_list)
       - ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
 
   - name: Remove outdated WebTools Plugin
@@ -131,7 +131,7 @@
       name: plex
       state: started
     when:
-      - ('plex' in docker_running_containers)
+      - ('plex' in docker_running_containers_list)
       - ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
 
   when: (not webtools_bundle.stat.exists) or ((webtools_bundle.stat.exists) and (webtools_outdated)) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)

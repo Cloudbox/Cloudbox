@@ -12,7 +12,7 @@
   shell: "docker ps -a --format '{{ '{{' }} .Names{{ '}}' }}' | sort | xargs echo -n"
   register: docker_installed_containers_list
 
-- name: Create 'docker_installed_containers_list' variable
+- name: Set 'docker_installed_containers_list' variable
   set_fact:
     docker_installed_containers_list: "{{ (docker_installed_containers_list.stdout).split() }}"
 

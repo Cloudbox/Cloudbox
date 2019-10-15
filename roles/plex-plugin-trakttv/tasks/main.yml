@@ -10,17 +10,17 @@
 ---
 - name: Gather list of running Docker containers
   shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
-  register: docker_running_containers
+  register: docker_running_containers_list
 
-- name: Convert to list
+- name: Set 'docker_running_containers_list' variable
   set_fact:
-    docker_running_containers: "{{ (docker_running_containers.stdout).split() }}"
+    docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
 
 - name: Stop Plex container
   docker_container:
     name: plex
     state: stopped
-  when: ('plex' in docker_running_containers) and ('plex-plugin-trakttv' in ansible_run_tags)
+  when: ('plex' in docker_running_containers_list) and ('plex-plugin-trakttv' in ansible_run_tags)
 
 - name: Remove Previous Trakt.tv Plugin
   file:
@@ -82,4 +82,4 @@
   docker_container:
     name: plex
     state: started
-  when: ('plex' in docker_running_containers) and ('plex-plugin-trakttv' in ansible_run_tags)
+  when: ('plex' in docker_running_containers_list) and ('plex-plugin-trakttv' in ansible_run_tags)
