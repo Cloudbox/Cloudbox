@@ -1,5 +1,5 @@
 [defaults]
-inventory = inventories/local
+inventory = ./inventories/local
 roles_path = roles:resources/roles
 hash_behaviour = merge
 fact_path = ./ansible_facts.d
