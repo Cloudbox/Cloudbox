@@ -1,0 +1,47 @@
+#########################################################################
+# Title:         Cloudbox: System | Logrotate Tasks                     #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# https://github.com/vbotka/ansible-linux-postinstall
+
+- name: Logrotate | Install required packages
+  apt:
+    state: present
+    name:
+      - logrotate
+
+- name: Logrotate | Configure '/etc/logrotate.conf'
+  lineinfile:
+    path: "/etc/logrotate.conf"
+    line: "{{ item.line }}"
+    state: "{{ item.state }}"
+  loop:
+    - {line: "include /etc/logrotate.d", state: "present"}
+
+- name: Logrotate | Create 'logrotate_d_items' variable
+  set_fact:
+    logrotate_d_items:
+       - path: "cloudbox"
+         content: |
+            /home/{{ user.name }}/cloudbox/cloudbox.log {
+                weekly
+                rotate 0
+                size 2M
+                missingok
+                notifempty
+                create 644 {{ user.name }} {{ user.name }}
+            }
+
+- name: Logrotate | Add items to '/etc/logrotate.d'
+  blockinfile:
+    path: "/etc/logrotate.d/{{ item.path }}"
+    marker: "### CLOUDBOX MANAGED BLOCK - {mark} ###"
+    block: "{{ item.content }}"
+    create: yes
+  loop: "{{ logrotate_d_items }}"

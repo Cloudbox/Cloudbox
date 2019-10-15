@@ -8,6 +8,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Logrotate
+  import_tasks: "subtasks/logrotate.yml"
+
 - name: APT tasks
   include_tasks: "subtasks/apt.yml"
 
