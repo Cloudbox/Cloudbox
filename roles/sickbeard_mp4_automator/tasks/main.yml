@@ -46,8 +46,8 @@
   import_tasks: "plex_autoscan_py.yml"
   when: not plex_autoscan_py.stat.exists
 
-- name: "Update Docker Images Task"
-  include_tasks: "update_docker_images.yml"
+- name: "Update Docker Containers Task"
+  include_tasks: "update_docker_containers.yml"
   loop:
     - "sonarr"
     - "radarr"

@@ -1,0 +1,50 @@
+#########################################################################
+# Title:         SMA: Update Docker Containers Task                     #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Check if '{{ app }}' is installed"
+  shell: docker ps -aq --format {% raw %}'{{ .Names}}'{% endraw %} --filter name='^/{{ app }}$'
+  register: container_lookup
+
+- name: Set 'container_is_installed' variable
+  set_fact:
+    container_is_installed: "{{ ( (container_lookup.stdout | trim) == (app | quote) ) | ternary(true,false) }}"
+
+- name: "Do following tasks when '{{ app }}' is installed"
+  block:
+
+  - name: Check if 'sma_req.sh' exists
+    stat:
+      path: "/opt/{{ app }}/script.d/sma_req.sh"
+    register: sma_req_status
+
+  - name: "Update '{{ app }}' Docker container tasks"
+    block:
+
+    - name: "Inspect Docker container: '{{ app }}'"
+      shell: "docker inspect {{ app }}"
+      register: container_facts
+
+    - name: "Set container_is_running' variable"
+      set_fact:
+        container_is_running: "{{ (container_facts.stdout | from_json)[0].State.Running }}"
+
+    - name: "Run role for '{{ app }}' to update container"
+      include_role:
+        name: "{{ app }}"
+
+    - name: "Shutdown '{{ app }}' if it was stopped before"
+      docker_container:
+        name: "{{ app }}"
+        state: stopped
+      when: not container_is_running
+
+    when: not sma_req_status.stat.exists
+
+  when: container_is_installed
