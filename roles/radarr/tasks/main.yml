@@ -40,8 +40,8 @@
 
   - name: Import 'sma_req.sh' script
     copy:
-      src: "sma_req.sh"
-      dest: "/opt/radarr/script.d/sma_req.sh"
+      src: "99-sma_req.sh"
+      dest: "/opt/radarr/script.d/99-sma_req.sh"
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
       mode: 0775
@@ -65,6 +65,21 @@
       - "/mnt:/mnt"
       - "/mnt/unionfs/Media/Movies:/movies"
 
+- name: Set 'sma_req_volume' variable
+  set_fact:
+    sma_req_volume:
+      - "/opt/radarr/script.d/99-sma_req.sh:/etc/cont-init.d/99-sma_req.sh"
+
+- name: Build 'docker_volumes' list variable
+  set_fact:
+    docker_volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
+  when: not (sickbeard_mp4_automator | default(false,true))
+
+- name: Build 'docker_volumes' list variable
+  set_fact:
+    docker_volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) + sma_req_volume }}"
+  when: (sickbeard_mp4_automator | default(false,true))
+
 - name: Create and start container
   docker_container:
     name: radarr
@@ -83,7 +98,7 @@
       LETSENCRYPT_HOST: "radarr.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"
-    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
+    volumes: "{{ docker_volumes }}"
     devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and (sickbeard_mp4_automator | default(false,true)) and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
