@@ -18,6 +18,28 @@
     name: tzdata
     state: present
 
+- name: Time Zone | Fetch Time Zone if set to 'auto'
+  block:
+
+  - name: Time Zone | Get time zone from 'http://ip-api.com'
+    uri:
+      url: http://ip-api.com/line?fields=timezone
+      return_content: yes
+    register: ip_api_timezone_response
+
+  - name: Time Zone | Set 'tz' variable from 'http://ip-api.com'
+    set_fact:
+      tz: "{{ ip_api_timezone_response.content | trim }}"
+    when:
+      - (ip_api_timezone_response is succeeded)
+      - (ip_api_timezone_response.content | trim | length > 0)
+
+  when:
+    - (system is defined)
+    - (system.timezone is defined)
+    - ('auto' in system.timezone | lower)
+  ignore_errors: yes
+
 - name: Time Zone | Set time zone
   timezone:
     name: "{{ tz }}"
