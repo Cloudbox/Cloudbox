@@ -101,6 +101,18 @@ server_root_path: "/"
 server_appdata_path: "{{ server_root_path | regex_replace('\\/$', '') + '/opt' }}"
 
 ################################
+# Timezone
+################################
+
+tz: "{{ system.timezone
+        if system is defined and
+          system.timezone is defined and
+          'auto' not in system.timezone | lower
+        else ansible_local.timezone
+          if ansible_local.timezone | trim | length > 0
+        else 'Etc/UTC' }}"
+
+################################
 # Network
 ################################
 
