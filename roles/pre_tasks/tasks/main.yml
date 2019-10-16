@@ -8,10 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set User Variables
-  import_tasks: "subtasks/user.yml"
-  tags: always
-
 - name: Clean Paths
   import_tasks: "subtasks/clean_paths.yml"
   tags: always

@@ -101,6 +101,16 @@ server_root_path: "/"
 server_appdata_path: "{{ server_root_path | regex_replace('\\/$', '') + '/opt' }}"
 
 ################################
+# User
+################################
+
+uid: "{{ ansible_local.user[user.name].uid }}"
+
+gid: "{{ ansible_local.user[user.name].gid }}"
+
+vgid: "{{ ansible_local.group.video.gid }}"
+
+################################
 # Timezone
 ################################
 
