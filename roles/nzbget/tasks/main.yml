@@ -58,6 +58,11 @@
     path: "/opt/nzbget/app/nzbget.conf"
   register: nzbget_conf
 
+- name: "Check if '/dev/dri' exists"
+  stat:
+    path: "/dev/dri"
+  register: dev_dri
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
@@ -100,6 +105,7 @@
       LC_ALL: "C"
       TZ: "{{ tz }}"
     volumes: "{{ docker_volumes }}"
+    devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and (sickbeard_mp4_automator | default(false,true)) and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
