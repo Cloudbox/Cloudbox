@@ -18,7 +18,6 @@
     - { role: rclone, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'preinstall', 'rclone'] }
     - { role: system, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'system'] }
     - { role: common, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'common'] }
-    - { role: aliases, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'aliases'] }
     - { role: motd, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'motd'] }
     - { role: docker, tags: ['core', 'cloudbox', 'mediabox', 'feederbox', 'docker'] }
     - { role: nvidia, tags: ['core', 'cloudbox', 'mediabox', 'nvidia'], when: ['use_nvidia'] }

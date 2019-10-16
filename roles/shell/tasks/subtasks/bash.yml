@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Shell Role | Bash Tasks                      #
+# Title:         Cloudbox: Shell | Bash Tasks                           #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -49,6 +49,20 @@
     regexp: "^export EDITOR="
     line: "export EDITOR=nano"
     state: present
+    group: "{{ user.name }}"
+    owner: "{{ user.name }}"
+    mode: 0664
+
+# aliases repo
+- name: Bash | Add 'aliases' to '.bash_aliases'
+  lineinfile:
+    dest: "/home/{{ user.name }}/.bash_aliases"
+    line: "eval \"$(find /opt/aliases -type f -path '*bash/*.sh' | while read af; do echo \"source $af\"; done)\""
+    state: present
+    group: "{{ user.name }}"
+    owner: "{{ user.name }}"
+    mode: 0664
+    create: yes
 
 - name: Bash | Set bash as default shell
   user:
@@ -56,13 +70,13 @@
     shell: /bin/bash
   register: default_shell
 
-- name: "Bash | Default shell set to: Bash"
+- name: "Bash | Default shell set to Bash"
   debug:
     msg:
-      - "Default shell set to: Bash"
+      - "Default shell set to Bash"
   when: (default_shell is changed)
 
-- name: "Bash | Default shell set to: Bash"
+- name: "Bash | Default shell set to Bash"
   debug:
     msg:
       - "Changes will apply on session restart."

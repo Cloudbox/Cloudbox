@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Shell Role                                   #
+# Title:         Cloudbox: Shell | Aliases Task                         #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,12 +8,17 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Import 'aliases' subtask
-  include_tasks: "subtasks/aliases.yml"
+- name: Aliases | Create aliases directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  with_items:
+    - /opt/aliases
 
-- name: Set 'shell_type' variable
-  set_fact:
-    shell_type: "{{ shell | default('zsh',true) }}"
-
-- name: Import '{{ shell_type }}' subtask
-  include_tasks: "subtasks/{{ shell_type }}.yml"
+- name: Aliases | Clone aliases repo
+  git:
+    repo: https://github.com/Cloudbox/aliases.git
+    dest: /opt/aliases
+    clone: yes
+    version: HEAD
+    force: yes
+  become: yes
+  become_user: "{{ user.name }}"
