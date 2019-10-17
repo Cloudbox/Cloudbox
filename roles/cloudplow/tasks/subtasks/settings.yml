@@ -8,13 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Settings | Install required packages
-  apt:
-    state: present
-    name:
-      - jq
-      - moreutils
-
 - name: Settings | Import Plex Auth Token role
   import_role:
     name: plex_auth_token
@@ -41,6 +34,13 @@
 
 - name: Settings | Existing 'config.json' tasks
   block:
+
+  - name: Settings | Install required packages
+    apt:
+      state: present
+      name:
+        - jq
+        - moreutils
 
   - name: Settings | Update Rclone config path 'config.json'
     shell: |
