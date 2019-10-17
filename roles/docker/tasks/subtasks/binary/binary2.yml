@@ -28,11 +28,11 @@
 
 - name: Binary | Get '{{ vars[item ~ '_name'] }}' version
   shell: "{{ vars[item ~ '_filepath'] }} --version | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
-  register: "{{ item }}_version"
+  register: binary_version
   ignore_errors: yes
   changed_when: false
 
 - name: Binary | Display '{{ vars[item ~ '_name'] }}' version
   debug:
-    msg: "{{ vars[item ~ '_name'] }} version {{ vars[item ~ '_version'].stdout }} installed."
-  when: vars[item ~ '_version'] is defined
+    msg: "{{ vars[item ~ '_name'] }} version {{ binary_version.stdout }} installed."
+  when: binary_version is defined
