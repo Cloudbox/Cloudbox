@@ -66,6 +66,10 @@ plex_docker_image: "cloudb0x/plex:{{ plex.tag }}"
 
 docker_image: "{{ plex_docker_image }}"
 
+plex_docker_pull: yes
+
+docker_pull: "{{ plex_docker_pull }}"
+
 ################################
 # Docker Ports
 ################################
@@ -205,6 +209,14 @@ docker_security_opts: "{{ plex_docker_security_opts }}"
 # Docker Restart Policy
 ################################
 
-plex_docker_restart_policy: "unless-stopped"
+plex_docker_restart_policy: unless-stopped
 
 docker_restart_policy: "{{ plex_docker_restart_policy }}"
+
+################################
+# Docker State
+################################
+
+plex_docker_state: started
+
+docker_state: "{{ plex_docker_state }}"

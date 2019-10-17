@@ -37,7 +37,7 @@
   docker_container:
     name: "{{ docker_name }}"
     image: "{{ docker_image }}"
-    pull: yes
+    pull: "{{ docker_pull }}"
     published_ports: "{{ docker_ports }}"
     env: "{{ docker_envs }}"
     volumes: "{{ docker_volumes }}"
@@ -49,7 +49,7 @@
     restart_policy: "{{ docker_restart_policy }}"
     capabilities: "{{ docker_capabilities }}"
     security_opts: "{{ docker_security_opts }}"
-    state: started
+    state: "{{ docker_state }}"
 
 - name: Post-Install Tasks
   import_tasks: "subtasks/post-install.yml"
