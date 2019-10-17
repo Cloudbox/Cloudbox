@@ -11,7 +11,7 @@
 - name: "Services | Check if '{{ outer_item }}' exists"
   stat:
     path: "/etc/systemd/system/{{ outer_item }}"
-  register: "{{ outer_item }}_status"
+  register: outer_item_status
 
 - name: "Services | Tasks for '{{ outer_item }}'"
   block:
@@ -57,4 +57,4 @@
   - name: "Services | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
-  when: (vars[outer_item ~ '_status'].stat.exists)
+  when: outer_item_status.stat.exists
