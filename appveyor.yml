@@ -12,13 +12,14 @@ skip_commits:
     - '*.md'
     - '.gitignore'
     - '.gitmodules'
-    - '.github/*'
-    - 'defaults/*'
-    - 'filter_plugins/*'
-    - 'inventories/*'
-    - 'library/*'
-    - 'roles/*/files/*'
-    - 'roles/settings/*'
+    - '.github/**/*'
+    - 'defaults/**/*'
+    - 'filter_plugins/**/*'
+    - 'inventories/**/*'
+    - 'library/**/*'
+    - 'roles/*/files/**/*'
+    - 'roles/settings/**/*'
+    - 'Vagrantfile'
   message: /\[minor\]/
 
 image: Ubuntu1604
