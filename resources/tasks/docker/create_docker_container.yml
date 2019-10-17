@@ -1,0 +1,27 @@
+##################################################################################
+# Title:         Cloudbox: Resources | Tasks | Docker | Create Docker Container  #
+# Author(s):     desimaniac                                                      #
+# URL:           https://github.com/cloudbox/cloudbox                            #
+# --                                                                             #
+#         Part of the Cloudbox project: https://cloudbox.works                   #
+##################################################################################
+#                   GNU General Public License v3.0                              #
+##################################################################################
+---
+- name: Resources | Tasks | Docker | Create Docker Container
+  docker_container:
+    name: "{{ docker_name }}"
+    image: "{{ docker_image }}"
+    pull: "{{ docker_pull }}"
+    published_ports: "{{ docker_ports }}"
+    env: "{{ docker_envs }}"
+    volumes: "{{ docker_volumes }}"
+    devices: "{{ docker_devices }}"
+    etc_hosts: "{{ docker_hosts }}"
+    labels: "{{ docker_labels }}"
+    networks: "{{ docker_networks }}"
+    purge_networks: yes
+    restart_policy: "{{ docker_restart_policy }}"
+    capabilities: "{{ docker_capabilities }}"
+    security_opts: "{{ docker_security_opts }}"
+    state: "{{ docker_state }}"
