@@ -18,11 +18,11 @@
     record: "{{ subdomain }}"
   when: reverse_proxy_is_enabled
 
-- name: "Create directories"
+- name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items: "{{ folders }}"
 
-- name: "Stop and remove any existing container"
+- name: Stop and remove any existing Docker container
   docker_container:
     name: "{{ docker_name }}"
     state: absent
@@ -31,23 +31,8 @@
   import_tasks: "subtasks/preferences/preferences.yml"
   when: (not continuous_integration)
 
-- name: "Create and start container"
-  docker_container:
-    name: "{{ docker_name }}"
-    image: "{{ docker_image }}"
-    pull: "{{ docker_pull }}"
-    published_ports: "{{ docker_ports }}"
-    env: "{{ docker_envs }}"
-    volumes: "{{ docker_volumes }}"
-    devices: "{{ docker_devices }}"
-    etc_hosts: "{{ docker_hosts }}"
-    labels: "{{ docker_labels }}"
-    networks: "{{ docker_networks }}"
-    purge_networks: yes
-    restart_policy: "{{ docker_restart_policy }}"
-    capabilities: "{{ docker_capabilities }}"
-    security_opts: "{{ docker_security_opts }}"
-    state: "{{ docker_state }}"
+- name: Create and start Docker container
+  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
 
 - name: Post-Install Tasks
   import_tasks: "subtasks/post-install.yml"
