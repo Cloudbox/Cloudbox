@@ -11,14 +11,12 @@
 - name: Variables Task
   import_tasks: "subtasks/variables.yml"
 
-- name: "Set DNS Record on CloudFlare"
+- name: Create DNS Record
   include_role:
-    name: cloudflare-dns
+    name: dns
   vars:
     record: "{{ subdomain }}"
-  when:
-    - cloudflare_enabled
-    - reverse_proxy_is_enabled
+  when: reverse_proxy_is_enabled
 
 - name: "Create directories"
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"

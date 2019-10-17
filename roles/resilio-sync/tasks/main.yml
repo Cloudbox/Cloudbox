@@ -9,12 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set DNS Record on CloudFlare"
+- name: Create DNS Record
   include_role:
-    name: cloudflare-dns
+    name: dns
   vars:
     record: resiliosync
-  when: cloudflare_enabled
 
 - name: Stop and remove any existing container
   docker_container:
@@ -30,7 +29,7 @@
     state: absent
     type: A
     record: "resilio"
-  when: cloudflare_enabled
+  when: cloudflare_is_enabled
 
 - name: Stop and remove any existing container
   docker_container:

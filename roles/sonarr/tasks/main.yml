@@ -10,12 +10,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set DNS Record on CloudFlare"
+- name: Create DNS Record
   include_role:
-    name: cloudflare-dns
+    name: dns
   vars:
     record: sonarr
-  when: cloudflare_enabled
 
 - name: Stop and remove any existing container
   docker_container:

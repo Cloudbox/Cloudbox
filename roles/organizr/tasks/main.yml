@@ -9,22 +9,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set DNS Record on CloudFlare"
+- name: Create DNS Record
   include_role:
-    name: cloudflare-dns
+    name: dns
   vars:
     record: organizr
-  when: (cloudflare_enabled) and not (organizr.direct_domain|default(false,true))
+  when: not (organizr.direct_domain|default(false,true))
 
-- name: "Set DNS Record on CloudFlare"
+- name: Create DNS Record
   include_role:
-    name: cloudflare-dns
+    name: dns
   vars:
     record: "{{ item }}"
   with_items:
     - "{{ user.domain }}"
     - "www"
-  when: (cloudflare_enabled) and (organizr.direct_domain|default(false,true))
+  when: (organizr.direct_domain|default(false,true))
 
 - name: Stop and remove any existing container
   docker_container:

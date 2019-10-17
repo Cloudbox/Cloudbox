@@ -9,12 +9,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set DNS Record on CloudFlare"
+- name: Create DNS Record
   include_role:
-    name: cloudflare-dns
+    name: dns
   vars:
     record: emby
-  when: cloudflare_enabled
 
 - name: Create emby directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"

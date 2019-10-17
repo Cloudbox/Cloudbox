@@ -18,7 +18,7 @@ continuous_integration: false
 # Accounts
 ################################
 
-cloudflare_enabled: "{{ true if not(
+cloudflare_is_enabled: "{{ true if not(
     (cloudflare is undefined)
     or
     (cloudflare is none)

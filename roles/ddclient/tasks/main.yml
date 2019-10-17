@@ -43,7 +43,7 @@
     group: "{{ user.name }}"
     mode: 0775
     force: no
-  when: cloudflare_enabled
+  when: cloudflare_is_enabled
 
 - name: Create and start container
   docker_container:

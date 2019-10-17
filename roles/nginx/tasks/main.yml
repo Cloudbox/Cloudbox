@@ -9,22 +9,22 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Set DNS Record on CloudFlare"
+- name: Create DNS Record
   include_role:
-    name: cloudflare-dns
+    name: dns
   vars:
     record: "{{ nginx.subdomain|default('web',true) }}"
-  when: (cloudflare_enabled) and not (nginx.direct_domain|default(false,true))
+  when: not (nginx.direct_domain|default(false,true))
 
-- name: "Set DNS Record on CloudFlare"
+- name: Create DNS Record
   include_role:
-    name: cloudflare-dns
+    name: dns
   vars:
     record: "{{ item }}"
   with_items:
     - "{{ user.domain }}"
     - "www"
-  when: (cloudflare_enabled) and (nginx.direct_domain|default(false,true))
+  when: (nginx.direct_domain|default(false,true))
 
 - name: Create nginx directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
