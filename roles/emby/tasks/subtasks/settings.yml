@@ -8,78 +8,61 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Settings | Wait for 'system.xml' to be created"
-  wait_for:
-    path: "/opt/emby/config/system.xml"
-    state: present
-
-- name: "Settings | Wait 10 seconds before stopping container"
-  wait_for:
-    timeout: 10
-
-- name: "Settings | Stop emby container"
+- name: Settings | Stop Docker container
   docker_container:
-    name: emby
+    name: "{{ docker_name }}"
     state: stopped
 
-- name: "Settings | Import 'dlna.xml'"
-  copy:
-    src: "dlna.xml"
-    dest: "/opt/emby/config/dlna.xml"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    force: no
-
-- name: "Settings | Set 'EnableUPnP' to 'false'"
+- name: Settings | Set 'EnableUPnP' to 'false' in '{{ emby_config_file_path | basename }}'
   xml:
-    path: "/opt/emby/config/system.xml"
+    path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/EnableUPnP
     value: "false"
 
-- name: "Settings | Set 'PublicPort' to '80'"
+- name: Settings | Set 'PublicPort' to '80' in '{{ emby_config_file_path | basename }}'
   xml:
-    path: "/opt/emby/config/system.xml"
+    path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/PublicPort
     value: "80"
 
-- name: "Settings | Set 'PublicHttpsPort' to '443'"
+- name: Settings | Set 'PublicHttpsPort' to '443' in '{{ emby_config_file_path | basename }}'
   xml:
-    path: "/opt/emby/config/system.xml"
+    path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/PublicHttpsPort
     value: "443"
 
-- name: "Settings | Set 'EnableHttps' to 'true'"
+- name: Settings | Set 'EnableHttps' to 'true' in '{{ emby_config_file_path | basename }}'
   xml:
-    path: "/opt/emby/config/system.xml"
+    path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/EnableHttps
     value: "true"
 
-- name: "Settings | Set 'WanDdns' to 'emby.{{ user.domain }}'"
+- name: Settings | Set 'WanDdns' to 'emby.{{ user.domain }}' in '{{ emby_config_file_path | basename }}'
   xml:
-    path: "/opt/emby/config/system.xml"
+    path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/WanDdns
     value: "emby.{{ user.domain }}"
 
-- name: "Settings | Set 'EnableAnonymousUsageReporting' to 'false'"
+- name: Settings | Set 'EnableAnonymousUsageReporting' to 'false' in '{{ emby_config_file_path | basename }}'
   xml:
-    path: "/opt/emby/config/system.xml"
+    path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/EnableAnonymousUsageReporting
     value: "false"
 
-- name: "Settings | Set 'RequireHttps' to 'false'"
+- name: Settings | Set 'RequireHttps' to 'false' in '{{ emby_config_file_path | basename }}'
   xml:
-    path: "/opt/emby/config/system.xml"
+    path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/RequireHttps
     value: "false"
 
-- name: "Settings | Set 'IsBehindProxy' to 'true'"
+- name: Settings | Set 'IsBehindProxy' to 'true' in '{{ emby_config_file_path | basename }}'
   xml:
-    path: "/opt/emby/config/system.xml"
+    path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/IsBehindProxy
     value: "true"
 
-- name: "Settings | Start emby container"
+- name: Settings | Start Docker container" in '{{ emby_config_file_path | basename }}'
   docker_container:
-    name: emby
-    state: started
+    name: "{{ docker_name }}"
+    state: "started"
+  when: ('started' in docker_state | lower)

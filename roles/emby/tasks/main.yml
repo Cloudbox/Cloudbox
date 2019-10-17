@@ -2,86 +2,37 @@
 # Title:         Cloudbox: Emby Role                                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  emby/embyserver                                        #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Variables Task
+  import_tasks: "subtasks/variables.yml"
+
 - name: Create DNS Record
   include_role:
     name: dns
   vars:
-    record: emby
+    record: "{{ subdomain }}"
+  when: reverse_proxy_is_enabled
 
-- name: Create emby directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - /opt/emby
-    - /opt/emby/config
-    - /opt/emby/config/users
-    - "{{ plex.transcodes }}/emby"
-
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: emby
+    name: "{{ docker_name }}"
     state: absent
 
-- name: "Check if '/dev/dri' exists"
-  stat:
-    path: "/dev/dri"
-  register: dev_dri
+- name: Create directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items: "{{ folders }}"
 
-- name: Create and start container
-  docker_container:
-    name: emby
-    image: "emby/embyserver:{{ emby.version }}"
-    pull: yes
-    published_ports:
-      - "127.0.0.1:8096:8096"
-    env:
-      UID: "{{ uid }}"
-      GID: "{{ gid }}"
-      GIDLIST: "{{ vgid }}"
-      VIRTUAL_HOST: "emby.{{ user.domain }}"
-      VIRTUAL_PORT: 8096
-      LETSENCRYPT_HOST: "emby.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      HTTPS_METHOD: noredirect
-      NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if gpu.nvidia.enabled | default(false) else omit }}"
-      NVIDIA_VISIBLE_DEVICES: "{{ 'all' if gpu.nvidia.enabled | default(false) else omit }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "/opt/emby:/config"
-      - "/mnt/unionfs/Media:/data"
-      - "/mnt:/mnt"
-      - "/tmp:/tmp"
-      - "/dev/shm:/dev/shm"
-      - "{{ plex.transcodes }}/emby:/transcode"
-    devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and dev_dri.stat.exists) | default(false) else omit }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - emby
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
+- name: Create Docker container
+  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
 
-# we need this here because sometimes after a restore, docker will set this transcodes folder to root, dont ask why, but it does...
-- name: "Wait 5 seconds"
-  wait_for:
-    timeout: 5
-
-- name: "Ensure transcodes folder has the correct permissions"
-  file:
-    path: "{{ plex.transcodes }}"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    recurse: yes
+- name: Post-Install Tasks
+  import_tasks: "subtasks/post-install.yml"
 
 - name: Settings Tasks
   include_tasks: "subtasks/settings.yml"
+  when: reverse_proxy_is_enabled

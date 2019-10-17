@@ -1,0 +1,25 @@
+##########################################################################
+# Title:         Cloudbox: Emby | Variables Task                         #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Docker Devices
+################################
+
+- name: Variables | Check if '/dev/dri' exists
+  stat:
+    path: "/dev/dri"
+  register: dev_dri
+
+- name: Variables | Set 'emby_docker_devices' variable
+  set_fact:
+    emby_docker_devices: "{{ emby_docker_devices + docker_devices_dev_dri }}"
+  when:
+    - dev_dri.stat.exists
+    - (gpu.intel) or (gpu.nvidia.enabled)
