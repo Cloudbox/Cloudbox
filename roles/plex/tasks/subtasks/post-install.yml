@@ -17,17 +17,17 @@
     mode: 0775
     recurse: yes
 
-- name: Post-Install | Wait for 'Preferences.xml' to be created
+- name: Post-Install | Wait for '{{ plex_config_file_path | basename }}' to be created
   wait_for:
-    path: "{{ plex_preferences_xml_path }}"
+    path: "{{ plex_config_file_path }}"
     state: present
 
-- name: Post-Install | Wait for Plex DB to be created
+- name: Post-Install | Wait for {{ plex_name | title }} DB to be created
   wait_for:
     path: "{{ plex_db_path }}"
     state: present
 
-- name: Post-Install | Wait for Plex Media Server executable to be created
+- name: Post-Install | Wait for {{ plex_name | title }} executable to be created
   shell: docker exec {{ docker_name }} bash -c "ls '/usr/lib/plexmediaserver/Plex Media Server'"
   register: pms_check
   until: pms_check.stderr.find("No such file or directory") == -1

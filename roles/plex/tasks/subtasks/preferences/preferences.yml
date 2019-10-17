@@ -8,25 +8,25 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Preferences | Check if 'Preferences.xml' exists"
+- name: "Preferences | Check if '{{ plex_config_file_path | basename }}' exists"
   stat:
-    path: "{{ plex_preferences_xml_path }}"
+    path: "{{ plex_config_file_path }}"
   register: preferences_xml
 
-- name: "Preferences | 'Preferences.xml' Tasks"
+- name: "Preferences | '{{ plex_config_file_path | basename }}' Tasks"
   block:
 
-  - name: Preferences | Get 'Preferences.xml' XML data
+  - name: Preferences | Get '{{ plex_config_file_path | basename }}' XML data
     xml:
-      path: "{{ plex_preferences_xml_path }}"
+      path: "{{ plex_config_file_path }}"
       xpath: /Preferences
       content: attribute
     register: preferences_xml_resp
     ignore_errors: yes
 
-  - name: "Preferences | Remove 'Preferences.xml' if malformed"
+  - name: "Preferences | Remove '{{ plex_config_file_path | basename }}' if malformed"
     file:
-      path: "{{ plex_preferences_xml_path }}"
+      path: "{{ plex_config_file_path }}"
       state: absent
     when: (preferences_xml_resp is failed)
 
@@ -38,7 +38,7 @@
 
   - name: "Preferences | Fix 'TranscoderTempDirectory'"
     xml:
-      path: "{{ plex_preferences_xml_path }}"
+      path: "{{ plex_config_file_path }}"
       xpath: /Preferences
       attribute: TranscoderTempDirectory
       value: "/transcode"
@@ -55,7 +55,7 @@
   when:
     - (preferences_xml.stat.exists)
 
-- name: Preferences | Claim Plex Server
+- name: Preferences | Claim {{ plex_name | title }} Server
   import_tasks: subtasks/preferences/claim_server.yml
   when:
     - (not preferences_xml.stat.exists) or (preferences_xml.stat.exists and not plex_server_claimed)

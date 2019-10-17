@@ -18,20 +18,20 @@
     record: "{{ subdomain }}"
   when: reverse_proxy_is_enabled
 
-- name: Create directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items: "{{ folders }}"
-
-- name: Stop and remove any existing Docker container
+- name: Remove existing Docker container
   docker_container:
     name: "{{ docker_name }}"
     state: absent
+
+- name: Create directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items: "{{ folders }}"
 
 - name: Preferences Tasks
   import_tasks: "subtasks/preferences/preferences.yml"
   when: (not continuous_integration)
 
-- name: Create and start Docker container
+- name: Create Docker container
   include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
 
 - name: Post-Install Tasks

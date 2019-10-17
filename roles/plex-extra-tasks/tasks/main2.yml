@@ -16,11 +16,15 @@
   set_fact:
     docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
 
-- name: Stop Plex Container
+- name: Set 'plex_is_running_outer_state' variable
+  set_fact:
+    plex_is_running_outer_state: "{{ 'plex' in docker_running_containers_list }}"
+
+- name: Stop Docker Container
   docker_container:
     name: "{{ docker_name }}"
     state: stopped
-  when: ('plex' in docker_running_containers_list)
+  when: plex_is_running_outer_state
 
 - name: "DB Cache Size Settings"
   import_tasks: "subtasks/settings/db_cache_size.yml"
@@ -52,8 +56,10 @@
     - plex-plugin-webtools
     - plex-plugin-webtools-reinstall
 
-- name: Start Plex Container
+- name: Start Docker Container
   docker_container:
     name: "{{ docker_name }}"
     state: started
-  when: ('plex' in docker_running_containers_list)
+  when:
+    - plex_is_running_outer_state
+    - ('started' in docker_state | lower)

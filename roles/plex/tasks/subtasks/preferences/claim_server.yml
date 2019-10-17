@@ -8,10 +8,10 @@
 #                   GNU General Public License v3.0                      #
 ##########################################################################
 ---
-- name: Claim Server | Get Plex Media Server claim code via API
+- name: Claim Server | Get {{ plex_name | title }} claim code via API
   block:
 
-  - name: "Get Plex Media Server claim code"
+  - name: "Get {{ plex_name | title }} claim code"
     uri:
       url: https://plex.tv/api/claim/token.json
       user: "{{ plex.user }}"
@@ -25,10 +25,10 @@
 
   when: (plex_account_enabled)
 
-- name: Claim Server | Get Plex Media Server claim code via prompts
+- name: Claim Server | Get {{ plex_name | title }} claim code via prompts
   block:
 
-  - name: "Claim Server | Ask user for Plex Media Server claim code"
+  - name: "Claim Server | Ask user for {{ plex_name | title }} claim code"
     pause:
       prompt: "Please visit 'https://plex.tv/claim', login with your Plex account,
         copy the 'Claim Code', paste it below, and press ENTER."
@@ -40,13 +40,13 @@
 
   when: (not plex_account_enabled)
 
-- name: Claim Server | Assert Plex Media Server claim code exists
+- name: Claim Server | Assert {{ plex_name | title }} claim code exists
   assert:
     that:
       - "plex_claim_code is defined"
       - "plex_claim_code is not none"
       - "plex_claim_code | trim | length > 0"
 
-- name: "Claim Server | Display Plex Media Server claim code"
+- name: "Claim Server | Display {{ plex_name | title }} claim code"
   debug:
     msg: "Using Plex Claim Code{{ ':' }} {{ plex_claim_code }}"

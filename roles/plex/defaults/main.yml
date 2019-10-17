@@ -28,16 +28,18 @@ subdomain: "{{ plex_subdomain }}"
 
 plex_folder: "{{ plex_name }}"
 
-plex_transcodes_path: "{{ plex.transcodes }}/{{ plex_folder }}"
+app_folder: "{{ plex_folder }}"
+
+plex_transcodes_path: "{{ plex.transcodes }}/{{ app_folder }}"
 
 plex_folders:
-  - "{{ server_appdata_path }}/{{ plex_folder }}"
-  - "{{ server_appdata_path }}/{{ plex_folder }}/Library"
-  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support"
-  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server"
-  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-ins"
-  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Logs"
-  - "{{ server_appdata_path }}/{{ plex_folder }}/Library/Logs/Plex Media Server"
+  - "{{ server_appdata_path }}/{{ app_folder }}"
+  - "{{ server_appdata_path }}/{{ app_folder }}/Library"
+  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support"
+  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server"
+  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server/Plug-ins"
+  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Logs"
+  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Logs/Plex Media Server"
   - "{{ plex_transcodes_path }}"
 
 folders: "{{ plex_folders }}"
@@ -46,9 +48,11 @@ folders: "{{ plex_folders }}"
 # Files
 ################################
 
-plex_preferences_xml_path: "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Preferences.xml"
+plex_application_support_path: "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server"
 
-plex_db_path: "{{ server_appdata_path }}/{{ plex_folder }}/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+plex_config_file_path: "{{ plex_application_support_path }}/Preferences.xml"
+
+plex_db_path: "{{ plex_application_support_path }}/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 
 ################################
 # Docker Container
@@ -91,10 +95,17 @@ webtools_ports:
   - "33400:33400/tcp"
   - "33443:33443/tcp"
 
-plex_docker_ports: "{{ (plex_main_ports) if ((plex.open_main_ports and not plex.open_extra_ports) or (not reverse_proxy_is_enabled))
-  else (plex_main_ports + plex_extra_ports) if (plex.open_main_ports and plex.open_extra_ports)
-  else (plex_extra_ports) if (not plex.open_main_ports and plex.open_extra_ports)
-  else [] }}"
+plex_docker_ports: "{{ (plex_main_ports)
+                        if ((plex.open_main_ports and
+                            not plex.open_extra_ports) or
+                            (not reverse_proxy_is_enabled))
+                        else (plex_main_ports + plex_extra_ports)
+                              if (plex.open_main_ports and
+                                  plex.open_extra_ports)
+                        else (plex_extra_ports)
+                              if (not plex.open_main_ports and
+                                  plex.open_extra_ports)
+                        else [] }}"
 
 docker_ports: "{{ plex_docker_ports + webtools_ports }}"
 
@@ -121,8 +132,11 @@ plex_docker_envs_reverse_proxy_extras:
   ADVERTISE_IP: "http://{{ subdomain }}.{{ user.domain }}:80/,https://{{ subdomain }}.{{ user.domain }}:443/"
   HTTPS_METHOD: noredirect
 
-plex_docker_envs: "{{ (plex_docker_envs_standard | combine(docker_envs_reverse_proxy) | combine(plex_docker_envs_reverse_proxy_extras)) if (reverse_proxy_is_enabled)
-  else (plex_docker_envs_standard) }}"
+plex_docker_envs: "{{ (plex_docker_envs_standard |
+                          combine(docker_envs_reverse_proxy) |
+                          combine(plex_docker_envs_reverse_proxy_extras))
+                      if (reverse_proxy_is_enabled)
+                      else (plex_docker_envs_standard) }}"
 
 docker_envs: "{{ plex_docker_envs }}"
 
@@ -131,13 +145,13 @@ docker_envs: "{{ plex_docker_envs }}"
 ################################
 
 plex_docker_volumes:
-  - "{{ server_appdata_path }}/{{ plex_folder }}:/config"
+  - "{{ server_appdata_path }}/{{ app_folder }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media:/data"
   - "/mnt:/mnt"
   - "/tmp:/tmp"
   - "/dev/shm:/dev/shm"
-  - "{{ plex.transcodes }}/plex:/transcode"
+  - "{{ plex_transcodes_path }}:/transcode"
 
 docker_volumes: "{{ plex_docker_volumes }}"
 
@@ -187,7 +201,10 @@ docker_network_alias: "{{ plex_docker_network_alias }}"
 
 plex_docker_networks: []
 
-docker_networks: "{{ (docker_networks_common) if not (plex_docker_networks and plex_docker_networks | length > 0) else (plex_docker_networks) }}"
+docker_networks: "{{ (docker_networks_common)
+                      if not (plex_docker_networks and
+                              plex_docker_networks | length > 0)
+                      else (plex_docker_networks) }}"
 
 ################################
 # Docker Capabilities
