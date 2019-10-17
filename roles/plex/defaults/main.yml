@@ -66,7 +66,7 @@ docker_name: "{{ plex_docker_name }}"
 # Docker Image
 ################################
 
-plex_docker_image: "cloudb0x/plex:{{ plex.tag }}"
+plex_docker_image: "plexinc/pms-docker:{{ plex.tag }}"
 
 docker_image: "{{ plex_docker_image }}"
 
