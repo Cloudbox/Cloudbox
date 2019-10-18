@@ -2,7 +2,6 @@
 # Title:         Cloudbox: Jackett Role                                 #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/jackett                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,47 +12,20 @@
   include_role:
     name: dns
   vars:
-    record: jackett
+    record: "{{ subdomain }}"
+  when: reverse_proxy_is_enabled
 
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: jackett
+    name: "{{ docker_name }}"
     state: absent
 
-- name: Suitarr Migration Tasks
-  import_tasks: "subtasks/suitarr_migration.yml"
+- name: Hotio Migration Tasks
+  import_tasks: "{{ playbook_dir }}/resources/tasks/hotio-migration/main.yml"
 
-- name: Create jackett directories
+- name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - /opt/jackett
+  with_items: "{{ folders }}"
 
-- name: Create and start container
-  docker_container:
-    name: jackett
-    image: hotio/jackett
-    pull: yes
-    published_ports:
-      - "127.0.0.1:9117:9117"
-    env:
-      VERSION: "{{ suitarr.version }}"
-      BACKUP: "no"
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      UMASK: 002
-      VIRTUAL_HOST: "jackett.{{ user.domain }}"
-      VIRTUAL_PORT: 9117
-      LETSENCRYPT_HOST: "jackett.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "/opt/jackett:/config"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - jackett
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
+- name: Create Docker container
+  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
