@@ -18,79 +18,60 @@ continuous_integration: false
 # Accounts
 ################################
 
-cloudflare_is_enabled: "{{ true if not(
-    (cloudflare is undefined)
-    or
-    (cloudflare is none)
-    or
-    (cloudflare | trim | length == 0)
-    or
-    (cloudflare.email is undefined)
-    or
-    (cloudflare.email is none)
-    or
-    (cloudflare.email | trim | length == 0)
-    or
-    (cloudflare.api is undefined)
-    or
-    (cloudflare.api is none)
-    or
-    (cloudflare.api | trim | length == 0)
-  )
-    else false }}"
+cloudflare_is_enabled: "{{  (cloudflare is defined) and
+                            (cloudflare is not none) and
+                            (cloudflare | trim | length > 0) and
+                            (cloudflare.email is defined) and
+                            (cloudflare.email is not none) and
+                            (cloudflare.email | trim | length > 0) and
+                            (cloudflare.api is defined) and
+                            (cloudflare.api is not none) and
+                            (cloudflare.api | trim | length > 0) }}"
 
-plex_account_enabled: "{{ true if not(
-    (plex is undefined)
-    or
-    (plex is none)
-    or
-    (plex | trim | length == 0)
-    or
-    (plex.user is undefined)
-    or
-    (plex.user is none)
-    or
-    (plex.user | trim | length == 0)
-    or
-    (plex.pass is undefined)
-    or
-    (plex.pass is none)
-    or
-    (plex.pass | trim | length == 0)
-  )
-  else false }}"
+plex_account_enabled: "{{  (plex is defined) and
+                              (plex is not none) and
+                              (plex | trim | length > 0) and
+                              (plex.user is defined) and
+                              (plex.user is not none) and
+                              (plex.user | trim | length > 0) and
+                              (plex.pass is defined) and
+                              (plex.pass is not none) and
+                              (plex.pass | trim | length > 0) }}"
 
 ################################
 # Role Conditionals
 ################################
 
-use_nzbs: "{{ true if ( (nzbs_downloads_path is defined) | default(false,true) ) else false }}"
+nzbs_downloads_path_is_defined: "{{ (downloads is defined) and
+                                    (downloads is not none) and
+                                    (downloads | trim | length > 0) and
+                                    (downloads.nzbs is defined) and
+                                    (downloads.nzbs is not none) and
+                                    (downloads.nzbs | trim | length > 0) }}"
 
-use_torrents: "{{ true if ( (torrents_downloads_path is defined) | default(false,true) ) else false }}"
+use_nzbs: "{{ nzbs_downloads_path_is_defined }}"
 
-use_remote: "{{ true if not(
-    (rclone is undefined)
-    or
-    (rclone is none)
-    or
-    (rclone | trim | length == 0)
-    or
-    (rclone.remote is undefined)
-    or
-    (rclone.remote is none)
-    or
-    (rclone.remote | trim | length == 0)
-  )
-  else false }}"
+torrents_downloads_path_is_defined: "{{ (downloads is defined) and
+                                        (downloads is not none) and
+                                        (downloads | trim | length > 0) and
+                                        (downloads.torrents is defined) and
+                                        (downloads.torrents is not none) and
+                                        (downloads.torrents | trim | length > 0) }}"
 
-use_nvidia: "{{ true if ( gpu.nvidia.enabled | default(false) ) else false }}"
+use_torrents: "{{ torrents_downloads_path_is_defined }}"
 
-use_sma: "{{ true if (
-    (sickbeard_mp4_automator is defined)
-    and
-    (sickbeard_mp4_automator)
-    )
-    else false }}"
+rclone_remote_is_defined: "{{ (rclone is defined) and
+                              (rclone is not none) and
+                              (rclone | trim | length > 0) and
+                              (rclone.remote is defined) and
+                              (rclone.remote is not none) and
+                              (rclone.remote | trim | length > 0) }}"
+
+use_remote: "{{ rclone_remote_is_defined }}"
+
+use_nvidia: "{{ gpu.nvidia.enabled  }}"
+
+use_sma: "{{ sickbeard_mp4_automator }}"
 
 ################################
 # System
@@ -138,32 +119,33 @@ ip_address_lookup_command: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google
 # Docker Reverse Proxy
 ################################
 
-reverse_proxy_is_enabled: "{{ true if not(
-    (user is undefined)
-    or
-    (user is none)
-    or
-    (user | trim | length == 0)
-    or
-    (user.domain is undefined)
-    or
-    (user.domain is none)
-    or
-    (user.domain | trim | length == 0)
-    or
-    (user.email is undefined)
-    or
-    (user.email is none)
-    or
-    (user.email | trim | length == 0)
-  )
-  else false }}"
+reverse_proxy_is_enabled: "{{ (user is defined) and
+                              (user is not none) and
+                              (user | trim | length > 0) and
+                              (user.domain is defined) and
+                              (user.domain is not none) and
+                              (user.domain | trim | length > 0) and
+                              (user.email is defined) and
+                              (user.email is not none) and
+                              (user.email | trim | length > 0) }}"
 
 docker_envs_reverse_proxy:
   VIRTUAL_HOST: "{{ subdomain }}.{{ user.domain }}"
   VIRTUAL_PORT: "{{ web_port }}"
   LETSENCRYPT_HOST: "{{ subdomain }}.{{ user.domain }}"
   LETSENCRYPT_EMAIL: "{{ user.email }}"
+
+################################
+# Docker Volumes
+################################
+
+nzbs_downloads_path: "{{ [downloads.nzbs + ':/downloads/nzbs']
+                          if nzbs_downloads_path_is_defined
+                          else [] }}"
+
+torrents_downloads_path: "{{ [downloads.torrents + ':/downloads/torrents']
+                              if torrents_downloads_path_is_defined
+                              else [] }}"
 
 ################################
 # Docker Devices

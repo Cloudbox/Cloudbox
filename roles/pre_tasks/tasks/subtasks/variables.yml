@@ -8,42 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Variables | Set 'nzbs_downloads_path' variable"
-  set_fact:
-    nzbs_downloads_path:
-      - "{{ downloads.nzbs }}:/downloads/nzbs"
-  when: not (
-        (downloads is undefined)
-        or
-        (downloads is none)
-        or
-        (downloads | trim | length == 0)
-        or
-        (downloads.nzbs is undefined)
-        or
-        (downloads.nzbs is none)
-        or
-        (downloads.nzbs | trim | length == 0)
-      )
-
-- name: "Variables | Set 'torrents_downloads_path' variable"
-  set_fact:
-    torrents_downloads_path:
-      - "{{ downloads.torrents }}:/downloads/torrents"
-  when: not (
-        (downloads is undefined)
-        or
-        (downloads is none)
-        or
-        (downloads | trim | length == 0)
-        or
-        (downloads.torrents is undefined)
-        or
-        (downloads.torrents is none)
-        or
-        (downloads.torrents | trim | length == 0)
-      )
-
 - name: Variables | Set 'suitarr_default_version' variable
   set_fact:
     suitarr_default_version: "stable"
