@@ -1,0 +1,18 @@
+#########################################################################
+# Title:         Cloudbox: Resources | Tasks | Hotio Migration          #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Resources | Tasks | Hotio Migration | Set 'migration_task_file' variable
+  set_fact:
+    migration_task_file: "{{ 'to_hotio_image'
+                              if 'hotio' in docker_image
+                              else 'from_hotio_image' }}"
+
+- name: Resources | Tasks | Hotio Migration | Migration Sub Task
+  include_tasks: "subtasks/{{ migration_task_file }}.yml"
