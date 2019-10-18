@@ -51,14 +51,14 @@
 - name: Import Plex Auth Token role
   import_role:
     name: plex_auth_token
-  when: plex_account_enabled
+  when: plex_account_is_enabled
 
 - name: Add plex token to config file
   shell: |
     yyq w -i /opt/python-plexlibrary/config.yml plex.token '{{ plex_auth_token }}'
   become: yes
   become_user: "{{ user.name }}"
-  when: plex_account_enabled
+  when: plex_account_is_enabled
 
 - name: "Copy example recipes to '/opt/python-plexlibrary' folder"
   copy:

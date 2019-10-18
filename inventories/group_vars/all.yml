@@ -28,7 +28,7 @@ cloudflare_is_enabled: "{{  (cloudflare is defined) and
                             (cloudflare.api is not none) and
                             (cloudflare.api | trim | length > 0) }}"
 
-plex_account_enabled: "{{  (plex is defined) and
+plex_account_is_enabled: "{{  (plex is defined) and
                               (plex is not none) and
                               (plex | trim | length > 0) and
                               (plex.user is defined) and

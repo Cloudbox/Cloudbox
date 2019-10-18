@@ -16,7 +16,7 @@
 - name: Import Plex Auth Token role
   import_role:
     name: plex_auth_token
-  when: plex_account_enabled
+  when: plex_account_is_enabled
 
 - name: Rclone Cache | Import 'rclone_cache.service'
   template:

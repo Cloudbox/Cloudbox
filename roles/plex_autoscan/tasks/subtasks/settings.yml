@@ -18,7 +18,7 @@
 - name: Settings | Import Plex Auth Token role
   import_role:
     name: plex_auth_token
-  when: plex_account_enabled
+  when: plex_account_is_enabled
 
 - name: Settings | Check if 'config.json' exists
   stat:

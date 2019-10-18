@@ -27,7 +27,7 @@
 - name: Import Plex Auth Token role
   import_role:
     name: plex_auth_token
-  when: (not nzbthrottle_config.stat.exists) and (plex_account_enabled)
+  when: (not nzbthrottle_config.stat.exists) and (plex_account_is_enabled)
 
 - name: Import default config
   template:

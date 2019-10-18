@@ -23,7 +23,7 @@
     set_fact:
       plex_claim_code: "{{ plex_claim.json.token }}"
 
-  when: (plex_account_enabled)
+  when: (plex_account_is_enabled)
 
 - name: Claim Server | Get {{ plex_name | title }} claim code via prompts
   block:
@@ -38,7 +38,7 @@
     set_fact:
       plex_claim_code: "{{ plex_claim_code_prompt.user_input }}"
 
-  when: (not plex_account_enabled)
+  when: (not plex_account_is_enabled)
 
 - name: Claim Server | Assert {{ plex_name | title }} claim code exists
   assert:

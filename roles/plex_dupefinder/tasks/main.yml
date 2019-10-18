@@ -36,7 +36,7 @@
 - name: Import Plex Auth Token role
   import_role:
     name: plex_auth_token
-  when: plex_account_enabled and not plex_dupefinder_config.stat.exists
+  when: plex_account_is_enabled and not plex_dupefinder_config.stat.exists
 
 - name: Import default config
   template:
