@@ -13,54 +13,20 @@
   include_role:
     name: dns
   vars:
-    record: lidarr
+    record: "{{ subdomain }}"
+  when: reverse_proxy_is_enabled
 
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: lidarr
+    name: "{{ docker_name }}"
     state: absent
 
-- name: Suitarr Migration Tasks
-  import_tasks: "subtasks/suitarr_migration.yml"
+- name: Hotio Migration Tasks
+  import_tasks: "{{ playbook_dir }}/resources/tasks/hotio-migration/main.yml"
 
-- name: Create lidarr directories
+- name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - /opt/lidarr
+  with_items: "{{ folders }}"
 
-- name: Set default_volumes variable
-  set_fact:
-    default_volumes:
-      - "/opt/lidarr:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt:/mnt"
-      - "/mnt/unionfs/Media/Music:/music"
-
-- name: Create and start container
-  docker_container:
-    name: lidarr
-    image: hotio/lidarr
-    pull: yes
-    published_ports:
-      - "127.0.0.1:8686:8686"
-    env:
-      VERSION: "{{ suitarr_version }}"
-      BACKUP: "no"
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      UMASK: 002
-      VIRTUAL_HOST: "lidarr.{{ user.domain }}"
-      VIRTUAL_PORT: 8686
-      LETSENCRYPT_HOST: "lidarr.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - lidarr
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
+- name: Create Docker container
+  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
