@@ -169,3 +169,20 @@ docker_networks_common:
   - name: cloudbox
     aliases:
       - "{{ docker_network_alias }}"
+
+################################
+# Hotio Docker Images
+################################
+
+# default suitarr version
+suitarr:
+  version: image
+
+suitarr_version_is_specified: "{{ (suitarr.version != 'default') and
+                                    ((suitarr.version == 'unstable') or
+                                    (suitarr.version == 'stable') or
+                                    (suitarr.version == 'image')) }}"
+
+suitarr_version: "{{ suitarr.version
+                     if suitarr_version_is_specified
+                     else 'image' }}"

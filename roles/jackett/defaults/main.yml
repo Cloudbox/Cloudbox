@@ -80,7 +80,7 @@ jackett_port: 9117
 web_port: "{{ jackett_port }}"
 
 jackett_docker_envs_standard:
-  VERSION: "{{ suitarr.version }}"
+  VERSION: "{{ suitarr_version }}"
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   UMASK: 002

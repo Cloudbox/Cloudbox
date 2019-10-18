@@ -25,7 +25,7 @@
 
 - name: Set 'ombi_version' variable
   set_fact:
-    ombi_version: "{{ suitarr.version }}"
+    ombi_version: "{{ suitarr_version }}"
 
 - name: Suitarr | Version Check Tasks
   include_tasks: "subtasks/suitarr/version.yml"

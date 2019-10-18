@@ -8,10 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set Cloudbox Variables
-  import_tasks: "subtasks/variables.yml"
-  tags: always
-
 - name: APT Tasks
   import_tasks: "subtasks/apt.yml"
   tags: always
