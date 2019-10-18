@@ -39,7 +39,7 @@
 
   - name: Import 'sma_req.sh' script
     copy:
-      src: "99-sma_req.sh"
+      src: "{{ playbook_dir }}/roles/sickbeard_mp4_automator/files/99-sma_req.sh"
       dest: "/opt/radarr/script.d/99-sma_req.sh"
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
