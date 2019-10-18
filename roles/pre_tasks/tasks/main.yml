@@ -8,10 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Clean Paths
-  import_tasks: "subtasks/clean_paths.yml"
-  tags: always
-
 - name: Set Cloudbox Variables
   import_tasks: "subtasks/variables.yml"
   tags: always
