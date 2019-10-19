@@ -8,19 +8,24 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Gather list of running Docker containers
-  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
-  register: docker_running_containers_list
+- name: Check to see if Plex is running
+  block:
 
-- name: Set 'docker_running_containers_list' variable
-  set_fact:
-    docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
+  - name: Gather list of running Docker containers
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+    register: docker_running_containers_list
 
-- name: Stop Plex container
-  docker_container:
-    name: plex
-    state: stopped
-  when: ('plex' in docker_running_containers_list) and ('plex-plugin-trakttv' in ansible_run_tags)
+  - name: Set 'docker_running_containers_list' variable
+    set_fact:
+      docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
+
+  - name: Stop Plex container
+    docker_container:
+      name: plex
+      state: stopped
+    when: ('plex' in docker_running_containers_list)
+
+  when: ('plex-plugin-trakttv' in ansible_run_tags)
 
 - name: Remove Previous Trakt.tv Plugin
   file:

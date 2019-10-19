@@ -8,23 +8,30 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Gather list of running Docker containers
-  shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | sort | xargs echo -n"
-  register: docker_running_containers_list
+- name: Check to see if Plex is running
+  block:
 
-- name: Set 'docker_running_containers_list' variable
-  set_fact:
-    docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
+  - name: Gather list of running Docker containers
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | sort | xargs echo -n"
+    register: docker_running_containers_list
 
-- name: Set 'plex_is_running_outer_state' variable
-  set_fact:
-    plex_is_running_outer_state: "{{ 'plex' in docker_running_containers_list }}"
+  - name: Set 'docker_running_containers_list' variable
+    set_fact:
+      docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
 
-- name: Stop Docker Container
-  docker_container:
-    name: "{{ docker_name }}"
-    state: stopped
-  when: plex_is_running_outer_state
+  - name: Set 'plex_is_running_outer_state' variable
+    set_fact:
+      plex_is_running_outer_state: "{{ 'plex' in docker_running_containers_list }}"
+
+  - name: Stop Docker Container
+    docker_container:
+      name: "{{ docker_name }}"
+      state: stopped
+    when: plex_is_running_outer_state
+
+  tags:
+    - plex-db-cache-size
+    - plex-forced-quality
 
 - name: "DB Cache Size Settings"
   import_tasks: "subtasks/settings/db_cache_size.yml"
@@ -39,22 +46,14 @@
 - name: "Install Sub-Zero Plugin"
   import_role:
     name: plex-plugin-sub-zero
-  tags:
-    - plex-plugin-sub-zero
-    - plex-plugin-sub-zero-reinstall
 
 - name: "Install Trakt.tv Plugin"
   import_role:
     name: plex-plugin-trakttv
-  tags:
-    - plex-plugin-trakttv
 
 - name: "Install WebTools Plugin"
   import_role:
     name: plex-plugin-webtools
-  tags:
-    - plex-plugin-webtools
-    - plex-plugin-webtools-reinstall
 
 - name: Start Docker Container
   docker_container:
@@ -63,3 +62,6 @@
   when:
     - plex_is_running_outer_state
     - ('started' in docker_state | lower)
+  tags:
+    - plex-db-cache-size
+    - plex-forced-quality

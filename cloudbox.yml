@@ -45,6 +45,9 @@
     - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['use_sma'] }
     - { role: feeder, tags: ['feeder_mount', 'feeder_mount_override', 'feeder_unmount'] }
     - { role: plex_auth_token, tags: ['plex_auth_token'] }
+    - { role: plex-plugin-trakttv, tags: ['plex-plugin-trakttv'] }
+    - { role: plex-plugin-sub-zero, tags: ['plex-plugin-sub-zero', 'plex-plugin-sub-zero-reinstall'] }
+    - { role: plex-plugin-webtools, tags: ['plex-plugin-webtools', 'plex-plugin-webtools-reinstall'] }
     - { role: subliminal, tags: ['subliminal'] }
     - { role: resilio-sync, tags: ['resilio-sync'] }
     - { role: mariadb, tags: ['mariadb'] }
