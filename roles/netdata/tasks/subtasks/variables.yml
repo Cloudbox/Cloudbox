@@ -1,0 +1,23 @@
+##########################################################################
+# Title:         Cloudbox: Netdata | Variables Task                      #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Docker Volumes
+################################
+
+- name: Variables | Check if '{{ netdata_config_override }}' exists
+  stat:
+    path: "{{ netdata_config_override }}"
+  register: netdata_override
+
+- name: Variables | Add '{{ netdata_config_override }}' to 'netdata_docker_volumes'
+  set_fact:
+    netdata_docker_volumes: "{{ netdata_docker_volumes + netdata_docker_volumes_config_override }}"
+  when: netdata_override.stat.exists

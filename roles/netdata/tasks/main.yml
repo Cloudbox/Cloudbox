@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Netdata Role                                 #
-# Author(s):     l3uddz                                                 #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # Docker Image:  titpetric/netdata                                      #
 # --                                                                    #
@@ -13,51 +13,20 @@
   include_role:
     name: dns
   vars:
-    record: netdata
+    record: "{{ subdomain }}"
+  when: reverse_proxy_is_enabled
 
-- name: Create htpasswd
-  htpasswd:
-    path: "/opt/nginx-proxy/htpasswd/{{ item }}.{{ user.domain }}"
-    name: "{{ user.name }}"
-    password: "{{ user.pass }}"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0664
-  with_items:
-    - netdata
-
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: netdata
+    name: "{{ docker_name }}"
     state: absent
 
-- name: Create and start container
-  docker_container:
-    name: netdata
-    image: "titpetric/netdata:latest"
-    pull: yes
-    capabilities:
-      - SYS_PTRACE
-    published_ports:
-      - "127.0.0.1:19999:19999"
-    env:
-      VIRTUAL_HOST: "netdata.{{ user.domain }}"
-      VIRTUAL_PORT: 19999
-      LETSENCRYPT_HOST: "netdata.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "/proc:/host/proc:ro"
-      - "/sys:/host/sys:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - netdata
-    purge_networks: yes
-    restart_policy: unless-stopped
-    security_opts:
-      - apparmor:unconfined
-    state: started
+- name: Create directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items: "{{ folders }}"
+
+- name: Create htpasswd
+  import_tasks: "{{ playbook_dir }}/resources/tasks/nginx-proxy/create_htpasswd.yml"
+
+- name: Create Docker container
+  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
