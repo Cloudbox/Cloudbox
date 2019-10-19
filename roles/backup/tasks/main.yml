@@ -362,13 +362,14 @@
         --exclude='./snapshots' \
         --exclude-from '{{ backup_excludes_list_path }}' \
         -cf '{{ local.destination }}/opt/{{ item | basename }}.tar' -C '{{ item | dirname }}' './{{ item | basename }}' \
-        2> /dev/null
+        > /dev/null
     args:
       executable: /bin/bash
       warn: no
     with_items: "{{ opt_folders }}"
     loop_control:
       label: "'{{ item }}' --> '{{ local.destination }}/opt/{{ item | basename }}.tar'"
+    ignore_errors: yes
 
   - name: Snapshot | Cleanup Tasks
     block:
