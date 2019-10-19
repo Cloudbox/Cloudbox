@@ -9,44 +9,6 @@
 #########################################################################
 ---
 ################################
-# Config Variables
-################################
-
-- name: Variables | Set 'apprise_account_enabled' variable
-  set_fact:
-    apprise_account_enabled: "{{ true if not(
-        (apprise is undefined)
-        or
-        (apprise is none)
-        or
-        (apprise | trim | length == 0)
-      )
-      else false }}"
-
-- name: Variables | Set 'pushover_account_enabled' variable
-  set_fact:
-    pushover_account_enabled: "{{ true if not(
-        (pushover is undefined)
-        or
-        (pushover is none)
-        or
-        (pushover | trim | length == 0)
-        or
-        (pushover.app_token is undefined)
-        or
-        (pushover.app_token is none)
-        or
-        (pushover.app_token | trim | length == 0)
-        or
-        (pushover.user_key is undefined)
-        or
-        (pushover.user_key is none)
-        or
-        (pushover.user_key | trim | length == 0)
-      )
-      else false }}"
-
-################################
 # Notification Services List
 ################################
 
@@ -59,5 +21,5 @@
     notification_services: "{{ notification_services + [ item.service ] }}"
   when: item.enabled
   loop:
-    - { service: 'apprise', enabled: '{{ apprise_account_enabled }}' }
-    - { service: 'pushover', enabled: '{{ pushover_account_enabled }}' }
+    - { service: 'apprise', enabled: '{{ apprise_account_is_enabled }}' }
+    - { service: 'pushover', enabled: '{{ pushover_account_is_enabled }}' }

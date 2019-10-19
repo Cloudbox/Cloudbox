@@ -1,0 +1,27 @@
+##########################################################################
+# Title:         Cloudbox: Notify | Default Variables                    #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Accounts
+################################
+
+apprise_account_is_enabled: "{{ (apprise is defined) and
+                                (apprise is not none) and
+                                (apprise | trim | length > 0) }}"
+
+pushover_account_is_enabled: "{{  (pushover is defined) and
+                                  (pushover is not none) and
+                                  (pushover | trim | length > 0) and
+                                  (pushover.app_token is defined) and
+                                  (pushover.app_token is not none) and
+                                  (pushover.app_token | trim | length > 0) and
+                                  (pushover.user_key is defined) and
+                                  (pushover.user_key is not none) and
+                                  (pushover.user_key | trim | length > 0) }}"
