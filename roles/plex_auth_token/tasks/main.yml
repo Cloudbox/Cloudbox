@@ -13,9 +13,9 @@
     url: https://plex.tv/users/sign_in.json
     method: POST
     headers:
-      X-Plex-Version: "1.0.0"
-      X-Plex-Product: "cloudbox"
-      X-Plex-Client-Identifier: "XXXX"
+      X-Plex-Version: "{{ plex_auth_token_version }}"
+      X-Plex-Product: "{{ plex_auth_token_product }}"
+      X-Plex-Client-Identifier: "{{ plex_auth_token_client_identifier }}"
       Content-Type: "application/x-www-form-urlencoded; charset=utf-8"
     user: '{{ plex.user }}'
     password: '{{ plex.pass }}'
