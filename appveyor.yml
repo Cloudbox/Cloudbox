@@ -9,17 +9,50 @@ skip_tags: true
 
 skip_commits:
   files:
-    - '*.md'
+    # git
     - '.gitignore'
     - '.gitmodules'
     - '.github/**/*'
+
+    # docs
+    - '*.md'
+
+    # vagrant
+    - 'Vagrantfile'
+
+    # ansible config
     - 'defaults/**/*'
     - 'filter_plugins/**/*'
     - 'inventories/**/*'
     - 'library/**/*'
+
+    # ansible roles
     - 'roles/*/files/**/*'
     - 'roles/settings/**/*'
-    - 'Vagrantfile'
+    - 'roles/backup/**/*'
+    - 'roles/restore/**/*'
+
+    # ansible roles extras
+    - 'roles/cloudflare/**/*'
+    - 'roles/ddclient/**/*'
+    - 'roles/emby/**/*'
+    - 'roles/feeder/**/*'
+    - 'roles/mariadb/**/*'
+    - 'roles/nginx/**/*'
+    - 'roles/netdata/**/*'
+    - 'roles/notify/**/*'
+    - 'roles/nvidia/**/*'
+    - 'roles/nzbthrottle/**/*'
+    - 'roles/plex_auth_token/**/*'
+    - 'roles/plex_dupefinder/**/*'
+    - 'roles/plex_patrol/**/*'
+    - 'roles/python-plexlibrary/**/*'
+    - 'roles/resilio-sync/**/*'
+    - 'roles/sabnzbd/**/*'
+    - 'roles/sickbeard_mp4_automator/**/*'
+    - 'roles/subliminal/**/*'
+    - 'roles/traktarr/**/*'
+
   message: /\[minor\]/
 
 image: Ubuntu1604
