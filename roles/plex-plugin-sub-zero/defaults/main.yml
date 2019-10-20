@@ -1,0 +1,59 @@
+##########################################################################
+# Title:         Cloudbox: Sub-Zero Plugin for Plex | Default Variables  #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+plex_name: "plex"
+
+################################
+# Folders
+################################
+
+plex_folder: "{{ plex_name }}"
+
+app_folder: "{{ plex_folder }}"
+
+################################
+# Paths
+################################
+
+plex_application_support_path: "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server"
+
+plex_plugin_path: "{{ plex_application_support_path }}/Plug-ins"
+
+plex_plugin_subzero_path: "{{ plex_plugin_path }}/Sub-Zero.bundle"
+
+plex_plugin_subzero_info_plist_path: "{{ plex_plugin_subzero_path }}/Contents/Info.plist"
+
+################################
+# Repository
+################################
+
+plex_plugin_subzero_release_url: https://api.github.com/repos/pannal/Sub-Zero.bundle/releases/latest
+
+plex_plugin_subzero_download_url_backup: https://github.com/pannal/Sub-Zero.bundle/releases/download/2.6.5.3152/Sub-Zero.bundle-2.6.5.3152.zip
+
+################################
+# Docker Container
+################################
+
+plex_docker_name: "{{ plex_name }}"
+
+docker_name: "{{ plex_docker_name }}"
+
+################################
+# Docker State
+################################
+
+plex_docker_state: started
+
+docker_state: "{{ plex_docker_state }}"

@@ -10,46 +10,48 @@
 ---
 - name: Check for previously installed Sub-Zero Plugin
   stat:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Sub-Zero.bundle/Contents/Info.plist"
-  register: subzero_bundle
+    path: "{{ plex_plugin_subzero_info_plist_path }}"
+  register: plex_plugin_subzero_bundle_status
 
 - name: Tasks for previously installed Sub-Zero Plugin
   block:
 
-  - name: Set default value for 'subzero_outdated' variable
+  - name: Set default value for 'plex_plugin_subzero_is_outdated' variable
     set_fact:
-      subzero_outdated: false
+      plex_plugin_subzero_is_outdated: false
 
   # https://stackoverflow.com/a/51109708/10975859
   - name: Check version of previously installed Sub-Zero
     xml:
-      path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Sub-Zero.bundle/Contents/Info.plist"
+      path: "{{ plex_plugin_subzero_info_plist_path }}"
       xpath: /plist/dict/key[.='CFBundleVersion']/following-sibling::*[1]
       content: 'text'
-    register: xmlresp
+    register: plex_plugin_subzero_info_plist_xmlresp_1
 
-  - name: Set 'subzero_previously_installed_version' variable
+  - name: Set 'plex_plugin_subzero_previously_installed_version' variable
     set_fact:
-      subzero_previously_installed_version: "{{ xmlresp.matches[0].string }}"
+      plex_plugin_subzero_previously_installed_version: "{{ plex_plugin_subzero_info_plist_xmlresp_1.matches[0].string }}"
 
   - name: Check latest available version for Sub-Zero
-    shell: curl -s https://api.github.com/repos/pannal/Sub-Zero.bundle/releases/latest | jq -r .tag_name
+    shell: curl -s {{ plex_plugin_subzero_release_url }} | jq -r .tag_name
     args:
       warn: no
-    register: subzero_latest_version
+    register: plex_plugin_subzero_latest_version
     ignore_errors: yes
 
   - name: Compare installed Sub-Zero Plugin version with latest one
     set_fact:
-      subzero_outdated: "{{ (subzero_latest_version is failed) or
-        ((subzero_latest_version is success) and (subzero_previously_installed_version is version(subzero_latest_version.stdout, '<'))) }}"
+      plex_plugin_subzero_is_outdated: "{{
+          (plex_plugin_subzero_latest_version is failed) or
+            ((plex_plugin_subzero_latest_version is success) and
+            (plex_plugin_subzero_previously_installed_version is version(plex_plugin_subzero_latest_version.stdout, '<'))) }}"
 
-  when: subzero_bundle.stat.exists
+  when: plex_plugin_subzero_bundle_status.stat.exists
 
 - name: Install Sub-Zero Plugin
   block:
 
-  - name: Check to see if Plex is running
+  - name: Check to see if {{ plex_name | title }} is running
     block:
 
     - name: Gather list of running Docker containers
@@ -60,49 +62,47 @@
       set_fact:
         docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
 
-    - name: Stop Plex container
+    - name: "Stop {{ plex_name | title }} container"
       docker_container:
-        name: plex
-        state: stopped
+        name: "{{ docker_name }}"
+        state: "stopped"
       when: ('plex' in docker_running_containers_list)
 
     when: ('plex-plugin-sub-zero' in ansible_run_tags) or ('plex-plugin-sub-zero-reinstall' in ansible_run_tags)
 
   - name: Remove outdated Sub-Zero Plugin
     file:
-      path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Sub-Zero.bundle"
+      path: "{{ plex_plugin_subzero_path }}"
       state: absent
 
   - name: Get latest Sub-Zero Plugin URL
-    shell: curl -s https://api.github.com/repos/pannal/Sub-Zero.bundle/releases/latest | jq -r ".assets[] | select(.name | test(\"Sub-Zero.bundle\")) | .browser_download_url"
+    shell: |
+      curl -s {{ plex_plugin_subzero_release_url }} \
+        | jq -r ".assets[] | select(.name | test(\"Sub-Zero.bundle\")) | .browser_download_url"
     args:
       warn: no
-    register: subzero_download_url
+    register: plex_plugin_subzero_download_url
     ignore_errors: yes
 
-  - name: Set 'subzero_download_url_backup' variable
+  - name: Set 'plex_plugin_subzero_download_url' variable
     set_fact:
-      subzero_download_url_backup: https://github.com/pannal/Sub-Zero.bundle/releases/download/2.6.5.3124/Sub-Zero.bundle-2.6.5.3124.zip
+      plex_plugin_subzero_download_url: "{{ plex_plugin_subzero_download_url.stdout | default(plex_plugin_subzero_download_url_backup,true)  }}"
 
-  - name: Set 'subzero_download_url' variable
-    set_fact:
-      subzero_download_url: "{{ subzero_download_url.stdout | default('{{ subzero_download_url_backup }}',true)  }}"
-
-  - name: Create 'plug-ins' directory
+  - name: "Create {{ plex_name | title }} 'plug-ins' directory"
     file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
     with_items:
-      - "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+      - "{{ plex_plugin_path }}"
 
   - name: Install Sub-Zero Plugin
     unarchive:
-      src: "{{ subzero_download_url }}"
-      dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+      src: "{{ plex_plugin_subzero_download_url }}"
+      dest: "{{ plex_plugin_path }}"
       copy: no
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
       mode: 0775
       validate_certs: no
-    register: download_subzero
+    register: plex_plugin_subzero_download_status
     ignore_errors: yes
 
   - name: Post-Successfull Sub-Zero Plugin Download
@@ -110,50 +110,56 @@
 
     - name: Check for newly installed Sub-Zero Plugin
       stat:
-        path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Sub-Zero.bundle/Contents/Info.plist"
-      register: subzero_info_plist
+        path: "{{ plex_plugin_subzero_info_plist_path }}"
+      register: plex_plugin_subzero_info_plist_status
 
     - name: Post-Successfull Sub-Zero Plugin Install
       block:
 
       - name: Check version of newly installed Sub-Zero Plugin
         xml:
-          path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Sub-Zero.bundle/Contents/Info.plist"
+          path: "{{ plex_plugin_subzero_info_plist_path }}"
           xpath: /plist/dict/key[.='CFBundleVersion']/following-sibling::*[1]
           content: 'text'
-        register: xmlresp
+        register: plex_plugin_subzero_info_plist_xmlresp_2
 
       - name: Set 'subzero_newly_installed_version' variable
         set_fact:
-          subzero_newly_installed_version: "{{ xmlresp.matches[0].string }}"
+          plex_plugin_subzero_newly_installed_version: "{{ plex_plugin_subzero_info_plist_xmlresp_2.matches[0].string }}"
 
       - name: Display Sub-Zero Plugin version
         debug:
-          msg: "Sub-Zero Plugin version {{ subzero_newly_installed_version }} installed."
+          msg: "Sub-Zero Plugin version {{ plex_plugin_subzero_newly_installed_version }} installed."
 
-      when: (subzero_info_plist.stat.exists)
+      when: (plex_plugin_subzero_info_plist_status.stat.exists)
 
-    when: (download_subzero is success)
+    when: (plex_plugin_subzero_download_status is success)
 
   - name: Sub-Zero Plugin install failed
     debug:
       msg: "Sub-Zero Plugin install failed."
-    when: (download_subzero is failed) or ((download_subzero is success) and (not subzero_info_plist.stat.exists))
+    when: >-
+      (plex_plugin_subzero_download_status is failed) or
+          ((plex_plugin_subzero_download_status is success) and
+          (not plex_plugin_subzero_info_plist_status.stat.exists))
 
-  - name: Start Plex container
+  - name: "Start {{ plex_name | title }} container"
     docker_container:
-      name: plex
-      state: started
+      name: "{{ docker_name }}"
+      state: "{{ docker_state }}"
     when:
-      - ('plex' in docker_running_containers_list)
       - ('plex-plugin-sub-zero' in ansible_run_tags) or ('plex-plugin-sub-zero-reinstall' in ansible_run_tags)
+      - ('plex' in docker_running_containers_list)
 
-  when: (not subzero_bundle.stat.exists) or ((subzero_bundle.stat.exists) and (subzero_outdated)) or ('plex-plugin-sub-zero-reinstall' in ansible_run_tags)
+  when: >-
+    (not plex_plugin_subzero_bundle_status.stat.exists) or
+        ((plex_plugin_subzero_bundle_status.stat.exists) and
+        (plex_plugin_subzero_is_outdated)) or ('plex-plugin-sub-zero-reinstall' in ansible_run_tags)
 
 - name: Sub-Zero Plugin was not updated
   debug:
-    msg: "Sub-Zero was already installed."
+    msg: "Sub-Zero is already the latest version."
   when:
-    - (subzero_bundle.stat.exists)
-    - (not subzero_outdated)
+    - (plex_plugin_subzero_bundle_status.stat.exists)
+    - (not plex_plugin_subzero_is_outdated)
     - ('plex-plugin-sub-zero-reinstall' not in ansible_run_tags)
