@@ -24,4 +24,5 @@
     restart_policy: "{{ docker_restart_policy }}"
     capabilities: "{{ docker_capabilities }}"
     security_opts: "{{ docker_security_opts }}"
+    stop_timeout: "{{ docker_stop_timeout | default('180') }}"
     state: "{{ docker_state }}"
