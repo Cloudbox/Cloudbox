@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Sanity Check Role                            #
+# Title:         Cloudbox: Sanity Check                                 #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,14 +8,14 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Sanity Check: System Checks"
-  import_tasks: "sanity_check_system.yml"
+- name: "System Check"
+  import_tasks: "subtasks/check_system.yml"
   tags: always
 
-- name: "Sanity Check: Tag Checks"
-  import_tasks: "sanity_check_tags.yml"
+- name: "Tags Check"
+  import_tasks: "subtasks/check_tags.yml"
   tags: always
 
-- name: "Sanity Check: Backup Checks"
-  import_tasks: "sanity_check_backup.yml"
+- name: "Backup Lock Check"
+  import_tasks: "subtasks/check_backup_lock.yml"
   tags: always
