@@ -1,0 +1,59 @@
+##########################################################################
+# Title:         Cloudbox: WebTools Plugin for Plex | Default Variables  #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+plex_name: "plex"
+
+################################
+# Folders
+################################
+
+plex_folder: "{{ plex_name }}"
+
+app_folder: "{{ plex_folder }}"
+
+################################
+# Paths
+################################
+
+plex_application_support_path: "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server"
+
+plex_plugin_path: "{{ plex_application_support_path }}/Plug-ins"
+
+plex_plugin_webtools_path: "{{ plex_plugin_path }}/WebTools.bundle"
+
+plex_plugin_webtools_version_path: "{{ plex_plugin_webtools_path }}/VERSION"
+
+################################
+# Repository
+################################
+
+plex_plugin_webtools_release_url: https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest
+
+plex_plugin_webtools_download_url_backup: https://github.com/ukdtom/WebTools.bundle/releases/download/3.0.0/WebTools.bundle.zip
+
+################################
+# Docker Container
+################################
+
+plex_docker_name: "{{ plex_name }}"
+
+docker_name: "{{ plex_docker_name }}"
+
+################################
+# Docker State
+################################
+
+plex_docker_state: started
+
+docker_state: "{{ plex_docker_state }}"

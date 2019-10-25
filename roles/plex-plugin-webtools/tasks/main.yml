@@ -10,38 +10,44 @@
 ---
 - name: Check for previously installed WebTools Plugin
   stat:
-    path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION"
-  register: webtools_bundle
+    path: "{{ plex_plugin_webtools_version_path }}"
+  register: plex_plugin_webtools_bundle_status
 
 - name: Tasks for previously installed WebTools Plugin
   block:
 
-  - name: Set default value for 'webtools_outdated' variable
+  - name: Set default value for 'plex_plugin_webtools_is_outdated' variable
     set_fact:
-      webtools_outdated: false
+      plex_plugin_webtools_is_outdated: false
 
   - name: Check version of previously installed WebTools Plugin
     shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
-    register: webtools_previously_installed_version
+    register: plex_plugin_webtools_previously_installed_version
 
-  - name: Check latest available version for WebTools Plugin
-    shell: curl -s https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest | jq -r .tag_name
+  - name: Set 'plex_plugin_webtools_previously_installed_version' variable
+    set_fact:
+      plex_plugin_webtools_previously_installed_version: "{{ plex_plugin_webtools_previously_installed_version.stdout }}"
+
+  - name: Check latest available version for WebTools
+    shell: curl -s {{ plex_plugin_webtools_release_url }} | jq -r .tag_name
     args:
       warn: no
-    register: webtools_latest_version
+    register: plex_plugin_webtools_latest_version
     ignore_errors: yes
 
   - name: Compare installed WebTools Plugin version with latest one
     set_fact:
-      webtools_outdated: "{{ (webtools_latest_version is failed) or
-        ((webtools_latest_version is success) and (webtools_previously_installed_version.stdout is version(webtools_latest_version.stdout, '<', strict=True))) }}"
+      plex_plugin_webtools_is_outdated: "{{
+          (plex_plugin_webtools_latest_version is failed) or
+            ((plex_plugin_webtools_latest_version is success) and
+            (plex_plugin_webtools_previously_installed_version is version(plex_plugin_webtools_latest_version.stdout, '<', strict=True))) }}"
 
-  when: webtools_bundle.stat.exists
+  when: plex_plugin_webtools_bundle_status.stat.exists
 
-- name: Install Webtools Plugin
+- name: Install WebTools Plugin
   block:
 
-  - name: Check to see if Plex is running
+  - name: Check to see if {{ plex_name | title }} is running
     block:
 
     - name: Gather list of running Docker containers
@@ -52,49 +58,47 @@
       set_fact:
         docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
 
-    - name: Stop Plex container
+    - name: "Stop {{ plex_name | title }} container"
       docker_container:
-        name: plex
-        state: stopped
+        name: "{{ docker_name }}"
+        state: "stopped"
       when: ('plex' in docker_running_containers_list)
 
     when: ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
 
   - name: Remove outdated WebTools Plugin
     file:
-      path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle"
+      path: "{{ plex_plugin_webtools_path }}"
       state: absent
 
   - name: Get latest WebTools Plugin URL
-    shell: curl -s https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest | jq -r ".assets[] | select(.name | test(\"WebTools.bundle.zip\")) | .browser_download_url"
+    shell: |
+      curl -s {{ plex_plugin_webtools_release_url }} \
+        | jq -r ".assets[] | select(.name | test(\"WebTools.bundle.zip\")) | .browser_download_url"
     args:
       warn: no
-    register: webtools_download_url
+    register: plex_plugin_webtools_download_url
     ignore_errors: yes
 
-  - name: Set 'webtools_download_url_backup' variable
+  - name: Set 'plex_plugin_webtools_download_url' variable
     set_fact:
-      webtools_download_url_backup: https://github.com/ukdtom/WebTools.bundle/releases/download/3.0.0/WebTools.bundle.zip
+      plex_plugin_webtools_download_url: "{{ plex_plugin_webtools_download_url.stdout | default(plex_plugin_webtools_download_url_backup,true)  }}"
 
-  - name: Set 'webtools_download_url' variable
-    set_fact:
-      webtools_download_url: "{{ webtools_download_url.stdout | default('{{ webtools_download_url_backup }}',true) }}"
-
-  - name: Create 'plug-ins' directory
+  - name: "Create {{ plex_name | title }} 'plug-ins' directory"
     file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
     with_items:
-      - "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+      - "{{ plex_plugin_path }}"
 
   - name: Install WebTools Plugin
     unarchive:
-      src: "{{ webtools_download_url }}"
-      dest: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins"
+      src: "{{ plex_plugin_webtools_download_url }}"
+      dest: "{{ plex_plugin_path }}"
       copy: no
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
       mode: 0775
       validate_certs: no
-    register: download_webtools
+    register: plex_plugin_webtools_download_status
     ignore_errors: yes
 
   - name: Post-Successfull WebTools Plugin Download
@@ -102,47 +106,53 @@
 
     - name: Check for newly installed WebTools Plugin
       stat:
-        path: "/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION"
-      register: webtools_version_file
+        path: "{{ plex_plugin_webtools_version_path }}"
+      register: plex_plugin_webtools_version_status
 
     - name: Post-Successfull WebTools Plugin Install
       block:
 
       - name: Check version of newly installed WebTools Plugin
         shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
-        register: webtools_newly_installed_version
+        register: plex_plugin_webtools_newly_installed_version
 
-      - name: Set 'webtools_newly_installed_version' variable
+      - name: Set 'plex_plugin_webtools_previously_installed_version' variable
         set_fact:
-          webtools_newly_installed_version: "{{ webtools_newly_installed_version.stdout }}"
+          plex_plugin_webtools_newly_installed_version: "{{ plex_plugin_webtools_newly_installed_version.stdout }}"
 
       - name: Display WebTools Plugin version
         debug:
-          msg: "WebTools Plugin version {{ webtools_newly_installed_version }} installed."
+          msg: "WebTools Plugin version {{ plex_plugin_webtools_newly_installed_version }} installed."
 
-      when: (webtools_version_file.stat.exists)
+      when: (plex_plugin_webtools_version_status.stat.exists)
 
-    when: (download_webtools is success)
+    when: (plex_plugin_webtools_download_status is success)
 
   - name: WebTools Plugin install failed
     debug:
       msg: "WebTools Plugin install failed."
-    when: (download_webtools is failed) or ((download_webtools is success) and (not webtools_version_file.stat.exists))
+    when: >-
+      (plex_plugin_webtools_download_status is failed) or
+          ((plex_plugin_webtools_download_status is success) and
+          (not plex_plugin_webtools_version_status.stat.exists))
 
-  - name: Start Plex container
+  - name: "Start {{ plex_name | title }} container"
     docker_container:
-      name: plex
-      state: started
+      name: "{{ docker_name }}"
+      state: "{{ docker_state }}"
     when:
-      - ('plex' in docker_running_containers_list)
       - ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
+      - ('plex' in docker_running_containers_list)
 
-  when: (not webtools_bundle.stat.exists) or ((webtools_bundle.stat.exists) and (webtools_outdated)) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
+  when: >-
+    (not plex_plugin_webtools_bundle_status.stat.exists) or
+        ((plex_plugin_webtools_bundle_status.stat.exists) and
+        (plex_plugin_webtools_is_outdated)) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
 
 - name: WebTools Plugin was not updated
   debug:
-    msg: "WebTools was already installed."
+    msg: "WebTools is already the latest version."
   when:
-    - (webtools_bundle.stat.exists)
-    - (not webtools_outdated)
+    - (plex_plugin_webtools_bundle_status.stat.exists)
+    - (not plex_plugin_webtools_is_outdated)
     - ('plex-plugin-webtools-reinstall' not in ansible_run_tags)
