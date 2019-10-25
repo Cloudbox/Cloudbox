@@ -28,9 +28,9 @@ app_folder: "{{ plex_folder }}"
 
 plex_application_support_path: "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server"
 
-plex_plugin_path: "{{ plex_application_support_path }}/Plug-ins"
+plex_plugins_path: "{{ plex_application_support_path }}/Plug-ins"
 
-plex_plugin_trakttv_path: "{{ plex_plugin_path }}/Trakttv.bundle"
+plex_plugin_trakttv_path: "{{ plex_plugins_path }}/Trakttv.bundle"
 
 ################################
 # Repository

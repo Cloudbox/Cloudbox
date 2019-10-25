@@ -87,12 +87,12 @@
   - name: "Create {{ plex_name | title }} 'plug-ins' directory"
     file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
     with_items:
-      - "{{ plex_plugin_path }}"
+      - "{{ plex_plugins_path }}"
 
   - name: Install WebTools Plugin
     unarchive:
       src: "{{ plex_plugin_webtools_download_url }}"
-      dest: "{{ plex_plugin_path }}"
+      dest: "{{ plex_plugins_path }}"
       copy: no
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
