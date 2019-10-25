@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Sanity Check                                 #
-# Author(s):     l3uddz, desimaniac                                     #
+# Title:         Cloudbox: Sanity Check | Touch Logs                    #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,18 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "System Check"
-  import_tasks: "subtasks/check_system.yml"
-  tags: always
+- name: "Touch Logs | Get 'cloudbox.yml' info."
+  stat:
+    path: "{{ playbook_dir }}/cloudbox.yml"
+  register: cloudbox_yml
 
-- name: "Tags Check"
-  import_tasks: "subtasks/check_tags.yml"
-  tags: always
-
-- name: "Backup Lock Check"
-  import_tasks: "subtasks/check_backup_lock.yml"
-  tags: always
-
-- name: "Touch Logs"
-  import_tasks: "subtasks/touch_logs.yml"
-  tags: always
+- name: "Touch Logs | Touch 'cloudbox.log'"
+  file:
+    path: "{{ playbook_dir }}/cloudbox.log"
+    state: touch
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664
