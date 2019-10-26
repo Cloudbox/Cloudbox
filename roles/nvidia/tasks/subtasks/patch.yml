@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Nvidia: Nvidia Patch Task                              #
+# Title:         Cloudbox: Nvidia | Patch Tasks                         #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Download Nvidia patch
+- name: Patch | Download Nvidia patch
   get_url:
     url:  "https://raw.githubusercontent.com/keylase/nvidia-patch/master/patch.sh"
     dest: /tmp/NVIDIA-patch.sh
@@ -18,7 +18,7 @@
     force: yes
     validate_certs: no
 
-- name: Install Nvidia patch
+- name: Patch | Install Nvidia patch
   shell: /tmp/NVIDIA-patch.sh
   args:
     executable: /bin/bash
@@ -26,12 +26,12 @@
   register: patch_install
   ignore_errors: yes
 
-- name: Nvidia patch installed!
+- name: Patch | Nvidia patch installed
   debug:
     msg: "Nvidia patch installed!"
   when: (patch_install is succeeded) and ('Patched!' in patch_install.stdout)
 
-- name: Nvidia patch did not install!
+- name: Patch | Nvidia patch did not install
   fail:
     msg:
     - "Nvidia patch did not install!"

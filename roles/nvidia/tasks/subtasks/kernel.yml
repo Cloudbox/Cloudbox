@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Nvidia: Nvidia Kernel Task                             #
+# Title:         Cloudbox: Nvidia | Kernel Tasks                        #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Copy 'blacklist-nouveau.conf'
+- name: Kernel | Copy 'blacklist-nouveau.conf'
   copy:
     src: "blacklist-nouveau.conf"
     dest: "/etc/modprobe.d/blacklist-nouveau.conf"
@@ -17,20 +17,20 @@
     mode: 0664
   register: r
 
-- name: Continue with tasks
+- name: Kernel | Continue with tasks
   block:
 
-  - name: Success message
+  - name: Kernel | Success message
     debug:
       msg: "Disabled nouveau driver. System will now reboot ..."
 
-  - name: Update initramfs
+  - name: Kernel | Update initramfs
     command: update-initramfs -u
 
-  - name: Reboot command
+  - name: Kernel | Reboot command
     shell: reboot
 
-  - name: Reboot message
+  - name: Kernel | Reboot message
     fail:
       msg: "Disabled nouveau driver. You will need to restart the server for changes to take effect."
 

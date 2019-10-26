@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Nvidia: Nvidia Docker Task                             #
+# Title:         Cloudbox: Nvidia | Docker Tasks                        #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Add nvidia repository
+- name: Docker | Add nvidia repository
   shell: |
     curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \
     sudo apt-key add -
@@ -16,50 +16,51 @@
     curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
     sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
 
-- name: Install 'nvidia-container-runtime'
+- name: Docker | Install 'nvidia-container-runtime'
   apt:
     name: nvidia-container-runtime
     update_cache: yes
     state: present
 
-- name: Populate Service Facts
+- name: Docker | Populate Service Facts
   service_facts:
 
-- name: Get Docker service state
+- name: Docker | Get Docker service state
   set_fact:
     docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == 'running') }}"
 
-- name: Gather list of running Docker containers
+- name: Docker | Gather list of running Docker containers
   shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
   register: docker_running_containers
   ignore_errors: yes
   when: (docker_service_running)
 
-- name: Stop all running Docker containers
+- name: Docker | Stop all running Docker containers
   shell: "docker stop {{ docker_running_containers.stdout }}"
   ignore_errors: yes
   when: (docker_service_running) and not (docker_running_containers.stdout | trim | length == 0)
 
-- name: Stop docker service
+- name: Docker | Stop docker service
   systemd:
     name: docker
     state: stopped
   when: (docker_service_running)
 
 # https://github.com/linkernetworks/vortex-installer/blob/master/roles/common/tasks/nvidia-docker.yml
-- name: Add runtime to '/etc/docker/daemon.json'
+- name: Docker | Add runtime to '/etc/docker/daemon.json'
   shell: |
-    jq '."default-runtime" = "nvidia" | .runtimes.nvidia.path = "/usr/bin/nvidia-container-runtime" | .runtimes.nvidia.runtimeArgs = []' \
-    /etc/docker/daemon.json | jq . > /etc/docker/daemon.json_tmp \
-    && mv /etc/docker/daemon.json_tmp /etc/docker/daemon.json
+    jq '."default-runtime" = "nvidia"
+        | .runtimes.nvidia.path = "/usr/bin/nvidia-container-runtime"
+        | .runtimes.nvidia.runtimeArgs = []' \
+    /etc/docker/daemon.json | jq . | sponge /etc/docker/daemon.json
 
-- name: Start docker service
+- name: Docker | Start docker service
   systemd:
     name: docker
     state: started
   when: (docker_service_running)
 
-- name: "Re-start all previously running Docker containers"
+- name: Docker | Re-start all previously running Docker containers
   shell: 'docker start {{ docker_running_containers.stdout }}'
   ignore_errors: yes
   when: (docker_service_running) and not (docker_running_containers.stdout | trim | length == 0)

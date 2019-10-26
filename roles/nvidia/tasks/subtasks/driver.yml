@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Nvidia: Nvidia Driver Task                             #
+# Title:         Cloudbox: Nvidia | Driver Tasks                        #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,20 +8,21 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install 'build-essential'
+- name: Driver | Install 'build-essential'
   apt:
     name: build-essential
     update_cache: yes
     state: present
 
-- name: Set 'nvidia_driver_version' variable
+- name: Driver | Set 'nvidia_driver_version' variable
   set_fact:
     nvidia_driver_version: >-
-      {{ ('%.2f'|format(gpu.nvidia.driver|float))
-      if ((gpu.nvidia.driver | type_debug == 'float') or (gpu.nvidia.driver | type_debug == 'int'))
-      else (gpu.nvidia.driver | regex_replace('(^v\\.|^v)', '')) }}
+      {{  ('%.2f'|format(gpu.nvidia.driver|float))
+          if (gpu.nvidia.driver | type_debug == 'float') or
+              (gpu.nvidia.driver | type_debug == 'int')
+          else (gpu.nvidia.driver | regex_replace('(^v\\.|^v)', '')) }}
 
-- name: Download Nvidia drivers
+- name: Driver | Download Nvidia drivers
   get_url:
     url:  "https://download.nvidia.com/XFree86/Linux-x86_64/{{ nvidia_driver_version }}/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run"
     dest: "/tmp/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run"
@@ -32,12 +33,12 @@
     validate_certs: no
   register: driver_download
 
-- name: Install Nvidia drivers
+- name: Driver | Install Nvidia drivers
   shell: "/tmp/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run --silent"
   register: driver_install
   ignore_errors: yes
 
-- name: Nvidia driver did not install
+- name: Driver | Nvidia driver did not install
   fail:
     msg:
       - "{{ driver_install.stdout }}"

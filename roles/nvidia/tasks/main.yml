@@ -9,10 +9,7 @@
 #########################################################################
 ---
 - name: Install common pip modules
-  pip:
-    state: present
-    name:
-      - jmespath
+  raw: pip install jmespath
 
 - name: Fetch Nvidia card info
   shell: |
@@ -49,7 +46,7 @@
       register: blacklist_nouveau_conf
 
     - name: "Nvidia Kernel Task"
-      include_tasks: "nvidia_kernel.yml"
+      include_tasks: "subtasks/kernel.yml"
       when: (not blacklist_nouveau_conf.stat.exists)
 
     when: '("manual_install: True" not in ubuntu_devices.stdout)'
@@ -60,7 +57,7 @@
     block:
 
     - name: "Nvidia Driver Task"
-      include_tasks: "nvidia_driver.yml"
+      include_tasks: "subtasks/driver.yml"
       when: (gpu.nvidia.driver | lower != 'ignore')
 
     when: '("manual_install: True" not in ubuntu_devices.stdout)'
@@ -79,7 +76,7 @@
       register: nvidia_patch_backup_files
 
     - name: "Nvidia Driver Patch Task"
-      include_tasks: "nvidia_patch.yml"
+      include_tasks: "subtasks/patch.yml"
       when: (nvidia_patch_backup_files.matched|int == 0)
 
     when: ('GeForce' in lspci_resp.stdout)
@@ -98,7 +95,7 @@
         docker_default_runtime: "{{ docker_daemon_json.stdout | from_json | json_query('\"default-runtime\"') }}"
 
     - name: "Nvidia Docker Task"
-      include_tasks: "nvidia_docker.yml"
+      include_tasks: "subtasks/docker.yml"
       when: (docker_default_runtime != 'nvidia')
 
   # Install Nvidia Nvtop Tool
@@ -106,13 +103,13 @@
   - name: Nvidia Nvtop Tasks
     block:
 
-    - name: Check nvtop exists
+    - name: Check if 'nvtop' exists
       stat:
         path: "/usr/local/bin/nvtop"
       register: nvtop_binary
 
     - name: "Nvidia Nvtop Task"
-      include_tasks: "nvidia_nvtop.yml"
+      include_tasks: "subtasks/nvtop.yml"
       when: not nvtop_binary.stat.exists
 
   when: (ansible_distribution == 'Ubuntu') and ('NVIDIA' in lspci_resp.stdout)
