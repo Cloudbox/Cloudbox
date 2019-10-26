@@ -31,7 +31,7 @@
   block:
 
   - name: Gather list of running Docker containers
-    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | sort | xargs echo -n"
     register: docker_running_containers
     ignore_errors: yes
     changed_when: false
@@ -69,9 +69,9 @@
     enabled: yes
     daemon_reload: yes
 
-- name: Wait for 30 seconds before commencing
+- name: Wait for 60 seconds before commencing
   wait_for:
-    timeout: 30
+    timeout: 60
 
 - name: "Stop all Docker containers"
   shell: docker stop $(docker ps -aq) &> /dev/null || true
@@ -84,8 +84,9 @@
   tags: docker-housekeeping
 
 - name: "Re-start all previously running Docker containers"
-  shell: 'docker start {{ docker_running_containers.stdout }} &> /dev/null || true'
+  shell: 'docker start {{ docker_running_containers.stdout }}'
   when: (docker_binary.stat.exists) and (docker_service_running) and (docker_running_containers.stdout | trim | length > 0)
+  ignore_errors: yes
 
 - name: "Install ctop"
   import_role:
