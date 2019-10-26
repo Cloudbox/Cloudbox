@@ -40,39 +40,69 @@
 - name: Rclone VFS | Systemd daemon-reload 'rclone_vfs_primer.service'
   systemd: name=rclone_vfs_primer.service state=stopped enabled=no daemon_reload=yes
 
-- name: "Rclone VFS | Test Rclone remote '{{ rclone.remote }}:'"
-  shell: |
-    rclone lsd {{ rclone.remote }}: \
-      --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
+- name: Rclone VFS | Get list of Rclone remotes in config
+  shell: rclone listremotes
   become: yes
   become_user: "{{ user.name }}"
-  register: rclone_test
-  failed_when: (rclone_test.rc|int > 5)
+  register: rclone_config_remotes
 
-- name: Rclone VFS | Start up services when rclone remote is configured properly
+- name: Rclone VFS | Set 'rclone_config_remotes' variable
+  set_fact:
+    rclone_config_remotes: "{{ (rclone_config_remotes.stdout).split() }}"
+
+- name: Rclone VFS | Set 'rclone_remote_is_configured' variable
+  set_fact:
+    rclone_remote_is_configured: "{{ (rclone.remote + ':') in rclone_config_remotes }}"
+
+- name: Rclone VFS | Tasks when rclone remote is configured
   block:
 
-  - name: Rclone VFS | Start 'rclone_vfs.service'
-    systemd: name=rclone_vfs.service state=started enabled=yes
+  - name: "Rclone VFS | Test Rclone remote '{{ rclone.remote }}:'"
+    shell: |
+      rclone lsd {{ rclone.remote }}: \
+        --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
+    become: yes
+    become_user: "{{ user.name }}"
+    register: rclone_test
+    failed_when: (rclone_test.rc|int > 5)
 
-  - name: Rclone VFS | "Wait for 5 seconds"
-    wait_for:
-      timeout: 5
+  - name: Rclone VFS | Set 'rclone_remote_is_working' variable
+    set_fact:
+      rclone_remote_is_working: "{{ rclone_test.rc | int == 0 }}"
 
-  - name: Rclone VFS | Start 'rclone_vfs_primer.timer'
-    systemd: name=rclone_vfs_primer.timer state=started enabled=yes
+  - name: Rclone VFS | Tasks when rclone remote is working properly
+    block:
 
-  - name: Rclone VFS | Start 'rclone_vfs_primer.service'
-    systemd: name=rclone_vfs_primer.service state=started enabled=yes
-    async: 900
-    poll: 0
+    - name: Rclone VFS | Start 'rclone_vfs.service'
+      systemd: name=rclone_vfs.service state=started enabled=yes
 
-  when: (rclone_test.rc|int == 0)
+    - name: Rclone VFS | "Wait for 5 seconds"
+      wait_for:
+        timeout: 5
+
+    - name: Rclone VFS | Start 'rclone_vfs_primer.timer'
+      systemd: name=rclone_vfs_primer.timer state=started enabled=yes
+
+    - name: Rclone VFS | Start 'rclone_vfs_primer.service'
+      systemd: name=rclone_vfs_primer.service state=started enabled=yes
+      async: 900
+      poll: 0
+
+    when: rclone_remote_is_working
+
+  - name: "Rclone VFS | Display error message when rclone remote is not working properly"
+    fail:
+      msg:
+        - "Rclone remote '{{ rclone.remote }}:' is not working properly."
+        - "{{ rclone_test.stderr }}"
+    when: not rclone_remote_is_working
+    ignore_errors: yes
+
+  when: rclone_remote_is_configured
 
 - name: "Rclone VFS | Display error message when rclone remote is not configured properly"
   fail:
     msg:
-      - "Rclone remote '{{ rclone.remote }}:' is not setup properly."
-      - "{{ rclone_test.stderr }}"
-  when: (rclone_test.rc|int != 0)
+      - "Rclone remote '{{ rclone.remote }}:' is not configured properly."
+  when: not rclone_remote_is_configured
   ignore_errors: yes
