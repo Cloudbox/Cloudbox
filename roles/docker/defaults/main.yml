@@ -48,6 +48,16 @@ docker_ce_cli_filepath: "/usr/bin/docker"
 
 docker_ce_cli_dpkg: "docker-ce-cli"
 
+# Containerd
+
+containerd_io_name: "Containerd"
+
+containerd_io_package: "containerd.io"
+
+containerd_io_filepath: "/usr/bin/containerd"
+
+containerd_io_dpkg: "containerd.io"
+
 # Misc
 
 docker_package_state: "{{ 'latest' if (docker.version is defined and docker.version | lower == 'latest') else 'present' }}"

@@ -25,11 +25,12 @@
     filename: "{{ docker_apt_repo_filename }}"
     update_cache: yes
 
-- name: Binary | Install 'docker-ce' and 'docker-ce-cli'
+- name: Binary | Install Docker binaries
   include_tasks: "binary2.yml"
   loop:
     - 'docker_ce'
     - 'docker_ce_cli'
+    - 'containerd_io'
 
 - name: Binary | Install 'docker' pip module
   pip:
