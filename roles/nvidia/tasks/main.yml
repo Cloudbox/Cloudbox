@@ -35,6 +35,10 @@
     shell: ubuntu-drivers devices
     register: ubuntu_devices
 
+  - name: Set 'manual_install_is_disabled' variable
+    set_fact:
+      manual_install_is_disabled: "{{ 'manual_install: True' not in ubuntu_devices.stdout }}"
+
   # Configure Nvidia Kernel
 
   - name: Nvidia Kernel Tasks
@@ -49,7 +53,7 @@
       include_tasks: "subtasks/kernel.yml"
       when: (not blacklist_nouveau_conf.stat.exists)
 
-    when: '("manual_install: True" not in ubuntu_devices.stdout)'
+    when: manual_install_is_disabled
 
   # Install Nvidia Driver
 
@@ -60,7 +64,7 @@
       include_tasks: "subtasks/driver.yml"
       when: (gpu.nvidia.driver | lower != 'ignore')
 
-    when: '("manual_install: True" not in ubuntu_devices.stdout)'
+    when: manual_install_is_disabled
 
   # Install Nvidia Driver Patch to remove transcode limit
 
