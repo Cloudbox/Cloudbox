@@ -173,6 +173,7 @@
 
 - name: Install pip 'glances'
   shell: pip install glances[action,browser,cloud,cpuinfo,docker,folders,gpu,graph,ip,raid,snmp,web]
+  ignore_errors: yes
   tags: glances
 
 - name: Install 'z jump'
