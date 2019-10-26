@@ -8,13 +8,21 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Docker | Add nvidia repository
-  shell: |
-    curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \
-    sudo apt-key add -
-    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-    curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
-    sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+- name: Docker | Add 'nvidia-container-runtime' repo key
+  apt_key:
+    url: https://nvidia.github.io/nvidia-container-runtime/gpgkey
+    state: present
+
+- name: Docker | Add 'nvidia-container-runtime' APT list
+  apt_repository:
+    repo: "{{ item }}"
+    filename: nvidia-container-runtime.list
+    state: present
+    mode: 0644
+    update_cache: yes
+  with_items:
+    - 'deb https://nvidia.github.io/libnvidia-container/{{ ansible_distribution|lower }}{{ ansible_distribution_version }}/$(ARCH) /'
+    - 'deb https://nvidia.github.io/nvidia-container-runtime/{{ ansible_distribution|lower }}{{ ansible_distribution_version }}/$(ARCH) /'
 
 - name: Docker | Install 'nvidia-container-runtime'
   apt:
