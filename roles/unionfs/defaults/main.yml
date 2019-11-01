@@ -1,0 +1,59 @@
+##########################################################################
+# Title:         Cloudbox: UnionFS | Default Variables                   #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# MergerFS
+################################
+
+mergerfs_releases_url: https://api.github.com/repos/trapexit/mergerfs/releases/latest
+
+mergerfs_releases_download_url: https://github.com/trapexit/mergerfs/releases/download
+
+mergerfs_release_lookup_command: |
+  curl -s {{ mergerfs_releases_url }} \
+    | jq -r ".assets[] | select(.name | test(\"{{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }}_amd64\")) \
+    | .browser_download_url"
+
+mergerfs_download_backup_version: 2.28.3
+
+mergerfs_download_backup_url: "
+  {{ mergerfs_releases_download_url }}/\
+  {{ mergerfs_download_backup_version }}/\
+  mergerfs_{{ mergerfs_download_backup_version }}.\
+  {{ ansible_distribution|lower }}-\
+  {{ ansible_distribution_release|lower }}_amd64.deb"
+
+mergerfs_mount_branches: /mnt/local=RW:/mnt/remote=NC
+
+mergerfs_mount_start_command: |-
+  /usr/bin/mergerfs \
+    -o category.create=ff,async_read=false,cache.files=partial \
+    -o dropcacheonclose=true,use_ino,minfreespace=0 \
+    -o xattr=nosys,statfs_ignore=ro,allow_other,umask=002,noatime \
+    {{ mergerfs_mount_branches }} /mnt/unionfs
+
+mergerfs_mount_stop_command: /bin/fusermount -u /mnt/unionfs
+
+################################
+# UnionFS
+################################
+
+unionfs_fuse_path: /mnt/local/.unionfs-fuse
+
+unionfs_fuse_apt_package: unionfs-fuse
+
+unionfs_mount_branches: /mnt/local=RW:/mnt/remote=RO
+
+unionfs_mount_start_command: |-
+  /usr/bin/unionfs-fuse \
+    -o cow,allow_other,nonempty \
+    {{ unionfs_mount_branches }} /mnt/unionfs
+
+unionfs_mount_stop_command: /bin/fusermount -u /mnt/unionfs

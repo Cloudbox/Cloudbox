@@ -8,14 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "UnionFS | Create unionfs directories"
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
-  with_items:
-    - /mnt/local/.unionfs-fuse
+- name: "UnionFS | Create unionfs fuse path"
+  file: "path={{ unionfs_fuse_path }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
 
 - name: "UnionFS | Install unionfs"
   apt:
-    name: unionfs-fuse
+    name: "{{ unionfs_fuse_apt_package }}"
     state: present
 
 - name: "UnionFS | Import 'unionfs.service'"

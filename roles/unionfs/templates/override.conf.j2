@@ -10,7 +10,7 @@
 #########################################################################
 
 [Unit]
-After={{ 'unionfs' if (mounts.unionfs|lower) == 'unionfs' else 'mergerfs' }}.service
+After={{ unionfs_mount_type }}.service
 
 [Service]
 ExecStartPre=/bin/sleep 120

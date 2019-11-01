@@ -1,7 +1,7 @@
 # /etc/systemd/system/mergerfs.service
 #########################################################################
 # Title:         Cloudbox: MergerFS Mount                               #
-# Author(s):     EnorMOZ                                                #
+# Author(s):     EnorMOZ, desimaniac                                    #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -16,12 +16,8 @@ After=network-online.target
 [Service]
 Type=forking
 GuessMainPID=no
-ExecStart=/usr/bin/mergerfs \
-  -o category.create=ff,async_read=false,cache.files=partial \
-  -o dropcacheonclose=true,use_ino,minfreespace=0 \
-  -o xattr=nosys,statfs_ignore=ro,allow_other,umask=002,noatime \
-  /mnt/local=RW:/mnt/remote=NC /mnt/unionfs
-ExecStop=/bin/fusermount -u /mnt/unionfs
+ExecStart={{ mergerfs_mount_start_command }}
+ExecStop={{ mergerfs_mount_stop_command }}
 
 [Install]
 WantedBy=default.target

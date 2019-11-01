@@ -1,7 +1,7 @@
 # /etc/systemd/system/unionfs.service
 #########################################################################
 # Title:         Cloudbox: UnionFS Mount                                #
-# Author(s):     l3uddz                                                 #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -18,10 +18,8 @@ Type=forking
 GuessMainPID=no
 User={{ user.name }}
 Group={{ user.name }}
-ExecStart=/usr/bin/unionfs-fuse \
-  -o cow,allow_other,nonempty \
-  /mnt/local=RW:/mnt/remote=RO /mnt/unionfs
-ExecStop=/bin/fusermount -u /mnt/unionfs
+ExecStart={{ unionfs_mount_start_command }}
+ExecStop={{ unionfs_mount_stop_command }}
 
 [Install]
 WantedBy=default.target

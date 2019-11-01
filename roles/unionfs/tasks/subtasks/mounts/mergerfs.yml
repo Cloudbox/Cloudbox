@@ -9,20 +9,12 @@
 #########################################################################
 ---
 - name: "MergerFS | Get URL for latest mergerfs release"
-  shell: |
-    curl -s https://api.github.com/repos/trapexit/mergerfs/releases/latest \
-      | jq -r ".assets[] | select(.name | test(\"{{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }}_amd64\")) \
-      | .browser_download_url"
+  shell: "{{ mergerfs_release_lookup_command }}"
   args:
     executable: /bin/bash
     warn: no
   register: mergerfs_download_url
   ignore_errors: yes
-
-- name: "MergerFS | Set 'mergerfs_download_url_backup' variable"
-  set_fact:
-    mergerfs_download_url_backup: https://github.com/trapexit/mergerfs/releases/download/2.28.1/mergerfs_2.28.1.{{ ansible_distribution|lower
-     }}-{{ ansible_distribution_release|lower }}_amd64.deb
 
 - name: "MergerFS | Install mergerfs"
   apt:
