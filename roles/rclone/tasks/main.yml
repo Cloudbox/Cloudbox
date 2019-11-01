@@ -8,9 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Uninstall Legacy Rclone Tasks
-  include_tasks: "uninstall_legacy_rclone.yml"
-
 - name: Build URL Tasks
   import_tasks: "build_url.yml"
 
