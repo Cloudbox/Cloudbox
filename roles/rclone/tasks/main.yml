@@ -9,14 +9,14 @@
 #########################################################################
 ---
 - name: Build URL Tasks
-  import_tasks: "build_url.yml"
+  import_tasks: "subtasks/01_build_url.yml"
 
 - name: Install Binary Tasks
-  import_tasks: "install_binary.yml"
+  import_tasks: "subtasks/02_install_binary.yml"
 
 - name: Import Existing Config Tasks
-  import_tasks: "import_config.yml"
+  import_tasks: "subtasks/03_import_config.yml"
 
 - name: Preinstall Tasks
-  include_tasks: "preinstall.yml"
+  include_tasks: "subtasks/99_preinstall.yml"
   when: ('preinstall' in ansible_run_tags)
