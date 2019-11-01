@@ -21,9 +21,6 @@
 
 # Existing Setup
 
-- name: Legacy Tasks
-  import_tasks: "subtasks/legacy.yml"
-
 - name: Service Tasks
   include_tasks: "subtasks/services.yml"
   loop_control:
