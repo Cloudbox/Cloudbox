@@ -11,12 +11,12 @@
 - name: Plexdrive 5 | Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
-    - /opt/plexdrive5
+    - "{{ plexdrive_5_install_path }}"
 
 - name: Plexdrive 5 | Install Plexdrive 5
   get_url:
-    url:  https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
-    dest: /opt/plexdrive5/plexdrive
+    url:  "{{ plexdrive_5_download_url }}"
+    dest: "{{ plexdrive_5_binary_path }}"
     mode: 0775
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
@@ -34,7 +34,7 @@
 
 - name: Plexdrive 5 | Check if config exists
   stat:
-    path: "/opt/plexdrive5/config.json"
+    path: "{{ plexdrive_5_config_path }}"
   register: plexdrive5_config
 
 - name: Plexdrive 5 | Start 'plexdrive5.service' if config exists

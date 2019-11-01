@@ -45,7 +45,7 @@
 
   - name: "Services | Enable cache in 'rclone.conf'"
     blockinfile:
-      path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
+      path: "{{ rclone_config_path }}"
       state: absent
       marker: "### {mark} CLOUDBOX - RCLONE CACHE MOUNT ###"
       owner: "{{ user.name }}"

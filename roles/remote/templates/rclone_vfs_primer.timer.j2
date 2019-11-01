@@ -13,7 +13,7 @@
 Description=Rclone VFS Primer - Timer
 
 [Timer]
-OnUnitInactiveSec=167h
+OnUnitInactiveSec={{ rclone_vfs_mount_primer_interval }}
 
 [Install]
 WantedBy=timers.target
