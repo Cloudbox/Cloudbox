@@ -53,8 +53,17 @@
 
 - name: Set docker image variables variables
   set_fact:
-    suitarr_image: "{{ 'hotio/sonarr3' if ('v3' in sonarr.version | lower) else 'hotio/sonarr' }}"
-    suitarr_version: "{{ ('tar.gz' in sonarr.version | lower) | ternary(sonarr.version,'unstable') }}"
+    suitarr_image: "{{ 'hotio/sonarr3'
+                        if ('v3' in sonarr.version | lower) or
+                            ((sonarr.version | type_debug == 'float') and
+                                (sonarr.version is version('3.0.0.0', '>=')))
+                        else 'hotio/sonarr' }}"
+    suitarr_version:  "{{ sonarr.version
+                          if ('tar.gz' in sonarr.version | lower)
+                          else 'image'
+                              if ((sonarr.version | type_debug == 'float') and
+                                    (sonarr.version is version('3.0.0.0', '>=')))
+                          else 'unstable' }}"
 
 - name: "Check if '/dev/dri' exists"
   stat:
@@ -102,6 +111,7 @@
       LETSENCRYPT_HOST: "sonarr.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"
+      SONARR3_VERSION: "{{ sonarr.version if ((sonarr.version | type_debug == 'float') and (sonarr.version is version('3.0.0.0', '>='))) else omit }}"
     volumes: "{{ docker_volumes }}"
     devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and (sickbeard_mp4_automator | default(false,true)) and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
