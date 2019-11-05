@@ -43,16 +43,6 @@
       - { option: 'Group', value: "{{ user.name }}" }
     when: (outer_item is not regex('.*\.timer'))
 
-  - name: "Services | Enable cache in 'rclone.conf'"
-    blockinfile:
-      path: "{{ rclone_config_path }}"
-      state: absent
-      marker: "### {mark} CLOUDBOX - RCLONE CACHE MOUNT ###"
-      owner: "{{ user.name }}"
-      group: "{{ user.name }}"
-      mode: 0755
-    when: outer_item == "rclone_cache.service"
-
   # if applicable
   - name: "Services | Update 'rc-addr' in existing '{{ outer_item }}'"
     replace:

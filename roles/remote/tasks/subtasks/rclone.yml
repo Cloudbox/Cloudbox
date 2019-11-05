@@ -1,0 +1,18 @@
+#########################################################################
+# Title:         Cloudbox: Remote | Rclone Tasks                        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Services | Disable cache in 'rclone.conf'"
+  blockinfile:
+    path: "{{ rclone_config_path }}"
+    state: absent
+    marker: "### {mark} CLOUDBOX - RCLONE CACHE MOUNT ###"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0755

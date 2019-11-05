@@ -32,6 +32,9 @@
     loop_var: outer_item
   loop: "{{ service_files }}"
 
+- name: Rclone Tasks
+  import_tasks: "subtasks/rclone.yml"
+
 - name: Mount Path Tasks
   import_tasks: "subtasks/mount_path.yml"
 
