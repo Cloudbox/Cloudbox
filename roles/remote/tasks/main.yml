@@ -28,22 +28,26 @@
 
 - name: Service Tasks
   include_tasks: "subtasks/services.yml"
-  loop_control:
-    loop_var: outer_item
+  vars:
+    service_file: "{{ item }}"
   loop: "{{ service_files }}"
 
 - name: Rclone Tasks
   import_tasks: "subtasks/rclone.yml"
 
 - name: Mount Path Tasks
-  import_tasks: "subtasks/mount_path.yml"
+  include_tasks: "subtasks/mount_path.yml"
+  vars:
+    mount_path: "{{ item }}"
+  loop: "{{ mount_paths }}"
 
 # New Setup
 
 - name: Basic Tasks
   import_tasks: "subtasks/basics.yml"
 
-# Mount Remote
+# Mount
 
-- name: Mount Remote Tasks
-  include_tasks: "subtasks/mounts/{{ remote_mount_type }}.yml"
+- name: Mount Tasks
+  include_tasks: "subtasks/mounts/{{ item }}.yml"
+  loop: "{{ mount_types }}"

@@ -8,40 +8,38 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# /mnt/remote
-
-- name: "Mount Path | Force unmount '/mnt/remote'"
-  shell: "/bin/umount -f '/mnt/remote' 2>/dev/null || :"
+- name: "Mount Path | Force unmount '{{ mount_path }}'"
+  shell: "/bin/umount -f '{{ mount_path }}' 2>/dev/null || :"
   ignore_errors: yes
 
-- name: "Mount Path | Check if '/mnt/remote' exists"
+- name: "Mount Path | Check if '{{ mount_path }}' exists"
   stat:
-    path: "/mnt/remote"
-  register: mnt_remote
+    path: "{{ mount_path }}"
+  register: mount_path_stat
   ignore_errors: yes
 
-- name: "Mount Path | Tasks for '/mnt/remote' path"
+- name: "Mount Path | Tasks for '{{ mount_path }}' path"
   block:
 
-  - name: "Mount Path | Remove empty directories in '/mnt/remote'"
-    shell: "find '/mnt/remote' -type d -empty -delete"
+  - name: "Mount Path | Remove empty directories in '{{ mount_path }}'"
+    shell: "find '{{ mount_path }}' -type d -empty -delete"
     ignore_errors: yes
 
-  - name: "Mount Path | Recursively find '/mnt/remote' files"
+  - name: "Mount Path | Recursively find '{{ mount_path }}' files"
     find:
-      paths: '/mnt/remote'
+      paths: '{{ mount_path }}'
       hidden: yes
       recurse: yes
-    register: mnt_remote_files
+    register: mount_path_stat_files
 
-  - name: "Mount Path | Backup non-empty '/mnt/remote' path"
-    shell: "mv /mnt/remote /mnt/remote_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
+  - name: "Mount Path | Backup non-empty '{{ mount_path }}' path"
+    shell: "mv {{ mount_path }} {{ mount_path }}_{{ '%Y-%m-%d_%H.%M.%S' | strftime(ansible_date_time['epoch']|int) }}"
     ignore_errors: yes
-    when: (mnt_remote_files.matched|int > 0)
+    when: (mount_path_stat_files.matched|int > 0)
 
-  - name: "Mount Path | Remove '/mnt/remote'"
+  - name: "Mount Path | Remove '{{ mount_path }}'"
     file:
-      path: "/mnt/remote"
+      path: "{{ mount_path }}"
       state: absent
 
-  when: (mnt_remote is failed) or (mnt_remote.stat.exists)
+  when: (mount_path_stat is failed) or (mount_path_stat.stat.exists)

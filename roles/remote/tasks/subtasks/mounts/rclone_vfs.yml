@@ -9,9 +9,7 @@
 #########################################################################
 ---
 - name: Rclone VFS | Reset permissions for 'rclone.conf'
-  file: "path={{ item }} state=file mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - "{{ rclone_config_path }}"
+  file: "path={{ rclone_config_path }} state=file mode=0775 owner={{ user.name }} group={{ user.name }}"
 
 - name: Rclone VFS | Import 'rclone_vfs.service'
   template:
@@ -54,12 +52,12 @@
   set_fact:
     rclone_remote_is_configured: "{{ (rclone.remote + ':') in rclone_config_remotes }}"
 
-- name: Rclone VFS | Tasks when rclone remote is configured
+- name: Rclone VFS | Tasks when Rclone remote is configured
   block:
 
   - name: "Rclone VFS | Test Rclone remote '{{ rclone.remote }}:'"
     shell: |
-      rclone lsd {{ rclone.remote }}: \
+      rclone lsd '{{ rclone.remote }}:' \
         --user-agent='{{ user_agent }}'
     become: yes
     become_user: "{{ user.name }}"
@@ -70,7 +68,7 @@
     set_fact:
       rclone_remote_is_working: "{{ rclone_test.rc | int == 0 }}"
 
-  - name: Rclone VFS | Tasks when rclone remote is working properly
+  - name: Rclone VFS | Tasks when Rclone remote is working properly
     block:
 
     - name: Rclone VFS | Start 'rclone_vfs.service'
@@ -90,7 +88,7 @@
 
     when: rclone_remote_is_working
 
-  - name: "Rclone VFS | Display error message when rclone remote is not working properly"
+  - name: "Rclone VFS | Display error message when Rclone remote is not working properly"
     fail:
       msg:
         - "Rclone remote '{{ rclone.remote }}:' is not working properly."
@@ -100,7 +98,7 @@
 
   when: rclone_remote_is_configured
 
-- name: "Rclone VFS | Display error message when rclone remote is not configured properly"
+- name: "Rclone VFS | Display error message when Rclone remote is not configured properly"
   fail:
     msg:
       - "Rclone remote '{{ rclone.remote }}:' is not configured properly."
