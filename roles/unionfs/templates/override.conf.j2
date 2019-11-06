@@ -10,7 +10,7 @@
 #########################################################################
 
 [Unit]
-After={{ unionfs_mount_type }}.service
+After={{ mount_type }}.service
 
 [Service]
 ExecStartPre=/bin/sleep 120

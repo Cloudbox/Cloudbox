@@ -23,8 +23,8 @@
 
 - name: Service Tasks
   include_tasks: "subtasks/services.yml"
-  loop_control:
-    loop_var: outer_item
+  vars:
+    service_file: "{{ item }}"
   loop: "{{ service_files }}"
 
 - name: Mount Path Tasks
@@ -38,7 +38,7 @@
 # Mount UnionFS
 
 - name: Mount UnionFS Tasks
-  include_tasks: "subtasks/mounts/{{ unionfs_mount_type }}.yml"
+  include_tasks: "subtasks/mounts/{{ mount_type }}.yml"
 
 - name: Docker Daemon Tasks
   import_tasks: "subtasks/docker/daemon.yml"

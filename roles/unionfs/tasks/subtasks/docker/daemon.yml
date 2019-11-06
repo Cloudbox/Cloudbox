@@ -27,7 +27,7 @@
     path: /etc/systemd/system/docker.service.d/override.conf
     section: Unit
     option: "After"
-    value: "{{ 'unionfs' if (mounts.unionfs|lower) == 'unionfs' else 'mergerfs' }}.service"
+    value: "{{ mount_type }}.service"
     state: present
     no_extra_spaces: yes
   register: edit

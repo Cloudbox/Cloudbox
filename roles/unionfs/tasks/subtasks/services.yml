@@ -8,53 +8,36 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Services | Check if '{{ outer_item }}' exists"
+- name: "Services | Check if '{{ service_file }}' exists"
   stat:
-    path: "/etc/systemd/system/{{ outer_item }}"
-  register: outer_item_status
+    path: "/etc/systemd/system/{{ service_file }}"
+  register: service_file_status
 
-- name: "Services | Tasks for '{{ outer_item }}'"
+- name: "Services | Tasks for '{{ service_file }}'"
   block:
 
-  - name: "Services | Stop and disable existing '{{ outer_item }}'"
+  - name: "Services | Stop and disable existing '{{ service_file }}'"
     systemd:
-      name: "{{ outer_item }}"
+      name: "{{ service_file }}"
       state: stopped
       enabled: no
     ignore_errors: yes
 
-  - name: "Services | Update 'User/Group' in existing '{{ outer_item }}'"
+  - name: "Services | Update credentials in existing '{{ service_file }}'"
     ini_file:
-      path: "/etc/systemd/system/{{ outer_item }}"
+      path: "/etc/systemd/system/{{ service_file }}"
       section: Service
-      option: "{{ item.option }}"
-      value: "{{ item.value }}"
-      state: present
+      option: "{{ inner_item.option }}"
+      value: "{{ inner_item.value }}"
+      state: "{{ inner_item.state }}"
       no_extra_spaces: yes
     loop:
-      - { option: 'User', value: "{{ user.name }}" }
-      - { option: 'Group', value: "{{ user.name }}" }
-    when: outer_item != "mergerfs.service"
-
-  - name: "Services | Remove ownership in existing '{{ outer_item }}'"
-    ini_file:
-      path: "/etc/systemd/system/{{ outer_item }}"
-      section: Service
-      option: "{{ item.option }}"
-      state: absent
-    loop:
-      - { option: 'User' }
-      - { option: 'Group' }
-    when: outer_item == "mergerfs.service"
-
-  # if applicable
-  - name: "Services | Replace '/mnt/plexdrive' with '/mnt/remote' in '{{ outer_item }}'"
-    replace:
-      path: "/etc/systemd/system/{{ outer_item }}"
-      regexp: "\\/mnt\\/plexdrive"
-      replace: '/mnt/remote'
+      - { option: 'User', value: '{{ user.name }}', state: "{{ 'absent' if (service_file != 'mergerfs.service') else 'absent' }}" }
+      - { option: 'Group', value: '{{ user.name }}', state: "{{ 'absent' if (service_file != 'mergerfs.service') else 'absent' }}" }
+    loop_control:
+      loop_var: inner_item
 
   - name: "Services | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
-  when: outer_item_status.stat.exists
+  when: service_file_status.stat.exists

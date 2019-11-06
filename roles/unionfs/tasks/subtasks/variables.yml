@@ -12,43 +12,53 @@
 # UnionFS Mount Types
 ################################
 
-- name: Variables | Set 'unionfs_mount_type' to 'mergerfs'
+- name: Variables | Reset 'mount_type' variable
   set_fact:
-    unionfs_mount_type: "mergerfs"
+    mount_type:
+
+- name: Variables | Set 'mergerfs' mount variables
+  set_fact:
+    mount_type: "mergerfs"
   when: (mounts.unionfs | lower == "mergerfs")
 
-- name: Variables | Set 'unionfs_mount_type' to 'unionfs'
+- name: Variables | Set 'unionfs' mount variables
   set_fact:
-    unionfs_mount_type: "unionfs"
+    mount_type: "unionfs"
   when: (mounts.unionfs | lower == "unionfs")
+
+- name: Variables | Set 'mount_type_is_defined' variable
+  set_fact:
+    mount_type_is_defined:  "{{ (mount_type is defined) and
+                                (mount_type is not none) and
+                                (mount_type | trim | length > 0) }}"
 
 - name: Variables | Fail when no valid remote mount type is specified.
   fail:
     msg: "'{{ mounts.unionfs }}' is not a valid unionfs mount type."
-  when: unionfs_mount_type is undefined
+  when: not mount_type_is_defined
 
 ################################
 # Service Files List
 ################################
 
-- name: Variables | Set 'service_files_list' variable
+- name: Variables | Set 'service_file' variable
   set_fact:
-    service_files_list:
-      - "mergerfs.service"
-      - "unionfs.service"
+    service_file: "{{ mount_type }}.service"
 
 - name: Variables | Set 'service_files_stat' variable
   stat:
-    path: "/etc/systemd/system/{{ item }}"
-  register: service_files_stat
-  loop: "{{ service_files_list }}"
+    path: "/etc/systemd/system/{{ service_file }}"
+  register: service_file_stat
 
-- name: Variables | Create empty 'service_files' list
+- name: Variables | Create empty 'service_files_temp' list
   set_fact:
-    service_files: []
+    service_files_temp: []
 
 - name: Variables | Build 'service_files' list
   set_fact:
-    service_files: "{{ service_files + [ item.item ] }}"
-  when: item.stat.exists
-  loop: "{{ service_files_stat.results }}"
+    service_files_temp: "{{ service_files_temp + [ service_file ] }}"
+  when: service_file_stat.stat.exists
+
+- name: Variables | Set new 'service_files' variable
+  set_fact:
+    service_files: "{{ service_files_temp }}"
