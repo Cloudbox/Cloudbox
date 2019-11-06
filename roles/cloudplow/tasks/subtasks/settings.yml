@@ -15,7 +15,7 @@
 
 - name: Settings | Check if 'config.json' exists
   stat:
-    path: "{{ config_path }}"
+    path: "{{ cloudplow_config_path }}"
   register: cloudplow_config
 
 - name: Settings | New 'config.json' tasks
@@ -24,7 +24,7 @@
   - name: Settings | Import 'config.json'
     template:
       src: config.json.j2
-      dest: "{{ config_path }}"
+      dest: "{{ cloudplow_config_path }}"
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
       mode: 0775
@@ -44,32 +44,32 @@
 
   - name: Settings | Update Rclone config path 'config.json'
     shell: |
-      jq '.core.rclone_config_path = "{{ rclone_config_path }}"' "{{ config_path }}" | sponge "{{ config_path }}"
+      jq '.core.rclone_config_path = "{{ rclone_config_path }}"' "{{ cloudplow_config_path }}" | sponge "{{ cloudplow_config_path }}"
     become: yes
     become_user: "{{ user.name }}"
 
   - name: Settings | Update NZBGet credentials in 'config.json'
     shell: |
-      jq '.nzbget.url = "{{ nzbget_url }}"' {{ config_path }} | sponge {{ config_path }}
+      jq '.nzbget.url = "{{ nzbget_url }}"' {{ cloudplow_config_path }} | sponge {{ cloudplow_config_path }}
     become: yes
     become_user: "{{ user.name }}"
 
   - name: Settings | Update Plex URL in 'config.json'
     shell: |
-      jq '.plex.url = "{{ plex_url }}"' {{ config_path }} | sponge {{ config_path }}
+      jq '.plex.url = "{{ plex_url }}"' {{ cloudplow_config_path }} | sponge {{ cloudplow_config_path }}
     become: yes
     become_user: "{{ user.name }}"
 
   - name: Settings | Update Plex Token in 'config.json'
     shell: |
-      jq '.plex.token = "{{ plex_auth_token | default('') }}"' {{ config_path }} | sponge {{ config_path }}
+      jq '.plex.token = "{{ plex_auth_token | default('') }}"' {{ cloudplow_config_path }} | sponge {{ cloudplow_config_path }}
     become: yes
     become_user: "{{ user.name }}"
 
   when: cloudplow_config.stat.exists
 
 - name: Settings | Upgrade 'config.json'
-  shell: "{{ script_path }} update_config"
+  shell: "{{ cloudplow_script_path }} update_config"
   become: yes
   become_user: "{{ user.name }}"
   ignore_errors: yes

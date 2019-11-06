@@ -22,27 +22,15 @@ cloudplow_folder: "{{ cloudplow_name }}"
 
 cloudplow_path: "{{ server_appdata_path }}/{{ cloudplow_folder }}"
 
-folder_path: "{{ cloudplow_path }}"
+cloudplow_script_path: "{{ cloudplow_path }}/cloudplow.py"
 
-cloudplow_script_path: "{{ folder_path }}/cloudplow.py"
-
-script_path: "{{ cloudplow_script_path }}"
-
-cloupdlow_requirements_path: "{{ folder_path }}/requirements.txt"
-
-requirements_path: "{{ cloupdlow_requirements_path }}"
+cloudplow_requirements_path: "{{ cloudplow_path }}/requirements.txt"
 
 cloudplow_pip_excutable: "pip3"
 
-pip_executable: "{{ cloudplow_pip_excutable }}"
-
-cloudplow_config_path: "{{ folder_path }}/config.json"
-
-config_path: "{{ cloudplow_config_path }}"
+cloudplow_config_path: "{{ cloudplow_path }}/config.json"
 
 cloudplow_alias_path: "/usr/local/bin/{{ cloudplow_name }}"
-
-alias_path: "{{ cloudplow_alias_path }}"
 
 ################################
 # GitHub Repository
@@ -50,19 +38,13 @@ alias_path: "{{ cloudplow_alias_path }}"
 
 cloudplow_git_repo_url: "https://github.com/l3uddz/cloudplow.git"
 
-git_repo_url: "{{ cloudplow_git_repo_url }}"
-
-git_repo_dest: "{{ folder_path }}"
+cloudplow_git_repo_dest: "{{ cloudplow_path }}"
 
 ################################
 # Systemd
 ################################
 
-service_name: "{{ cloudplow_name }}"
-
-service_file: "{{ service_name }}.service"
-
-service_path: "/etc/systemd/system/{{ service_file }}"
+cloudplow_service_name: "{{ cloudplow_name }}"
 
 ################################
 # Rclone
