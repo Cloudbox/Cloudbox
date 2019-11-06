@@ -41,13 +41,13 @@
 # Service Files List
 ################################
 
-- name: Variables | Set 'service_file' variable
+- name: Variables | Set '_service_file' variable
   set_fact:
-    service_file: "{{ mount_type }}.service"
+    _service_file: "{{ mount_type }}.service"
 
 - name: Variables | Set 'service_files_stat' variable
   stat:
-    path: "/etc/systemd/system/{{ service_file }}"
+    path: "/etc/systemd/system/{{ _service_file }}"
   register: service_file_stat
 
 - name: Variables | Create empty 'service_files_temp' list
@@ -56,7 +56,7 @@
 
 - name: Variables | Build 'service_files' list
   set_fact:
-    service_files_temp: "{{ service_files_temp + [ service_file ] }}"
+    service_files_temp: "{{ service_files_temp + [ _service_file ] }}"
   when: service_file_stat.stat.exists
 
 - name: Variables | Set new 'service_files' variable
