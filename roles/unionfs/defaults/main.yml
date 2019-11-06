@@ -9,6 +9,12 @@
 ##########################################################################
 ---
 ################################
+# Global
+################################
+
+local_mount_branch: "{{ '/mnt/feeder' if (feeder_remote_is_active is defined and feeder_remote_is_active) else '/mnt/local' }}"
+
+################################
 # MergerFS
 ################################
 
@@ -30,7 +36,7 @@ mergerfs_download_backup_url: "
   {{ ansible_distribution|lower }}-\
   {{ ansible_distribution_release|lower }}_amd64.deb"
 
-mergerfs_mount_branches: /mnt/local=RW:/mnt/remote=NC
+mergerfs_mount_branches: "{{ local_mount_branch }}=RW:/mnt/remote=NC"
 
 mergerfs_mount_start_command: |-
   /usr/bin/mergerfs \
@@ -49,7 +55,7 @@ unionfs_fuse_path: /mnt/local/.unionfs-fuse
 
 unionfs_fuse_apt_package: unionfs-fuse
 
-unionfs_mount_branches: /mnt/local=RW:/mnt/remote=RO
+unionfs_mount_branches: "{{ local_mount_branch }}=RW:/mnt/remote=RO"
 
 unionfs_mount_start_command: |-
   /usr/bin/unionfs-fuse \

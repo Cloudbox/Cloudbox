@@ -1,5 +1,7 @@
+# /etc/systemd/system/feeder.service
 #########################################################################
-# Title:         Cloudbox: Feeder Mounts Role                           #
+# Title:         Cloudbox: Feeder Mount                                 #
+# Location:      /etc/systemd/system/feeder.service                     #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -7,17 +9,22 @@
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
----
-- name: "Services Stop Tasks"
-  include_tasks: "subtasks/services_stop.yml"
 
-- name: "Feeder Mount Tasks"
-  include_tasks: "subtasks/feeder_mount.yml"
-  when: ('feeder_mount' in ansible_run_tags) or ('feeder_mount_override' in ansible_run_tags)
+[Unit]
+Description=Feeder Mount
+After=network-online.target
 
-- name: "Feeder Unmount Tasks"
-  include_tasks: "subtasks/feeder_unmount.yml"
-  when: ('feeder_unmount' in ansible_run_tags)
+[Service]
+User={{ user.name }}
+Group={{ user.name }}
+Type=notify
+ExecStartPre=/bin/sleep 10
+ExecStart={{ feeder_mount_start_command }}
+ExecStop={{ feeder_mount_stop_command }}
+Restart=on-abort
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
 
-- name: "Services Start Tasks"
-  include_tasks: "subtasks/services_start.yml"
+[Install]
+WantedBy=default.target

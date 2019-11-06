@@ -51,7 +51,28 @@
 - name: Variables | Fail when no valid remote mount type is specified.
   fail:
     msg: "'{{ mounts.remote }}' is not a valid remote mount type."
-  when: not mount_types_is_defined
+  when: not mount_types_is_defined and not feeder_mount_is_enabled
+
+################################
+# Feeder
+################################
+
+- name: Variables | Add feeder entries to variable
+  block:
+
+  - name: Variables | Add 'feeder' to 'mount_types' variable
+    set_fact:
+      mount_types: "{{ mount_types + ['feeder'] }}"
+
+  - name: Variables | Add '/mnt/feeder' to 'mount_paths' variable
+    set_fact:
+      mount_paths: "{{ mount_paths + ['/mnt/feeder'] }}"
+
+  - name: Variables | Add 'feeder.service' to 'service_files' variable
+    set_fact:
+      service_files: "{{ service_files + ['feeder.service'] }}"
+
+  when: feeder_mount_is_enabled
 
 ################################
 # Service Files

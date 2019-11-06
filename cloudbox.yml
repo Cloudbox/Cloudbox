@@ -43,7 +43,6 @@
     - { role: radarr, tags: ['cloudbox', 'feederbox', 'radarr'] }
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
     - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['use_sma'] }
-    - { role: feeder, tags: ['feeder_mount', 'feeder_mount_override', 'feeder_unmount'] }
     - { role: plex_auth_token, tags: ['plex_auth_token'] }
     - { role: plex-plugin-trakttv, tags: ['plex-plugin-trakttv'] }
     - { role: plex-plugin-sub-zero, tags: ['plex-plugin-sub-zero', 'plex-plugin-sub-zero-reinstall'] }

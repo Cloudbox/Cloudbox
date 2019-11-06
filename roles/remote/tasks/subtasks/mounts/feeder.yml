@@ -1,0 +1,76 @@
+#########################################################################
+# Title:         Cloudbox: Remote | Feeder Tasks                        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/Cloudbox/Cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Feeder | Import 'feeder.service'
+  template:
+    src: feeder.service.j2
+    dest: /etc/systemd/system/feeder.service
+    force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
+
+- name: Feeder | Systemd daemon-reload 'feeder.service'
+  systemd: name=feeder.service state=stopped enabled=no daemon_reload=yes
+
+- name: Feeder | Get list of Rclone remotes in config
+  shell: rclone listremotes
+  become: yes
+  become_user: "{{ user.name }}"
+  register: rclone_config_remotes
+
+- name: Feeder | Set 'rclone_config_remotes' variable
+  set_fact:
+    rclone_config_remotes: "{{ (rclone_config_remotes.stdout).split() }}"
+
+- name: Feeder | Set 'rclone_remote_is_configured' variable
+  set_fact:
+    rclone_remote_is_configured: "{{ 'feeder:' in rclone_config_remotes }}"
+
+- name: Feeder | Tasks when Rclone remote is configured
+  block:
+
+  - name: "Feeder | Test Rclone remote 'feeder:'"
+    shell: |
+      rclone lsd 'feeder:' \
+        --user-agent='{{ user_agent }}'
+    become: yes
+    become_user: "{{ user.name }}"
+    register: rclone_test
+    failed_when: (rclone_test.rc|int > 5)
+
+  - name: Feeder | Set 'rclone_remote_is_working' variable
+    set_fact:
+      rclone_remote_is_working: "{{ rclone_test.rc | int == 0 }}"
+
+  - name: Feeder | Start 'feeder.service'
+    systemd: name=feeder.service state=started enabled=yes
+    when: rclone_remote_is_working
+
+  - name: "Feeder | Display error message when Rclone remote is not working properly"
+    fail:
+      msg:
+        - "Rclone remote 'feeder:' is not working properly."
+        - "{{ rclone_test.stderr }}"
+    when: not rclone_remote_is_working
+    ignore_errors: yes
+
+  when: rclone_remote_is_configured
+
+- name: "Feeder | Display error message when Rclone remote is not configured properly"
+  fail:
+    msg:
+      - "Rclone remote 'feeder:' is not configured properly."
+  when: not rclone_remote_is_configured
+  ignore_errors: yes
+
+- name: Feeder | Set 'feeder_remote_is_active' variable
+  set_fact:
+    feeder_remote_is_active:  "{{ (feeder_remote_is_configured is defined and
+                                    feeder_remote_is_configured) and
+                                  (feeder_remote_is_working is defined and
+                                    feeder_remote_is_working) }}"

@@ -7,6 +7,7 @@ docker:
 mounts:
   unionfs: mergerfs
   remote: rclone_vfs
+  feeder: no
 plex:
   open_main_ports: no
   open_extra_ports: no

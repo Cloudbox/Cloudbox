@@ -60,6 +60,14 @@ torrents_downloads_path_is_defined: "{{ (downloads is defined) and
 
 use_torrents: "{{ torrents_downloads_path_is_defined }}"
 
+feeder_mount_is_enabled:  "{{ (mounts is defined) and
+                              (mounts is not none) and
+                              (mounts | trim | length > 0) and
+                              (mounts.feeder is defined) and
+                              (mounts.feeder is not none) and
+                              (mounts.feeder | trim | length > 0) and
+                              (mounts.feeder) }}"
+
 rclone_remote_is_defined: "{{ (rclone is defined) and
                               (rclone is not none) and
                               (rclone | trim | length > 0) and
@@ -67,7 +75,7 @@ rclone_remote_is_defined: "{{ (rclone is defined) and
                               (rclone.remote is not none) and
                               (rclone.remote | trim | length > 0) }}"
 
-use_remote: "{{ rclone_remote_is_defined }}"
+use_remote: "{{ feeder_mount_is_enabled or rclone_remote_is_defined }}"
 
 use_nvidia: "{{ gpu.nvidia.enabled  }}"
 

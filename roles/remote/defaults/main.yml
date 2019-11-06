@@ -17,6 +17,27 @@ user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 rclone_config_path: "/home/{{ user.name }}/.config/rclone/rclone.conf"
 
 ################################
+# Feeder
+################################
+
+feeder_mount_start_command: |-
+  /usr/bin/rclone mount \
+    --user-agent='{{ user_agent }}' \
+    --config={{ rclone_config_path }} \
+    --allow-other \
+    --allow-non-empty \
+    --copy-links \
+    --fast-list \
+    --dir-cache-time=1m \
+    --max-read-ahead=200M \
+    --umask=002 \
+    --syslog \
+    -v \
+    feeder:/mnt/local /mnt/feeder
+
+feeder_mount_stop_command: /bin/fusermount -uz /mnt/feeder
+
+################################
 # Plexdrive 4
 ################################
 
