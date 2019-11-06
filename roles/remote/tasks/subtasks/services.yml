@@ -8,24 +8,24 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Services | Check if '{{ service_file }}' exists"
+- name: "Services | Check if '{{ _service_file }}' exists"
   stat:
-    path: "/etc/systemd/system/{{ service_file }}"
-  register: service_file_status
+    path: "/etc/systemd/system/{{ _service_file }}"
+  register: _service_file_status
 
-- name: "Services | Tasks for '{{ service_file }}'"
+- name: "Services | Tasks for '{{ _service_file }}'"
   block:
 
-  - name: "Services | Stop and disable existing '{{ service_file }}'"
+  - name: "Services | Stop and disable existing '{{ _service_file }}'"
     systemd:
-      name: "{{ service_file }}"
+      name: "{{ _service_file }}"
       state: stopped
       enabled: no
     ignore_errors: yes
 
-  - name: "Services | Update credentials in existing '{{ service_file }}'"
+  - name: "Services | Update credentials in existing '{{ _service_file }}'"
     ini_file:
-      path: "/etc/systemd/system/{{ service_file }}"
+      path: "/etc/systemd/system/{{ _service_file }}"
       section: Service
       option: "{{ inner_item.option }}"
       value: "{{ inner_item.value }}"
@@ -36,17 +36,17 @@
       - { option: 'Group', value: "{{ user.name }}" }
     loop_control:
       loop_var: inner_item
-    when: (service_file is not regex('.*\.timer'))
+    when: (_service_file is not regex('.*\.timer'))
 
   # if applicable
-  - name: "Services | Update 'rc-addr' in existing '{{ service_file }}'"
+  - name: "Services | Update 'rc-addr' in existing '{{ _service_file }}'"
     replace:
-      path: "/etc/systemd/system/{{ service_file }}"
+      path: "/etc/systemd/system/{{ _service_file }}"
       regexp: "rc-addr=localhost:[0-9]*"
       replace: 'rc-addr=localhost:5572'
-    when: (service_file is not regex('.*\.timer'))
+    when: (_service_file is not regex('.*\.timer'))
 
   - name: "Services | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
-  when: service_file_status.stat.exists
+  when: _service_file_status.stat.exists

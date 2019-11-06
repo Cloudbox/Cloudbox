@@ -29,7 +29,7 @@
 - name: Service Tasks
   include_tasks: "subtasks/services.yml"
   vars:
-    service_file: "{{ item }}"
+    _service_file: "{{ item }}"
   loop: "{{ service_files }}"
 
 - name: Rclone Tasks
