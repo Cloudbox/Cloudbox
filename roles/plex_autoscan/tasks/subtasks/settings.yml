@@ -76,13 +76,3 @@
   become: yes
   become_user: "{{ user.name }}"
   ignore_errors: yes
-  tags: plex-autoscan-update-sections
-
-- name: Settings | Update 'PLEX_SECTION_PATH_MAPPINGS' in 'config.json'
-  shell: "/opt/plex_autoscan/scan.py update_sections"
-  become: yes
-  become_user: "{{ user.name }}"
-  ignore_errors: yes
-  async: 60
-  poll: 0
-  tags: plex-autoscan-update-sections
