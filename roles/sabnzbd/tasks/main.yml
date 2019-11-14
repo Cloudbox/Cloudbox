@@ -46,13 +46,11 @@
 - name: Create and start container
   docker_container:
     name: sabnzbd
-    image: hotio/sabnzbd
+    image: "hotio/sabnzbd:latest"
     pull: yes
     published_ports:
       - "127.0.0.1:8081:8080"
     env:
-      VERSION: "{{ suitarr_version }}"
-      BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
