@@ -67,11 +67,7 @@
    "SERVER_ALLOW_MANUAL_SCAN":false,
    "SERVER_FILE_CHECK_DELAY":60,
    "SERVER_MAX_FILE_CHECKS":10,
-   "SERVER_FILE_EXIST_PATH_MAPPINGS":{
-      "/mnt/unionfs/Media/":[
-         "/data/"
-      ]
-   },
+   "SERVER_FILE_EXIST_PATH_MAPPINGS":{},
    "SERVER_IGNORE_LIST":[
       "/.grab/",
       ".DS_Store",
@@ -80,20 +76,9 @@
    "SERVER_IP":"0.0.0.0",
    "SERVER_PASS":"{{ plex_autoscan_server_pass | default('') }}",
    "SERVER_PATH_MAPPINGS":{
-      "/data/Movies/":[
-         "/movies/",
-         "/mnt/unionfs/Media/Movies/",
-         "My Drive/Media/Movies/"
-      ],
-      "/data/TV/":[
-         "/tv/",
-         "/mnt/unionfs/Media/TV/",
-         "My Drive/Media/TV/"
-      ],
-      "/data/Music/":[
-         "/music/",
-         "/mnt/unionfs/Media/Music/",
-         "My Drive/Media/Music/"
+      "/mnt/unionfs/Media/":[
+         "/mnt/unionfs/Media/",
+         "My Drive/Media/"
       ]
    },
    "SERVER_PORT":3468,
