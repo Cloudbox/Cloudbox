@@ -2,8 +2,7 @@
 # Title:            Cloudbox: Sonarr Role                               #
 # Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  hotio/sonarr,                                       #
-#                   andrewkhunn/suitarr_mp4_automator                   #
+# Docker Image(s):  hotio/sonarr                                        #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -51,20 +50,6 @@
 - name: Darkerr Tasks
   import_tasks: "subtasks/darkerr.yml"
 
-- name: Set docker image variables variables
-  set_fact:
-    suitarr_image: "{{ 'hotio/sonarr3'
-                        if ('v3' in sonarr.version | lower) or
-                            ((sonarr.version | type_debug == 'float') and
-                                (sonarr.version is version('3.0.0.0', '>=')))
-                        else 'hotio/sonarr' }}"
-    suitarr_version:  "{{ sonarr.version
-                          if ('tar.gz' in sonarr.version | lower)
-                          else 'image'
-                              if ((sonarr.version | type_debug == 'float') and
-                                    (sonarr.version is version('3.0.0.0', '>=')))
-                          else 'unstable' }}"
-
 - name: "Check if '/dev/dri' exists"
   stat:
     path: "/dev/dri"
@@ -96,13 +81,11 @@
 - name: Create and start container
   docker_container:
     name: sonarr
-    image: "{{ suitarr_image }}"
+    image: "hotio/sonarr:phantom"
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8989"
     env:
-      VERSION: "{{ suitarr_version }}"
-      BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
@@ -111,7 +94,6 @@
       LETSENCRYPT_HOST: "sonarr.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"
-      SONARR3_VERSION: "{{ sonarr.version if ((sonarr.version | type_debug == 'float') and (sonarr.version is version('3.0.0.0', '>='))) else omit }}"
     volumes: "{{ docker_volumes }}"
     devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and (sickbeard_mp4_automator | default(false,true)) and dev_dri.stat.exists) | default(false) else omit }}"
     labels:
