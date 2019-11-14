@@ -2,8 +2,7 @@
 # Title:            Cloudbox: Radarr Role                               #
 # Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  hotio/radarr,                                       #
-#                   andrewkhunn/suitarr_mp4_automator                   #
+# Docker Image(s):  hotio/radarr                                        #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -82,13 +81,11 @@
 - name: Create and start container
   docker_container:
     name: radarr
-    image: "hotio/radarr"
+    image: "hotio/radarr:unstable"
     pull: yes
     published_ports:
       - "127.0.0.1:7878:7878"
     env:
-      VERSION: "{{ suitarr_version }}"
-      BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
