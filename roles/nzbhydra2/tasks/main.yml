@@ -53,13 +53,11 @@
 - name: Create and start container
   docker_container:
     name: nzbhydra2
-    image: hotio/nzbhydra2
+    image: "hotio/nzbhydra2:latest"
     pull: yes
     published_ports:
       - "127.0.0.1:5076:5076"
     env:
-      VERSION: "{{ suitarr_version }}"
-      BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
