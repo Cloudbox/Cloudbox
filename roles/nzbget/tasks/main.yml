@@ -87,13 +87,11 @@
 - name: Create and start container
   docker_container:
     name: nzbget
-    image: hotio/nzbget
+    image: "hotio/nzbget:unstable"
     pull: yes
     published_ports:
       - "127.0.0.1:6789:6789"
     env:
-      VERSION: "{{ suitarr_version }}"
-      BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
