@@ -37,6 +37,22 @@
     loop_control:
       loop_var: inner_item
 
+  - name: Replace '/mnt/local' with '/mnt/feeder' in existing '{{ _service_file }}'"
+    replace:
+      path: "/etc/systemd/system/{{ _service_file }}"
+      regexp: "\\/mnt\\/local"
+      replace: '/mnt/feeder'
+    when:
+      - feeder_mount_is_enabled
+      - (feeder_remote_is_active is defined and feeder_remote_is_active)
+
+  - name: Replace '/mnt/feeder' with '/mnt/local' in existing '{{ _service_file }}'"
+    replace:
+      path: "/etc/systemd/system/{{ _service_file }}"
+      regexp: "\\/mnt\\/feeder"
+      replace: '/mnt/local'
+    when: not feeder_mount_is_enabled or not (feeder_remote_is_active is defined and feeder_remote_is_active)
+
   - name: "Services | Systemd daemon-reload"
     systemd: daemon_reload=yes
 
