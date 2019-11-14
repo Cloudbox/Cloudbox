@@ -52,7 +52,7 @@ docker_name: "{{ lidarr_docker_name }}"
 # Docker Image
 ################################
 
-lidarr_docker_image: "hotio/lidarr"
+lidarr_docker_image: "hotio/lidarr:latest"
 
 docker_image: "{{ lidarr_docker_image }}"
 
@@ -80,11 +80,9 @@ lidarr_port: 8686
 web_port: "{{ lidarr_port }}"
 
 lidarr_docker_envs_standard:
-  VERSION: "{{ suitarr_version }}"
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   UMASK: 002
-  BACKUP: "no"
   TZ: "{{ tz }}"
 
 lidarr_docker_envs_reverse_proxy_extras: {}
