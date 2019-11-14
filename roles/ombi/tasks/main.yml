@@ -23,14 +23,6 @@
 - name: Suitarr | Migration Tasks
   import_tasks: "subtasks/suitarr/migration.yml"
 
-- name: Set 'ombi_version' variable
-  set_fact:
-    ombi_version: "{{ suitarr_version }}"
-
-- name: Suitarr | Version Check Tasks
-  include_tasks: "subtasks/suitarr/version.yml"
-  when: (ombi_version == 'unstable')
-
 - name: Create ombi directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
@@ -39,13 +31,11 @@
 - name: Create and start container
   docker_container:
     name: ombi
-    image: "hotio/ombi"
+    image: "hotio/ombi:latest"
     pull: yes
     published_ports:
       - "127.0.0.1:3579:5000"
     env:
-      VERSION: "{{ ombi_version }}"
-      BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
