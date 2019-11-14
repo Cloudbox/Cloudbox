@@ -14,10 +14,6 @@ plex:
   force_auto_adjust_quality: no
   force_high_output_bitrates: no
   db_cache_size: default
-suitarr:
-  version: default
-sonarr:
-  version: v3
 darkerr:
   enable: no
 emby:
