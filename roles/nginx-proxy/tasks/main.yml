@@ -50,29 +50,23 @@
   with_items:
     - /opt/nginx-proxy
     - /opt/nginx-proxy/certs
+    - /opt/nginx-proxy/conf.d
     - /opt/nginx-proxy/htpasswd
     - /opt/nginx-proxy/vhost.d
 
-- name: Check if 'proxy.conf' file exists
-  stat:
-    path: "/opt/nginx-proxy/proxy.conf"
-  register: proxy_conf
-
-- name: "Delete 'proxy.conf' if link or a folder"
+- name: Delete 'proxy.conf' if in main folder
   file:
     path: "/opt/nginx-proxy/proxy.conf"
     state: absent
-  when:  (proxy_conf.stat.exists) and ((proxy_conf.stat.islnk) or (proxy_conf.stat.isdir))
 
-- name: Import 'proxy.conf'
+- name: Import 'proxy.conf' file
   copy:
-    src: "proxy.conf"
-    dest: "/opt/nginx-proxy/proxy.conf"
+    src: "conf.d/proxy.conf"
+    dest: "/opt/nginx-proxy/conf.d/proxy.conf"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
     force: yes
-  when: (not proxy_conf.stat.exists) or ((proxy_conf.stat.exists) and ((proxy_conf.stat.islnk) or (proxy_conf.stat.isdir)))
 
 - name: Create and start container
   docker_container:
@@ -84,11 +78,11 @@
       - "443:443"
     volumes:
       - "/opt/nginx-proxy/certs:/etc/nginx/certs:ro"
+      - "/opt/nginx-proxy/conf.d/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
       - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "/usr/share/nginx/html"
-      - "/opt/nginx-proxy/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
     env:
       TZ: "{{ tz }}"
     labels:
