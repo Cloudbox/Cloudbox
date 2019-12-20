@@ -48,7 +48,6 @@
     - { role: plex-plugin-sub-zero, tags: ['plex-plugin-sub-zero', 'plex-plugin-sub-zero-reinstall'] }
     - { role: plex-plugin-webtools, tags: ['plex-plugin-webtools', 'plex-plugin-webtools-reinstall'] }
     - { role: subliminal, tags: ['subliminal'] }
-    - { role: resilio-sync, tags: ['resilio-sync'] }
     - { role: mariadb, tags: ['mariadb'] }
     - { role: emby, tags: ['emby'] }
     - { role: traktarr, tags: ['traktarr'] }
