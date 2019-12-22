@@ -79,7 +79,7 @@ use_remote: "{{ feeder_mount_is_enabled or rclone_remote_is_defined }}"
 
 use_nvidia: "{{ gpu.nvidia.enabled  }}"
 
-use_sma: "{{ sickbeard_mp4_automator }}"
+use_sma: "{{ sickbeard_mp4_automator  | default(false,true) }}"
 
 ################################
 # System

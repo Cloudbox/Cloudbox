@@ -1,0 +1,41 @@
+##############################################################################
+# Title:         Cloudbox: Resources | Tasks | Hotio | SMA | Install Reqs    #
+# Author(s):     desimaniac                                                  #
+# URL:           https://github.com/cloudbox/cloudbox                        #
+# --                                                                         #
+#         Part of the Cloudbox project: https://cloudbox.works               #
+##############################################################################
+#                   GNU General Public License v3.0                          #
+##############################################################################
+---
+- name: Set 'script_d_path' variable
+  set_fact:
+    script_d_path: "{{ lookup('vars', role_name + '_path') }}/script.d/"
+
+- name: Create directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - "{{ script_d_path }}"
+
+- name: Import 'sma_req.sh' script
+  copy:
+    src: "{{ playbook_dir }}/resources/tasks/hotio/sickbeard_mp4_automator/files/99-sma_req.sh"
+    dest: "{{ script_d_path }}/99-sma_req.sh"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: yes
+
+- name: Set 'sma_req_volume' variable
+  set_fact:
+    sma_req_volume:
+      - "{{ script_d_path }}/99-sma_req.sh:/etc/cont-init.d/99-sma_req.sh"
+
+- name: Set 'docker_volumes_var_*' temp variables
+  set_fact:
+      docker_volumes_var_name: "{{ role_name + '_docker_volumes' }}"
+      docker_volumes_var_value: "{{ lookup('vars', role_name + '_docker_volumes') }}"
+
+- name: Rebuild 'docker_volumes' variable
+  set_fact:
+    "{{ docker_volumes_var_name }}": "{{ docker_volumes_var_value + sma_req_volume }}"
