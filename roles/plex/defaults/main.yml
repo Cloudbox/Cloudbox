@@ -20,35 +20,31 @@ plex_name: plex
 
 plex_subdomain: "{{ plex_name }}"
 
-subdomain: "{{ plex_subdomain }}"
-
 ################################
 # Folders
 ################################
 
 plex_folder: "{{ plex_name }}"
 
-app_folder: "{{ plex_folder }}"
+plex_transcodes_path: "{{ plex.transcodes }}/{{ plex_folder }}"
 
-plex_transcodes_path: "{{ plex.transcodes }}/{{ app_folder }}"
+plex_path: "{{ server_appdata_path }}/{{ plex_folder }}"
 
 plex_folders:
-  - "{{ server_appdata_path }}/{{ app_folder }}"
-  - "{{ server_appdata_path }}/{{ app_folder }}/Library"
-  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support"
-  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server"
-  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server/Plug-ins"
-  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Logs"
-  - "{{ server_appdata_path }}/{{ app_folder }}/Library/Logs/Plex Media Server"
+  - "{{ plex_path }}"
+  - "{{ plex_path }}/Library"
+  - "{{ plex_path }}/Library/Application Support"
+  - "{{ plex_path }}/Library/Application Support/Plex Media Server"
+  - "{{ plex_path }}/Library/Application Support/Plex Media Server/Plug-ins"
+  - "{{ plex_path }}/Library/Logs"
+  - "{{ plex_path }}/Library/Logs/Plex Media Server"
   - "{{ plex_transcodes_path }}"
-
-folders: "{{ plex_folders }}"
 
 ################################
 # Files
 ################################
 
-plex_application_support_path: "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server"
+plex_application_support_path: "{{ plex_path }}/Library/Application Support/Plex Media Server"
 
 plex_config_file_path: "{{ plex_application_support_path }}/Preferences.xml"
 
@@ -58,9 +54,7 @@ plex_db_path: "{{ plex_application_support_path }}/Plug-in Support/Databases/com
 # Docker Container
 ################################
 
-plex_docker_name: "{{ plex_name }}"
-
-docker_name: "{{ plex_docker_name }}"
+plex_docker_container: "{{ plex_name }}"
 
 ################################
 # Docker Image
@@ -68,11 +62,7 @@ docker_name: "{{ plex_docker_name }}"
 
 plex_docker_image: "plexinc/pms-docker:{{ plex.tag }}"
 
-docker_image: "{{ plex_docker_image }}"
-
 plex_docker_pull: yes
-
-docker_pull: "{{ plex_docker_pull }}"
 
 ################################
 # Docker Ports
@@ -95,41 +85,39 @@ webtools_ports:
   - "33400:33400/tcp"
   - "33443:33443/tcp"
 
-plex_docker_ports: "{{ (plex_main_ports)
-                        if ((plex.open_main_ports and
-                            not plex.open_extra_ports) or
-                            (not reverse_proxy_is_enabled))
-                        else (plex_main_ports + plex_extra_ports)
-                              if (plex.open_main_ports and
-                                  plex.open_extra_ports)
-                        else (plex_extra_ports)
-                              if (not plex.open_main_ports and
-                                  plex.open_extra_ports)
-                        else [] }}"
+plex_ports: "{{ (plex_main_ports)
+                if ((plex.open_main_ports and
+                      not plex.open_extra_ports) or
+                    (not reverse_proxy_is_enabled))
+                else (plex_main_ports + plex_extra_ports)
+                      if (plex.open_main_ports and
+                          plex.open_extra_ports)
+                else (plex_extra_ports)
+                      if (not plex.open_main_ports and
+                          plex.open_extra_ports)
+                else [] }}"
 
-docker_ports: "{{ plex_docker_ports + webtools_ports }}"
+plex_docker_ports: "{{ plex_ports + webtools_ports }}"
 
 ################################
 # Docker Envs
 ################################
 
-plex_port: 32400
-
-web_port: "{{ plex_port }}"
+plex_web_port: 32400
 
 plex_docker_envs_standard:
   PLEX_UID: "{{ uid }}"
   PLEX_GID: "{{ gid }}"
   PLEX_CLAIM: "{{ (plex_claim_code) | default(omit) }}"
   CHANGE_CONFIG_DIR_OWNERSHIP: "false"
-  ADVERTISE_IP: "http://{{ ip_address_host }}:{{ web_port }}/"
+  ADVERTISE_IP: "http://{{ ip_address_host }}:{{ plex_web_port }}/"
   HEALTHCHECK_MOUNT: /mnt/unionfs
   NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia.enabled) | default(false) else omit }}"
   NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
   TZ: "{{ tz }}"
 
 plex_docker_envs_reverse_proxy_extras:
-  ADVERTISE_IP: "http://{{ subdomain }}.{{ user.domain }}:80/,https://{{ subdomain }}.{{ user.domain }}:443/"
+  ADVERTISE_IP: "http://{{ plex_subdomain }}.{{ user.domain }}:80/,https://{{ plex_subdomain }}.{{ user.domain }}:443/"
   HTTPS_METHOD: noredirect
 
 plex_docker_envs: "{{ (plex_docker_envs_standard |
@@ -138,14 +126,12 @@ plex_docker_envs: "{{ (plex_docker_envs_standard |
                       if (reverse_proxy_is_enabled)
                       else (plex_docker_envs_standard) }}"
 
-docker_envs: "{{ plex_docker_envs }}"
-
 ################################
 # Docker Volumes
 ################################
 
 plex_docker_volumes:
-  - "{{ server_appdata_path }}/{{ app_folder }}:/config"
+  - "{{ plex_path }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media:/data"
   - "/mnt:/mnt"
@@ -153,15 +139,11 @@ plex_docker_volumes:
   - "/dev/shm:/dev/shm"
   - "{{ plex_transcodes_path }}:/transcode"
 
-docker_volumes: "{{ plex_docker_volumes }}"
-
 ################################
 # Docker Devices
 ################################
 
 plex_docker_devices: []
-
-docker_devices: "{{ plex_docker_devices }}"
 
 ################################
 # Docker Hosts
@@ -181,30 +163,23 @@ plex_docker_hosts_custom:
 
 plex_docker_hosts: "{{ plex_docker_hosts_default | combine(plex_docker_hosts_custom) }}"
 
-docker_hosts: "{{ plex_docker_hosts }}"
-
 ################################
 # Docker Labels
 ################################
 
-plex_docker_labels: {}
+plex_docker_labels_custom: {}
 
-docker_labels: "{{ docker_labels_common | combine(plex_docker_labels) }}"
+plex_docker_labels: "{{ docker_labels_common | combine(plex_docker_labels_custom) }}"
 
 ################################
 # Docker Networks
 ################################
 
-plex_docker_network_alias: "{{ plex_name }}"
+plex_docker_networks_alias: "{{ plex_name }}"
 
-docker_network_alias: "{{ plex_docker_network_alias }}"
+plex_docker_networks_custom: []
 
-plex_docker_networks: []
-
-docker_networks: "{{ (docker_networks_common)
-                      if not (plex_docker_networks and
-                              plex_docker_networks | length > 0)
-                      else (plex_docker_networks) }}"
+plex_docker_networks: "{{ docker_networks_common + plex_docker_networks_custom }}"
 
 ################################
 # Docker Capabilities
@@ -212,15 +187,11 @@ docker_networks: "{{ (docker_networks_common)
 
 plex_docker_capabilities: []
 
-docker_capabilities: "{{ plex_docker_capabilities }}"
-
 ################################
 # Docker Security
 ################################
 
 plex_docker_security_opts: []
-
-docker_security_opts: "{{ plex_docker_security_opts }}"
 
 ################################
 # Docker Restart Policy
@@ -228,12 +199,8 @@ docker_security_opts: "{{ plex_docker_security_opts }}"
 
 plex_docker_restart_policy: unless-stopped
 
-docker_restart_policy: "{{ plex_docker_restart_policy }}"
-
 ################################
 # Docker State
 ################################
 
 plex_docker_state: started
-
-docker_state: "{{ plex_docker_state }}"

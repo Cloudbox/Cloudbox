@@ -28,7 +28,7 @@
     state: present
 
 - name: Post-Install | Wait for {{ plex_name | title }} executable to be created
-  shell: docker exec {{ docker_name }} bash -c "ls '/usr/lib/plexmediaserver/Plex Media Server'"
+  shell: docker exec {{ plex_docker_container }} bash -c "ls '/usr/lib/plexmediaserver/Plex Media Server'"
   register: pms_check
   until: pms_check.stderr.find("No such file or directory") == -1
   retries: 600
