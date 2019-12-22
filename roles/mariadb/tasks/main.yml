@@ -1,8 +1,7 @@
 #########################################################################
-# Title:            Cloudbox: MariaDB Role                              #
-# Author(s):        l3uddz, desimaniac                                  #
-# URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  linuxserver/mariadb                                 #
+# Title:         Cloudbox: MariaDB Role                                 #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -11,12 +10,12 @@
 ---
 - name: Remove existing Docker container
   docker_container:
-    name: "{{ docker_name }}"
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
 
 - name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items: "{{ folders }}"
+  with_items: "{{ lookup('vars', role_name + '_folders') }}"
 
 - name: Create Docker container
   include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
