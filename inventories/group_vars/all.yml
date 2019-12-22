@@ -163,13 +163,6 @@ torrents_downloads_path: "{{ [downloads.torrents + ':/downloads/torrents']
                               else [] }}"
 
 ################################
-# Docker Devices
-################################
-
-docker_devices_dev_dri:
-  - "/dev/dri:/dev/dri"
-
-################################
 # Docker Hosts
 ################################
 
