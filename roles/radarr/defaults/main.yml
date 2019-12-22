@@ -116,6 +116,12 @@ radarr_docker_labels_custom: {}
 radarr_docker_labels: "{{ docker_labels_common | combine(radarr_docker_labels_custom) }}"
 
 ################################
+# Docker Hostname
+################################
+
+radarr_docker_hostname: "{{ radarr_name }}"
+
+################################
 # Docker Networks
 ################################
 

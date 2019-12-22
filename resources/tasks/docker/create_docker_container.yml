@@ -19,6 +19,7 @@
     devices: "{{ lookup('vars', role_name + '_docker_devices') }}"
     etc_hosts: "{{ lookup('vars', role_name + '_docker_hosts') }}"
     labels: "{{ lookup('vars', role_name + '_docker_labels') }}"
+    hostname: "{{ lookup('vars', role_name + '_docker_hostname') }}"
     networks: "{{ lookup('vars', role_name + '_docker_networks') }}"
     purge_networks: yes
     restart_policy: "{{ lookup('vars', role_name + '_docker_restart_policy') }}"

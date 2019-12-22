@@ -97,6 +97,12 @@ mariadb_docker_labels_custom: {}
 mariadb_docker_labels: "{{ docker_labels_common | combine(mariadb_docker_labels_custom) }}"
 
 ################################
+# Docker Hostname
+################################
+
+mariadb_docker_hostname: "{{ mariadb_name }}"
+
+################################
 # Docker Networks
 ################################
 

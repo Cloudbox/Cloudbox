@@ -115,6 +115,12 @@ netdata_docker_labels_custom: {}
 netdata_docker_labels: "{{ docker_labels_common | combine(netdata_docker_labels_custom) }}"
 
 ################################
+# Docker Hostname
+################################
+
+netdata_docker_hostname: "{{ netdata_name }}"
+
+################################
 # Docker Networks
 ################################
 

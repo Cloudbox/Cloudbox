@@ -170,6 +170,12 @@ plex_docker_labels_custom: {}
 plex_docker_labels: "{{ docker_labels_common | combine(plex_docker_labels_custom) }}"
 
 ################################
+# Docker Hostname
+################################
+
+plex_docker_hostname: "{{ plex_name }}"
+
+################################
 # Docker Networks
 ################################
 

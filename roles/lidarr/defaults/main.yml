@@ -108,6 +108,12 @@ lidarr_docker_hosts_custom: []
 lidarr_docker_hosts: "{{ docker_hosts_common | combine(lidarr_docker_hosts_custom) }}"
 
 ################################
+# Docker Hostname
+################################
+
+lidarr_docker_hostname: "{{ lidarr_name }}"
+
+################################
 # Docker Labels
 ################################
 

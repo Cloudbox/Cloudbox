@@ -112,6 +112,12 @@ jackett_docker_labels_custom: {}
 jackett_docker_labels: "{{ docker_labels_common | combine(jackett_docker_labels_custom) }}"
 
 ################################
+# Docker Hostname
+################################
+
+jackett_docker_hostname: "{{ jackett_name }}"
+
+################################
 # Docker Networks
 ################################
 

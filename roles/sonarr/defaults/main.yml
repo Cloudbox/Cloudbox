@@ -116,6 +116,12 @@ sonarr_docker_labels_custom: {}
 sonarr_docker_labels: "{{ docker_labels_common | combine(sonarr_docker_labels_custom) }}"
 
 ################################
+# Docker Hostname
+################################
+
+sonarr_docker_hostname: "{{ sonarr_name }}"
+
+################################
 # Docker Networks
 ################################
 
