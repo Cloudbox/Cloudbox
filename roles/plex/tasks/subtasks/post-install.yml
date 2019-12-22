@@ -16,21 +16,3 @@
     group: "{{ user.name }}"
     mode: 0775
     recurse: yes
-
-- name: Post-Install | Wait for '{{ plex_config_file_path | basename }}' to be created
-  wait_for:
-    path: "{{ plex_config_file_path }}"
-    state: present
-
-- name: Post-Install | Wait for {{ plex_name | title }} DB to be created
-  wait_for:
-    path: "{{ plex_db_path }}"
-    state: present
-
-- name: Post-Install | Wait for {{ plex_name | title }} executable to be created
-  shell: docker exec {{ plex_docker_container }} bash -c "ls '/usr/lib/plexmediaserver/Plex Media Server'"
-  register: pms_check
-  until: pms_check.stderr.find("No such file or directory") == -1
-  retries: 600
-  changed_when: false
-  failed_when: pms_check.rc == 1 or pms_check.rc > 2

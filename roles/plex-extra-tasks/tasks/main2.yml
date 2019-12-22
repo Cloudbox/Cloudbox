@@ -23,6 +23,9 @@
     set_fact:
       plex_is_running_outer_state: "{{ plex_docker_container in docker_running_containers_list }}"
 
+  - name: Plex Post-Install Checks
+    import_tasks: "subtasks/post_install_checks.yml"
+
   - name: Stop Docker Container
     docker_container:
       name: "{{ plex_docker_container }}"
