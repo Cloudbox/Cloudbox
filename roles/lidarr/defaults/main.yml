@@ -20,20 +20,16 @@ lidarr_name: lidarr
 
 lidarr_subdomain: "{{ lidarr_name }}"
 
-subdomain: "{{ lidarr_subdomain }}"
-
 ################################
 # Folders
 ################################
 
 lidarr_folder: "{{ lidarr_name }}"
 
-app_folder: "{{ lidarr_folder }}"
+lidarr_path: "{{ server_appdata_path }}/{{ lidarr_name }}"
 
 lidarr_folders:
-  - "{{ server_appdata_path }}/{{ app_folder }}"
-
-folders: "{{ lidarr_folders }}"
+  - "{{ lidarr_path }}"
 
 ################################
 # Files
@@ -44,9 +40,7 @@ folders: "{{ lidarr_folders }}"
 # Docker Container
 ################################
 
-lidarr_docker_name: "{{ lidarr_name }}"
-
-docker_name: "{{ lidarr_docker_name }}"
+lidarr_docker_container: "{{ lidarr_name }}"
 
 ################################
 # Docker Image
@@ -54,30 +48,24 @@ docker_name: "{{ lidarr_docker_name }}"
 
 lidarr_docker_image: "hotio/lidarr:latest"
 
-docker_image: "{{ lidarr_docker_image }}"
-
 lidarr_docker_pull: yes
-
-docker_pull: "{{ lidarr_docker_pull }}"
 
 ################################
 # Docker Ports
 ################################
 
-lidarr_docker_ports:
+lidarr_ports:
   - "8686:8686"
 
-docker_ports: "{{ lidarr_docker_ports
-                  if (not reverse_proxy_is_enabled)
-                  else [] }}"
+lidarr_docker_ports: "{{ lidarr_ports
+                         if (not reverse_proxy_is_enabled)
+                         else [] }}"
 
 ################################
 # Docker Envs
 ################################
 
-lidarr_port: 8686
-
-web_port: "{{ lidarr_port }}"
+lidarr_web_port: 8686
 
 lidarr_docker_envs_standard:
   PUID: "{{ uid }}"
@@ -93,19 +81,17 @@ lidarr_docker_envs: "{{ (lidarr_docker_envs_standard |
                         if (reverse_proxy_is_enabled)
                         else (lidarr_docker_envs_standard) }}"
 
-docker_envs: "{{ lidarr_docker_envs }}"
-
 ################################
 # Docker Volumes
 ################################
 
-lidarr_docker_volumes:
-  - "{{ server_appdata_path }}/{{ app_folder }}:/config"
+lidarr_docker_volumes_basic:
+  - "{{ lidarr_path }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt:/mnt"
   - "/mnt/unionfs/Media/Music:/music"
 
-docker_volumes: "{{ lidarr_docker_volumes + nzbs_downloads_path + torrents_downloads_path }}"
+lidarr_docker_volumes: "{{ lidarr_docker_volumes_basic + nzbs_downloads_path + torrents_downloads_path }}"
 
 ################################
 # Docker Devices
@@ -113,42 +99,31 @@ docker_volumes: "{{ lidarr_docker_volumes + nzbs_downloads_path + torrents_downl
 
 lidarr_docker_devices: []
 
-docker_devices: "{{ lidarr_docker_devices }}"
-
 ################################
 # Docker Hosts
 ################################
 
-lidarr_docker_hosts_default: []
-
 lidarr_docker_hosts_custom: []
 
-lidarr_docker_hosts: "{{ lidarr_docker_hosts_default | combine(lidarr_docker_hosts_custom) }}"
-
-docker_hosts: "{{ lidarr_docker_hosts }}"
+lidarr_docker_hosts: "{{ docker_hosts_common | combine(lidarr_docker_hosts_custom) }}"
 
 ################################
 # Docker Labels
 ################################
 
-lidarr_docker_labels: {}
+lidarr_docker_labels_custom: {}
 
-docker_labels: "{{ docker_labels_common | combine(lidarr_docker_labels) }}"
+lidarr_docker_labels: "{{ docker_labels_common | combine(lidarr_docker_labels_custom) }}"
 
 ################################
 # Docker Networks
 ################################
 
-lidarr_docker_network_alias: "{{ lidarr_name }}"
+lidarr_docker_networks_alias: "{{ lidarr_name }}"
 
-docker_network_alias: "{{ lidarr_docker_network_alias }}"
+lidarr_docker_networks_custom: []
 
-lidarr_docker_networks: []
-
-docker_networks: "{{ (docker_networks_common)
-                      if not (lidarr_docker_networks and
-                              lidarr_docker_networks | length > 0)
-                      else (lidarr_docker_networks) }}"
+lidarr_docker_networks: "{{ docker_networks_common + lidarr_docker_networks_custom }}"
 
 ################################
 # Docker Capabilities
@@ -156,15 +131,11 @@ docker_networks: "{{ (docker_networks_common)
 
 lidarr_docker_capabilities: []
 
-docker_capabilities: "{{ lidarr_docker_capabilities }}"
-
 ################################
 # Docker Security
 ################################
 
 lidarr_docker_security_opts: []
-
-docker_security_opts: "{{ lidarr_docker_security_opts }}"
 
 ################################
 # Docker Restart Policy
@@ -172,12 +143,8 @@ docker_security_opts: "{{ lidarr_docker_security_opts }}"
 
 lidarr_docker_restart_policy: unless-stopped
 
-docker_restart_policy: "{{ lidarr_docker_restart_policy }}"
-
 ################################
 # Docker State
 ################################
 
 lidarr_docker_state: started
-
-docker_state: "{{ lidarr_docker_state }}"
