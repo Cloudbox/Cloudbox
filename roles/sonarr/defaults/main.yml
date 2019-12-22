@@ -1,0 +1,150 @@
+##########################################################################
+# Title:         Cloudbox: Sonarr | Default Variables                    #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+sonarr_name: sonarr
+
+################################
+# Subdomain
+################################
+
+sonarr_subdomain: "{{ sonarr_name }}"
+
+################################
+# Folders
+################################
+
+sonarr_folder: "{{ sonarr_name }}"
+
+sonarr_path: "{{ server_appdata_path }}/{{ sonarr_name }}"
+
+sonarr_folders:
+  - "{{ sonarr_path }}"
+
+################################
+# Files
+################################
+
+
+################################
+# Docker Container
+################################
+
+sonarr_docker_container: "{{ sonarr_name }}"
+
+################################
+# Docker Image
+################################
+
+sonarr_docker_image: "hotio/sonarr:phantom"
+
+sonarr_docker_pull: yes
+
+################################
+# Docker Ports
+################################
+
+sonarr_ports:
+  - "8989:8989"
+
+sonarr_docker_ports: "{{ sonarr_ports
+                         if (not reverse_proxy_is_enabled)
+                         else [] }}"
+
+################################
+# Docker Envs
+################################
+
+sonarr_web_port: 8989
+
+sonarr_docker_envs_standard:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  UMASK: 002
+  TZ: "{{ tz }}"
+
+sonarr_docker_envs_reverse_proxy_extras: {}
+
+sonarr_docker_envs: "{{ (sonarr_docker_envs_standard |
+                            combine(docker_envs_reverse_proxy) |
+                            combine(sonarr_docker_envs_reverse_proxy_extras))
+                        if (reverse_proxy_is_enabled)
+                        else (sonarr_docker_envs_standard) }}"
+
+################################
+# Docker Volumes
+################################
+
+sonarr_docker_volumes_basic:
+  - "{{ sonarr_path }}:/config"
+  - "{{ server_appdata_path }}/scripts:/scripts"
+  - "/mnt:/mnt"
+  - "/mnt/unionfs/Media/TV:/tv"
+
+sonarr_docker_volumes: "{{ sonarr_docker_volumes_basic + nzbs_downloads_path + torrents_downloads_path }}"
+
+################################
+# Docker Devices
+################################
+
+sonarr_docker_devices: []
+
+################################
+# Docker Hosts
+################################
+
+sonarr_docker_hosts_custom: []
+
+sonarr_docker_hosts: "{{ docker_hosts_common | combine(sonarr_docker_hosts_custom) }}"
+
+################################
+# Docker Labels
+################################
+
+sonarr_docker_labels_custom: {}
+
+sonarr_docker_labels: "{{ docker_labels_common | combine(sonarr_docker_labels_custom) }}"
+
+################################
+# Docker Networks
+################################
+
+sonarr_docker_networks_alias: "{{ sonarr_name }}"
+
+sonarr_docker_networks_custom: []
+
+sonarr_docker_networks: "{{ docker_networks_common + sonarr_docker_networks_custom }}"
+
+################################
+# Docker Capabilities
+################################
+
+sonarr_docker_capabilities: []
+
+################################
+# Docker Security
+################################
+
+sonarr_docker_security_opts: []
+
+################################
+# Docker Restart Policy
+################################
+
+sonarr_docker_restart_policy: unless-stopped
+
+################################
+# Docker State
+################################
+
+sonarr_docker_state: started
