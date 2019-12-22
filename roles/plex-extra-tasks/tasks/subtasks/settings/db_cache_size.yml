@@ -49,7 +49,7 @@
 
   - name: Settings | DB Cache Size | Stop Plex Container
     docker_container:
-      name: "{{ docker_name }}"
+      name: "{{ plex_docker_container }}"
       state: stopped
     when: ('plex_db_cache_size' in ansible_run_tags)
 
@@ -78,7 +78,7 @@
 
   - name: Settings | DB Cache Size | Start Plex Container
     docker_container:
-      name: "{{ docker_name }}"
+      name: "{{ plex_docker_container }}"
       state: started
     when: ('plex_db_cache_size' in ansible_run_tags)
 

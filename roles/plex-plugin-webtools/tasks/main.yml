@@ -60,9 +60,9 @@
 
     - name: "Stop {{ plex_name | title }} container"
       docker_container:
-        name: "{{ docker_name }}"
+        name: "{{ plex_docker_container }}"
         state: "stopped"
-      when: ('plex' in docker_running_containers_list)
+      when: (plex_docker_container in docker_running_containers_list)
 
     when: ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
 
@@ -138,11 +138,11 @@
 
   - name: "Start {{ plex_name | title }} container"
     docker_container:
-      name: "{{ docker_name }}"
-      state: "{{ docker_state }}"
+      name: "{{ plex_docker_container }}"
+      state: "{{ plex_docker_state }}"
     when:
       - ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
-      - ('plex' in docker_running_containers_list)
+      - (plex_docker_container in docker_running_containers_list)
 
   when: >-
     (not plex_plugin_webtools_bundle_status.stat.exists) or

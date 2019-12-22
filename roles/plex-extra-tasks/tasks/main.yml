@@ -25,4 +25,4 @@
 
 - name: "Continue when Plex Docker container exists"
   import_tasks: "main2.yml"
-  when: ('plex' in docker_installed_containers_list)
+  when: (plex_docker_container in docker_installed_containers_list)

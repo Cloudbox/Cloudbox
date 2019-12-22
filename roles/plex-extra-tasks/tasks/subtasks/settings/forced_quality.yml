@@ -48,7 +48,7 @@
 
 - name: Settings | Forced Quality | Restart plex container
   docker_container:
-    name: "{{ docker_name }}"
+    name: "{{ plex_docker_container }}"
     state: started
     restart: yes
   when: ('plex_forced_quality' in ansible_run_tags) and (x.changed or y.changed)

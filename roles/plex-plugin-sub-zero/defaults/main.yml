@@ -20,13 +20,13 @@ plex_name: "plex"
 
 plex_folder: "{{ plex_name }}"
 
-app_folder: "{{ plex_folder }}"
+plex_path: "{{ server_appdata_path }}/{{ plex_folder }}"
 
 ################################
 # Paths
 ################################
 
-plex_application_support_path: "{{ server_appdata_path }}/{{ app_folder }}/Library/Application Support/Plex Media Server"
+plex_application_support_path: "{{ plex_path }}/Library/Application Support/Plex Media Server"
 
 plex_plugins_path: "{{ plex_application_support_path }}/Plug-ins"
 
@@ -46,14 +46,10 @@ plex_plugin_subzero_download_url_backup: https://github.com/pannal/Sub-Zero.bund
 # Docker Container
 ################################
 
-plex_docker_name: "{{ plex_name }}"
-
-docker_name: "{{ plex_docker_name }}"
+plex_docker_container: "{{ plex_name }}"
 
 ################################
 # Docker State
 ################################
 
 plex_docker_state: started
-
-docker_state: "{{ plex_docker_state }}"

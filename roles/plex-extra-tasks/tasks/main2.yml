@@ -21,11 +21,11 @@
 
   - name: Set 'plex_is_running_outer_state' variable
     set_fact:
-      plex_is_running_outer_state: "{{ 'plex' in docker_running_containers_list }}"
+      plex_is_running_outer_state: "{{ plex_docker_container in docker_running_containers_list }}"
 
   - name: Stop Docker Container
     docker_container:
-      name: "{{ docker_name }}"
+      name: "{{ plex_docker_container }}"
       state: stopped
     when: plex_is_running_outer_state
 
@@ -57,11 +57,10 @@
 
 - name: Start Docker Container
   docker_container:
-    name: "{{ docker_name }}"
-    state: started
+    name: "{{ plex_docker_container }}"
+    state: "{{ plex_docker_state }}"
   when:
     - plex_is_running_outer_state
-    - ('started' in docker_state | lower)
   tags:
     - plex-db-cache-size
     - plex-forced-quality
