@@ -11,7 +11,7 @@
 # Sometimes docker will set transcodes folder to root after a restore.
 - name: Post-Install | Ensure transcodes folder has the correct permissions
   file:
-    path: "{{ plex.transcodes }}"
+    path: "{{ plex_transcodes_path }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775

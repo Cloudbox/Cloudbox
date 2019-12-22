@@ -26,7 +26,7 @@ emby_subdomain: "{{ emby_name }}"
 
 emby_folder: "{{ emby_name }}"
 
-emby_transcodes_path: "{{ plex.transcodes }}/{{ emby_folder }}"
+emby_transcodes_path: "{{ transcodes_path }}/{{ emby_folder }}"
 
 emby_path: "{{ server_appdata_path }}/{{ emby_folder }}"
 

@@ -26,7 +26,7 @@ plex_subdomain: "{{ plex_name }}"
 
 plex_folder: "{{ plex_name }}"
 
-plex_transcodes_path: "{{ plex.transcodes }}/{{ plex_folder }}"
+plex_transcodes_path: "{{ transcodes_path }}/{{ plex_folder }}"
 
 plex_path: "{{ server_appdata_path }}/{{ plex_folder }}"
 
