@@ -151,17 +151,15 @@ plex_docker_devices: []
 
 lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
 
-plex_docker_hosts_default:
+plex_docker_hosts_custom:
   "metric.plex.tv": "{{ ip_address_localhost }}"
   "metrics.plex.tv": "{{ ip_address_localhost }}"
   "analytics.plex.tv": "{{ ip_address_localhost }}"
-
-plex_docker_hosts_custom:
   "mf.svc.nhl.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
   "mlb-ws-mf.media.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
   "playback.svcs.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
 
-plex_docker_hosts: "{{ plex_docker_hosts_default | combine(plex_docker_hosts_custom) }}"
+plex_docker_hosts: "{{ docker_hosts_common | combine(plex_docker_hosts_custom) }}"
 
 ################################
 # Docker Labels
