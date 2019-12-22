@@ -138,9 +138,9 @@ reverse_proxy_is_enabled: "{{ (user is defined) and
                               (user.email | trim | length > 0) }}"
 
 docker_envs_reverse_proxy:
-  VIRTUAL_HOST: "{{ subdomain }}.{{ user.domain }}"
-  VIRTUAL_PORT: "{{ web_port }}"
-  LETSENCRYPT_HOST: "{{ subdomain }}.{{ user.domain }}"
+  VIRTUAL_HOST: "{{ lookup('vars', role_name + '_subdomain') }}.{{ user.domain }}"
+  VIRTUAL_PORT: "{{ lookup('vars', role_name + '_web_port') }}"
+  LETSENCRYPT_HOST: "{{ lookup('vars', role_name + '_subdomain') }}.{{ user.domain }}"
   LETSENCRYPT_EMAIL: "{{ user.email }}"
 
 ################################
@@ -173,7 +173,9 @@ docker_labels_common:
 # Docker Network
 ################################
 
+docker_networks_name: cloudbox
+
 docker_networks_common:
-  - name: cloudbox
+  - name: "{{ docker_networks_name }}"
     aliases:
-      - "{{ docker_network_alias }}"
+      - "{{ lookup('vars', role_name + '_docker_networks_alias') }}"
