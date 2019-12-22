@@ -1,0 +1,150 @@
+##########################################################################
+# Title:         Cloudbox: Radarr | Default Variables                    #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+radarr_name: radarr
+
+################################
+# Subdomain
+################################
+
+radarr_subdomain: "{{ radarr_name }}"
+
+################################
+# Folders
+################################
+
+radarr_folder: "{{ radarr_name }}"
+
+radarr_path: "{{ server_appdata_path }}/{{ radarr_name }}"
+
+radarr_folders:
+  - "{{ radarr_path }}"
+
+################################
+# Files
+################################
+
+
+################################
+# Docker Container
+################################
+
+radarr_docker_container: "{{ radarr_name }}"
+
+################################
+# Docker Image
+################################
+
+radarr_docker_image: "hotio/radarr:unstable"
+
+radarr_docker_pull: yes
+
+################################
+# Docker Ports
+################################
+
+radarr_ports:
+  - "7878:7878"
+
+radarr_docker_ports: "{{ radarr_ports
+                         if (not reverse_proxy_is_enabled)
+                         else [] }}"
+
+################################
+# Docker Envs
+################################
+
+radarr_web_port: 7878
+
+radarr_docker_envs_standard:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  UMASK: 002
+  TZ: "{{ tz }}"
+
+radarr_docker_envs_reverse_proxy_extras: {}
+
+radarr_docker_envs: "{{ (radarr_docker_envs_standard |
+                            combine(docker_envs_reverse_proxy) |
+                            combine(radarr_docker_envs_reverse_proxy_extras))
+                        if (reverse_proxy_is_enabled)
+                        else (radarr_docker_envs_standard) }}"
+
+################################
+# Docker Volumes
+################################
+
+radarr_docker_volumes_basic:
+  - "{{ radarr_path }}:/config"
+  - "{{ server_appdata_path }}/scripts:/scripts"
+  - "/mnt:/mnt"
+  - "/mnt/unionfs/Media/Movies:/movies"
+
+radarr_docker_volumes: "{{ radarr_docker_volumes_basic + nzbs_downloads_path + torrents_downloads_path }}"
+
+################################
+# Docker Devices
+################################
+
+radarr_docker_devices: []
+
+################################
+# Docker Hosts
+################################
+
+radarr_docker_hosts_custom: []
+
+radarr_docker_hosts: "{{ docker_hosts_common | combine(radarr_docker_hosts_custom) }}"
+
+################################
+# Docker Labels
+################################
+
+radarr_docker_labels_custom: {}
+
+radarr_docker_labels: "{{ docker_labels_common | combine(radarr_docker_labels_custom) }}"
+
+################################
+# Docker Networks
+################################
+
+radarr_docker_networks_alias: "{{ radarr_name }}"
+
+radarr_docker_networks_custom: []
+
+radarr_docker_networks: "{{ docker_networks_common + radarr_docker_networks_custom }}"
+
+################################
+# Docker Capabilities
+################################
+
+radarr_docker_capabilities: []
+
+################################
+# Docker Security
+################################
+
+radarr_docker_security_opts: []
+
+################################
+# Docker Restart Policy
+################################
+
+radarr_docker_restart_policy: unless-stopped
+
+################################
+# Docker State
+################################
+
+radarr_docker_state: started

@@ -1,8 +1,7 @@
 #########################################################################
-# Title:            Cloudbox: Radarr Role                               #
-# Author(s):        l3uddz, desimaniac                                  #
-# URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  hotio/radarr                                        #
+# Title:         Cloudbox: Radarr Role                                  #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,95 +12,37 @@
   include_role:
     name: dns
   vars:
-    record: radarr
+    record: "{{ item }}"
+  loop:
+    - "{{ lookup('vars', role_name + '_subdomain') }}"
+  when: reverse_proxy_is_enabled
 
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: radarr
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
 
-- name: Suitarr Migration Tasks
-  import_tasks: "subtasks/suitarr_migration.yml"
+- name: Hotio Migration Tasks
+  import_tasks: "{{ playbook_dir }}/resources/tasks/hotio/migration/main.yml"
 
-- name: Create radarr directories
+- name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - /opt/radarr
-
-- name: SMA Tasks
-  block:
-
-  - name: Create directories
-    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-    with_items:
-      - /opt/radarr/script.d
-
-  - name: Import 'sma_req.sh' script
-    copy:
-      src: "{{ playbook_dir }}/roles/sickbeard_mp4_automator/files/99-sma_req.sh"
-      dest: "/opt/radarr/script.d/99-sma_req.sh"
-      owner: "{{ user.name }}"
-      group: "{{ user.name }}"
-      mode: 0775
-      force: yes
-
-  when: (sickbeard_mp4_automator | default(false,true))
+  with_items: "{{ lookup('vars', role_name + '_folders') }}"
 
 - name: Darkerr Tasks
   import_tasks: "subtasks/darkerr.yml"
 
-- name: "Check if '/dev/dri' exists"
-  stat:
-    path: "/dev/dri"
-  register: dev_dri
+- name: SMA Tasks
+  include_tasks: "{{ playbook_dir }}/resources/tasks/hotio/sickbeard_mp4_automator/install_reqs.yml"
+  when:
+    - ('hotio' in lookup('vars', role_name + '_docker_image'))
+    - (use_sma)
 
-- name: Set 'default_volumes' variable
-  set_fact:
-    default_volumes:
-      - "/opt/radarr:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt:/mnt"
-      - "/mnt/unionfs/Media/Movies:/movies"
+- name: Docker Devices Task
+  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/set_docker_devices_variable.yml"
+  when:
+    - (gpu.intel or gpu.nvidia.enabled)
+    - (use_sma)
 
-- name: Set 'sma_req_volume' variable
-  set_fact:
-    sma_req_volume:
-      - "/opt/radarr/script.d/99-sma_req.sh:/etc/cont-init.d/99-sma_req.sh"
-
-- name: Build 'docker_volumes' list variable
-  set_fact:
-    docker_volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
-  when: not (sickbeard_mp4_automator | default(false,true))
-
-- name: Build 'docker_volumes' list variable
-  set_fact:
-    docker_volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) + sma_req_volume }}"
-  when: (sickbeard_mp4_automator | default(false,true))
-
-- name: Create and start container
-  docker_container:
-    name: radarr
-    image: "hotio/radarr:unstable"
-    pull: yes
-    published_ports:
-      - "127.0.0.1:7878:7878"
-    env:
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      UMASK: 002
-      VIRTUAL_HOST: "radarr.{{ user.domain }}"
-      VIRTUAL_PORT: 7878
-      LETSENCRYPT_HOST: "radarr.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    volumes: "{{ docker_volumes }}"
-    devices: "{{ '/dev/dri:/dev/dri' if ((gpu.intel or gpu.nvidia.enabled) and (sickbeard_mp4_automator | default(false,true)) and dev_dri.stat.exists) | default(false) else omit }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - radarr
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
+- name: Create Docker container
+  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
