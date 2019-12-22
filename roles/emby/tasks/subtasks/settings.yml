@@ -10,7 +10,7 @@
 ---
 - name: Settings | Stop Docker container
   docker_container:
-    name: "{{ docker_name }}"
+    name: "{{ emby_docker_container }}"
     state: stopped
 
 - name: Settings | Set 'EnableUPnP' to 'false' in '{{ emby_config_file_path | basename }}'
@@ -42,6 +42,7 @@
     path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/WanDdns
     value: "emby.{{ user.domain }}"
+  when: reverse_proxy_is_enabled
 
 - name: Settings | Set 'EnableAnonymousUsageReporting' to 'false' in '{{ emby_config_file_path | basename }}'
   xml:
@@ -63,6 +64,5 @@
 
 - name: Settings | Start Docker container" in '{{ emby_config_file_path | basename }}'
   docker_container:
-    name: "{{ docker_name }}"
-    state: "started"
-  when: ('started' in docker_state | lower)
+    name: "{{ emby_docker_container }}"
+    state: "{{ emby_docker_state }}"

@@ -20,41 +20,35 @@ emby_name: emby
 
 emby_subdomain: "{{ emby_name }}"
 
-subdomain: "{{ emby_subdomain }}"
-
 ################################
 # Folders
 ################################
 
 emby_folder: "{{ emby_name }}"
 
-app_folder: "{{ emby_folder }}"
+emby_transcodes_path: "{{ plex.transcodes }}/{{ emby_folder }}"
 
-emby_transcodes_path: "{{ plex.transcodes }}/{{ app_folder }}"
+emby_path: "{{ server_appdata_path }}/{{ emby_folder }}"
 
 emby_folders:
-  - "{{ server_appdata_path }}/{{ app_folder }}"
-  - "{{ server_appdata_path }}/{{ app_folder }}/config"
-  - "{{ server_appdata_path }}/{{ app_folder }}/config/users"
+  - "{{ emby_path }}"
+  - "{{ emby_path }}/config"
+  - "{{ emby_path }}/config/users"
   - "{{ emby_transcodes_path }}"
-
-folders: "{{ emby_folders }}"
 
 ################################
 # Files
 ################################
 
-emby_config_file_path: "{{ server_appdata_path }}/{{ app_folder }}/config/system.xml"
+emby_config_file_path: "{{ emby_path }}/config/system.xml"
 
-emby_dlna_file_path: "{{ server_appdata_path }}/{{ app_folder }}/config/dlna.xml"
+emby_dlna_file_path: "{{ emby_path }}/config/dlna.xml"
 
 ################################
 # Docker Container
 ################################
 
-emby_docker_name: "{{ emby_name }}"
-
-docker_name: "{{ emby_docker_name }}"
+emby_docker_container: "{{ emby_name }}"
 
 ################################
 # Docker Image
@@ -62,30 +56,24 @@ docker_name: "{{ emby_docker_name }}"
 
 emby_docker_image: "emby/embyserver:{{ emby.version }}"
 
-docker_image: "{{ emby_docker_image }}"
-
 emby_docker_pull: yes
-
-docker_pull: "{{ emby_docker_pull }}"
 
 ################################
 # Docker Ports
 ################################
 
-emby_docker_ports:
+emby_ports:
   - "8096:8096"
 
-docker_ports: "{{ emby_docker_ports
-                  if (not reverse_proxy_is_enabled)
-                  else [] }}"
+emby_docker_ports: "{{ emby_ports
+                       if (not reverse_proxy_is_enabled)
+                       else [] }}"
 
 ################################
 # Docker Envs
 ################################
 
-emby_port: 8096
-
-web_port: "{{ emby_port }}"
+emby_web_port: 8096
 
 emby_docker_envs_standard:
   UID: "{{ uid }}"
@@ -104,14 +92,12 @@ emby_docker_envs: "{{ (emby_docker_envs_standard |
                       if (reverse_proxy_is_enabled)
                       else (emby_docker_envs_standard) }}"
 
-docker_envs: "{{ emby_docker_envs }}"
-
 ################################
 # Docker Volumes
 ################################
 
 emby_docker_volumes:
-  - "{{ server_appdata_path }}/{{ app_folder }}:/config"
+  - "{{ emby_path }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media:/data"
   - "/mnt:/mnt"
@@ -119,50 +105,37 @@ emby_docker_volumes:
   - "/dev/shm:/dev/shm"
   - "{{ emby_transcodes_path }}:/transcode"
 
-docker_volumes: "{{ emby_docker_volumes }}"
-
 ################################
 # Docker Devices
 ################################
 
 emby_docker_devices: []
 
-docker_devices: "{{ emby_docker_devices }}"
-
 ################################
 # Docker Hosts
 ################################
 
-emby_docker_hosts_default: []
-
 emby_docker_hosts_custom: []
 
-emby_docker_hosts: "{{ emby_docker_hosts_default | combine(emby_docker_hosts_custom) }}"
-
-docker_hosts: "{{ emby_docker_hosts }}"
+emby_docker_hosts: "{{ docker_hosts_common | combine(plex_docker_hosts_custom) }}"
 
 ################################
 # Docker Labels
 ################################
 
-emby_docker_labels: {}
+emby_docker_labels_custom: {}
 
-docker_labels: "{{ docker_labels_common | combine(emby_docker_labels) }}"
+emby_docker_labels: "{{ docker_labels_common | combine(emby_docker_labels_custom) }}"
 
 ################################
 # Docker Networks
 ################################
 
-emby_docker_network_alias: "{{ emby_name }}"
+emby_docker_networks_alias: "{{ emby_name }}"
 
-docker_network_alias: "{{ emby_docker_network_alias }}"
+emby_docker_networks_custom: []
 
-emby_docker_networks: []
-
-docker_networks: "{{ (docker_networks_common)
-                      if not (emby_docker_networks and
-                              emby_docker_networks | length > 0)
-                      else (emby_docker_networks) }}"
+emby_docker_networks: "{{ docker_networks_common + emby_docker_networks_custom }}"
 
 ################################
 # Docker Capabilities
@@ -170,15 +143,11 @@ docker_networks: "{{ (docker_networks_common)
 
 emby_docker_capabilities: []
 
-docker_capabilities: "{{ emby_docker_capabilities }}"
-
 ################################
 # Docker Security
 ################################
 
 emby_docker_security_opts: []
-
-docker_security_opts: "{{ emby_docker_security_opts }}"
 
 ################################
 # Docker Restart Policy
@@ -186,12 +155,8 @@ docker_security_opts: "{{ emby_docker_security_opts }}"
 
 emby_docker_restart_policy: unless-stopped
 
-docker_restart_policy: "{{ emby_docker_restart_policy }}"
-
 ################################
 # Docker State
 ################################
 
 emby_docker_state: started
-
-docker_state: "{{ emby_docker_state }}"
