@@ -9,17 +9,17 @@
 #########################################################################
 ---
 - name: Remove legacy service
-  include_tasks: "{{ playbook_dir }}/resources/tasks/systemd/delete_service.yml"
+  include_tasks: "{{ resources_tasks_path }}/systemd/delete_service.yml"
   vars:
     _service_name: unionfs_cleaner
 
 - name: Stop Service
-  include_tasks: "{{ playbook_dir }}/resources/tasks/systemd/stop_service.yml"
+  include_tasks: "{{ resources_tasks_path }}/systemd/stop_service.yml"
   vars:
     _service_name: "{{ cloudplow_service_name }}"
 
 - name: Update Service Credentials
-  include_tasks: "{{ playbook_dir }}/resources/tasks/systemd/update_service_credentials.yml"
+  include_tasks: "{{ resources_tasks_path }}/systemd/update_service_credentials.yml"
   vars:
     _service_name: "{{ cloudplow_service_name }}"
 
@@ -27,7 +27,7 @@
   file: "path={{ cloudplow_path }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
 
 - name: Clone git repo
-  include_tasks: "{{ playbook_dir }}/resources/tasks/git/clone_git_repo.yml"
+  include_tasks: "{{ resources_tasks_path }}/git/clone_git_repo.yml"
   vars:
     _git_repo_url: "{{ cloudplow_git_repo_url }}"
     _git_repo_dest: "{{ cloudplow_git_repo_dest }}"

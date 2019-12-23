@@ -23,7 +23,7 @@
     state: absent
 
 - name: Hotio Migration Tasks
-  import_tasks: "{{ playbook_dir }}/resources/tasks/hotio/migration/main.yml"
+  import_tasks: "{{ resources_tasks_path }}/hotio/migration/main.yml"
 
 - name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
@@ -33,16 +33,16 @@
   import_tasks: "subtasks/darkerr.yml"
 
 - name: SMA Tasks
-  include_tasks: "{{ playbook_dir }}/resources/tasks/hotio/sickbeard_mp4_automator/install_reqs.yml"
+  include_tasks: "{{ resources_tasks_path }}/hotio/sickbeard_mp4_automator/install_reqs.yml"
   when:
     - ('hotio' in lookup('vars', role_name + '_docker_image'))
     - (use_sma)
 
 - name: Docker Devices Task
-  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/set_docker_devices_variable.yml"
+  include_tasks: "{{ resources_tasks_path }}/docker/set_docker_devices_variable.yml"
   when:
     - (gpu.intel or gpu.nvidia.enabled)
     - (use_sma)
 
 - name: Create Docker container
-  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"

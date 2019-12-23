@@ -9,6 +9,12 @@
 ##########################################################################
 ---
 ################################
+# Resources
+################################
+
+resources_tasks_path: "{{ playbook_dir }}/resources/tasks"
+
+################################
 # Continuous Integration
 ################################
 
@@ -88,7 +94,6 @@ use_sma: "{{ sickbeard_mp4_automator  | default(false,true) }}"
 server_root_path: "/"
 
 server_appdata_path: "{{ server_root_path | regex_replace('\\/$', '') + '/opt' }}"
-
 
 ################################
 # Paths

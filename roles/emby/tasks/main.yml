@@ -27,11 +27,11 @@
   with_items: "{{ lookup('vars', role_name + '_folders') }}"
 
 - name: Docker Devices Task
-  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/set_docker_devices_variable.yml"
+  include_tasks: "{{ resources_tasks_path }}/docker/set_docker_devices_variable.yml"
   when: (gpu.intel or gpu.nvidia.enabled)
 
 - name: Create Docker container
-  include_tasks: "{{ playbook_dir }}/resources/tasks/docker/create_docker_container.yml"
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
 
 - name: Post-Install Tasks
   import_tasks: "subtasks/post-install.yml"
