@@ -1,0 +1,167 @@
+##########################################################################
+# Title:         Cloudbox: Tautulli | Default Variables                  #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+tautulli_name: tautulli
+
+################################
+# Subdomain
+################################
+
+tautulli_subdomain: "{{ tautulli_name }}"
+
+################################
+# Folders
+################################
+
+tautulli_folder: "{{ tautulli_name }}"
+
+tautulli_path: "{{ server_appdata_path }}/{{ tautulli_folder }}"
+
+tautulli_folders:
+  - "{{ tautulli_path }}"
+  - "{{ server_appdata_path }}/scripts/{{ tautulli_folder }}"
+
+################################
+# Files
+################################
+
+################################
+# Docker Container
+################################
+
+tautulli_docker_container: "{{ tautulli_name }}"
+
+################################
+# Docker Image
+################################
+
+tautulli_docker_image: "tautulli/tautulli"
+
+tautulli_docker_pull: yes
+
+################################
+# Docker Ports
+################################
+
+tautulli_ports:
+  - "8181:8181"
+
+tautulli_docker_ports: "{{ tautulli_ports
+                           if (not reverse_proxy_is_enabled)
+                           else [] }}"
+
+################################
+# Docker Envs
+################################
+
+tautulli_web_port: 8181
+
+tautulli_docker_envs_standard:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  TZ: "{{ tz }}"
+  ADVANCED_GIT_BRANCH: nightly
+
+tautulli_docker_envs_reverse_proxy_extras: {}
+
+tautulli_docker_envs: "{{ (tautulli_docker_envs_standard |
+                              combine(docker_envs_reverse_proxy) |
+                              combine(tautulli_docker_envs_reverse_proxy_extras))
+                          if (reverse_proxy_is_enabled)
+                          else (tautulli_docker_envs_standard) }}"
+
+################################
+# Docker Volumes
+################################
+
+tautulli_docker_volumes:
+  - "{{ tautulli_path }}:/config"
+  - "{{ server_appdata_path }}/scripts:/scripts"
+  - "{{ plex_log_path }}:/logs:ro"
+
+################################
+# Docker Devices
+################################
+
+tautulli_docker_devices: []
+
+################################
+# Docker Hosts
+################################
+
+tautulli_docker_hosts_custom: []
+
+tautulli_docker_hosts: "{{ docker_hosts_common | combine(tautulli_docker_hosts_custom) }}"
+
+################################
+# Docker Labels
+################################
+
+tautulli_docker_labels_custom: {}
+
+tautulli_docker_labels: "{{ docker_labels_common | combine(tautulli_docker_labels_custom) }}"
+
+################################
+# Docker Hostname
+################################
+
+tautulli_docker_hostname: "{{ tautulli_name }}"
+
+################################
+# Docker Networks
+################################
+
+tautulli_docker_networks_alias: "{{ tautulli_name }}"
+
+tautulli_docker_networks_custom: []
+
+tautulli_docker_networks: "{{ docker_networks_common + tautulli_docker_networks_custom }}"
+
+################################
+# Docker Capabilities
+################################
+
+tautulli_docker_capabilities: []
+
+################################
+# Docker Security
+################################
+
+tautulli_docker_security_opts: []
+
+################################
+# Docker Restart Policy
+################################
+
+tautulli_docker_restart_policy: unless-stopped
+
+################################
+# Docker State
+################################
+
+tautulli_docker_state: started
+
+################################
+# Plex
+################################
+
+plex_name: plex
+
+plex_folder: "{{ plex_name }}"
+
+plex_path: "{{ server_appdata_path }}/{{ plex_folder }}"
+
+plex_application_support_path: "{{ plex_path }}/Library/Application Support/Plex Media Server"
+
+plex_log_path: "{{ plex_application_support_path }}/Logs"
