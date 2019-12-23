@@ -1,0 +1,39 @@
+#########################################################################
+# Title:         Cloudbox: Trackarr | Pre-Install Tasks                 #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Pre-Install | Check if Trackarr config exists
+  stat:
+    path: "{{ trackarr_paths_config_location }}"
+  register: trackarr_paths_config_location_stat
+
+- name: Pre-Install | New Trackarr config tasks
+  block:
+
+  - name: Pre-Install | Get ARR API keys
+    include_tasks: "{{ resources_tasks_path }}/arr/get_api_keys.yml"
+
+  - name: Pre-Install | Set 'trackarr_server_apikey' variable
+    set_fact:
+      trackarr_server_apikey: "{{ lookup('password', '/dev/null chars=ascii_letters,digits length=22') }}"
+
+  - name: Pre-Install | Import default Trackarr config
+    template:
+      src: 'config.yaml.j2'
+      dest: "{{ trackarr_paths_config_location }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: no
+
+  - name: Pre-Install | Set 'trackarr_docker_state' variable
+    set_fact:
+      trackarr_docker_state: 'stopped'
+
+  when: not trackarr_paths_config_location_stat.stat.exists
