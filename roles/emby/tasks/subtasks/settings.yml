@@ -42,7 +42,6 @@
     path: "{{ emby_config_file_path }}"
     xpath: /ServerConfiguration/WanDdns
     value: "emby.{{ user.domain }}"
-  when: reverse_proxy_is_enabled
 
 - name: Settings | Set 'EnableAnonymousUsageReporting' to 'false' in '{{ emby_config_file_path | basename }}'
   xml:

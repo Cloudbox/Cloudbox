@@ -8,6 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: DNS Tasks
-  include_tasks: "main2.yml"
-  when: reverse_proxy_is_enabled
+- name: Cloudflare DNS Tasks
+  include_tasks: "cloudflare/main.yml"
+  when: cloudflare_is_enabled

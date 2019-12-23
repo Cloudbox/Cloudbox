@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: DNS | Cloudflare                             #
+# Title:         Cloudbox: DNS | Cloudflare | Create DNS Record         #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -30,11 +30,17 @@
     type: A
     value: "{{ public_ip }}"
     record: "{{ record }}"
+  register: cloudflare_dns_record_creation_status
 
-- name: Cloudflare | Set 'record_temp' variable
-  set_fact:
-    record_temp: "{{ (record == user.domain) | ternary(user.domain,record + '.' + user.domain) }}"
+- name: Cloudflare | Tasks on success
+  block:
 
-- name: Cloudflare | Display DNS Record
-  debug:
-    msg: "DNS Record for '{{ record_temp }}' set to '{{ public_ip }}'."
+  - name: Cloudflare | Set 'record_temp' variable
+    set_fact:
+      record_temp: "{{ (record == user.domain) | ternary(user.domain,record + '.' + user.domain) }}"
+
+  - name: Cloudflare | Display DNS record creation status
+    debug:
+      msg: "DNS Record for '{{ record_temp }}' set to '{{ public_ip }}'."
+
+  when: cloudflare_dns_record_creation_status is succeeded

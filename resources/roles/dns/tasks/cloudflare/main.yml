@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: DNS Role                                     #
+# Title:         Cloudbox: DNS | Cloudflare                             #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,6 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: DNS Tasks
-  include_tasks: "main2.yml"
-  when: reverse_proxy_is_enabled
+- name: Cloudflare | Create DNS Record
+  include_tasks: "subtasks/create_dns_record.yml"
+  when: action != 'remove'
+
+- name: Cloudflare | Remove DNS Record
+  include_tasks: "subtasks/remove_dns_record.yml"
+  when: action == 'remove'

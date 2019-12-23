@@ -9,16 +9,11 @@
 #########################################################################
 ---
 - name: "Legacy Migration | Cloudflare: Remove 'plexpy' subdomain from '{{ user.domain }}'"
-  cloudflare_dns:
-    account_api_token: "{{ cloudflare.api }}"
-    account_email: "{{ cloudflare.email }}"
-    zone: "{{ user.domain }}"
-    state: absent
-    type: A
-    record: "plexpy"
-  when:
-    - reverse_proxy_is_enabled
-    - cloudflare_is_enabled
+  include_role:
+    name: dns
+  vars:
+    record: plexpy
+    action: remove
 
 - name: Legacy Migration | Stop and remove 'plexpy' container
   docker_container:
