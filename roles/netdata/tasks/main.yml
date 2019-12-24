@@ -26,7 +26,7 @@
   with_items: "{{ lookup('vars', role_name + '_folders') }}"
 
 - name: Create htpasswd
-  import_tasks: "{{ resources_tasks_path }}/nginx-proxy/create_htpasswd.yml"
+  include_tasks: "{{ resources_tasks_path }}/nginx-proxy/create_htpasswd.yml"
 
 - name: Create Docker container
   include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"

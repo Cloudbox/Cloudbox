@@ -1,0 +1,36 @@
+#####################################################################################
+# Title:         Cloudbox: Resources | Tasks | Hotio | Migrator | To Hotio Image    #
+# Author(s):     desimaniac                                                         #
+# URL:           https://github.com/cloudbox/cloudbox                               #
+# --                                                                                #
+#         Part of the Cloudbox project: https://cloudbox.works                      #
+#####################################################################################
+#                   GNU General Public License v3.0                                 #
+#####################################################################################
+---
+- name: Resources | Tasks | Hotio | Migrator | To Hotio Image | Set 'app_path' variable
+  set_fact:
+    app_path: "{{ lookup('vars', role_name + '_path') }}"
+
+- name: Resources | Tasks | Hotio | Migrator | To Hotio Image | Set 'app_folder' variable
+  set_fact:
+    app_folder: "{{ app_path | basename }}"
+
+- name: Resources | Tasks | Hotio | Migrator | To Hotio Image | Check if main '{{ app_folder }}' folder exists
+  stat:
+    path: "{{ app_path }}"
+  register: folder
+
+- name: Resources | Tasks | Hotio | Migrator | To Hotio Image | Check if 'app' subfolder exists
+  stat:
+    path: "{{ app_path }}/app"
+  register: subfolder
+
+- name: Resources | Tasks | Hotio | Migrator | To Hotio Image | Move '{{ app_folder }}' folder contents into 'app' subfolder
+  shell: |
+    mv {{ app_path }} /tmp/app
+    mkdir {{ app_path }}
+    mv /tmp/app {{ app_path }}/
+    find {{ app_path }}/* -type d -empty -delete
+    chown -R {{ user.name }}:{{ user.name }} {{ app_path }}
+  when: folder.stat.exists and not subfolder.stat.exists
