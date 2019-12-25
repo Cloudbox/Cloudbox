@@ -20,8 +20,8 @@
     etc_hosts: "{{ lookup('vars', role_name + '_docker_hosts') }}"
     labels: "{{ lookup('vars', role_name + '_docker_labels') }}"
     hostname: "{{ lookup('vars', role_name + '_docker_hostname') }}"
+    networks_cli_compatible: yes
     networks: "{{ lookup('vars', role_name + '_docker_networks') }}"
-    purge_networks: yes
     restart_policy: "{{ lookup('vars', role_name + '_docker_restart_policy') }}"
     capabilities: "{{ lookup('vars', role_name + '_docker_capabilities') }}"
     security_opts: "{{ lookup('vars', role_name + '_docker_security_opts') }}"
