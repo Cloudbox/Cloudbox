@@ -32,9 +32,10 @@ sonarr_folders:
   - "{{ sonarr_path }}"
 
 ################################
-# Files
+# Paths
 ################################
 
+sonarr_config_file_path: "{{ sonarr_path }}/app/config.xml"
 
 ################################
 # Docker Container
@@ -55,7 +56,7 @@ sonarr_docker_pull: yes
 ################################
 
 sonarr_ports:
-  - "8989:8989"
+  - "8989-8999:8989"
 
 sonarr_docker_ports: "{{ sonarr_ports
                          if (not reverse_proxy_is_enabled)
