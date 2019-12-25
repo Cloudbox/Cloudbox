@@ -152,16 +152,20 @@
   pip:
     state: present
     name:
-      - passlib
       - certbot
       - ansible-toolbox
       - ndg-httpsclient
-      - dnspython
       - yq
-      - lxml
-      - apprise
-      - jmespath
-      - apprise
+  ignore_errors: yes
+
+- name: Install pip modules needed by Ansible via raw method
+  raw: "pip install {{ item }}"
+  loop:
+    - apprise
+    - dnspython
+    - lxml
+    - jmespath
+    - passlib
   ignore_errors: yes
 
 - name: Uninstall apt 'glances'

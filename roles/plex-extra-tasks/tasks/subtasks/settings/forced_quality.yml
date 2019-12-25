@@ -11,7 +11,7 @@
 ##########################################################################
 ---
 - name: Settings | Forced Quality | Install lxml pip module
-  pip: "name=lxml state=present"
+  raw: pip install lxml
 
 - name: Settings | Forced Quality | Wait for 'Preferences.xml' to be created by Plex
   wait_for:

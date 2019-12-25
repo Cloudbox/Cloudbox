@@ -33,7 +33,5 @@
     - 'containerd_io'
 
 - name: Binary | Install 'docker' pip module
-  pip:
-    name: docker
-    state: latest
+  raw: pip install docker
   ignore_errors: yes

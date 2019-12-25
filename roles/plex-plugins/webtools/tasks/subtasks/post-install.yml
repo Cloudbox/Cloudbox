@@ -9,6 +9,8 @@
 #########################################################################
 ---
 # Update WebTools ports in Preferences
+- name: Post-Install | Install lxml pip module
+  raw: pip install lxml
 
 - name: Post-Install | Gather list of running Docker containers
   shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
@@ -77,4 +79,6 @@
   docker_container:
     name: "{{ plex_docker_container }}"
     state: "stopped"
-  when: (plex_docker_container not in docker_running_containers_list)
+  when:
+    - ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
+    - (plex_docker_container not in docker_running_containers_list)
