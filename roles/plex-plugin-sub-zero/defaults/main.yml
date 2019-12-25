@@ -9,26 +9,8 @@
 ##########################################################################
 ---
 ################################
-# Name
-################################
-
-plex_name: "plex"
-
-################################
-# Folders
-################################
-
-plex_folder: "{{ plex_name }}"
-
-plex_path: "{{ server_appdata_path }}/{{ plex_folder }}"
-
-################################
 # Paths
 ################################
-
-plex_application_support_path: "{{ plex_path }}/Library/Application Support/Plex Media Server"
-
-plex_plugins_path: "{{ plex_application_support_path }}/Plug-ins"
 
 plex_plugin_subzero_path: "{{ plex_plugins_path }}/Sub-Zero.bundle"
 
@@ -41,15 +23,3 @@ plex_plugin_subzero_info_plist_path: "{{ plex_plugin_subzero_path }}/Contents/In
 plex_plugin_subzero_release_url: https://api.github.com/repos/pannal/Sub-Zero.bundle/releases/latest
 
 plex_plugin_subzero_download_url_backup: https://github.com/pannal/Sub-Zero.bundle/releases/download/2.6.5.3152/Sub-Zero.bundle-2.6.5.3152.zip
-
-################################
-# Docker Container
-################################
-
-plex_docker_container: "{{ plex_name }}"
-
-################################
-# Docker State
-################################
-
-plex_docker_state: started

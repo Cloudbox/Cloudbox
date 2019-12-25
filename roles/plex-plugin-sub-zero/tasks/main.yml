@@ -38,6 +38,7 @@
       warn: no
     register: plex_plugin_subzero_latest_version
     ignore_errors: yes
+    changed_when: no
 
   - name: Compare installed Sub-Zero Plugin version with latest one
     set_fact:
@@ -83,6 +84,7 @@
       warn: no
     register: plex_plugin_subzero_download_url
     ignore_errors: yes
+    changed_when: no
 
   - name: Set 'plex_plugin_subzero_download_url' variable
     set_fact:

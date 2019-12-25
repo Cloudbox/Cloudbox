@@ -21,8 +21,9 @@
       plex_plugin_webtools_is_outdated: false
 
   - name: Check version of previously installed WebTools Plugin
-    shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
+    shell: cat '{{ plex_plugin_webtools_version_path }}' |  head -n 1 | awk '{ print }'
     register: plex_plugin_webtools_previously_installed_version
+    changed_when: no
 
   - name: Set 'plex_plugin_webtools_previously_installed_version' variable
     set_fact:
@@ -34,6 +35,7 @@
       warn: no
     register: plex_plugin_webtools_latest_version
     ignore_errors: yes
+    changed_when: no
 
   - name: Compare installed WebTools Plugin version with latest one
     set_fact:
@@ -113,8 +115,9 @@
       block:
 
       - name: Check version of newly installed WebTools Plugin
-        shell: cat '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/WebTools.bundle/VERSION' |  head -n 1 | awk '{ print }'
+        shell: cat '{{ plex_plugin_webtools_version_path }}' |  head -n 1 | awk '{ print }'
         register: plex_plugin_webtools_newly_installed_version
+        changed_when: no
 
       - name: Set 'plex_plugin_webtools_previously_installed_version' variable
         set_fact:
