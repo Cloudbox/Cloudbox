@@ -24,7 +24,10 @@
   assert:
     that:
       - '"{{ item }}" in t.stdout_lines'
-    msg: "You must supply valid tag(s) via '--tags TAG' (get a list of valid tags by running 'ansible-playbook cloudbox.yml --list-tags')"
+    msg: >-
+      You must supply valid tag(s) via '--tags TAG'
+      (get a list of valid tags by running 'ansible-playbook cloudbox.yml --list-tags')
+    quiet: yes
   with_items: "{{ ansible_run_tags }}"
   when:
    - not continuous_integration

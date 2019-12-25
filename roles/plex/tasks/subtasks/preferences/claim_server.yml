@@ -46,6 +46,7 @@
       - "plex_claim_code is defined"
       - "plex_claim_code is not none"
       - "plex_claim_code | trim | length > 0"
+    quiet: yes
 
 - name: "Claim Server | Display {{ plex_name | title }} claim code"
   debug:
