@@ -69,7 +69,7 @@ plex_docker_pull: yes
 ################################
 
 plex_main_ports:
-  - "32400:32400/tcp"
+  - "32400-32410:32400/tcp"
 
 plex_extra_ports:
   - "3005:3005/tcp"
@@ -82,22 +82,24 @@ plex_extra_ports:
   - "32414:32414/udp"
 
 webtools_ports:
-  - "33400:33400/tcp"
-  - "33443:33443/tcp"
+  - "33400-33401:33400/tcp"
+  - "33443-33453:33443/tcp"
 
-plex_ports: "{{ (plex_main_ports)
-                if ((plex.open_main_ports and
-                      not plex.open_extra_ports) or
-                    (not reverse_proxy_is_enabled))
-                else (plex_main_ports + plex_extra_ports)
-                      if (plex.open_main_ports and
-                          plex.open_extra_ports)
-                else (plex_extra_ports)
-                      if (not plex.open_main_ports and
-                          plex.open_extra_ports)
-                else [] }}"
+# Port openings decision making
 
-plex_docker_ports: "{{ plex_ports + webtools_ports }}"
+## Open main port(s) if enabled or reverse proxy is disabled
+plex_open_main_ports: "{{ plex_main_ports
+                          if plex.open_main_ports or
+                              reverse_proxy_is_enabled
+                          else [] }}"
+
+## Open extra ports if enabled and for only one main plex container
+plex_open_extra_ports: "{{ plex_extra_ports
+                            if plex.open_extra_ports and
+                                plex_name == 'plex'
+                            else [] }}"
+
+plex_docker_ports: "{{ plex_open_main_ports + plex_open_extra_ports + webtools_ports }}"
 
 ################################
 # Docker Envs

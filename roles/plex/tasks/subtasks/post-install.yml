@@ -16,3 +16,19 @@
     group: "{{ user.name }}"
     mode: 0775
     recurse: yes
+
+# Update Plex ports in Preferences
+- name: Post-Install | Get host port that's mapped to docker port '32400'
+  shell:
+    docker port {{ plex_docker_container }} 32400 | sed 's/[0-9.]*://'
+  register: plex_docker_port_32400
+  changed_when: no
+
+- name: Post-Install | Update 'ManualPortMappingPort' in 'Preferences.xml'
+  xml:
+    path: "{{ plex_config_file_path }}"
+    xpath: /Preferences
+    attribute: ManualPortMappingPort
+    value: "{{ plex_docker_port_32400.stdout | trim }}"
+    state: present
+  ignore_errors: yes
