@@ -1,0 +1,163 @@
+#########################################################################
+# Title:         Cloudbox: Plex Plugins / WebTools | Install            #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Install | Check for previously installed WebTools Plugin
+  stat:
+    path: "{{ plex_plugin_webtools_version_path }}"
+  register: plex_plugin_webtools_bundle_status
+
+- name: Install | Tasks for previously installed WebTools Plugin
+  block:
+
+  - name: Install | Set default value for 'plex_plugin_webtools_is_outdated' variable
+    set_fact:
+      plex_plugin_webtools_is_outdated: false
+
+  - name: Install | Check version of previously installed WebTools Plugin
+    shell: cat '{{ plex_plugin_webtools_version_path }}' |  head -n 1 | awk '{ print }'
+    register: plex_plugin_webtools_previously_installed_version
+    changed_when: no
+
+  - name: Install | Set 'plex_plugin_webtools_previously_installed_version' variable
+    set_fact:
+      plex_plugin_webtools_previously_installed_version: "{{ plex_plugin_webtools_previously_installed_version.stdout }}"
+
+  - name: Install | Check latest available version for WebTools
+    shell: curl -s {{ plex_plugin_webtools_release_url }} | jq -r .tag_name
+    args:
+      warn: no
+    register: plex_plugin_webtools_latest_version
+    ignore_errors: yes
+    changed_when: no
+
+  - name: Install | Compare installed WebTools Plugin version with latest one
+    set_fact:
+      plex_plugin_webtools_is_outdated: "{{
+          (plex_plugin_webtools_latest_version is failed) or
+            ((plex_plugin_webtools_latest_version is success) and
+            (plex_plugin_webtools_previously_installed_version is version(plex_plugin_webtools_latest_version.stdout, '<', strict=True))) }}"
+
+  when: plex_plugin_webtools_bundle_status.stat.exists
+
+- name: Install | Install WebTools Plugin
+  block:
+
+  - name: Install | Check to see if {{ plex_name | title }} is running
+    block:
+
+    - name: Install | Gather list of running Docker containers
+      shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | xargs echo -n"
+      register: docker_running_containers_list
+      changed_when: no
+
+    - name: Install | Set 'docker_running_containers_list' variable
+      set_fact:
+        docker_running_containers_list: "{{ (docker_running_containers_list.stdout).split() }}"
+
+    - name: Install | Stop {{ plex_name | title }} container
+      docker_container:
+        name: Install | "{{ plex_docker_container }}"
+        state: "stopped"
+      when: (plex_docker_container in docker_running_containers_list)
+
+    when: ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
+
+  - name: Install | Remove outdated WebTools Plugin
+    file:
+      path: "{{ plex_plugin_webtools_path }}"
+      state: absent
+
+  - name: Install | Get latest WebTools Plugin URL
+    shell: |
+      curl -s {{ plex_plugin_webtools_release_url }} \
+        | jq -r ".assets[] | select(.name | test(\"WebTools.bundle.zip\")) | .browser_download_url"
+    args:
+      warn: no
+    register: plex_plugin_webtools_download_url
+    ignore_errors: yes
+    changed_when: no
+
+  - name: Install | Set 'plex_plugin_webtools_download_url' variable
+    set_fact:
+      plex_plugin_webtools_download_url: "{{ plex_plugin_webtools_download_url.stdout | default(plex_plugin_webtools_download_url_backup,true)  }}"
+
+  - name: "Create {{ plex_name | title }} 'plug-ins' directory"
+    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+    with_items:
+      - "{{ plex_plugins_path }}"
+
+  - name: Install | Install WebTools Plugin
+    unarchive:
+      src: "{{ plex_plugin_webtools_download_url }}"
+      dest: "{{ plex_plugins_path }}"
+      copy: no
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      validate_certs: no
+    register: plex_plugin_webtools_download_status
+    ignore_errors: yes
+
+  - name: Install | Post-Successfull WebTools Plugin Download
+    block:
+
+    - name: Install | Check for newly installed WebTools Plugin
+      stat:
+        path: "{{ plex_plugin_webtools_version_path }}"
+      register: plex_plugin_webtools_version_status
+
+    - name: Install | Post-Successfull WebTools Plugin Install
+      block:
+
+      - name: Install | Check version of newly installed WebTools Plugin
+        shell: cat '{{ plex_plugin_webtools_version_path }}' |  head -n 1 | awk '{ print }'
+        register: plex_plugin_webtools_newly_installed_version
+        changed_when: no
+
+      - name: Install | Set 'plex_plugin_webtools_previously_installed_version' variable
+        set_fact:
+          plex_plugin_webtools_newly_installed_version: "{{ plex_plugin_webtools_newly_installed_version.stdout }}"
+
+      - name: Install | Display WebTools Plugin version
+        debug:
+          msg: "WebTools Plugin version {{ plex_plugin_webtools_newly_installed_version }} installed."
+
+      when: (plex_plugin_webtools_version_status.stat.exists)
+
+    when: (plex_plugin_webtools_download_status is success)
+
+  - name: Install | WebTools Plugin install failed
+    debug:
+      msg: "WebTools Plugin install failed."
+    when: >-
+      (plex_plugin_webtools_download_status is failed) or
+          ((plex_plugin_webtools_download_status is success) and
+          (not plex_plugin_webtools_version_status.stat.exists))
+
+  - name: Install | Start {{ plex_name | title }} container
+    docker_container:
+      name: Install | "{{ plex_docker_container }}"
+      state: "{{ plex_docker_state }}"
+    when:
+      - ('plex-plugin-webtools' in ansible_run_tags) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
+      - (plex_docker_container in docker_running_containers_list)
+
+  when: >-
+    (not plex_plugin_webtools_bundle_status.stat.exists) or
+        ((plex_plugin_webtools_bundle_status.stat.exists) and
+        (plex_plugin_webtools_is_outdated)) or ('plex-plugin-webtools-reinstall' in ansible_run_tags)
+
+- name: Install | WebTools Plugin was not updated
+  debug:
+    msg: "WebTools is already the latest version."
+  when:
+    - (plex_plugin_webtools_bundle_status.stat.exists)
+    - (not plex_plugin_webtools_is_outdated)
+    - ('plex-plugin-webtools-reinstall' not in ansible_run_tags)

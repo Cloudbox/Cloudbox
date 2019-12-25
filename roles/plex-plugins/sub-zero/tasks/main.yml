@@ -91,7 +91,7 @@
       plex_plugin_subzero_download_url: "{{ plex_plugin_subzero_download_url.stdout | default(plex_plugin_subzero_download_url_backup,true)  }}"
 
   - name: "Create {{ plex_name | title }} 'plug-ins' directory"
-    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
     with_items:
       - "{{ plex_plugins_path }}"
 
