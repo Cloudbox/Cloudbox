@@ -31,4 +31,6 @@
     attribute: ManualPortMappingPort
     value: "{{ plex_docker_port_32400.stdout | trim }}"
     state: present
+  become: yes
+  become_user: "{{ user.name }}"
   ignore_errors: yes

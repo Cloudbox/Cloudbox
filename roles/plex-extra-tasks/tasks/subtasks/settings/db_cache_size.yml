@@ -63,6 +63,8 @@
         "PRAGMA default_cache_size = '{{ desired_db_cache_size | int }}';"
     args:
       executable: /bin/bash
+    become: yes
+    become_user: "{{ user.name }}"
 
   - name: Settings | DB Cache Size | Get New Plex DB Cache Size
     shell: |

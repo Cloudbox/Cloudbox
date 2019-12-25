@@ -29,6 +29,8 @@
     attribute: forceAutoAdjustQuality
     value: "{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('1','0') }}"
     state: present
+  become: yes
+  become_user: "{{ user.name }}"
   register: x
   ignore_errors: yes
 
@@ -43,6 +45,8 @@
     attribute: AllowHighOutputBitrates
     value: "{{ (plex.force_high_output_bitrates|default(false,true)) | ternary('1','0') }}"
     state: present
+  become: yes
+  become_user: "{{ user.name }}"
   register: y
   ignore_errors: yes
 

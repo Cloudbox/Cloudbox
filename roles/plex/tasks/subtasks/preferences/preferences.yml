@@ -43,6 +43,8 @@
       attribute: TranscoderTempDirectory
       value: "/transcode"
       state: present
+    become: yes
+    become_user: "{{ user.name }}"
     ignore_errors: yes
     when: (transcoder_path_fix)
 
