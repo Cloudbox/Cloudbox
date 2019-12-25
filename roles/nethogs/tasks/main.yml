@@ -12,11 +12,13 @@
   apt: "name=nethogs state=absent"
 
 - name: Install nethog dependencies
-  apt: name="{{ item }}" state=present update_cache=yes
-  with_items:
+  apt:
+    name:
       - build-essential
       - libncurses5-dev
       - libpcap-dev
+    state: present
+    update_cache: yes
 
 - name: Pull nethogs repo from github
   git:
