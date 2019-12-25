@@ -41,14 +41,18 @@ plex_folders:
   - "{{ plex_transcodes_path }}"
 
 ################################
-# Files
+# Paths
 ################################
 
 plex_application_support_path: "{{ plex_path }}/Library/Application Support/Plex Media Server"
 
 plex_config_file_path: "{{ plex_application_support_path }}/Preferences.xml"
 
-plex_db_path: "{{ plex_application_support_path }}/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+plex_plugins_path: "{{ plex_application_support_path }}/Plug-ins"
+
+plex_plugin_support_path: "{{ plex_application_support_path }}/Plug-in Support"
+
+plex_db_path: "{{ plex_plugin_support_path }}/Databases/com.plexapp.plugins.library.db"
 
 ################################
 # Docker Container
