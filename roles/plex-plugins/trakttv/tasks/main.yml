@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Trakt.tv Plugin for Plex                     #
+# Title:         Cloudbox: Plex Plugins / Trakt.tv                      #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -85,7 +85,7 @@
     msg: "Trakt.tv Plugin install failed."
   when: (plex_plugin_trakttv_download_status is failed)
 
-- name: Start {{ plex_name | title }}  container
+- name: Start {{ plex_name | title }} container
   docker_container:
     name: "{{ plex_docker_container }}"
     state: "{{ plex_docker_state }}"

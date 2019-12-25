@@ -44,9 +44,9 @@
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
     - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['use_sma'] }
     - { role: plex_auth_token, tags: ['plex_auth_token'] }
-    - { role: plex-plugin-trakttv, tags: ['plex-plugin-trakttv'] }
-    - { role: plex-plugin-sub-zero, tags: ['plex-plugin-sub-zero', 'plex-plugin-sub-zero-reinstall'] }
-    - { role: plex-plugin-webtools, tags: ['plex-plugin-webtools', 'plex-plugin-webtools-reinstall'] }
+    - { role: plex-plugins/trakttv, tags: ['plex-plugins-trakttv'] }
+    - { role: plex-plugins/sub-zero, tags: ['plex-plugins-sub-zero', 'plex-plugins-sub-zero-reinstall'] }
+    - { role: plex-plugins/webtools, tags: ['plex-plugins-webtools', 'plex-plugins-webtools-reinstall'] }
     - { role: subliminal, tags: ['subliminal'] }
     - { role: mariadb, tags: ['mariadb'] }
     - { role: emby, tags: ['emby'] }

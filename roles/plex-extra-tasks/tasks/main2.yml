@@ -14,6 +14,7 @@
   - name: Gather list of running Docker containers
     shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | sort | xargs echo -n"
     register: docker_running_containers_list
+    changed_when: no
 
   - name: Set 'docker_running_containers_list' variable
     set_fact:
@@ -48,15 +49,15 @@
 
 - name: "Install Sub-Zero Plugin"
   import_role:
-    name: plex-plugin-sub-zero
+    name: plex-plugins/sub-zero
 
 - name: "Install Trakt.tv Plugin"
   import_role:
-    name: plex-plugin-trakttv
+    name: plex-plugins/trakttv
 
 - name: "Install WebTools Plugin"
   import_role:
-    name: plex-plugin-webtools
+    name: plex-plugins/webtools
 
 - name: Start Docker Container
   docker_container:

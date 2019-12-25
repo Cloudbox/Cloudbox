@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: WebTools Plugin for Plex                     #
+# Title:         Cloudbox: Plex Plugins / WebTools                      #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -161,7 +161,7 @@
     - ('plex-plugin-webtools-reinstall' not in ansible_run_tags)
 
 # Update WebTools ports in Preferences
-- name: Get host port that's mapped to plex docker http port '33400'
+- name: Get host port that's mapped to {{ plex_name | title }} docker http port '33400'
   shell:
     docker port {{ plex_docker_container }} 33400 | sed 's/[0-9.]*://'
   register: plex_docker_port_33400
@@ -175,7 +175,7 @@
     state: present
   ignore_errors: yes
 
-- name: Get host port that's mapped to plex docker https port '33443'
+- name: Get host port that's mapped to {{ plex_name | title }} docker https port '33443'
   shell:
     docker port {{ plex_docker_container }} 33443 | sed 's/[0-9.]*://'
   register: plex_docker_port_33443
