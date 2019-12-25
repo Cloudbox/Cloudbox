@@ -48,6 +48,8 @@ plex_application_support_path: "{{ plex_path }}/Library/Application Support/Plex
 
 plex_config_file_path: "{{ plex_application_support_path }}/Preferences.xml"
 
+plex_log_path: "{{ plex_application_support_path }}/Logs"
+
 plex_plugins_path: "{{ plex_application_support_path }}/Plug-ins"
 
 plex_plugin_support_path: "{{ plex_application_support_path }}/Plug-in Support"
