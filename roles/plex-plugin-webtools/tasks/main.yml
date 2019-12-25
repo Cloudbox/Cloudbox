@@ -159,3 +159,32 @@
     - (plex_plugin_webtools_bundle_status.stat.exists)
     - (not plex_plugin_webtools_is_outdated)
     - ('plex-plugin-webtools-reinstall' not in ansible_run_tags)
+
+# Update WebTools ports in Preferences
+- name: Get host port that's mapped to plex docker http port '33400'
+  shell:
+    docker port {{ plex_docker_container }} 33400 | sed 's/[0-9.]*://'
+  register: plex_docker_port_33400
+  changed_when: no
+
+- name: Update 'WEB_Port_http' in 'com.plexapp.plugins.WebTools.xml'
+  xml:
+    path: "{{ plex_plugin_webtools_preferences_path }}"
+    xpath: /PluginPreferences/WEB_Port_http
+    value: "{{ plex_docker_port_33400.stdout | trim }}"
+    state: present
+  ignore_errors: yes
+
+- name: Get host port that's mapped to plex docker https port '33443'
+  shell:
+    docker port {{ plex_docker_container }} 33443 | sed 's/[0-9.]*://'
+  register: plex_docker_port_33443
+  changed_when: no
+
+- name: Update 'WEB_Port_https' in 'com.plexapp.plugins.WebTools.xml'
+  xml:
+    path: "{{ plex_plugin_webtools_preferences_path }}"
+    xpath: /PluginPreferences/WEB_Port_https
+    value: "{{ plex_docker_port_33443.stdout | trim }}"
+    state: present
+  ignore_errors: yes
