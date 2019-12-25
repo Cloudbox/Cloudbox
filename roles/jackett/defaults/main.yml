@@ -70,7 +70,7 @@ jackett_web_port: 9117
 jackett_docker_envs_standard:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
-  UMASK: 002
+  UMASK: "002"
   TZ: "{{ tz }}"
 
 jackett_docker_envs_reverse_proxy_extras: {}

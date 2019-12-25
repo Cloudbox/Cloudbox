@@ -94,9 +94,9 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      UMASK: 002
+      UMASK: "002"
       VIRTUAL_HOST: "nzbget.{{ user.domain }}"
-      VIRTUAL_PORT: 6789
+      VIRTUAL_PORT: "6789"
       LETSENCRYPT_HOST: "nzbget.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       LC_ALL: "C"

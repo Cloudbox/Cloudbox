@@ -37,7 +37,7 @@
       - "/var/run/docker.sock:/var/run/docker.sock"
     env:
       VIRTUAL_HOST: "portainer.{{ user.domain }}"
-      VIRTUAL_PORT: 9000
+      VIRTUAL_PORT: "9000"
       LETSENCRYPT_HOST: "portainer.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"

@@ -60,9 +60,9 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      UMASK: 002
+      UMASK: "002"
       VIRTUAL_HOST: "nzbhydra2.{{ user.domain }}"
-      VIRTUAL_PORT: 5076
+      VIRTUAL_PORT: "5076"
       LETSENCRYPT_HOST: "nzbhydra2.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"

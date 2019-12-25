@@ -48,7 +48,7 @@
     path: "/etc/default/motd-news"
     section: null
     option: "ENABLED"
-    value: 0
+    value: "0"
     no_extra_spaces: yes
     state: present
   when: (motd_news.stat.exists)
