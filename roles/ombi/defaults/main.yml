@@ -1,0 +1,153 @@
+##########################################################################
+# Title:         Cloudbox: Ombi | Default Variables                      #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+ombi_name: ombi
+
+################################
+# Subdomain
+################################
+
+ombi_subdomain_default: "{{ ombi_name }}"
+
+ombi_subdomain: "{{ ombi.subdomain | default(ombi_subdomain_default,true) }}"
+
+################################
+# Folders
+################################
+
+ombi_folder: "{{ ombi_name }}"
+
+ombi_path: "{{ server_appdata_path }}/{{ ombi_folder }}"
+
+ombi_folders:
+  - "{{ ombi_path }}"
+
+################################
+# Files
+################################
+
+################################
+# Docker Container
+################################
+
+ombi_docker_container: "{{ ombi_name }}"
+
+################################
+# Docker Image
+################################
+
+ombi_docker_image: "hotio/ombi:latest"
+
+ombi_docker_pull: yes
+
+################################
+# Docker Ports
+################################
+
+ombi_ports:
+  - "5000:5000"
+
+ombi_docker_ports: "{{ ombi_ports
+                        if (not reverse_proxy_is_enabled)
+                        else [] }}"
+
+################################
+# Docker Envs
+################################
+
+ombi_web_port: 5000
+
+ombi_docker_envs_standard:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  UMASK: "002"
+  TZ: "{{ tz }}"
+  LC_ALL: "en_US.UTF-8"
+
+ombi_docker_envs_reverse_proxy_extras: {}
+
+ombi_docker_envs: "{{ (ombi_docker_envs_standard |
+                            combine(docker_envs_reverse_proxy) |
+                            combine(ombi_docker_envs_reverse_proxy_extras))
+                        if (reverse_proxy_is_enabled)
+                        else (ombi_docker_envs_standard) }}"
+
+################################
+# Docker Volumes
+################################
+
+ombi_docker_volumes:
+  - "{{ ombi_path }}:/config"
+
+################################
+# Docker Devices
+################################
+
+ombi_docker_devices: []
+
+################################
+# Docker Hosts
+################################
+
+ombi_docker_hosts_custom: []
+
+ombi_docker_hosts: "{{ docker_hosts_common | combine(ombi_docker_hosts_custom) }}"
+
+################################
+# Docker Labels
+################################
+
+ombi_docker_labels_custom: {}
+
+ombi_docker_labels: "{{ docker_labels_common | combine(ombi_docker_labels_custom) }}"
+
+################################
+# Docker Hostname
+################################
+
+ombi_docker_hostname: "{{ ombi_name }}"
+
+################################
+# Docker Networks
+################################
+
+ombi_docker_networks_alias: "{{ ombi_name }}"
+
+ombi_docker_networks_custom: []
+
+ombi_docker_networks: "{{ docker_networks_common + ombi_docker_networks_custom }}"
+
+################################
+# Docker Capabilities
+################################
+
+ombi_docker_capabilities: []
+
+################################
+# Docker Security
+################################
+
+ombi_docker_security_opts: []
+
+################################
+# Docker Restart Policy
+################################
+
+ombi_docker_restart_policy: unless-stopped
+
+################################
+# Docker State
+################################
+
+ombi_docker_state: started

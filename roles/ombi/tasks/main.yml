@@ -2,7 +2,6 @@
 # Title:         Cloudbox: Ombi                                         #
 # Author(s):     RXWatcher1, l3uddz, desimaniac                         #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/ombi                                             #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,46 +12,21 @@
   include_role:
     name: dns
   vars:
-    record: "{{ ombi.subdomain|default('ombi',true) }}"
+    record: "{{ item }}"
+  loop:
+    - "{{ lookup('vars', role_name + '_subdomain') }}"
 
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: ombi
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
 
-- name: Suitarr | Migration Tasks
-  import_tasks: "subtasks/suitarr/migration.yml"
+- name: Hotio Migration Tasks
+  include_tasks: "{{ resources_tasks_path }}/hotio/migrator/main.yml"
 
-- name: Create ombi directories
+- name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - /opt/ombi
+  with_items: "{{ lookup('vars', role_name + '_folders') }}"
 
-- name: Create and start container
-  docker_container:
-    name: ombi
-    image: "hotio/ombi:latest"
-    pull: yes
-    published_ports:
-      - "127.0.0.1:3579:5000"
-    env:
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      UMASK: "002"
-      VIRTUAL_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ user.domain }}"
-      VIRTUAL_PORT: "5000"
-      LETSENCRYPT_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      LC_ALL: "en_US.UTF-8"
-      TZ: "{{ tz }}"
-    volumes:
-      - "/opt/ombi:/config"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - ombi
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
