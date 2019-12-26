@@ -28,7 +28,7 @@
     - "{{ downloads.nzbs }}/sabnzbd"
     - "{{ downloads.nzbs }}/sabnzbd/complete"
     - "{{ downloads.nzbs }}/sabnzbd/incomplete"
-    - "{{ downloads.nzbs }}/sabnzbd/watched"
+    - "{{ downloads.nzbs }}/sabnzbd/watch"
     - "{{ downloads.nzbs }}/sabnzbd/logs"
 
 - name: Check sabnzbd.ini exists
@@ -71,7 +71,7 @@
     state: started
 
 - name: Settings Tweaks
-  include_tasks: "subtasks/sabnzbd_settings.yml"
+  include_tasks: "subtasks/settings.yml"
   when: not (
         (sabnzbd_ini.stat.exists)
         or
