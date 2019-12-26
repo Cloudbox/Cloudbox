@@ -1,4 +1,7 @@
 {
+  "core": {
+    "debug": false
+  },
   "automatic": {
     "movies": {
       "anticipated": 3,
@@ -18,47 +21,6 @@
     "verbose": false
   },
   "filters": {
-    "shows": {
-      "allowed_countries": [
-        "us",
-        "gb",
-        "ca"
-      ],
-      "allowed_languages": [],
-      "blacklisted_min_runtime": 15,
-      "blacklisted_min_year": 2010,
-      "blacklisted_max_year": 2019,
-      "blacklisted_genres": [
-        "animation",
-        "game-show",
-        "talk-show",
-        "home-and-garden",
-        "children",
-        "reality",
-        "anime",
-        "news",
-        "documentary",
-        "special-interest"
-      ],
-      "blacklisted_networks": [
-        "twitch",
-        "youtube",
-        "nickelodeon",
-        "hallmark",
-        "reelzchannel",
-        "disney",
-        "cnn",
-        "cbbc",
-        "the movie network",
-        "teletoon",
-        "cartoon network",
-        "espn",
-        "fox sports",
-        "yahoo!"
-      ],
-      "blacklisted_tvdb_ids": [],
-      "disabled_for": []
-    },
     "movies": {
       "allowed_countries": [
         "us",
@@ -67,48 +29,69 @@
       ],
       "allowed_languages": [],
       "blacklisted_genres": [
-        "documentary",
-        "music",
+        "fan-film",
         "short",
         "sporting-event",
-        "film-noir",
-        "fan-film"
+        "tv-movie"
       ],
-      "blacklist_title_keywords": [
+      "blacklisted_min_runtime": 30,
+      "blacklisted_max_runtime": 0,
+      "blacklisted_min_year": 2000,
+      "blacklisted_max_year": 2020,
+      "blacklisted_tmdb_ids": [],
+      "blacklisted_title_keywords": [
         "untitled",
         "barbie",
         "ufc"
       ],
-      "blacklisted_min_runtime": 60,
-      "blacklisted_min_year": 2000,
-      "blacklisted_max_year": 2019,
-      "blacklisted_tmdb_ids": [],
+      "disabled_for": []
+    },
+    "shows": {
       "allowed_countries": [
         "us",
         "gb",
         "ca"
       ],
+      "allowed_languages": [],
+      "blacklisted_min_runtime": 15,
+      "blacklisted_max_runtime": 0,
+      "blacklisted_min_year": 2010,
+      "blacklisted_max_year": 2019,
+      "blacklisted_genres": [
+        "news",
+        "special-interest"
+      ],
+      "blacklisted_networks": [
+        "twitch"
+      ],
+      "blacklisted_title_keywords": [
+        "wwe",
+        "wwf"
+      ],
+      "blacklisted_tvdb_ids": [],
       "disabled_for": []
     }
   },
-  "core": {
-    "debug": false
-  },
   "radarr": {
     "api_key": "{{ radarr_api_key | default('',true) }}",
-    "profile": "HD-1080p",
-    "url": "https://radarr.{{ user.domain }}",
-    "root_folder": "/movies/"
+    "minimum_availability": "released",
+    "quality": "HD-1080p",
+    "root_folder": "/movies/",
+    "url": "https://radarr.{{ user.domain }}"
   },
   "sonarr": {
     "api_key": "{{ sonarr_api_key | default('',true) }}",
-    "profile": "HD-1080p",
-    "url": "https://sonarr.{{ user.domain }}",
+    "language": "English",
+    "quality": "HD-1080p",
     "root_folder": "/tv/",
-    "tags": {}
+    "tags": {},
+    "url": "https://sonarr.{{ user.domain }}"
   },
   "trakt": {
     "client_id": "",
     "client_secret": ""
+  },
+  "omdb": {
+    "api_key": ""
   }
 }
