@@ -29,24 +29,25 @@
      "POLL_INTERVAL": 120,
      "SHOW_CACHE_LOGS": false
    },
-   "PLEX_ANALYZE_DIRECTORY":true,
-   "PLEX_ANALYZE_TYPE":"basic",
-   "PLEX_FIX_MISMATCHED":true,
-   "PLEX_DATABASE_PATH":"/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db",
-   "PLEX_EMPTY_TRASH":true,
-   "PLEX_EMPTY_TRASH_CONTROL_FILES":[
+   "PLEX_ANALYZE_DIRECTORY": true,
+   "PLEX_ANALYZE_TYPE": "basic",
+   "PLEX_FIX_MISMATCHED": true,
+   "PLEX_FIX_MISMATCHED_LANG": "en",
+   "PLEX_DATABASE_PATH": "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db",
+   "PLEX_EMPTY_TRASH": true,
+   "PLEX_EMPTY_TRASH_CONTROL_FILES": [
       "/mnt/unionfs/mounted.bin"
    ],
-   "PLEX_EMPTY_TRASH_MAX_FILES":100,
-   "PLEX_EMPTY_TRASH_ZERO_DELETED":false,
-   "PLEX_LD_LIBRARY_PATH":"/usr/lib/plexmediaserver/lib",
-   "PLEX_LOCAL_URL":"https://plex.{{ user.domain }}",
-   "PLEX_SCANNER":"/usr/lib/plexmediaserver/Plex\\ Media\\ Scanner",
-   "PLEX_SUPPORT_DIR":"/var/lib/plexmediaserver/Library/Application\\ Support",
-   "PLEX_USER":"plex",
-   "PLEX_TOKEN":"{{ plex_auth_token | default('') }}",
-   "PLEX_CHECK_BEFORE_SCAN":true,
-   "PLEX_WAIT_FOR_EXTERNAL_SCANNERS":false,
+   "PLEX_EMPTY_TRASH_MAX_FILES": 100,
+   "PLEX_EMPTY_TRASH_ZERO_DELETED": false,
+   "PLEX_LD_LIBRARY_PATH": "/usr/lib/plexmediaserver/lib",
+   "PLEX_LOCAL_URL": "https://plex.{{ user.domain }}",
+   "PLEX_SCANNER": "/usr/lib/plexmediaserver/Plex\\ Media\\ Scanner",
+   "PLEX_SUPPORT_DIR": "/var/lib/plexmediaserver/Library/Application\\ Support",
+   "PLEX_USER": "plex",
+   "PLEX_TOKEN": "{{ plex_auth_token | default('') }}",
+   "PLEX_CHECK_BEFORE_SCAN": true,
+   "PLEX_WAIT_FOR_EXTERNAL_SCANNERS": false,
    "RCLONE": {
      "BINARY": "/usr/bin/rclone",
      "CONFIG": "/home/{{ user.name }}/.config/rclone/rclone.conf",
@@ -62,29 +63,29 @@
        "RC_URL": "http://localhost:5572"
      }
    },
-   "RUN_COMMAND_BEFORE_SCAN":"",
+   "RUN_COMMAND_BEFORE_SCAN": "",
    "RUN_COMMAND_AFTER_SCAN": "",
-   "SERVER_ALLOW_MANUAL_SCAN":false,
-   "SERVER_FILE_CHECK_DELAY":60,
-   "SERVER_MAX_FILE_CHECKS":10,
-   "SERVER_FILE_EXIST_PATH_MAPPINGS":{},
-   "SERVER_IGNORE_LIST":[
+   "SERVER_ALLOW_MANUAL_SCAN": false,
+   "SERVER_FILE_CHECK_DELAY": 60,
+   "SERVER_MAX_FILE_CHECKS": 10,
+   "SERVER_FILE_EXIST_PATH_MAPPINGS": {},
+   "SERVER_IGNORE_LIST": [
       "/.grab/",
       ".DS_Store",
       "Thumbs.db"
    ],
-   "SERVER_IP":"0.0.0.0",
-   "SERVER_PASS":"{{ plex_autoscan_server_pass | default('') }}",
-   "SERVER_PATH_MAPPINGS":{
-      "/mnt/unionfs/Media/":[
+   "SERVER_IP": "0.0.0.0",
+   "SERVER_PASS": "{{ plex_autoscan_server_pass | default('') }}",
+   "SERVER_PATH_MAPPINGS": {
+      "/mnt/unionfs/Media/": [
          "/mnt/unionfs/Media/",
          "My Drive/Media/"
       ]
    },
-   "SERVER_PORT":3468,
-   "SERVER_SCAN_DELAY":180,
-   "SERVER_SCAN_FOLDER_ON_FILE_EXISTS_EXHAUSTION":true,
-   "SERVER_SCAN_PRIORITIES":{
+   "SERVER_PORT": 3468,
+   "SERVER_SCAN_DELAY": 180,
+   "SERVER_SCAN_FOLDER_ON_FILE_EXISTS_EXHAUSTION": true,
+   "SERVER_SCAN_PRIORITIES": {
       "0":[
          "/TV/"
       ],
@@ -95,7 +96,7 @@
          "/Music/"
       ]
    },
-   "SERVER_USE_SQLITE":true,
-   "USE_DOCKER":true,
-   "USE_SUDO":false
+   "SERVER_USE_SQLITE": true,
+   "USE_DOCKER": true,
+   "USE_SUDO": false
 }
