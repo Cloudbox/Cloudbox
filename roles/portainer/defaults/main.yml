@@ -1,0 +1,150 @@
+##########################################################################
+# Title:         Cloudbox: Portainer | Default Variables                 #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Name
+################################
+
+portainer_name: portainer
+
+################################
+# Subdomain
+################################
+
+portainer_subdomain: "{{ portainer_name }}"
+
+################################
+# Folders
+################################
+
+portainer_folder: "{{ portainer_name }}"
+
+portainer_path: "{{ server_appdata_path }}/{{ portainer_folder }}"
+
+portainer_folders:
+  - "{{ portainer_path }}"
+
+################################
+# Files
+################################
+
+portainer_config_override: "{{ portainer_path }}/override"
+
+################################
+# Docker Container
+################################
+
+portainer_docker_container: "{{ portainer_name }}"
+
+################################
+# Docker Image
+################################
+
+portainer_docker_image: "portainer/portainer"
+
+portainer_docker_pull: yes
+
+################################
+# Docker Ports
+################################
+
+portainer_ports:
+  - "9000:9000"
+
+portainer_docker_ports: "{{ portainer_ports
+                            if (not reverse_proxy_is_enabled)
+                            else [] }}"
+
+################################
+# Docker Envs
+################################
+
+portainer_web_port: 9000
+
+portainer_docker_envs_standard:
+  TZ: "{{ tz }}"
+
+portainer_docker_envs_reverse_proxy_extras: {}
+
+portainer_docker_envs: "{{ (portainer_docker_envs_standard |
+                                combine(docker_envs_reverse_proxy) |
+                                combine(portainer_docker_envs_reverse_proxy_extras))
+                            if (reverse_proxy_is_enabled)
+                            else (portainer_docker_envs_standard) }}"
+
+################################
+# Docker Volumes
+################################
+
+portainer_docker_volumes:
+  - "{{ portainer_path }}:/data"
+  - "/var/run/docker.sock:/var/run/docker.sock"
+
+################################
+# Docker Devices
+################################
+
+portainer_docker_devices: []
+
+################################
+# Docker Hosts
+################################
+
+portainer_docker_hosts_custom: []
+
+portainer_docker_hosts: "{{ docker_hosts_common | combine(portainer_docker_hosts_custom) }}"
+
+################################
+# Docker Labels
+################################
+
+portainer_docker_labels_custom: {}
+
+portainer_docker_labels: "{{ docker_labels_common | combine(portainer_docker_labels_custom) }}"
+
+################################
+# Docker Hostname
+################################
+
+portainer_docker_hostname: "{{ portainer_name }}"
+
+################################
+# Docker Networks
+################################
+
+portainer_docker_networks_alias: "{{ portainer_name }}"
+
+portainer_docker_networks_custom: []
+
+portainer_docker_networks: "{{ docker_networks_common + portainer_docker_networks_custom }}"
+
+################################
+# Docker Capabilities
+################################
+
+portainer_docker_capabilities: []
+
+################################
+# Docker Security
+################################
+
+portainer_docker_security_opts: []
+
+################################
+# Docker Restart Policy
+################################
+
+portainer_docker_restart_policy: unless-stopped
+
+################################
+# Docker State
+################################
+
+portainer_docker_state: started

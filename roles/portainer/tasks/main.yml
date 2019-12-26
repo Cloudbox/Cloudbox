@@ -1,8 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: Portainer Role                               #
-# Author(s):     l3uddz                                                 #
+# Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  portainer/portainer                                    #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,40 +12,18 @@
   include_role:
     name: dns
   vars:
-    record: portainer
+    record: "{{ item }}"
+  loop:
+    - "{{ lookup('vars', role_name + '_subdomain') }}"
 
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: portainer
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
 
-- name: Create portainer directories
+- name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - /opt/portainer
+  with_items: "{{ lookup('vars', role_name + '_folders') }}"
 
-- name: Create and start container
-  docker_container:
-    name: portainer
-    image: "portainer/portainer"
-    pull: yes
-    published_ports:
-      - "127.0.0.1:9000:9000"
-    volumes:
-      - "/opt/portainer:/data"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    env:
-      VIRTUAL_HOST: "portainer.{{ user.domain }}"
-      VIRTUAL_PORT: "9000"
-      LETSENCRYPT_HOST: "portainer.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - portainer
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
