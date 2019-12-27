@@ -34,7 +34,3 @@
 
 - name: Post-Install Tasks
   import_tasks: "subtasks/post-install.yml"
-
-- name: Settings Tasks
-  include_tasks: "subtasks/settings.yml"
-  when: reverse_proxy_is_enabled

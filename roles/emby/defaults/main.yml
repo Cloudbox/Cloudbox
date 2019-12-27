@@ -45,6 +45,28 @@ emby_config_file_path: "{{ emby_path }}/config/system.xml"
 emby_dlna_file_path: "{{ emby_path }}/config/dlna.xml"
 
 ################################
+# Settings
+################################
+
+emby_config_settings:
+  # set 'IsBehindProxy' to 'true'
+  - { xpath: 'IsBehindProxy', value: 'true' }
+  # set 'WanDdns' to 'emby.{{ user.domain }}'
+  - { xpath: 'WanDdns', value: 'emby.{{ user.domain }}' }
+  # set 'PublicPort' to '80'
+  - { xpath: 'PublicPort', value: '80' }
+  # set 'PublicHttpsPort' to '443'
+  - { xpath: 'PublicHttpsPort', value: '443' }
+  # set 'EnableHttps' to 'true'
+  - { xpath: 'EnableHttps', value: 'true' }
+  # set 'RequireHttps' to 'false'
+  - { xpath: 'RequireHttps', value: 'false' }
+  # set 'EnableUPnP' to 'false'
+  - { xpath: 'EnableUPnP', value: 'false' }
+  # set 'EnableAnonymousUsageReporting' to 'false'
+  - { xpath: 'EnableAnonymousUsageReporting', value: 'false' }
+
+################################
 # Docker Container
 ################################
 
