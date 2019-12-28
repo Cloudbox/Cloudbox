@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Nginx-Proxy                                  #
-# Author(s):     desimaniac, l3udzz                                     #
+# Title:         Cloudbox: Nginx-Proxy | Letsencrypt Tasks              #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,8 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Nginx-Proxy Tasks
-  import_tasks: "nginx-proxy/main.yml"
+- name: Letsencrypt | Stop and remove any existing container
+  docker_container:
+    name: letsencrypt
+    state: absent
 
-- name: Letsencrypt Tasks
-  import_tasks: "letsencrypt/main.yml"
+- name: Letsencrypt | HTTP Validation
+  import_tasks: "http_validation.yml"
+  when: not cloudflare_is_enabled
+
+- name: Letsencrypt | DNS Validation
+  import_tasks: "dns_validation.yml"
+  when: cloudflare_is_enabled

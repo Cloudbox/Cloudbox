@@ -1,0 +1,92 @@
+#########################################################################
+# Title:         Cloudbox: Nginx-Proxy | Nginx-Proxy Tasks              #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Nginx-Proxy | Stop and remove any existing container
+  docker_container:
+    name: nginx-proxy
+    state: absent
+
+- name: Nginx-Proxy | Create nginx-proxy directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  with_items:
+    - /opt/nginx-proxy
+    - /opt/nginx-proxy/certs
+    - /opt/nginx-proxy/conf.d
+    - /opt/nginx-proxy/htpasswd
+    - /opt/nginx-proxy/vhost.d
+
+- name: Nginx-Proxy | Create nginx-proxy directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  with_items:
+    - /opt/nginx-proxy/tmpl
+    - /opt/nginx-proxy/certs/letsencrypt
+  when: cloudflare_is_enabled
+
+- name: Nginx-Proxy | Import 'proxy.conf' file
+  copy:
+    src: "conf.d/proxy.conf"
+    dest: "/opt/nginx-proxy/conf.d/proxy.conf"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: yes
+
+# Letsencrypt DNS Validation Only
+- name: Nginx-Proxy | Import 'nginx.tmpl' file
+  copy:
+    src: "dns_validation/nginx.tmpl"
+    dest: "/opt/nginx-proxy/tmpl/nginx.tmpl"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: yes
+  when: cloudflare_is_enabled
+
+- name: Nginx-Proxy | Set 'nginx_proxy_docker_volumes' variable
+  set_fact:
+    nginx_proxy_docker_volumes:
+      - "/opt/nginx-proxy/certs:/etc/nginx/certs:ro"
+      - "/opt/nginx-proxy/conf.d/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
+      - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
+      - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/usr/share/nginx/html"
+
+- name: Nginx-Proxy | Set 'docker_volumes_default' variable
+  set_fact:
+    letsencrypt_dns_validation_docker_volumes:
+      - "/opt/nginx-proxy/tmpl/nginx.tmpl:/app/nginx.tmpl"
+
+- name: Nginx-Proxy | Build 'docker_volumes' list variable
+  set_fact:
+    nginx_proxy_docker_volumes: "{{ nginx_proxy_docker_volumes  + letsencrypt_dns_validation_docker_volumes }}"
+  when: cloudflare_is_enabled
+
+- name: Nginx-Proxy | Create and start container
+  docker_container:
+    name: nginx-proxy
+    image: "jwilder/nginx-proxy:alpine"
+    pull: yes
+    published_ports:
+      - "80:80"
+      - "443:443"
+    volumes: "{{ nginx_proxy_docker_volumes }}"
+    env:
+      TZ: "{{ tz }}"
+    labels:
+      "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - nginx-proxy
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started

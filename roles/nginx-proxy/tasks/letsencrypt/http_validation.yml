@@ -1,0 +1,34 @@
+#########################################################################
+# Title:         Cloudbox: Nginx-Proxy | Letsencrypt | HTTP Validation  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Letsencrypt | HTTP Validation | Create and start container
+  docker_container:
+    name: letsencrypt
+    image: "jrcs/letsencrypt-nginx-proxy-companion"
+    pull: yes
+    volumes:
+      - "/opt/nginx-proxy/certs:/etc/nginx/certs:rw"
+      - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    volumes_from:
+      - "nginx-proxy"
+    env:
+      FILES_UID: "{{ uid }}"
+      FILES_GID: "{{ gid }}"
+      TZ: "{{ tz }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - letsencrypt
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
