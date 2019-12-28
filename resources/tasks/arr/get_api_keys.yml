@@ -1,0 +1,74 @@
+#########################################################################
+# Title:         Cloudbox: Resources | Tasks | ARR | Get API Keys       #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Resources | Tasks | ARR | Get API Keys | Check if Sonarr exists
+  stat:
+    path: "{{ sonarr_config_file_path }}"
+  register: sonarr_config_file_stat
+
+- name: Resources | Tasks | ARR | Get API Keys | Sonarr API Key tasks
+  block:
+
+  - name: Resources | Tasks | ARR | Get API Keys | Fetch Sonarr API Key
+    xml:
+      path: "{{ sonarr_config_file_path }}"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Resources | Tasks | ARR | Get API Keys | Set 'sonarr_api_key' variable
+    set_fact:
+      sonarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (sonarr_config_file_stat.stat.exists)
+
+- name: Resources | Tasks | ARR | Get API Keys | Check if Radarr exists
+  stat:
+    path: "{{ radarr_config_file_path }}"
+  register: radarr_config_file_stat
+  when: not trackarr_config_file_stat.stat.exists
+
+- name: Resources | Tasks | ARR | Get API Keys | Radarr API Key tasks
+  block:
+
+  - name: Resources | Tasks | ARR | Get API Keys | Fetch Radarr API Key
+    xml:
+      path: "{{ radarr_config_file_path }}"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Resources | Tasks | ARR | Get API Keys | Set 'radarr_api_key' variable
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (radarr_config_file_stat.stat.exists)
+
+- name: Resources | Tasks | ARR | Get API Keys | Check if Lidarr exists
+  stat:
+    path: "{{ lidarr_config_file_path }}"
+  register: lidarr_config_file_stat
+  when: not trackarr_config_file_stat.stat.exists
+
+- name: Resources | Tasks | ARR | Get API Keys | Lidarr API Key tasks
+  block:
+
+  - name: Resources | Tasks | ARR | Get API Keys | Fetch Lidarr API Key
+    xml:
+      path: "{{ lidarr_config_file_path }}"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Resources | Tasks | ARR | Get API Keys | Set 'lidarr_api_key' variable
+    set_fact:
+      lidarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (lidarr_config_file_stat.stat.exists)
