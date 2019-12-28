@@ -15,10 +15,14 @@
 radarr_name: radarr
 
 ################################
-# Subdomain
+# Web
 ################################
 
 radarr_subdomain: "{{ radarr_name }}"
+
+radarr_url: "{{ 'https://' + radarr_subdomain + user.domain
+                  if (reverse_proxy_is_enabled)
+                  else 'http://localhost:' + radarr_web_port }}"
 
 ################################
 # Folders
@@ -37,6 +41,12 @@ radarr_folders:
 
 radarr_config_file_path: "{{ radarr_path }}/app/config.xml"
 
+################################
+# API
+################################
+
+# default to blank
+radarr_api_key:
 
 ################################
 # Docker Container
