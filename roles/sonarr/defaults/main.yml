@@ -15,10 +15,14 @@
 sonarr_name: sonarr
 
 ################################
-# Subdomain
+# Web
 ################################
 
 sonarr_subdomain: "{{ sonarr_name }}"
+
+sonarr_url: "{{ 'https://' + sonarr_subdomain + user.domain
+                  if (reverse_proxy_is_enabled)
+                  else 'http://localhost:' + sonarr_web_port }}"
 
 ################################
 # Folders
@@ -36,6 +40,13 @@ sonarr_folders:
 ################################
 
 sonarr_config_file_path: "{{ sonarr_path }}/app/config.xml"
+
+################################
+# API
+################################
+
+# default to blank
+sonarr_api_key:
 
 ################################
 # Docker Container
