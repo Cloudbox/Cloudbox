@@ -15,10 +15,14 @@
 lidarr_name: lidarr
 
 ################################
-# Subdomain
+# Web
 ################################
 
 lidarr_subdomain: "{{ lidarr_name }}"
+
+lidarr_url: "{{ 'https://' + lidarr_subdomain + user.domain
+                  if (reverse_proxy_is_enabled)
+                  else 'http://localhost:' + lidarr_web_port }}"
 
 ################################
 # Folders
@@ -32,9 +36,11 @@ lidarr_folders:
   - "{{ lidarr_path }}"
 
 ################################
-# Files
+# API
 ################################
 
+# default to blank
+lidarr_api_key:
 
 ################################
 # Docker Container
