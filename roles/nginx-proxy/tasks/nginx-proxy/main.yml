@@ -67,7 +67,7 @@
 - name: Nginx-Proxy | Build 'docker_volumes' list variable
   set_fact:
     nginx_proxy_docker_volumes: "{{ nginx_proxy_docker_volumes  + letsencrypt_dns_validation_docker_volumes }}"
-  when: cloudflare_is_enabled
+  when: cloudflare_is_enabled and reverse_proxy.wildcard_certs
 
 - name: Nginx-Proxy | Create and start container
   docker_container:
