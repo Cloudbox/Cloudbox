@@ -20,7 +20,7 @@ radarr_name: radarr
 
 radarr_subdomain: "{{ radarr_name }}"
 
-radarr_url: "{{ 'https://' + radarr_subdomain + user.domain
+radarr_url: "{{ 'https://' + radarr_subdomain + '.' + user.domain
                   if (reverse_proxy_is_enabled)
                   else 'http://localhost:' + radarr_web_port }}"
 
