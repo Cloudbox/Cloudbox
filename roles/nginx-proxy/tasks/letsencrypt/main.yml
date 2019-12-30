@@ -13,10 +13,10 @@
     name: letsencrypt
     state: absent
 
-- name: Letsencrypt | HTTP Validation
-  import_tasks: "http_validation.yml"
-  when: not cloudflare_is_enabled
-
 - name: Letsencrypt | DNS Validation
   import_tasks: "dns_validation.yml"
-  when: cloudflare_is_enabled
+  when: cloudflare_is_enabled and reverse_proxy.wildcard_certs
+
+- name: Letsencrypt | HTTP Validation
+  import_tasks: "http_validation.yml"
+  when: (not cloudflare_is_enabled) or (cloudflare_is_enabled and not reverse_proxy.wildcard_certs)

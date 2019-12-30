@@ -3,6 +3,8 @@ system:
   timezone: auto
 dns:
   enabled: yes
+reverse_proxy:
+  wildcard_certs: yes
 docker:
   repo: edge
   version: latest
