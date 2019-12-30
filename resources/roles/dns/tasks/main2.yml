@@ -10,4 +10,4 @@
 ---
 - name: Cloudflare DNS Tasks
   include_tasks: "cloudflare/main.yml"
-  when: cloudflare_is_enabled
+  when: cloudflare_is_enabled and dns.enabled
