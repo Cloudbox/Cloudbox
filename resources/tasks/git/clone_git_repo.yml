@@ -8,21 +8,43 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Resources | Tasks | Git | Clone Git Repo | git clone repo 'HEAD'
+- name: Resources | Tasks | Git | Clone Git Repo | Check for existing git folder
+  stat:
+    path: "{{ _git_repo_dest }}"
+  register: _git_repo_dest_stat
+
+- name: Resources | Tasks | Git | Clone Git Repo | Existing repo block
+  block:
+
+  - name: Resources | Tasks | Git | Clone Git Repo | Get current git branch
+    shell: |
+      cd {{ _git_repo_dest }}
+      git rev-parse --abbrev-ref HEAD 2>/dev/null || echo ""
+    register: _git_repo_dest_current_branch
+
+  - name: Resources | Tasks | Git | Clone Git Repo | Update target branch
+    set_fact:
+      _git_repo_branch_primary: "{{ _git_repo_branch_secondary }}"
+    when: _git_repo_branch_secondary == _git_repo_dest_current_branch | trim
+
+  when: _git_repo_dest_stat.stat.exists
+
+- name: Resources | Tasks | Git | Clone Git Repo | git clone repo
   git:
     repo: "{{ _git_repo_url }}"
     dest: "{{ _git_repo_dest }}"
     clone: yes
-    version: HEAD
+    version: "{{ _git_repo_branch_primary }}"
     force: yes
   become: yes
   become_user: "{{ user.name }}"
   ignore_errors: yes
-  register: clone_status
+  register: _clone_status
 
-- block:
+- name: Resources | Tasks | Git | Clone Git Repo | Tasks when above fails
+  block:
 
-  - name: Resources | Tasks | Git | Clone Git Repo | git clone repo 'master' if cloning of 'HEAD' fails
+  - name: Resources | Tasks | Git | Clone Git Repo | git clone repo 'master' if above fails
     git:
       repo: "{{ _git_repo_url }}"
       dest: "{{ _git_repo_dest }}"
@@ -32,9 +54,9 @@
     become: yes
     become_user: "{{ user.name }}"
     ignore_errors: yes
-    register: clone_master_status
+    register: _clone_master_status
 
-  - name: Resources | Tasks | Git | Clone Git Repo | force git clone repo when above fails
+  - name: Resources | Tasks | Git | Clone Git Repo | Repair git folder if cloning 'master' fails
     shell: |
       cd "{{ _git_repo_dest }}"
       rm -fr .git
@@ -42,6 +64,6 @@
       git remote add origin "{{ _github_repo }}"
       git fetch origin
       git reset --hard origin/master
-    when: clone_master_status is failed
+    when: _clone_master_status is failed
 
-  when: clone_status is failed
+  when: _clone_status is failed

@@ -40,6 +40,10 @@ cloudplow_git_repo_url: "https://github.com/l3uddz/cloudplow.git"
 
 cloudplow_git_repo_dest: "{{ cloudplow_path }}"
 
+cloudplow_git_repo_branch_primary: "master"
+
+cloudplow_git_repo_branch_secondary: "develop"
+
 ################################
 # Systemd
 ################################

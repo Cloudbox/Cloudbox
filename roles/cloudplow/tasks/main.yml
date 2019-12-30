@@ -31,6 +31,8 @@
   vars:
     _git_repo_url: "{{ cloudplow_git_repo_url }}"
     _git_repo_dest: "{{ cloudplow_git_repo_dest }}"
+    _git_repo_branch_primary: "{{ cloudplow_git_repo_branch_primary }}"
+    _git_repo_branch_secondary: "{{ cloudplow_git_repo_branch_secondary }}"
 
 - name: Install pip requirements
   pip:
