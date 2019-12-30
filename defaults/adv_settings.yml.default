@@ -1,6 +1,8 @@
 ---
 system:
   timezone: auto
+dns:
+  enabled: yes
 docker:
   repo: edge
   version: latest

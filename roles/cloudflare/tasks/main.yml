@@ -14,7 +14,7 @@
 
 - name: Cloudbox Subdomains Task
   import_tasks: "subtasks/subdomains.yml"
-  when: (cloudbox_type | length > 0)
+  when: (cloudbox_type | length > 0) and dns.enabled
   ignore_errors: yes
 
 - name: Purge Cache Task
