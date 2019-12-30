@@ -20,7 +20,7 @@ sonarr_name: sonarr
 
 sonarr_subdomain: "{{ sonarr_name }}"
 
-sonarr_url: "{{ 'https://' + sonarr_subdomain + user.domain
+sonarr_url: "{{ 'https://' + sonarr_subdomain + '.' + user.domain
                   if (reverse_proxy_is_enabled)
                   else 'http://localhost:' + sonarr_web_port }}"
 
