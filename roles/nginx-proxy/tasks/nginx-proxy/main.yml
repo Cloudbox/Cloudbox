@@ -53,7 +53,7 @@
   set_fact:
     nginx_proxy_docker_volumes:
       - "/opt/nginx-proxy/certs:/etc/nginx/certs:ro"
-      - "/opt/nginx-proxy/conf.d/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
+      - "/opt/nginx-proxy/conf.d:/etc/nginx/conf.d:rw"
       - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
