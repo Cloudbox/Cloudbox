@@ -20,8 +20,6 @@ plex:
   db_cache_size: default
 darkerr:
   enable: no
-emby:
-  version: latest
 organizr:
   direct_domain: no
 nginx:
