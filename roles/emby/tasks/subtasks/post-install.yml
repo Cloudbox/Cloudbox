@@ -14,7 +14,7 @@
 
 - name: Post-Install | Ensure transcodes folder has the correct permissions
   file:
-    path: "{{ emby_transcodes_path }}"
+    path: "{{ emby_paths_transcodes_location }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
@@ -23,7 +23,7 @@
 - name: Post-Install | Import 'dlna.xml'
   copy:
     src: "dlna.xml"
-    dest: "{{ emby_dlna_file_path }}"
+    dest: "{{ emby_paths_dlna_xml_location }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
