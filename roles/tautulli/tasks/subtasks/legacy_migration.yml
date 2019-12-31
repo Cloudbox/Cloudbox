@@ -24,7 +24,7 @@
 
 - name: Legacy Migration | Check if new folder exists
   stat:
-    path: "{{ tautulli_path }}"
+    path: "{{ tautulli_paths_location }}"
   register: new_folder
 
 - name: Legacy Migration | Check if legacy folder exists
@@ -34,6 +34,6 @@
 
 - name: Legacy Migration | Move legacy folder to new folder if possible
   shell: |
-    mv '{{ server_appdata_path }}/plexpy' '{{ tautulli_path }}'
-    chown -R {{ user.name }}:{{ user.name }} '{{ tautulli_path }}'
+    mv '{{ server_appdata_path }}/plexpy' '{{ tautulli_paths_location }}'
+    chown -R {{ user.name }}:{{ user.name }} '{{ tautulli_paths_location }}'
   when: legacy_folder.stat.exists and not new_folder.stat.exists
