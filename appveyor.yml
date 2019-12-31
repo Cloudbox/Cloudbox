@@ -1,10 +1,6 @@
 ---
 version: 1.0.0-{build}
 
-branches:
-  except:
-    - master
-
 skip_tags: true
 
 skip_commits:
