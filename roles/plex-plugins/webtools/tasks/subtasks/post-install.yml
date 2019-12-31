@@ -52,23 +52,23 @@
   set_fact:
     plex_docker_port_33443: "{{ plex_docker_port_33443.stdout | trim }}"
 
-- name: Post-Install | Wait for '{{ plex_plugin_webtools_preferences_path | basename }}' to be created
+- name: Post-Install | Wait for '{{ plex_plugin_webtools_paths_preferences_location | basename }}' to be created
   wait_for:
-    path: "{{ plex_plugin_webtools_preferences_path }}"
+    path: "{{ plex_plugin_webtools_paths_preferences_location }}"
     state: present
 
-- name: Post-Install | Update 'WEB_Port_http' in '{{ plex_plugin_webtools_preferences_path | basename }}'
+- name: Post-Install | Update 'WEB_Port_http' in '{{ plex_plugin_webtools_paths_preferences_location | basename }}'
   xml:
-    path: "{{ plex_plugin_webtools_preferences_path }}"
+    path: "{{ plex_plugin_webtools_paths_preferences_location }}"
     xpath: /PluginPreferences/WEB_Port_http
     value: "{{ plex_docker_port_33400 }}"
     state: present
   become: yes
   become_user: "{{ user.name }}"
 
-- name: Post-Install | Update 'WEB_Port_https' in '{{ plex_plugin_webtools_preferences_path | basename }}'
+- name: Post-Install | Update 'WEB_Port_https' in '{{ plex_plugin_webtools_paths_preferences_location | basename }}'
   xml:
-    path: "{{ plex_plugin_webtools_preferences_path }}"
+    path: "{{ plex_plugin_webtools_paths_preferences_location }}"
     xpath: /PluginPreferences/WEB_Port_https
     value: "{{ plex_docker_port_33443 }}"
     state: present
