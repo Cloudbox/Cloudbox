@@ -103,7 +103,7 @@ radarr_docker_volumes_basic:
   - "/mnt:/mnt"
   - "/mnt/unionfs/Media/Movies:/movies"
 
-radarr_docker_volumes: "{{ radarr_docker_volumes_basic + nzbs_downloads_path + torrents_downloads_path }}"
+radarr_docker_volumes: "{{ radarr_docker_volumes_basic + docker_volumes_downloads_common }}"
 
 ################################
 # Docker Devices

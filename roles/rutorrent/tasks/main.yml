@@ -65,7 +65,7 @@
       LETSENCRYPT_HOST: "rutorrent.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       TZ: "{{ tz }}"
-    volumes: "{{ default_volumes + torrents_downloads_path|default([]) }}"
+    volumes: "{{ default_volumes + docker_volumes_downloads_common }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
