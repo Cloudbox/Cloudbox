@@ -1,0 +1,32 @@
+#########################################################################
+# Title:         Cloudbox: NZBGet | Post-Install | Settings Task        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Post-Install | Settings | Wait for config file to be created
+  wait_for:
+    path: "{{ nzbget_paths_config_location }}"
+    state: present
+
+- name: Post-Install | Settings | Stop container
+  docker_container:
+    name: "{{ nzbget_docker_container }}"
+    state: stopped
+
+- name: Post-Install | Settings | Update settings
+  lineinfile:
+    path: "{{ nzbget_paths_config_location }}"
+    regexp: '{{ item.regexp }}'
+    line: "{{ item.line }}"
+    state: present
+  loop: "{{ nzbget_config_settings_list }}"
+
+- name: Post-Install | Settings | Start container
+  docker_container:
+    name: "{{ nzbget_docker_container }}"
+    state: "{{ nzbget_docker_state }}"
