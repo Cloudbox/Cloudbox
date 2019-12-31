@@ -10,7 +10,7 @@
 ---
 - name: Migration Tasks
   include_tasks: "subtasks/legacy_migration.yml"
-  when: lookup('vars', role_name + '_path') != server_appdata_path + '/plexpy'
+  when: lookup('vars', role_name + '_paths_location') != server_appdata_path + '/plexpy'
 
 - name: Create DNS Record
   include_role:
@@ -18,7 +18,7 @@
   vars:
     record: "{{ item }}"
   loop:
-    - "{{ lookup('vars', role_name + '_subdomain') }}"
+    - "{{ lookup('vars', role_name + '_web_subdomain') }}"
 
 - name: Remove existing Docker container
   docker_container:
@@ -27,13 +27,13 @@
 
 - name: Wait for Plex Logs folder to be created by Plex
   wait_for:
-    path: "{{ plex_log_path }}"
+    path: "{{ plex_paths_log_location }}"
     state: present
   when: (not continuous_integration)
 
 - name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items: "{{ lookup('vars', role_name + '_folders') }}"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
 
 - name: Create Docker container
   include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
