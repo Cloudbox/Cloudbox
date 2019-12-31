@@ -136,7 +136,7 @@ ip_address_localhost: "127.0.0.1"
 ip_address_lookup_command: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
 
 ################################
-# Docker Reverse Proxy
+# Reverse Proxy
 ################################
 
 reverse_proxy_is_enabled: "{{ (user is defined) and
@@ -149,44 +149,34 @@ reverse_proxy_is_enabled: "{{ (user is defined) and
                               (user.email is not none) and
                               (user.email | trim | length > 0) }}"
 
-docker_envs_reverse_proxy:
+################################
+# Docker
+################################
+
+docker_envs_reverse_proxy_common:
   VIRTUAL_HOST: "{{ lookup('vars', role_name + '_subdomain') }}.{{ user.domain }}"
   VIRTUAL_PORT: "{{ lookup('vars', role_name + '_web_port') }}"
   LETSENCRYPT_HOST: "{{ lookup('vars', role_name + '_subdomain') }}.{{ user.domain }}"
   LETSENCRYPT_EMAIL: "{{ user.email }}"
 
-################################
-# Docker Volumes
-################################
-
-nzbs_downloads_path: "{{ [downloads.nzbs + ':/downloads/nzbs']
+docker_volumes_downloads_nzbs: "{{ [downloads.nzbs + ':/downloads/nzbs']
                           if nzbs_downloads_path_is_defined
                           else [] }}"
 
-torrents_downloads_path: "{{ [downloads.torrents + ':/downloads/torrents']
+docker_volumes_downloads_torrents: "{{ [downloads.torrents + ':/downloads/torrents']
                               if torrents_downloads_path_is_defined
                               else [] }}"
 
-################################
-# Docker Hosts
-################################
+docker_volumes_downloads_common: "{{ docker_volumes_downloads_nzbs + docker_volumes_downloads_torrents }}"
 
 docker_hosts_common: []
-
-################################
-# Docker Labels
-################################
 
 docker_labels_common:
   "com.github.cloudbox.cloudbox_managed": "true"
 
-################################
-# Docker Network
-################################
-
-docker_networks_name: cloudbox
+docker_networks_name_common: cloudbox
 
 docker_networks_common:
-  - name: "{{ docker_networks_name }}"
+  - name: "{{ docker_networks_name_common }}"
     aliases:
       - "{{ lookup('vars', role_name + '_docker_networks_alias') }}"
