@@ -10,7 +10,7 @@
 ---
 - name: Resources | Tasks | Hotio | Migrator | From Hotio Image | Set 'app_path' variable
   set_fact:
-    app_path: "{{ lookup('vars', role_name + '_path') }}"
+    app_path: "{{ lookup('vars', role_name + '_paths_location') }}"
 
 - name: Resources | Tasks | Hotio | Migrator | From Hotio Image | Set 'app_folder' variable
   set_fact:

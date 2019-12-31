@@ -154,9 +154,9 @@ reverse_proxy_is_enabled: "{{ (user is defined) and
 ################################
 
 docker_envs_reverse_proxy_common:
-  VIRTUAL_HOST: "{{ lookup('vars', role_name + '_subdomain') }}.{{ user.domain }}"
+  VIRTUAL_HOST: "{{ lookup('vars', role_name + '_web_subdomain') }}.{{ user.domain }}"
   VIRTUAL_PORT: "{{ lookup('vars', role_name + '_web_port') }}"
-  LETSENCRYPT_HOST: "{{ lookup('vars', role_name + '_subdomain') }}.{{ user.domain }}"
+  LETSENCRYPT_HOST: "{{ lookup('vars', role_name + '_web_subdomain') }}.{{ user.domain }}"
   LETSENCRYPT_EMAIL: "{{ user.email }}"
 
 docker_volumes_downloads_nzbs: "{{ [downloads.nzbs + ':/downloads/nzbs']
