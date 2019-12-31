@@ -1,0 +1,16 @@
+#########################################################################
+# Title:         Cloudbox: NZBGet | Post-Install Tasks                  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Scripts Task
+  import_tasks: "scripts.yml"
+
+- name: Settings Task
+  import_tasks: "settings.yml"
+  when: not nzbget_conf_stat.stat.exists

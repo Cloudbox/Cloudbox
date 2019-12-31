@@ -1,0 +1,226 @@
+#########################################################################
+# Title:         Cloudbox: NZBGet | Default Variables                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Basics
+################################
+
+nzbget_name: nzbget
+
+################################
+# Paths
+################################
+
+nzbget_paths_folder: "{{ nzbget_name }}"
+nzbget_paths_location: "{{ server_appdata_path }}/{{ nzbget_paths_folder }}"
+nzbget_paths_downloads_location: "{{ downloads.nzbs }}/{{ nzbget_paths_folder }}"
+nzbget_paths_folders_list:
+  - "{{ nzbget_paths_location }}"
+  - "{{ nzbget_paths_downloads_location }}"
+nzbget_paths_config_location: "{{ nzbget_paths_location }}/app/nzbget.conf"
+
+################################
+# Web
+################################
+
+nzbget_web_subdomain: "{{ nzbget_name }}"
+nzbget_web_port: "6789"
+nzbget_web_url: "{{ 'https://' + nzbget_web_subdomain + '.' + user.domain
+                    if (reverse_proxy_is_enabled)
+                    else 'http://localhost:' + nzbget_web_port }}"
+
+################################
+# Config
+################################
+
+nzbget_config_settings_default:
+  # Authentication
+  - { regexp: '^ControlUsername\s?=.*', line: "ControlUsername={{ user.name }}" }
+  - { regexp: '^ControlPassword\s?=.*', line: "ControlPassword={{ user.pass }}" }
+  - { regexp: '^FormAuth\s?=.*', line: 'FormAuth=yes' }
+  # Paths
+  - { regexp: '^MainDir\s?=.*', line: 'MainDir=/downloads/nzbs/nzbget' }
+  - { regexp: '^QueueDir\s?=.*', line: "QueueDir=${MainDir}/queue" }
+  - { regexp: '^TempDir\s?=.*', line: "TempDir=${MainDir}/tmp" }
+  - { regexp: '^ScriptDir\s?=.*', line: 'ScriptDir=/scripts/nzbget' }
+  - { regexp: '^LockFile\s?=.*', line: 'LockFile=config/app/nzbget.lock' }
+  - { regexp: '^LogFile\s?=.*', line: "LogFile=${MainDir}/nzbget.log" }
+  # Default Categories
+  - { regexp: '^Category1\.Name\s?=.*', line: 'Category1.Name=movies' }
+  - { regexp: '^Category1\.Aliases\s?=.*', line: 'Category1.Aliases=movies*, Movies*' }
+  - { regexp: '^Category2\.Name\s?=.*', line: 'Category2.Name=series' }
+  - { regexp: '^Category2\.Aliases\s?=.*', line: 'Category2.Aliases=TV - HD, TV - SD, TV*' }
+  - { regexp: '^Category3\.Name\s?=.*', line: 'Category3.Name=music' }
+  - { regexp: '^Category3\.Aliases\s?=.*', line: 'Category3.Aliases=audio*' }
+  - { regexp: '^Category4\.Name\s?=.*', line: 'Category4.Name=apps' }
+  - { regexp: '^Category4\.Aliases\s?=.*', line: 'Category4.Aliases=apps*, pc*' }
+  # New Categories
+  - { regexp: '^Category5\.Name\s?=.*', line: 'Category5.Name=sonarr' }
+  - { regexp: '^Category6\.Name\s?=.*', line: 'Category6.Name=radarr' }
+  - { regexp: '^Category7\.Name\s?=.*', line: 'Category7.Name=lidarr' }
+  # Logging
+  - { regexp: '^WriteLog\s?=.*', line: 'WriteLog=rotate' }
+  - { regexp: '^RotateLog\s?=.*', line: 'RotateLog=3' }
+  # Min Disk Space = 100GB
+  - { regexp: '^DiskSpace\s?=.*', line: 'DiskSpace=100000' }
+  # HealthCheck
+  - { regexp: '^HealthCheck\s?=.*', line: 'HealthCheck=Delete' }
+  # Unpauser task
+  - { regexp: '^#?Task2\.Time\s?=.*', line: 'Task2.Time=*,*:00,*:15,*:30,*:45' }
+  - { regexp: '^#?Task2\.WeekDays\s?=.*', line: 'Task2.WeekDays=1-7' }
+  - { regexp: '^#?Task2\.Command\s?=.*', line: 'Task2.Command=UnpauseDownload' }
+  - { regexp: '^#?Task2\.Param\s?=.*', line: 'Task2.Param=' }
+  # Extensions
+  - { regexp: '^Extensions\s?=.*', line: 'Extensions=nzbgetpp/unzip.py, flatten.py, DeleteSamples.py, HashRenamer.py, reverse_name.py' }
+  - { regexp: '^ScriptOrder\s?=.*', line: 'ScriptOrder=nzbgetpp/unzip.py, flatten.py, DeleteSamples.py, HashRenamer.py, reverse_name.py' }
+  # Unpacking
+  - { regexp: '^UnrarCmd\s?=.*', line: 'UnrarCmd=ionice -c3 ${AppDir}/unrar' }
+  - { regexp: '^ParIgnoreExt\s?=.*', line: 'ParIgnoreExt=.sfv, .nzb, .nfo, .srr, .1.rar' }
+  - { regexp: '^ExtCleanupDisk\s?=.*', line: 'ExtCleanupDisk=.nzb, .par2, .sfv, .sfv.*, .rar.*,
+                                                              .htm, .html, _brokenlog.txt, .srr,
+                                                              .duplicate1.rar, .srs, .info, .txt,
+                                                              .com, .md5, .png, .1, .url, .jpg,
+                                                              .xxx, .rev, .iso, .img, .ifo, .vob' }
+
+nzbget_config_settings_custom: []
+
+nzbget_config_settings_list: "{{ nzbget_config_settings_default
+                                      + nzbget_config_settings_custom }}"
+
+################################
+# Scripts
+################################
+
+# Paths
+# Default nzbget_scripts_paths_location = /opt/scripts/nzbget
+nzbget_scripts_paths_location: "{{ server_appdata_path }}/scripts/{{ nzbget_paths_folder }}"
+nzbget_scripts_paths_folders_list:
+  - "{{ nzbget_scripts_paths_location }}"
+  - "{{ nzbget_scripts_paths_location }}/nzbgetpp"
+nzbget_scripts_paths_rarfile_py_location: "{{ nzbget_scripts_paths_location }}/nzbgetpp/rarfile/rarfile.py"
+
+# Repos Downloaded
+nzbget_scripts_repos_default:
+  - 'https://github.com/Prinz23/nzbgetpp.git'
+nzbget_scripts_repos_custom: []
+nzbget_scripts_repos_list: "{{ nzbget_scripts_repos_default + nzbget_scripts_repos_custom }}"
+
+# URLs Downloaded
+nzbget_scripts_direct_downloads_default:
+  - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/flatten.py"
+  - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/DeleteSamples.py"
+  - "https://raw.githubusercontent.com/Prinz23/nzbget-pp-reverse/master/reverse_name.py"
+  - "https://raw.githubusercontent.com/l3uddz/nzbgetScripts/master/HashRenamer.py"
+nzbget_scripts_direct_downloads_custom: []
+nzbget_scripts_direct_downloads_list: "{{ nzbget_scripts_direct_downloads_default
+                                              + nzbget_scripts_direct_downloads_custom }}"
+
+# Locally Copied
+nzbget_scripts_local_copy_default: []
+nzbget_scripts_local_copy_custom: []
+nzbget_scripts_local_copy_list: "{{ nzbget_scripts_local_copy_default
+                                        + nzbget_scripts_local_copy_custom }}"
+
+################################
+# Docker
+################################
+
+# Container
+nzbget_docker_container: "{{ nzbget_name }}"
+
+# Image
+nzbget_docker_image_pull: yes
+nzbget_docker_image_tag: "unstable"
+nzbget_docker_image: "hotio/nzbget:{{ nzbget_docker_image_tag }}"
+
+# Ports
+nzbget_docker_ports_defaults:
+  - "{{ nzbget_web_port }}:{{ nzbget_web_port }}"
+nzbget_docker_ports_custom: []
+nzbget_docker_ports: "{{ nzbget_docker_ports_defaults
+                              + nzbget_docker_ports_custom
+                          if (not reverse_proxy_is_enabled)
+                          else [] + nzbget_docker_ports_custom }}"
+
+# Envs
+nzbget_docker_envs_default:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  UMASK: "002"
+  TZ: "{{ tz }}"
+  LC_ALL: "C"
+nzbget_docker_envs_custom: {}
+nzbget_docker_envs_reverse_proxy: {}
+nzbget_docker_envs: "{{ nzbget_docker_envs_default
+                            | combine(nzbget_docker_envs_custom)
+                            | combine(nzbget_docker_envs_reverse_proxy)
+                            | combine(docker_envs_reverse_proxy_common)
+                        if (reverse_proxy_is_enabled)
+                        else nzbget_docker_envs_default
+                            | combine(nzbget_docker_envs_custom) }}"
+
+# Volumes
+nzbget_docker_volumes_default:
+  - "{{ nzbget_paths_location }}:/config"
+  - "{{ server_appdata_path }}/scripts:/scripts"
+  - "/mnt:/mnt"
+nzbget_docker_volumes_custom: []
+nzbget_docker_volumes: "{{ nzbget_docker_volumes_default
+                                + nzbget_docker_volumes_custom
+                                + docker_volumes_downloads_common }}"
+
+# Devices
+nzbget_docker_devices_default: []
+nzbget_docker_devices_custom: []
+nzbget_docker_devices: "{{ nzbget_docker_devices_default
+                                + nzbget_docker_devices_custom }}"
+
+# Hosts
+nzbget_docker_hosts_default: []
+nzbget_docker_hosts_custom: []
+nzbget_docker_hosts: "{{ docker_hosts_common
+                              | combine(nzbget_docker_hosts_default)
+                              | combine(nzbget_docker_hosts_custom) }}"
+
+# Labels
+nzbget_docker_labels_default: {}
+nzbget_docker_labels_custom: {}
+nzbget_docker_labels: "{{ docker_labels_common
+                              | combine(nzbget_docker_labels_default)
+                              | combine(nzbget_docker_labels_custom) }}"
+
+# Hostname
+nzbget_docker_hostname: "{{ nzbget_name }}"
+
+# Networks
+nzbget_docker_networks_alias: "{{ nzbget_name }}"
+nzbget_docker_networks_default: []
+nzbget_docker_networks_custom: []
+nzbget_docker_networks: "{{ docker_networks_common
+                                + nzbget_docker_networks_default
+                                + nzbget_docker_networks_custom }}"
+
+# Capabilities
+nzbget_docker_capabilities_default: []
+nzbget_docker_capabilities_custom: []
+nzbget_docker_capabilities: "{{ nzbget_docker_capabilities_default
+                                    + nzbget_docker_capabilities_custom }}"
+
+# Security Opts
+nzbget_docker_security_opts_default: []
+nzbget_docker_security_opts_custom: []
+nzbget_docker_security_opts: "{{ nzbget_docker_security_opts_default
+                                      + nzbget_docker_security_opts_custom }}"
+
+# Restart Policy
+nzbget_docker_restart_policy: unless-stopped
+
+# State
+nzbget_docker_state: started
