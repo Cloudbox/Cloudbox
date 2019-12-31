@@ -1,22 +1,57 @@
 ---
 version: 1.0.0-{build}
 
-branches:
-  except:
-    - master
-
 skip_tags: true
 
 skip_commits:
   files:
+    # git
+    - '.gitignore'
+    - '.gitmodules'
+    - '.github/**/*'
+
+    # docs
     - '*.md'
-    - '.github/*'
-    - 'defaults/*'
-    - 'roles/*/files/*'
-    - 'roles/settings/*'
+
+    # vagrant
+    - 'Vagrantfile'
+
+    # ansible config
+    - 'defaults/**/*'
+    - 'filter_plugins/**/*'
+    - 'inventories/**/*'
+    - 'library/**/*'
+
+    # ansible roles
+    - 'roles/*/files/**/*'
+    - 'roles/settings/**/*'
+    - 'roles/backup/**/*'
+    - 'roles/restore/**/*'
+
+    # ansible roles extras
+    - 'roles/cloudflare/**/*'
+    - 'roles/ddclient/**/*'
+    - 'roles/emby/**/*'
+    - 'roles/feeder/**/*'
+    - 'roles/mariadb/**/*'
+    - 'roles/nginx/**/*'
+    - 'roles/netdata/**/*'
+    - 'roles/notify/**/*'
+    - 'roles/nvidia/**/*'
+    - 'roles/nzbthrottle/**/*'
+    - 'roles/plex_auth_token/**/*'
+    - 'roles/plex_dupefinder/**/*'
+    - 'roles/plex_patrol/**/*'
+    - 'roles/python-plexlibrary/**/*'
+    - 'roles/resilio-sync/**/*'
+    - 'roles/sabnzbd/**/*'
+    - 'roles/sickbeard_mp4_automator/**/*'
+    - 'roles/subliminal/**/*'
+    - 'roles/traktarr/**/*'
+
   message: /\[minor\]/
 
-image: ubuntu
+image: Ubuntu1604
 
 matrix:
   fast_finish: true
@@ -31,7 +66,10 @@ install:
   - sh: git submodule update --init --recursive
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
-  - sh: sudo ansible-playbook cloudbox.yml --tags "cloudbox" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
+  - sh: |
+      sudo ansible-playbook cloudbox.yml --tags "cloudbox" \
+          --skip-tags "settings" \
+          --extra-vars '{"continuous_integration":true}'
 
 # https://boblokerse.github.io/2015/11/03/GitVersion-versioning-made-easy-and-dry/
 on_finish:
