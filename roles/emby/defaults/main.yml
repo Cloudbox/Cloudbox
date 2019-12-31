@@ -9,182 +9,152 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 emby_name: emby
 
 ################################
-# Subdomain
+# Paths
 ################################
 
-emby_subdomain: "{{ emby_name }}"
+emby_paths_folder: "{{ emby_name }}"
+emby_paths_location: "{{ server_appdata_path }}/{{ emby_paths_folder }}"
+emby_paths_transcodes_location: "{{ transcodes_path }}/{{ emby_paths_folder }}"
+emby_paths_folders_list:
+  - "{{ emby_paths_location }}"
+  - "{{ emby_paths_location }}/config"
+  - "{{ emby_paths_location }}/config/users"
+  - "{{ emby_paths_transcodes_location }}"
+emby_paths_config_location: "{{ emby_paths_location }}/config/system.xml"
+emby_paths_dlna_xml_location: "{{ emby_paths_location }}/config/dlna.xml"
 
 ################################
-# Folders
+# Web
 ################################
 
-emby_folder: "{{ emby_name }}"
-
-emby_transcodes_path: "{{ transcodes_path }}/{{ emby_folder }}"
-
-emby_path: "{{ server_appdata_path }}/{{ emby_folder }}"
-
-emby_folders:
-  - "{{ emby_path }}"
-  - "{{ emby_path }}/config"
-  - "{{ emby_path }}/config/users"
-  - "{{ emby_transcodes_path }}"
-
-################################
-# Files
-################################
-
-emby_config_file_path: "{{ emby_path }}/config/system.xml"
-
-emby_dlna_file_path: "{{ emby_path }}/config/dlna.xml"
+emby_web_subdomain: "{{ emby_name }}"
+emby_web_port: "8096"
+emby_web_url: "{{ 'https://' + emby_web_subdomain + '.' + user.domain
+                  if (reverse_proxy_is_enabled)
+                  else 'http://localhost:' + emby_web_port }}"
 
 ################################
 # Settings
 ################################
 
-emby_config_settings:
-  # set 'IsBehindProxy' to 'true'
+emby_config_settings_default:
   - { xpath: 'IsBehindProxy', value: 'true' }
-  # set 'WanDdns' to 'emby.{{ user.domain }}'
   - { xpath: 'WanDdns', value: 'emby.{{ user.domain }}' }
-  # set 'PublicPort' to '80'
   - { xpath: 'PublicPort', value: '80' }
-  # set 'PublicHttpsPort' to '443'
   - { xpath: 'PublicHttpsPort', value: '443' }
-  # set 'EnableHttps' to 'true'
   - { xpath: 'EnableHttps', value: 'true' }
-  # set 'RequireHttps' to 'false'
   - { xpath: 'RequireHttps', value: 'false' }
-  # set 'EnableUPnP' to 'false'
   - { xpath: 'EnableUPnP', value: 'false' }
-  # set 'EnableAnonymousUsageReporting' to 'false'
   - { xpath: 'EnableAnonymousUsageReporting', value: 'false' }
 
+emby_config_settings_custom: []
+
+emby_config_settings_list: "{{ emby_config_settings_default + emby_config_settings_custom }}"
+
 ################################
-# Docker Container
+# Docker
 ################################
 
+# Container
 emby_docker_container: "{{ emby_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+emby_docker_image_pull: yes
+emby_docker_image_tag: "beta"
+emby_docker_image: "emby/embyserver:{{ emby_docker_image_tag }}"
 
-emby_docker_image: "emby/embyserver:{{ emby.version }}"
+# Ports
+emby_docker_ports_defaults:
+  - "{{ emby_web_port }}:{{ emby_web_port }}"
+emby_docker_ports_custom: []
+emby_docker_ports: "{{ emby_docker_ports_defaults
+                            + emby_docker_ports_custom
+                        if (not reverse_proxy_is_enabled)
+                        else [] + emby_docker_ports_custom }}"
 
-emby_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-emby_ports:
-  - "8096:8096"
-
-emby_docker_ports: "{{ emby_ports
-                       if (not reverse_proxy_is_enabled)
-                       else [] }}"
-
-################################
-# Docker Envs
-################################
-
-emby_web_port: 8096
-
-emby_docker_envs_standard:
+# Envs
+emby_docker_envs_default:
   UID: "{{ uid }}"
   GID: "{{ gid }}"
   GIDLIST: "{{ vgid }}"
   NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia.enabled) | default(false) else omit }}"
   NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
   TZ: "{{ tz }}"
-
-emby_docker_envs_reverse_proxy_extras:
-  HTTPS_METHOD: noredirect
-
-emby_docker_envs: "{{ (emby_docker_envs_standard |
-                          combine(docker_envs_reverse_proxy) |
-                          combine(emby_docker_envs_reverse_proxy_extras))
+emby_docker_envs_custom: {}
+emby_docker_envs_reverse_proxy: {}
+emby_docker_envs: "{{ emby_docker_envs_default
+                          | combine(emby_docker_envs_custom)
+                          | combine(emby_docker_envs_reverse_proxy)
+                          | combine(docker_envs_reverse_proxy_common)
                       if (reverse_proxy_is_enabled)
-                      else (emby_docker_envs_standard) }}"
+                      else emby_docker_envs_default
+                          | combine(emby_docker_envs_custom) }}"
 
-################################
-# Docker Volumes
-################################
-
-emby_docker_volumes:
-  - "{{ emby_path }}:/config"
+# Volumes
+emby_docker_volumes_default:
+  - "{{ emby_paths_location }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media:/data"
   - "/mnt:/mnt"
   - "/tmp:/tmp"
   - "/dev/shm:/dev/shm"
-  - "{{ emby_transcodes_path }}:/transcode"
+  - "{{ emby_paths_transcodes_location }}:/transcode"
+emby_docker_volumes_custom: []
+emby_docker_volumes: "{{ emby_docker_volumes_default
+                              + emby_docker_volumes_custom
+                              + docker_volumes_downloads_common }}"
 
-################################
-# Docker Devices
-################################
+# Devices
+emby_docker_devices_default: []
+emby_docker_devices_custom: []
+emby_docker_devices: "{{ emby_docker_devices_default
+                              + emby_docker_devices_custom }}"
 
-emby_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+emby_docker_hosts_default: []
 emby_docker_hosts_custom: []
+emby_docker_hosts: "{{ docker_hosts_common
+                            | combine(emby_docker_hosts_default)
+                            | combine(emby_docker_hosts_custom) }}"
 
-emby_docker_hosts: "{{ docker_hosts_common | combine(plex_docker_hosts_custom) }}"
-
-################################
-# Docker Labels
-################################
-
+# Labels
+emby_docker_labels_default: {}
 emby_docker_labels_custom: {}
+emby_docker_labels: "{{ docker_labels_common
+                            | combine(emby_docker_labels_default)
+                            | combine(emby_docker_labels_custom) }}"
 
-emby_docker_labels: "{{ docker_labels_common | combine(emby_docker_labels_custom) }}"
-
-################################
-# Docker Hostname
-################################
-
+# Hostname
 emby_docker_hostname: "{{ emby_name }}"
 
-################################
-# Docker Networks
-################################
-
+# Networks
 emby_docker_networks_alias: "{{ emby_name }}"
-
+emby_docker_networks_default: []
 emby_docker_networks_custom: []
+emby_docker_networks: "{{ docker_networks_common
+                              + emby_docker_networks_default
+                              + emby_docker_networks_custom }}"
 
-emby_docker_networks: "{{ docker_networks_common + emby_docker_networks_custom }}"
+# Capabilities
+emby_docker_capabilities_default: []
+emby_docker_capabilities_custom: []
+emby_docker_capabilities: "{{ emby_docker_capabilities_default
+                                  + emby_docker_capabilities_custom }}"
 
-################################
-# Docker Capabilities
-################################
+# Security Opts
+emby_docker_security_opts_default: []
+emby_docker_security_opts_custom: []
+emby_docker_security_opts: "{{ emby_docker_security_opts_default
+                                    + emby_docker_security_opts_custom }}"
 
-emby_docker_capabilities: []
-
-################################
-# Docker Security
-################################
-
-emby_docker_security_opts: []
-
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 emby_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 emby_docker_state: started

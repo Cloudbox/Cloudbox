@@ -14,7 +14,7 @@
   vars:
     record: "{{ item }}"
   loop:
-    - "{{ lookup('vars', role_name + '_subdomain') }}"
+    - "{{ lookup('vars', role_name + '_web_subdomain') }}"
 
 - name: Remove existing Docker container
   docker_container:
@@ -23,7 +23,7 @@
 
 - name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items: "{{ lookup('vars', role_name + '_folders') }}"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
 
 - name: Docker Devices Task
   include_tasks: "{{ resources_tasks_path }}/docker/set_docker_devices_variable.yml"

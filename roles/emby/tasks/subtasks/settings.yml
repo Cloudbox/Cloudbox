@@ -10,7 +10,7 @@
 ---
 - name: Post-Install | Wait for config file to be created
   wait_for:
-    path: "{{ emby_config_file_path }}"
+    path: "{{ emby_paths_config_location }}"
     state: present
 
 - name: Settings | Stop Docker container
@@ -20,12 +20,12 @@
 
 - name: Settings | Update config file
   xml:
-    path: "{{ emby_config_file_path }}"
+    path: "{{ emby_paths_config_location }}"
     xpath: "/ServerConfiguration/{{ item.xpath }}"
     value: "{{ item.value }}"
   become: yes
   become_user: "{{ user.name }}"
-  loop: "{{ emby_config_settings }}"
+  loop: "{{ emby_config_settings_list }}"
 
 - name: Settings | Start Docker container
   docker_container:
