@@ -9,129 +9,103 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 mariadb_name: mariadb
 
 ################################
-# Subdomain
+# Paths
 ################################
 
+mariadb_paths_folder: "{{ mariadb_name }}"
+mariadb_paths_location: "{{ server_appdata_path }}/{{ mariadb_paths_folder }}"
+mariadb_paths_downloads_location: "{{ downloads.nzbs }}/{{ mariadb_paths_folder }}"
+mariadb_paths_folders_list:
+  - "{{ mariadb_paths_location }}"
 
 ################################
-# Folders
+# Docker
 ################################
 
-mariadb_folder: "{{ mariadb_name }}"
-
-mariadb_path: "{{ server_appdata_path }}/{{ mariadb_folder }}"
-
-mariadb_folders:
-  - "{{ mariadb_path }}"
-
-################################
-# Files
-################################
-
-
-################################
-# Docker Container
-################################
-
+# Container
 mariadb_docker_container: "{{ mariadb_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+mariadb_docker_image_pull: yes
+mariadb_docker_image_tag: "latest"
+mariadb_docker_image: "linuxserver/mariadb:{{ mariadb_docker_image_tag }}"
 
-mariadb_docker_image: "linuxserver/mariadb"
+# Ports
+mariadb_docker_ports_defaults: []
+mariadb_docker_ports_custom: []
+mariadb_docker_ports: "{{ mariadb_docker_ports_defaults
+                              + mariadb_docker_ports_custom }}"
 
-mariadb_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-mariadb_docker_ports: []
-
-################################
-# Docker Envs
-################################
-
-mariadb_mysql_root_password: password321
-
-mariadb_docker_envs:
+# Envs
+mariadb_docker_envs_mysql_root_password: password321
+mariadb_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   TZ: "{{ tz }}"
-  MYSQL_ROOT_PASSWORD: "{{ mariadb_mysql_root_password }}"
+  MYSQL_ROOT_PASSWORD: "{{ mariadb_docker_envs_mysql_root_password }}"
+mariadb_docker_envs_custom: {}
+mariadb_docker_envs: "{{ mariadb_docker_envs_default
+                            | combine(mariadb_docker_envs_custom) }}"
 
-################################
-# Docker Volumes
-################################
+# Volumes
+mariadb_docker_volumes_default:
+  - "{{ mariadb_paths_location }}:/config"
+mariadb_docker_volumes_custom: []
+mariadb_docker_volumes: "{{ mariadb_docker_volumes_default
+                                + mariadb_docker_volumes_custom
+                                + docker_volumes_downloads_common }}"
 
-mariadb_docker_volumes:
-  - "{{ mariadb_path }}:/config"
+# Devices
+mariadb_docker_devices_default: []
+mariadb_docker_devices_custom: []
+mariadb_docker_devices: "{{ mariadb_docker_devices_default
+                                + mariadb_docker_devices_custom }}"
 
-################################
-# Docker Devices
-################################
-
-mariadb_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+mariadb_docker_hosts_default: []
 mariadb_docker_hosts_custom: []
+mariadb_docker_hosts: "{{ docker_hosts_common
+                              | combine(mariadb_docker_hosts_default)
+                              | combine(mariadb_docker_hosts_custom) }}"
 
-mariadb_docker_hosts: "{{ docker_hosts_common | combine(mariadb_docker_hosts_custom) }}"
-
-################################
-# Docker Labels
-################################
-
+# Labels
+mariadb_docker_labels_default: {}
 mariadb_docker_labels_custom: {}
+mariadb_docker_labels: "{{ docker_labels_common
+                              | combine(mariadb_docker_labels_default)
+                              | combine(mariadb_docker_labels_custom) }}"
 
-mariadb_docker_labels: "{{ docker_labels_common | combine(mariadb_docker_labels_custom) }}"
-
-################################
-# Docker Hostname
-################################
-
+# Hostname
 mariadb_docker_hostname: "{{ mariadb_name }}"
 
-################################
-# Docker Networks
-################################
-
+# Networks
 mariadb_docker_networks_alias: "{{ mariadb_name }}"
-
+mariadb_docker_networks_default: []
 mariadb_docker_networks_custom: []
+mariadb_docker_networks: "{{ docker_networks_common
+                                + mariadb_docker_networks_default
+                                + mariadb_docker_networks_custom }}"
 
-mariadb_docker_networks: "{{ docker_networks_common + mariadb_docker_networks_custom }}"
+# Capabilities
+mariadb_docker_capabilities_default: []
+mariadb_docker_capabilities_custom: []
+mariadb_docker_capabilities: "{{ mariadb_docker_capabilities_default
+                                    + mariadb_docker_capabilities_custom }}"
 
-################################
-# Docker Capabilities
-################################
+# Security Opts
+mariadb_docker_security_opts_default: []
+mariadb_docker_security_opts_custom: []
+mariadb_docker_security_opts: "{{ mariadb_docker_security_opts_default
+                                      + mariadb_docker_security_opts_custom }}"
 
-mariadb_docker_capabilities: []
-
-################################
-# Docker Security
-################################
-
-mariadb_docker_security_opts: []
-
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 mariadb_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 mariadb_docker_state: started
