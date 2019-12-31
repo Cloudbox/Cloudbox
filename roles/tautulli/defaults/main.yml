@@ -9,145 +9,126 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 tautulli_name: tautulli
 
 ################################
-# Subdomain
+# Paths
 ################################
 
-tautulli_subdomain: "{{ tautulli_name }}"
+tautulli_paths_folder: "{{ tautulli_name }}"
+tautulli_paths_location: "{{ server_appdata_path }}/{{ tautulli_paths_folder }}"
+tautulli_paths_scripts_location: "{{ server_appdata_path }}/scripts/{{ tautulli_paths_folder }}"
+tautulli_paths_folders_list:
+  - "{{ tautulli_paths_location }}"
+  - "{{ tautulli_paths_scripts_location }}"
 
 ################################
-# Folders
+# Web
 ################################
 
-tautulli_folder: "{{ tautulli_name }}"
-
-tautulli_path: "{{ server_appdata_path }}/{{ tautulli_folder }}"
-
-tautulli_folders:
-  - "{{ tautulli_path }}"
-  - "{{ server_appdata_path }}/scripts/{{ tautulli_folder }}"
+tautulli_web_subdomain: "{{ tautulli_name }}"
+tautulli_web_port: "8181"
+tautulli_web_url: "{{ 'https://' + tautulli_web_subdomain + '.' + user.domain
+                      if (reverse_proxy_is_enabled)
+                      else 'http://localhost:' + tautulli_web_port }}"
 
 ################################
-# Files
+# Docker
 ################################
 
-################################
-# Docker Container
-################################
-
+# Container
 tautulli_docker_container: "{{ tautulli_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+tautulli_docker_image_pull: yes
+tautulli_docker_image_tag: "latest"
+tautulli_docker_image: "tautulli/tautulli:{{ tautulli_docker_image_tag }}"
 
-tautulli_docker_image: "tautulli/tautulli"
+# Ports
+tautulli_docker_ports_defaults:
+  - "{{ tautulli_web_port }}:{{ tautulli_web_port }}"
+tautulli_docker_ports_custom: []
+tautulli_docker_ports: "{{ tautulli_docker_ports_defaults
+                                + tautulli_docker_ports_custom
+                            if (not reverse_proxy_is_enabled)
+                            else [] + tautulli_docker_ports_custom }}"
 
-tautulli_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-tautulli_ports:
-  - "8181:8181"
-
-tautulli_docker_ports: "{{ tautulli_ports
-                           if (not reverse_proxy_is_enabled)
-                           else [] }}"
-
-################################
-# Docker Envs
-################################
-
-tautulli_web_port: 8181
-
-tautulli_docker_envs_standard:
+# Envs
+tautulli_docker_envs_git_branch: "nightly"
+tautulli_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
+  UMASK: "002"
   TZ: "{{ tz }}"
-  ADVANCED_GIT_BRANCH: nightly
-
-tautulli_docker_envs_reverse_proxy_extras: {}
-
-tautulli_docker_envs: "{{ (tautulli_docker_envs_standard |
-                              combine(docker_envs_reverse_proxy) |
-                              combine(tautulli_docker_envs_reverse_proxy_extras))
+  ADVANCED_GIT_BRANCH: "{{ tautulli_docker_envs_git_branch }}"
+tautulli_docker_envs_custom: {}
+tautulli_docker_envs_reverse_proxy: {}
+tautulli_docker_envs: "{{ tautulli_docker_envs_default
+                              | combine(tautulli_docker_envs_custom)
+                              | combine(tautulli_docker_envs_reverse_proxy)
+                              | combine(docker_envs_reverse_proxy_common)
                           if (reverse_proxy_is_enabled)
-                          else (tautulli_docker_envs_standard) }}"
+                          else tautulli_docker_envs_default
+                              | combine(tautulli_docker_envs_custom) }}"
 
-################################
-# Docker Volumes
-################################
-
-tautulli_docker_volumes:
-  - "{{ tautulli_path }}:/config"
+# Volumes
+tautulli_docker_volumes_default:
+  - "{{ tautulli_paths_location }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
-  - "{{ plex_log_path }}:/logs:ro"
+  - "{{ plex_paths_log_location }}:/logs:ro"
+tautulli_docker_volumes_custom: []
+tautulli_docker_volumes: "{{ tautulli_docker_volumes_default
+                                  + tautulli_docker_volumes_custom
+                                  + docker_volumes_downloads_common }}"
 
-################################
-# Docker Devices
-################################
+# Devices
+tautulli_docker_devices_default: []
+tautulli_docker_devices_custom: []
+tautulli_docker_devices: "{{ tautulli_docker_devices_default
+                                  + tautulli_docker_devices_custom }}"
 
-tautulli_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+tautulli_docker_hosts_default: []
 tautulli_docker_hosts_custom: []
+tautulli_docker_hosts: "{{ docker_hosts_common
+                                | combine(tautulli_docker_hosts_default)
+                                | combine(tautulli_docker_hosts_custom) }}"
 
-tautulli_docker_hosts: "{{ docker_hosts_common | combine(tautulli_docker_hosts_custom) }}"
-
-################################
-# Docker Labels
-################################
-
+# Labels
+tautulli_docker_labels_default: {}
 tautulli_docker_labels_custom: {}
+tautulli_docker_labels: "{{ docker_labels_common
+                                | combine(tautulli_docker_labels_default)
+                                | combine(tautulli_docker_labels_custom) }}"
 
-tautulli_docker_labels: "{{ docker_labels_common | combine(tautulli_docker_labels_custom) }}"
-
-################################
-# Docker Hostname
-################################
-
+# Hostname
 tautulli_docker_hostname: "{{ tautulli_name }}"
 
-################################
-# Docker Networks
-################################
-
+# Networks
 tautulli_docker_networks_alias: "{{ tautulli_name }}"
-
+tautulli_docker_networks_default: []
 tautulli_docker_networks_custom: []
+tautulli_docker_networks: "{{ docker_networks_common
+                                  + tautulli_docker_networks_default
+                                  + tautulli_docker_networks_custom }}"
 
-tautulli_docker_networks: "{{ docker_networks_common + tautulli_docker_networks_custom }}"
+# Capabilities
+tautulli_docker_capabilities_default: []
+tautulli_docker_capabilities_custom: []
+tautulli_docker_capabilities: "{{ tautulli_docker_capabilities_default
+                                      + tautulli_docker_capabilities_custom }}"
 
-################################
-# Docker Capabilities
-################################
+# Security Opts
+tautulli_docker_security_opts_default: []
+tautulli_docker_security_opts_custom: []
+tautulli_docker_security_opts: "{{ tautulli_docker_security_opts_default
+                                        + tautulli_docker_security_opts_custom }}"
 
-tautulli_docker_capabilities: []
-
-################################
-# Docker Security
-################################
-
-tautulli_docker_security_opts: []
-
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 tautulli_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 tautulli_docker_state: started
