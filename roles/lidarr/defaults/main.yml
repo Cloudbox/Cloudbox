@@ -9,31 +9,30 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 lidarr_name: lidarr
 
 ################################
+# Paths
+################################
+
+lidarr_paths_folder: "{{ lidarr_name }}"
+lidarr_paths_location: "{{ server_appdata_path }}/{{ lidarr_paths_folder }}"
+lidarr_paths_config_location: "{{ lidarr_paths_location }}/app/config.xml"
+lidarr_paths_folders_list:
+  - "{{ lidarr_paths_location }}"
+
+################################
 # Web
 ################################
 
-lidarr_subdomain: "{{ lidarr_name }}"
-
-lidarr_url: "{{ 'https://' + lidarr_subdomain + '.' + user.domain
-                  if (reverse_proxy_is_enabled)
-                  else 'http://localhost:' + lidarr_web_port }}"
-
-################################
-# Folders
-################################
-
-lidarr_folder: "{{ lidarr_name }}"
-
-lidarr_path: "{{ server_appdata_path }}/{{ lidarr_name }}"
-
-lidarr_folders:
-  - "{{ lidarr_path }}"
+lidarr_web_subdomain: "{{ lidarr_name }}"
+lidarr_web_port: "8686"
+lidarr_web_url: "{{ 'https://' + lidarr_web_subdomain + '.' + user.domain
+                    if (reverse_proxy_is_enabled)
+                    else 'http://localhost:' + lidarr_web_port }}"
 
 ################################
 # API
@@ -43,120 +42,98 @@ lidarr_folders:
 lidarr_api_key:
 
 ################################
-# Docker Container
+# Docker
 ################################
 
+# Container
 lidarr_docker_container: "{{ lidarr_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+lidarr_docker_image_pull: yes
+lidarr_docker_image_tag: "latest"
+lidarr_docker_image: "hotio/lidarr:{{ lidarr_docker_image_tag }}"
 
-lidarr_docker_image: "hotio/lidarr:latest"
+# Ports
+lidarr_docker_ports_defaults:
+  - "{{ lidarr_web_port }}:{{ lidarr_web_port }}"
+lidarr_docker_ports_custom: []
+lidarr_docker_ports: "{{ lidarr_docker_ports_defaults
+                              + lidarr_docker_ports_custom
+                          if (not reverse_proxy_is_enabled)
+                          else [] + lidarr_docker_ports_custom }}"
 
-lidarr_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-lidarr_ports:
-  - "8686:8686"
-
-lidarr_docker_ports: "{{ lidarr_ports
-                         if (not reverse_proxy_is_enabled)
-                         else [] }}"
-
-################################
-# Docker Envs
-################################
-
-lidarr_web_port: 8686
-
-lidarr_docker_envs_standard:
+# Envs
+lidarr_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   UMASK: "002"
   TZ: "{{ tz }}"
-
-lidarr_docker_envs_reverse_proxy_extras: {}
-
-lidarr_docker_envs: "{{ (lidarr_docker_envs_standard |
-                            combine(docker_envs_reverse_proxy) |
-                            combine(lidarr_docker_envs_reverse_proxy_extras))
+lidarr_docker_envs_custom: {}
+lidarr_docker_envs_reverse_proxy: {}
+lidarr_docker_envs: "{{ lidarr_docker_envs_default
+                            | combine(lidarr_docker_envs_custom)
+                            | combine(lidarr_docker_envs_reverse_proxy)
+                            | combine(docker_envs_reverse_proxy_common)
                         if (reverse_proxy_is_enabled)
-                        else (lidarr_docker_envs_standard) }}"
+                        else lidarr_docker_envs_default
+                            | combine(lidarr_docker_envs_custom) }}"
 
-################################
-# Docker Volumes
-################################
-
-lidarr_docker_volumes_basic:
-  - "{{ lidarr_path }}:/config"
+# Volumes
+lidarr_docker_volumes_default:
+  - "{{ lidarr_paths_location }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
-  - "/mnt:/mnt"
   - "/mnt/unionfs/Media/Music:/music"
+  - "/mnt:/mnt"
+lidarr_docker_volumes_custom: []
+lidarr_docker_volumes: "{{ lidarr_docker_volumes_default
+                                + lidarr_docker_volumes_custom
+                                + docker_volumes_downloads_common }}"
 
-lidarr_docker_volumes: "{{ lidarr_docker_volumes_basic + docker_volumes_downloads_common }}"
+# Devices
+lidarr_docker_devices_default: []
+lidarr_docker_devices_custom: []
+lidarr_docker_devices: "{{ lidarr_docker_devices_default
+                                + lidarr_docker_devices_custom }}"
 
-################################
-# Docker Devices
-################################
-
-lidarr_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+lidarr_docker_hosts_default: []
 lidarr_docker_hosts_custom: []
+lidarr_docker_hosts: "{{ docker_hosts_common
+                              | combine(lidarr_docker_hosts_default)
+                              | combine(lidarr_docker_hosts_custom) }}"
 
-lidarr_docker_hosts: "{{ docker_hosts_common | combine(lidarr_docker_hosts_custom) }}"
+# Labels
+lidarr_docker_labels_default: {}
+lidarr_docker_labels_custom: {}
+lidarr_docker_labels: "{{ docker_labels_common
+                              | combine(lidarr_docker_labels_default)
+                              | combine(lidarr_docker_labels_custom) }}"
 
-################################
-# Docker Hostname
-################################
-
+# Hostname
 lidarr_docker_hostname: "{{ lidarr_name }}"
 
-################################
-# Docker Labels
-################################
-
-lidarr_docker_labels_custom: {}
-
-lidarr_docker_labels: "{{ docker_labels_common | combine(lidarr_docker_labels_custom) }}"
-
-################################
-# Docker Networks
-################################
-
+# Networks
 lidarr_docker_networks_alias: "{{ lidarr_name }}"
-
+lidarr_docker_networks_default: []
 lidarr_docker_networks_custom: []
+lidarr_docker_networks: "{{ docker_networks_common
+                                + lidarr_docker_networks_default
+                                + lidarr_docker_networks_custom }}"
 
-lidarr_docker_networks: "{{ docker_networks_common + lidarr_docker_networks_custom }}"
+# Capabilities
+lidarr_docker_capabilities_default: []
+lidarr_docker_capabilities_custom: []
+lidarr_docker_capabilities: "{{ lidarr_docker_capabilities_default
+                                    + lidarr_docker_capabilities_custom }}"
 
-################################
-# Docker Capabilities
-################################
+# Security Opts
+lidarr_docker_security_opts_default: []
+lidarr_docker_security_opts_custom: []
+lidarr_docker_security_opts: "{{ lidarr_docker_security_opts_default
+                                      + lidarr_docker_security_opts_custom }}"
 
-lidarr_docker_capabilities: []
-
-################################
-# Docker Security
-################################
-
-lidarr_docker_security_opts: []
-
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 lidarr_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 lidarr_docker_state: started
