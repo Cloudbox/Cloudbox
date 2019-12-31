@@ -53,7 +53,7 @@
 
 - name: Resources | Tasks | ARR | Get API Keys | Check if Lidarr exists
   stat:
-    path: "{{ lidarr_config_file_path }}"
+    path: "{{ lidarr_paths_config_location }}"
   register: lidarr_config_file_stat
   when: not trackarr_config_file_stat.stat.exists
 
@@ -62,7 +62,7 @@
 
   - name: Resources | Tasks | ARR | Get API Keys | Fetch Lidarr API Key
     xml:
-      path: "{{ lidarr_config_file_path }}"
+      path: "{{ lidarr_paths_config_location }}"
       xpath: /Config/ApiKey
       content: text
     register: xmlresp
