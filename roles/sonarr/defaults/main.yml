@@ -103,7 +103,7 @@ sonarr_docker_volumes_basic:
   - "/mnt:/mnt"
   - "/mnt/unionfs/Media/TV:/tv"
 
-sonarr_docker_volumes: "{{ sonarr_docker_volumes_basic + nzbs_downloads_path + torrents_downloads_path }}"
+sonarr_docker_volumes: "{{ sonarr_docker_volumes_basic + docker_volumes_downloads_common }}"
 
 ################################
 # Docker Devices

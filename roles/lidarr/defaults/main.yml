@@ -97,7 +97,7 @@ lidarr_docker_volumes_basic:
   - "/mnt:/mnt"
   - "/mnt/unionfs/Media/Music:/music"
 
-lidarr_docker_volumes: "{{ lidarr_docker_volumes_basic + nzbs_downloads_path + torrents_downloads_path }}"
+lidarr_docker_volumes: "{{ lidarr_docker_volumes_basic + docker_volumes_downloads_common }}"
 
 ################################
 # Docker Devices
