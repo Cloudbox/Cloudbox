@@ -1,0 +1,67 @@
+#########################################################################
+# Title:         Cloudbox: NZBGet | Post-Install | Scripts Task         #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Post-Install | Scripts | Create directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items: "{{ nzbget_scripts_paths_folders_list }}"
+
+# Add Scripts
+
+- name: Post-Install | Scripts | Download scripts repos
+  git:
+    repo: "{{ item }}"
+    dest: "{{ nzbget_scripts_paths_location }}/{{ (item | basename | splitext)[0] }}"
+    clone: yes
+    version: HEAD
+    force: yes
+  become: yes
+  become_user: "{{ user.name }}"
+  loop: "{{ nzbget_scripts_repos_list }}"
+  ignore_errors: yes
+
+- name: Post-Install | Scripts | Download script URLs
+  get_url:
+    url:  "{{ item }}"
+    dest: "{{ nzbget_scripts_paths_location }}"
+    validate_certs: no
+    force: yes
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+  loop: "{{ nzbget_scripts_direct_downloads_list }}"
+  ignore_errors: yes
+
+- name: Post-Install | Scripts | Import local scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ nzbget_scripts_paths_location }}/{{ item }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: yes
+  loop: "{{ nzbget_scripts_local_copy_list }}"
+
+# Customize Scripts
+
+- name: Post-Install | Scripts | Check if 'nzbgetpp/rarfile/rarfile.py' exists
+  stat:
+    path: "{{ nzbget_scripts_paths_rarfile_py_location }}"
+  register: nzbget_scripts_rarfile_py_stat
+
+- name: Post-Install | Scripts | Add unrar path to 'nzbgetpp/rarfile/rarfile.py'
+  lineinfile:
+    path: "{{ nzbget_scripts_paths_rarfile_py_location }}"
+    regexp: '^UNRAR_TOOL\s?=.*'
+    line: 'UNRAR_TOOL = "/app/unrar"'
+    state: present
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+  when: nzbget_scripts_rarfile_py_stat.stat.exists
