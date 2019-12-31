@@ -12,7 +12,7 @@
   docker_container:
     name: "{{ lookup('vars', role_name + '_docker_container') }}"
     image: "{{ lookup('vars', role_name + '_docker_image') }}"
-    pull: "{{ lookup('vars', role_name + '_docker_pull') }}"
+    pull: "{{ lookup('vars', role_name + '_docker_image_pull') }}"
     published_ports: "{{ lookup('vars', role_name + '_docker_ports') }}"
     env: "{{ lookup('vars', role_name + '_docker_envs') }}"
     volumes: "{{ lookup('vars', role_name + '_docker_volumes') }}"
@@ -20,8 +20,8 @@
     etc_hosts: "{{ lookup('vars', role_name + '_docker_hosts') }}"
     labels: "{{ lookup('vars', role_name + '_docker_labels') }}"
     hostname: "{{ lookup('vars', role_name + '_docker_hostname') }}"
-    networks_cli_compatible: yes
     networks: "{{ lookup('vars', role_name + '_docker_networks') }}"
+    networks_cli_compatible: yes
     restart_policy: "{{ lookup('vars', role_name + '_docker_restart_policy') }}"
     capabilities: "{{ lookup('vars', role_name + '_docker_capabilities') }}"
     security_opts: "{{ lookup('vars', role_name + '_docker_security_opts') }}"
