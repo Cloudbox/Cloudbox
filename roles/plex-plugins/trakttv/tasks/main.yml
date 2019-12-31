@@ -29,7 +29,7 @@
 
 - name: Remove Previous Trakt.tv Plugin
   file:
-    path: "{{ plex_plugin_trakttv_path }}"
+    path: "{{ plex_plugin_trakttv_paths_location }}"
     state: absent
 
 - name: Get latest version available for Trakt.tv Plugin
@@ -61,12 +61,12 @@
 - name: "Create {{ plex_name | title }} 'plug-ins' directory"
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
   with_items:
-    - "{{ plex_plugins_path }}"
+    - "{{ plex_paths_plugins_location }}"
 
 - name: Install Trakt.tv Plugin
   unarchive:
     src: "{{ plex_plugin_trakttv_download_url }}"
-    dest: "{{ plex_plugins_path }}"
+    dest: "{{ plex_paths_plugins_location }}"
     copy: no
     owner: "{{ user.name }}"
     group: "{{ user.name }}"

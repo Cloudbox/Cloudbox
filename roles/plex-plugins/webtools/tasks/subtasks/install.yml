@@ -10,7 +10,7 @@
 ---
 - name: Install | Check for previously installed WebTools Plugin
   stat:
-    path: "{{ plex_plugin_webtools_version_path }}"
+    path: "{{ plex_plugin_webtools_paths_version_location }}"
   register: plex_plugin_webtools_bundle_status
 
 - name: Install | Tasks for previously installed WebTools Plugin
@@ -21,7 +21,7 @@
       plex_plugin_webtools_is_outdated: false
 
   - name: Install | Check version of previously installed WebTools Plugin
-    shell: cat '{{ plex_plugin_webtools_version_path }}' |  head -n 1 | awk '{ print }'
+    shell: cat '{{ plex_plugin_webtools_paths_version_location }}' |  head -n 1 | awk '{ print }'
     register: plex_plugin_webtools_previously_installed_version
     changed_when: no
 
@@ -71,7 +71,7 @@
 
   - name: Install | Remove outdated WebTools Plugin
     file:
-      path: "{{ plex_plugin_webtools_path }}"
+      path: "{{ plex_plugin_webtools_paths_location }}"
       state: absent
 
   - name: Install | Get latest WebTools Plugin URL
@@ -91,12 +91,12 @@
   - name: "Create {{ plex_name | title }} 'plug-ins' directory"
     file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
     with_items:
-      - "{{ plex_plugins_path }}"
+      - "{{ plex_paths_plugins_location }}"
 
   - name: Install | Install WebTools Plugin
     unarchive:
       src: "{{ plex_plugin_webtools_download_url }}"
-      dest: "{{ plex_plugins_path }}"
+      dest: "{{ plex_paths_plugins_location }}"
       copy: no
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
@@ -110,14 +110,14 @@
 
     - name: Install | Check for newly installed WebTools Plugin
       stat:
-        path: "{{ plex_plugin_webtools_version_path }}"
+        path: "{{ plex_plugin_webtools_paths_version_location }}"
       register: plex_plugin_webtools_version_status
 
     - name: Install | Post-Successfull WebTools Plugin Install
       block:
 
       - name: Install | Check version of newly installed WebTools Plugin
-        shell: cat '{{ plex_plugin_webtools_version_path }}' |  head -n 1 | awk '{ print }'
+        shell: cat '{{ plex_plugin_webtools_paths_version_location }}' |  head -n 1 | awk '{ print }'
         register: plex_plugin_webtools_newly_installed_version
         changed_when: no
 
