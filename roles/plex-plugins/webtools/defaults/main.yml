@@ -12,11 +12,11 @@
 # Paths
 ################################
 
-plex_plugin_webtools_path: "{{ plex_plugins_path }}/WebTools.bundle"
+plex_plugin_webtools_paths_location: "{{ plex_paths_plugins_location }}/WebTools.bundle"
 
-plex_plugin_webtools_version_path: "{{ plex_plugin_webtools_path }}/VERSION"
+plex_plugin_webtools_paths_version_location: "{{ plex_plugin_webtools_paths_location }}/VERSION"
 
-plex_plugin_webtools_preferences_path: "{{ plex_plugin_support_path }}/Preferences/com.plexapp.plugins.WebTools.xml"
+plex_plugin_webtools_paths_preferences_location: "{{ plex_paths_plugin_support_location }}/Preferences/com.plexapp.plugins.WebTools.xml"
 
 ################################
 # Repository

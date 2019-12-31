@@ -10,13 +10,13 @@
 ---
 - name: Settings | DB Cache Size | Wait for Plex DB to be created
   wait_for:
-    path: "{{ plex_db_path }}"
+    path: "{{ plex_paths_db_location }}"
     state: present
     timeout: 600
 
 - name: Settings | DB Cache Size | Get Current Plex DB Cache Size
   shell: |
-    sqlite3 "{{ plex_db_path }}" \
+    sqlite3 "{{ plex_paths_db_location }}" \
       "PRAGMA default_cache_size;"
   args:
     executable: /bin/bash
@@ -59,7 +59,7 @@
 
   - name: "Settings | DB Cache Size | Set Plex DB Cache Size"
     shell: |
-      sqlite3 "{{ plex_db_path }}" \
+      sqlite3 "{{ plex_paths_db_location }}" \
         "PRAGMA default_cache_size = '{{ desired_db_cache_size | int }}';"
     args:
       executable: /bin/bash
@@ -68,7 +68,7 @@
 
   - name: Settings | DB Cache Size | Get New Plex DB Cache Size
     shell: |
-      sqlite3 "{{ plex_db_path }}" \
+      sqlite3 "{{ plex_paths_db_location }}" \
         "PRAGMA default_cache_size;"
     args:
       executable: /bin/bash

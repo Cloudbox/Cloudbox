@@ -10,7 +10,7 @@
 ---
 - name: Check for previously installed Sub-Zero Plugin
   stat:
-    path: "{{ plex_plugin_subzero_info_plist_path }}"
+    path: "{{ plex_plugin_subzero_paths_info_plist_location }}"
   register: plex_plugin_subzero_bundle_status
 
 - name: Tasks for previously installed Sub-Zero Plugin
@@ -23,7 +23,7 @@
   # https://stackoverflow.com/a/51109708/10975859
   - name: Check version of previously installed Sub-Zero
     xml:
-      path: "{{ plex_plugin_subzero_info_plist_path }}"
+      path: "{{ plex_plugin_subzero_paths_info_plist_location }}"
       xpath: /plist/dict/key[.='CFBundleVersion']/following-sibling::*[1]
       content: 'text'
     register: plex_plugin_subzero_info_plist_xmlresp_1
@@ -73,7 +73,7 @@
 
   - name: Remove outdated Sub-Zero Plugin
     file:
-      path: "{{ plex_plugin_subzero_path }}"
+      path: "{{ plex_plugin_subzero_paths_location }}"
       state: absent
 
   - name: Get latest Sub-Zero Plugin URL
@@ -93,12 +93,12 @@
   - name: "Create {{ plex_name | title }} 'plug-ins' directory"
     file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
     with_items:
-      - "{{ plex_plugins_path }}"
+      - "{{ plex_paths_plugins_location }}"
 
   - name: Install Sub-Zero Plugin
     unarchive:
       src: "{{ plex_plugin_subzero_download_url }}"
-      dest: "{{ plex_plugins_path }}"
+      dest: "{{ plex_paths_plugins_location }}"
       copy: no
       owner: "{{ user.name }}"
       group: "{{ user.name }}"
@@ -112,7 +112,7 @@
 
     - name: Check for newly installed Sub-Zero Plugin
       stat:
-        path: "{{ plex_plugin_subzero_info_plist_path }}"
+        path: "{{ plex_plugin_subzero_paths_info_plist_location }}"
       register: plex_plugin_subzero_info_plist_status
 
     - name: Post-Successfull Sub-Zero Plugin Install
@@ -120,7 +120,7 @@
 
       - name: Check version of newly installed Sub-Zero Plugin
         xml:
-          path: "{{ plex_plugin_subzero_info_plist_path }}"
+          path: "{{ plex_plugin_subzero_paths_info_plist_location }}"
           xpath: /plist/dict/key[.='CFBundleVersion']/following-sibling::*[1]
           content: 'text'
         register: plex_plugin_subzero_info_plist_xmlresp_2
