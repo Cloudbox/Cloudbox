@@ -8,14 +8,14 @@
 #                   GNU General Public License v3.0                      #
 ##########################################################################
 ---
-- name: Post-Install Checks | Wait for '{{ plex_config_file_path | basename }}' to be created
+- name: Post-Install Checks | Wait for '{{ plex_paths_config_location | basename }}' to be created
   wait_for:
-    path: "{{ plex_config_file_path }}"
+    path: "{{ plex_paths_config_location }}"
     state: present
 
 - name: Post-Install Checks | Wait for {{ plex_name | title }} DB to be created
   wait_for:
-    path: "{{ plex_db_path }}"
+    path: "{{ plex_paths_db_location }}"
     state: present
 
 - name: Post-Install Checks | Wait for {{ plex_name | title }} executable to be created

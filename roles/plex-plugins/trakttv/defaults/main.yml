@@ -12,7 +12,7 @@
 # Paths
 ################################
 
-plex_plugin_trakttv_path: "{{ plex_plugins_path }}/Trakttv.bundle"
+plex_plugin_trakttv_paths_location: "{{ plex_paths_plugins_location }}/Trakttv.bundle"
 
 ################################
 # Repository

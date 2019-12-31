@@ -11,16 +11,16 @@
 # Sometimes docker will set transcodes folder to root after a restore.
 - name: Post-Install | Ensure transcodes folder has the correct permissions
   file:
-    path: "{{ plex_transcodes_path }}"
+    path: "{{ plex_paths_transcodes_location }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
     recurse: yes
 
 # Update Plex ports in Preferences
-- name: Post-Install | Wait for '{{ plex_config_file_path | basename }}' to be created
+- name: Post-Install | Wait for '{{ plex_paths_config_location | basename }}' to be created
   wait_for:
-    path: "{{ plex_config_file_path }}"
+    path: "{{ plex_paths_config_location }}"
     state: present
 
 - name: Post-Install | Get host port that's mapped to docker port '32400'
@@ -38,7 +38,7 @@
 
 - name: Post-Install | Update 'ManualPortMappingPort' in 'Preferences.xml'
   xml:
-    path: "{{ plex_config_file_path }}"
+    path: "{{ plex_paths_config_location }}"
     xpath: /Preferences
     attribute: ManualPortMappingPort
     value: "{{ plex_docker_port_32400 }}"
