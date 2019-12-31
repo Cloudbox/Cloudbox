@@ -37,7 +37,6 @@
     published_ports:
       - "127.0.0.1:6767:6767"
     env:
-      VERSION: "{{ suitarr.version }}"
       BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"

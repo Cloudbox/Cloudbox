@@ -95,50 +95,6 @@
         (downloads.torrents | trim | length == 0)
       )
 
-
-- name: Variables | Set 'suitarr_default_version' variable
-  set_fact:
-    suitarr_default_version: "stable"
-
-- name: Variables | Check if 'suitarr.version' was specified
-  set_fact:
-    suitarr_version_is_specified: "{{ true if not (
-        (suitarr is undefined)
-        or
-        (suitarr is none)
-        or
-        (suitarr | trim | length == 0)
-        or
-        (suitarr.version is undefined)
-        or
-        (suitarr.version is none)
-        or
-        (suitarr.version | trim | length == 0)
-      )
-      else false }}"
-
-- name: Variables | Validate and set proper 'suitarr' key variables
-  set_fact:
-    suitarr_tmp: { version: "{{ (suitarr.version | lower) if (
-        (suitarr_version_is_specified)
-        and
-        (suitarr.version != 'default')
-        and
-        ((suitarr.version == 'unstable') or (suitarr.version == 'stable') or (suitarr.version == 'image'))
-      )
-      else (suitarr_default_version) }}" }
-
-- name: Variables | Merge changes back to 'suitarr' key
-  set_fact:
-    suitarr: "{{ (suitarr_tmp) if (
-        (suitarr is undefined)
-        or
-        (suitarr is none)
-        or
-        (suitarr | trim | length == 0)
-        )
-      else ((suitarr) | combine(suitarr_tmp))  }}"
-
 - name: "Variables | Set 'sma_enabled' role tag"
   set_fact:
     sma_enabled: "{{ true if (
