@@ -23,8 +23,8 @@
 
   - name: Resources | Tasks | Docker | Set Docker Devices Variable | Set 'docker_devices_var_*' temp variables
     set_fact:
-        docker_devices_var_name: "{{ role_name + '_docker_devices' }}"
-        docker_devices_var_value: "{{ lookup('vars', role_name + '_docker_devices') }}"
+        docker_devices_var_name: "{{ role_name + '_docker_devices_default' }}"
+        docker_devices_var_value: "{{ lookup('vars', role_name + '_docker_devices_default') }}"
 
   - name: Resources | Tasks | Docker | Set Docker Devices Variable | Set 'docker_devices' variable
     set_fact:
