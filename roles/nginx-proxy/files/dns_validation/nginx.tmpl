@@ -234,7 +234,7 @@ upstream {{ $upstream_name }} {
 {{/* Use the cert specified on the container or fallback to the best vhost match */}}
 {{ $cert := (coalesce $certName $vhostCert) }}
 
-{{ $is_https := (and (ne $https_method "nohttps") (ne $cert "") (or (and (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/fullchain.pem" $cert)) (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/privkey.pem" $cert))) (and (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert)))) ) }}
+{{ $is_https := (and (ne $https_method "nohttps") (or (and (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/fullchain.pem" $default_host)) (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/privkey.pem" $default_host))) (and (ne $cert "") (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert)))) ) }}
 
 {{ if $is_https }}
 
@@ -269,19 +269,25 @@ server {
 	ssl_session_cache shared:SSL:50m;
 	ssl_session_tickets off;
 
-        {{ if (and (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/fullchain.pem" $cert)) (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/privkey.pem" $cert))) }}
-	ssl_certificate /etc/nginx/certs/letsencrypt/live/{{ (printf "%s/fullchain.pem" $cert) }};
-	ssl_certificate_key /etc/nginx/certs/letsencrypt/live/{{ (printf "%s/privkey.pem" $cert) }};
-        {{ else if (and (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert))) }}
+  {{ if (and (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/fullchain.pem" $default_host)) (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/privkey.pem" $default_host))) }}
+	ssl_certificate /etc/nginx/certs/letsencrypt/live/{{ (printf "%s/fullchain.pem" $default_host) }};
+	ssl_certificate_key /etc/nginx/certs/letsencrypt/live/{{ (printf "%s/privkey.pem" $default_host) }};
+  {{ else if (and (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert))) }}
 	ssl_certificate /etc/nginx/certs/{{ (printf "%s.crt" $cert) }};
 	ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $cert) }};
 	{{ end }}
 
-	{{ if (exists (printf "/etc/nginx/certs/%s.dhparam.pem" $cert)) }}
+	{{ if (exists "/etc/nginx/certs/dhparam.pem") }}
+	ssl_dhparam {{"/etc/nginx/certs/dhparam.pem" }};
+	{{ else if (exists (printf "/etc/nginx/certs/%s.dhparam.pem" $cert)) }}
 	ssl_dhparam {{ printf "/etc/nginx/certs/%s.dhparam.pem" $cert }};
 	{{ end }}
 
-	{{ if (exists (printf "/etc/nginx/certs/%s.chain.pem" $cert)) }}
+  {{ if (exists (printf "/etc/nginx/certs/letsencrypt/letsencrypt/live/%s/chain.pem" $default_host)) }}
+	ssl_stapling on;
+	ssl_stapling_verify on;
+	ssl_trusted_certificate {{ printf "/etc/nginx/certs/letsencrypt/live/%s/chain.pem" $default_host }};
+  {{ else if (exists (printf "/etc/nginx/certs/%s.chain.pem" $cert)) }}
 	ssl_stapling on;
 	ssl_stapling_verify on;
 	ssl_trusted_certificate {{ printf "/etc/nginx/certs/%s.chain.pem" $cert }};

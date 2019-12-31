@@ -52,7 +52,7 @@
 - name: Nginx-Proxy | Set 'nginx_proxy_docker_volumes' variable
   set_fact:
     nginx_proxy_docker_volumes:
-      - "/opt/nginx-proxy/certs:/etc/nginx/certs:ro"
+      - "/opt/nginx-proxy/certs:/etc/nginx/certs:rw"
       - "/opt/nginx-proxy/conf.d:/etc/nginx/conf.d:rw"
       - "/opt/nginx-proxy/vhost.d:/etc/nginx/vhost.d:rw"
       - "/opt/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro"
@@ -79,6 +79,7 @@
       - "443:443"
     volumes: "{{ nginx_proxy_docker_volumes }}"
     env:
+      DEFAULT_HOST: "{{ user.domain }}"
       TZ: "{{ tz }}"
     labels:
       "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy": "true"
