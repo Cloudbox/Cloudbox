@@ -9,12 +9,12 @@
 #########################################################################
 ---
 # Update ports in preferences
-- name: Post-Install | Check if '{{ sonarr_config_file_path | basename }}' exists
+- name: Post-Install | Check if '{{ sonarr_paths_config_location | basename }}' exists
   stat:
-    path: "{{ sonarr_config_file_path }}"
-  register: sonarr_config_file_path_stat
+    path: "{{ sonarr_paths_config_location }}"
+  register: sonarr_paths_config_location_stat
 
-- name: Post-Install | Update '{{ sonarr_config_file_path | basename }}'
+- name: Post-Install | Update '{{ sonarr_paths_config_location | basename }}'
   block:
 
   - name: Post-Install | Get host port that's mapped to docker port '8989'
@@ -26,13 +26,13 @@
   - name: Post-Install | Set 'sonarr_docker_port_8989' variable
     set_fact:
       sonarr_docker_port_8989: >-
-        {{ sonarr_docker_port_8989.stdout | trim 
+        {{ sonarr_docker_port_8989.stdout | trim
             if sonarr_docker_port_8989.stdout | trim | length > 0
             else '8989' }}
 
-  - name: Post-Install | Update 'Port' in '{{ sonarr_config_file_path | basename }}'
+  - name: Post-Install | Update 'Port' in '{{ sonarr_paths_config_location | basename }}'
     xml:
-      path: "{{ sonarr_config_file_path }}"
+      path: "{{ sonarr_paths_config_location }}"
       xpath: /Config/Port
       value: "{{ sonarr_docker_port_8989 }}"
       state: present
@@ -40,4 +40,4 @@
     become_user: "{{ user.name }}"
     ignore_errors: yes
 
-  when: sonarr_config_file_path_stat.stat.exists
+  when: sonarr_paths_config_location_stat.stat.exists
