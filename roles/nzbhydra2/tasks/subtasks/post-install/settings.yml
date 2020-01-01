@@ -1,0 +1,34 @@
+#########################################################################
+# Title:         Cloudbox: NZBHydra2 | Settings Task                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Post-Install | Settings | Wait for config file to be created
+  wait_for:
+    path: "{{ nzbhydra2_paths_config_location }}"
+    state: present
+    timeout: 15
+
+- name: Post-Install | Settings | Stop container
+  docker_container:
+    name: "{{ nzbhydra2_docker_container }}"
+    state: stopped
+
+- name: Post-Install | Settings | Update settings
+  shell: |
+    yq -y '{{ item }}' \
+    '{{ nzbhydra2_paths_config_location }}' \
+    | sponge '{{ nzbhydra2_paths_config_location }}'
+  become: yes
+  become_user: "{{ user.name }}"
+  loop: "{{ nzbhydra2_config_settings_list }}"
+
+- name: Post-Install | Settings | Start container
+  docker_container:
+    name: "{{ nzbhydra2_docker_container }}"
+    state: "{{ nzbhydra2_docker_state }}"

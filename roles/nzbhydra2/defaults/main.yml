@@ -1,0 +1,182 @@
+#########################################################################
+# Title:         Cloudbox: NZBHydra2 | Default Variables                #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Basics
+################################
+
+nzbhydra2_name: nzbhydra2
+
+################################
+# Paths
+################################
+
+nzbhydra2_paths_folder: "{{ nzbhydra2_name }}"
+nzbhydra2_paths_location: "{{ server_appdata_path }}/{{ nzbhydra2_paths_folder }}"
+nzbhydra2_paths_downloads_location: "{{ downloads.nzbs }}/{{ nzbhydra2_paths_folder }}"
+nzbhydra2_paths_folders_list:
+  - "{{ nzbhydra2_paths_location }}"
+nzbhydra2_paths_config_location: "{{ nzbhydra2_paths_location }}/app/nzbhydra.yml"
+
+nzbhydra_paths_db_location: "{{ server_appdata_path }}/nzbhydra/hydra/nzbhydra.db"
+
+################################
+# Web
+################################
+
+nzbhydra2_web_subdomain: "{{ nzbhydra2_name }}"
+nzbhydra2_web_port: "5076"
+nzbhydra2_web_url: "{{ 'https://' + nzbhydra2_web_subdomain + '.' + user.domain
+                    if (reverse_proxy_is_enabled)
+                    else 'http://localhost:' + nzbhydra2_web_port }}"
+
+################################
+# Config
+################################
+
+nzbhydra2_config_settings_jvm_memory: "{{ ((ansible_memory_mb.real.total / 1024)
+                                            | round(0,'ceil') | int >= 8 )
+                                            | ternary('512','256') }}"
+
+nzbhydra2_config_settings_default:
+  # Authentication
+  -  >-
+    .auth.authType = "FORM"
+    | .auth.restrictAdmin = true
+    | .auth.restrictDetailsDl = true
+    | .auth.restrictIndexerSelection = true
+    | .auth.restrictSearch = true
+    | .auth.restrictStats = true
+  # User
+  -  >-
+    .auth.users = []
+    | .auth.users[0].username = "{{ user.name }}"
+    | .auth.users[0].password = "{noop}{{ user.pass }}"
+    | .auth.users[0].maySeeAdmin = true
+    | .auth.users[0].maySeeDetailsDl = true
+    | .auth.users[0].showIndexerSelection = true
+  # NZBGet
+  -  >-
+    .downloading.downloaders = []
+    | .downloading.downloaders[0].apiKey = null
+    | .downloading.downloaders[0].defaultCategory = null
+    | .downloading.downloaders[0].downloadType = "NZB"
+    | .downloading.downloaders[0].enabled = true
+    | .downloading.downloaders[0].iconCssClass = ""
+    | .downloading.downloaders[0].name = "NZBGet"
+    | .downloading.downloaders[0].nzbAddingType = "UPLOAD"
+    | .downloading.downloaders[0].downloaderType = "NZBGET"
+    | .downloading.downloaders[0].url = "http://{{ nzbget_docker_networks_alias }}:{{ nzbget_web_port }}"
+    | .downloading.downloaders[0].username = "{{ user.name }}"
+    | .downloading.downloaders[0].password = "{{ user.pass }}"
+  # JVM Memory. If RAM >= 8GB, set XMX to 512, else 256.
+  - .main.xmx = {{ nzbhydra2_config_settings_jvm_memory }}
+
+nzbhydra2_config_settings_custom: []
+
+nzbhydra2_config_settings_list: "{{ nzbhydra2_config_settings_default
+                                      + nzbhydra2_config_settings_custom }}"
+
+################################
+# Docker
+################################
+
+# Container
+nzbhydra2_docker_container: "{{ nzbhydra2_name }}"
+
+# Image
+nzbhydra2_docker_image_pull: yes
+nzbhydra2_docker_image_tag: "latest"
+nzbhydra2_docker_image: "hotio/nzbhydra2:{{ nzbhydra2_docker_image_tag }}"
+
+# Ports
+nzbhydra2_docker_ports_defaults:
+  - "{{ nzbhydra2_web_port }}:{{ nzbhydra2_web_port }}"
+nzbhydra2_docker_ports_custom: []
+nzbhydra2_docker_ports: "{{ nzbhydra2_docker_ports_defaults
+                                + nzbhydra2_docker_ports_custom
+                            if (not reverse_proxy_is_enabled)
+                            else [] + nzbhydra2_docker_ports_custom }}"
+
+# Envs
+nzbhydra2_docker_envs_default:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  UMASK: "002"
+  TZ: "{{ tz }}"
+nzbhydra2_docker_envs_custom: {}
+nzbhydra2_docker_envs_reverse_proxy: {}
+nzbhydra2_docker_envs: "{{ nzbhydra2_docker_envs_default
+                                | combine(nzbhydra2_docker_envs_custom)
+                                | combine(nzbhydra2_docker_envs_reverse_proxy)
+                                | combine(docker_envs_reverse_proxy_common)
+                            if (reverse_proxy_is_enabled)
+                            else nzbhydra2_docker_envs_default
+                                | combine(nzbhydra2_docker_envs_custom) }}"
+
+# Volumes
+nzbhydra2_docker_volumes_nzbhydra1_migration:
+  - "{{ nzbhydra_paths_db_location }}:/nzbhydra1:ro"
+nzbhydra2_docker_volumes_default:
+  - "{{ nzbhydra2_paths_location }}:/config"
+  - "/mnt:/mnt"
+nzbhydra2_docker_volumes_custom: []
+nzbhydra2_docker_volumes: "{{ nzbhydra2_docker_volumes_default
+                                  + nzbhydra2_docker_volumes_custom
+                                  + docker_volumes_downloads_common }}"
+
+# Devices
+nzbhydra2_docker_devices_default: []
+nzbhydra2_docker_devices_custom: []
+nzbhydra2_docker_devices: "{{ nzbhydra2_docker_devices_default
+                                  + nzbhydra2_docker_devices_custom }}"
+
+# Hosts
+nzbhydra2_docker_hosts_default: []
+nzbhydra2_docker_hosts_custom: []
+nzbhydra2_docker_hosts: "{{ docker_hosts_common
+                                | combine(nzbhydra2_docker_hosts_default)
+                                | combine(nzbhydra2_docker_hosts_custom) }}"
+
+# Labels
+nzbhydra2_docker_labels_default: {}
+nzbhydra2_docker_labels_custom: {}
+nzbhydra2_docker_labels: "{{ docker_labels_common
+                                | combine(nzbhydra2_docker_labels_default)
+                                | combine(nzbhydra2_docker_labels_custom) }}"
+
+# Hostname
+nzbhydra2_docker_hostname: "{{ nzbhydra2_name }}"
+
+# Networks
+nzbhydra2_docker_networks_alias: "{{ nzbhydra2_name }}"
+nzbhydra2_docker_networks_default: []
+nzbhydra2_docker_networks_custom: []
+nzbhydra2_docker_networks: "{{ docker_networks_common
+                                  + nzbhydra2_docker_networks_default
+                                  + nzbhydra2_docker_networks_custom }}"
+
+# Capabilities
+nzbhydra2_docker_capabilities_default: []
+nzbhydra2_docker_capabilities_custom: []
+nzbhydra2_docker_capabilities: "{{ nzbhydra2_docker_capabilities_default
+                                    + nzbhydra2_docker_capabilities_custom }}"
+
+# Security Opts
+nzbhydra2_docker_security_opts_default: []
+nzbhydra2_docker_security_opts_custom: []
+nzbhydra2_docker_security_opts: "{{ nzbhydra2_docker_security_opts_default
+                                        + nzbhydra2_docker_security_opts_custom }}"
+
+# Restart Policy
+nzbhydra2_docker_restart_policy: unless-stopped
+
+# State
+nzbhydra2_docker_state: started
