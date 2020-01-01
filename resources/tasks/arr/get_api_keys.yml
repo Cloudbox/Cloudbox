@@ -10,15 +10,15 @@
 ---
 - name: Resources | Tasks | ARR | Get API Keys | Check if Sonarr exists
   stat:
-    path: "{{ sonarr_config_file_path }}"
-  register: sonarr_config_file_stat
+    path: "{{ sonarr_paths_config_location }}"
+  register: sonarr_paths_config_location_stat
 
 - name: Resources | Tasks | ARR | Get API Keys | Sonarr API Key tasks
   block:
 
   - name: Resources | Tasks | ARR | Get API Keys | Fetch Sonarr API Key
     xml:
-      path: "{{ sonarr_config_file_path }}"
+      path: "{{ sonarr_paths_config_location }}"
       xpath: /Config/ApiKey
       content: text
     register: xmlresp
@@ -27,13 +27,12 @@
     set_fact:
       sonarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
 
-  when: (sonarr_config_file_stat.stat.exists)
+  when: (sonarr_paths_config_location_stat.stat.exists)
 
 - name: Resources | Tasks | ARR | Get API Keys | Check if Radarr exists
   stat:
     path: "{{ radarr_paths_config_location }}"
-  register: radarr_config_file_stat
-  when: not trackarr_config_file_stat.stat.exists
+  register: radarr_paths_config_location_stat
 
 - name: Resources | Tasks | ARR | Get API Keys | Radarr API Key tasks
   block:
@@ -49,13 +48,12 @@
     set_fact:
       radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
 
-  when: (radarr_config_file_stat.stat.exists)
+  when: (radarr_paths_config_location_stat.stat.exists)
 
 - name: Resources | Tasks | ARR | Get API Keys | Check if Lidarr exists
   stat:
     path: "{{ lidarr_paths_config_location }}"
-  register: lidarr_config_file_stat
-  when: not trackarr_config_file_stat.stat.exists
+  register: lidarr_paths_config_location_stat
 
 - name: Resources | Tasks | ARR | Get API Keys | Lidarr API Key tasks
   block:
@@ -71,4 +69,4 @@
     set_fact:
       lidarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
 
-  when: (lidarr_config_file_stat.stat.exists)
+  when: (lidarr_paths_config_location_stat.stat.exists)
