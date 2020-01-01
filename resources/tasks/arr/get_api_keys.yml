@@ -31,7 +31,7 @@
 
 - name: Resources | Tasks | ARR | Get API Keys | Check if Radarr exists
   stat:
-    path: "{{ radarr_config_file_path }}"
+    path: "{{ radarr_paths_config_location }}"
   register: radarr_config_file_stat
   when: not trackarr_config_file_stat.stat.exists
 
@@ -40,7 +40,7 @@
 
   - name: Resources | Tasks | ARR | Get API Keys | Fetch Radarr API Key
     xml:
-      path: "{{ radarr_config_file_path }}"
+      path: "{{ radarr_paths_config_location }}"
       xpath: /Config/ApiKey
       content: text
     register: xmlresp

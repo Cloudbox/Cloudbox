@@ -9,12 +9,12 @@
 #########################################################################
 ---
 # Update ports in preferences
-- name: Post-Install | Check if '{{ radarr_config_file_path | basename }}' exists
+- name: Post-Install | Check if '{{ radarr_paths_config_location | basename }}' exists
   stat:
-    path: "{{ radarr_config_file_path }}"
-  register: radarr_config_file_path_stat
+    path: "{{ radarr_paths_config_location }}"
+  register: radarr_paths_config_location_stat
 
-- name: Post-Install | Update '{{ radarr_config_file_path | basename }}'
+- name: Post-Install | Update '{{ radarr_paths_config_location | basename }}'
   block:
 
   - name: Post-Install | Get host port that's mapped to docker port '7878'
@@ -30,9 +30,9 @@
             if radarr_docker_port_7878.stdout | trim | length > 0
             else '7878' }}
 
-  - name: Post-Install | Update 'Port' in '{{ radarr_config_file_path | basename }}'
+  - name: Post-Install | Update 'Port' in '{{ radarr_paths_config_location | basename }}'
     xml:
-      path: "{{ radarr_config_file_path }}"
+      path: "{{ radarr_paths_config_location }}"
       xpath: /Config/Port
       value: "{{ radarr_docker_port_7878 }}"
       state: present
@@ -40,4 +40,4 @@
     become_user: "{{ user.name }}"
     ignore_errors: yes
 
-  when: radarr_config_file_path_stat.stat.exists
+  when: radarr_paths_config_location_stat.stat.exists
