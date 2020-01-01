@@ -26,13 +26,8 @@
 - name: Create directory
   file: "path={{ cloudplow_path }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
 
-- name: Clone git repo
+- name: Clone project git repo
   include_tasks: "{{ resources_tasks_path }}/git/clone_git_repo.yml"
-  vars:
-    _git_repo_url: "{{ cloudplow_git_repo_url }}"
-    _git_repo_dest: "{{ cloudplow_git_repo_dest }}"
-    _git_repo_branch_primary: "{{ cloudplow_git_repo_branch_primary }}"
-    _git_repo_branch_secondary: "{{ cloudplow_git_repo_branch_secondary }}"
 
 - name: Install pip requirements
   pip:
