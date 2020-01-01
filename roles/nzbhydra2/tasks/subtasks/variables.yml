@@ -1,0 +1,22 @@
+##########################################################################
+# Title:         Cloudbox: NZBHydra2 | Variables Task                    #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+# NZBHydra v1 Migration
+
+- name: Variables | Check if '{{ nzbhydra_paths_db_location }}' exists
+  stat:
+    path: "{{ nzbhydra_paths_db_location }}"
+  register: nzbhydra_paths_db_location_stat
+
+- name: Variables | Add '{{ nzbhydra_paths_db_location }}' to variables
+  set_fact:
+    nzbhydra2_docker_volumes_default: "{{ nzbhydra2_docker_volumes_default
+                                              + nzbhydra2_docker_volumes_nzbhydra1_migration }}"
+  when: nzbhydra_paths_db_location_stat.stat.exists
