@@ -30,4 +30,4 @@
 - name: Updater | Set 'exit_is_necessary' variable
   set_fact:
     exit_is_necessary: true
-  when: (settings_updater.rc == 1)
+  when: (settings_updater.rc == 2)
