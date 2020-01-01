@@ -1,0 +1,32 @@
+#########################################################################
+# Title:         Cloudbox: SSTVIRL | Pre-Install Tasks                  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Pre-Install | Check if SSTVIRL config exists
+  stat:
+    path: "{{ sstvirl_paths_config_location }}"
+  register: sstvirl_paths_config_location_stat
+
+- name: Pre-Install | New SSTVIRL config tasks
+  block:
+
+  - name: Pre-Install | Import default SSTVIRL config
+    template:
+      src: 'config.json.j2'
+      dest: "{{ sstvirl_paths_config_location }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: no
+
+  - name: Pre-Install | Set 'sstvirl_docker_state' variable
+    set_fact:
+      sstvirl_docker_state: 'stopped'
+
+  when: not sstvirl_paths_config_location_stat.stat.exists

@@ -1,0 +1,37 @@
+#########################################################################
+# Title:         Cloudbox: SSTVIRL Role                                 #
+# Author(s):     l3uddz                                                 #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create DNS Record
+  include_role:
+    name: dns
+  vars:
+    record: "{{ item }}"
+  loop:
+    - "{{ lookup('vars', role_name + '_web_subdomain') }}"
+
+- name: Remove existing Docker container
+  docker_container:
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
+    state: absent
+
+- name: Create directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
+
+- name: Pre-Install Tasks
+  include_tasks: "subtasks/pre-install.yml"
+
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
+
+- name: Set Docker container state
+  docker_container:
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
+    state: "{{ lookup('vars', role_name + '_docker_state') }}"
