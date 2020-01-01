@@ -70,7 +70,8 @@ plex_docker_ports_webtools:
 plex_docker_ports: "{{ plex_docker_ports_defaults
                             + plex_docker_ports_webtools
                             + plex_docker_ports_custom
-                        if (not reverse_proxy_is_enabled)
+                        if (not reverse_proxy_is_enabled
+                            or plex.open_main_ports)
                         else plex_docker_ports_webtools
                             + plex_docker_ports_custom }}"
 # Envs
