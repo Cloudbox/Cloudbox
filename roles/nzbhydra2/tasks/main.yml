@@ -2,7 +2,6 @@
 # Title:         Cloudbox: NZBHydra2 Role                               #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/nzbhydra2                                        #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,74 +12,30 @@
   include_role:
     name: dns
   vars:
-    record: nzbhydra2
+    record: "{{ item }}"
+  loop:
+    - "{{ lookup('vars', role_name + '_web_subdomain') }}"
 
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: nzbhydra2
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
 
-- name: Suitarr Migration Tasks
-  import_tasks: "subtasks/suitarr_migration.yml"
+- name: Hotio Migration Tasks
+  include_tasks: "{{ resources_tasks_path }}/hotio/migrator/main.yml"
 
-- name: Create nzbhydra2 directories
+- name: Create directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
-  with_items:
-    - /opt/nzbhydra2
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
 
-- name: Check if nzbhydra.yml exists
+- name: Check if existing config exists
   stat:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
-  register: nzbhydra2_yml
+    path: "{{ nzbhydra2_paths_config_location }}"
+  register: nzbhydra2_yml_stat
 
-- name: Set default_volumes variable
-  set_fact:
-    default_volumes:
-      - "/opt/nzbhydra2:/config"
-      - "/mnt:/mnt"
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
 
-- name: Check to see if nzbhydra1 is installed
-  stat:
-    path: "/opt/nzbhydra/hydra/nzbhydra.db"
-  register: nzbhydra1
-
-- name: Set migration_path variable if nzbhydra1 is installed
-  set_fact:
-    migration_path:
-      - "/opt/nzbhydra/hydra:/nzbhydra1:ro"
-  when: nzbhydra1.stat.exists
-
-- name: Create and start container
-  docker_container:
-    name: nzbhydra2
-    image: "hotio/nzbhydra2:latest"
-    pull: yes
-    published_ports:
-      - "127.0.0.1:5076:5076"
-    env:
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      UMASK: "002"
-      VIRTUAL_HOST: "nzbhydra2.{{ user.domain }}"
-      VIRTUAL_PORT: "5076"
-      LETSENCRYPT_HOST: "nzbhydra2.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    volumes: "{{ default_volumes + migration_path|default([]) }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - nzbhydra2
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
-
-- name: Settings Tweaks
-  include_tasks: "subtasks/nzbhydra2_settings.yml"
-  when: not (
-        (nzbhydra2_yml.stat.exists)
-        or
-        (continuous_integration)
-    )
+- name: Post-Install Tasks
+  import_tasks: "subtasks/post-install/main.yml"
+  when: not continuous_integration
