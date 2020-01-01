@@ -9,37 +9,30 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 sonarr_name: sonarr
 
 ################################
-# Web
-################################
-
-sonarr_subdomain: "{{ sonarr_name }}"
-
-sonarr_url: "{{ 'https://' + sonarr_subdomain + '.' + user.domain
-                  if (reverse_proxy_is_enabled)
-                  else 'http://localhost:' + sonarr_web_port }}"
-
-################################
-# Folders
-################################
-
-sonarr_folder: "{{ sonarr_name }}"
-
-sonarr_path: "{{ server_appdata_path }}/{{ sonarr_name }}"
-
-sonarr_folders:
-  - "{{ sonarr_path }}"
-
-################################
 # Paths
 ################################
 
-sonarr_config_file_path: "{{ sonarr_path }}/app/config.xml"
+sonarr_paths_folder: "{{ sonarr_name }}"
+sonarr_paths_location: "{{ server_appdata_path }}/{{ sonarr_paths_folder }}"
+sonarr_paths_folders_list:
+  - "{{ sonarr_paths_location }}"
+sonarr_paths_config_location: "{{ sonarr_paths_location }}/app/config.xml"
+
+################################
+# Web
+################################
+
+sonarr_web_subdomain: "{{ sonarr_name }}"
+sonarr_web_port: "8989"
+sonarr_web_url: "{{ 'https://' + sonarr_web_subdomain + '.' + user.domain
+                    if (reverse_proxy_is_enabled)
+                    else 'http://localhost:' + sonarr_web_port }}"
 
 ################################
 # API
@@ -49,120 +42,99 @@ sonarr_config_file_path: "{{ sonarr_path }}/app/config.xml"
 sonarr_api_key:
 
 ################################
-# Docker Container
+# Docker
 ################################
 
+# Container
 sonarr_docker_container: "{{ sonarr_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+sonarr_docker_image_pull: yes
+sonarr_docker_image_tag: "phantom"
+sonarr_docker_image: "hotio/sonarr:{{ sonarr_docker_image_tag }}"
 
-sonarr_docker_image: "hotio/sonarr:phantom"
+# Ports
+sonarr_docker_ports_range: "{{ sonarr_web_port }}-{{ sonarr_web_port | int + 10 }}"
+sonarr_docker_ports_defaults:
+  - "{{ sonarr_docker_ports_range }}:{{ sonarr_web_port }}"
+sonarr_docker_ports_custom: []
+sonarr_docker_ports: "{{ sonarr_docker_ports_defaults
+                              + sonarr_docker_ports_custom
+                          if (not reverse_proxy_is_enabled)
+                          else [] + sonarr_docker_ports_custom }}"
 
-sonarr_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-sonarr_ports:
-  - "8989-8999:8989"
-
-sonarr_docker_ports: "{{ sonarr_ports
-                         if (not reverse_proxy_is_enabled)
-                         else [] }}"
-
-################################
-# Docker Envs
-################################
-
-sonarr_web_port: 8989
-
-sonarr_docker_envs_standard:
+# Envs
+sonarr_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   UMASK: "002"
   TZ: "{{ tz }}"
-
-sonarr_docker_envs_reverse_proxy_extras: {}
-
-sonarr_docker_envs: "{{ (sonarr_docker_envs_standard |
-                            combine(docker_envs_reverse_proxy) |
-                            combine(sonarr_docker_envs_reverse_proxy_extras))
+sonarr_docker_envs_custom: {}
+sonarr_docker_envs_reverse_proxy: {}
+sonarr_docker_envs: "{{ sonarr_docker_envs_default
+                            | combine(sonarr_docker_envs_custom)
+                            | combine(sonarr_docker_envs_reverse_proxy)
+                            | combine(docker_envs_reverse_proxy_common)
                         if (reverse_proxy_is_enabled)
-                        else (sonarr_docker_envs_standard) }}"
+                        else sonarr_docker_envs_default
+                            | combine(sonarr_docker_envs_custom) }}"
 
-################################
-# Docker Volumes
-################################
-
-sonarr_docker_volumes_basic:
-  - "{{ sonarr_path }}:/config"
+# Volumes
+sonarr_docker_volumes_default:
+  - "{{ sonarr_paths_location }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
-  - "/mnt:/mnt"
   - "/mnt/unionfs/Media/TV:/tv"
+  - "/mnt:/mnt"
+sonarr_docker_volumes_custom: []
+sonarr_docker_volumes: "{{ sonarr_docker_volumes_default
+                                + sonarr_docker_volumes_custom
+                                + docker_volumes_downloads_common }}"
 
-sonarr_docker_volumes: "{{ sonarr_docker_volumes_basic + docker_volumes_downloads_common }}"
+# Devices
+sonarr_docker_devices_default: []
+sonarr_docker_devices_custom: []
+sonarr_docker_devices: "{{ sonarr_docker_devices_default
+                                + sonarr_docker_devices_custom }}"
 
-################################
-# Docker Devices
-################################
-
-sonarr_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+sonarr_docker_hosts_default: []
 sonarr_docker_hosts_custom: []
+sonarr_docker_hosts: "{{ docker_hosts_common
+                              | combine(sonarr_docker_hosts_default)
+                              | combine(sonarr_docker_hosts_custom) }}"
 
-sonarr_docker_hosts: "{{ docker_hosts_common | combine(sonarr_docker_hosts_custom) }}"
-
-################################
-# Docker Labels
-################################
-
+# Labels
+sonarr_docker_labels_default: {}
 sonarr_docker_labels_custom: {}
+sonarr_docker_labels: "{{ docker_labels_common
+                              | combine(sonarr_docker_labels_default)
+                              | combine(sonarr_docker_labels_custom) }}"
 
-sonarr_docker_labels: "{{ docker_labels_common | combine(sonarr_docker_labels_custom) }}"
-
-################################
-# Docker Hostname
-################################
-
+# Hostname
 sonarr_docker_hostname: "{{ sonarr_name }}"
 
-################################
-# Docker Networks
-################################
-
+# Networks
 sonarr_docker_networks_alias: "{{ sonarr_name }}"
-
+sonarr_docker_networks_default: []
 sonarr_docker_networks_custom: []
+sonarr_docker_networks: "{{ docker_networks_common
+                                + sonarr_docker_networks_default
+                                + sonarr_docker_networks_custom }}"
 
-sonarr_docker_networks: "{{ docker_networks_common + sonarr_docker_networks_custom }}"
+# Capabilities
+sonarr_docker_capabilities_default: []
+sonarr_docker_capabilities_custom: []
+sonarr_docker_capabilities: "{{ sonarr_docker_capabilities_default
+                                    + sonarr_docker_capabilities_custom }}"
 
-################################
-# Docker Capabilities
-################################
+# Security Opts
+sonarr_docker_security_opts_default: []
+sonarr_docker_security_opts_custom: []
+sonarr_docker_security_opts: "{{ sonarr_docker_security_opts_default
+                                      + sonarr_docker_security_opts_custom }}"
 
-sonarr_docker_capabilities: []
-
-################################
-# Docker Security
-################################
-
-sonarr_docker_security_opts: []
-
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 sonarr_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 sonarr_docker_state: started
