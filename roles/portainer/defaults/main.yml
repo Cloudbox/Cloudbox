@@ -9,142 +9,118 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 portainer_name: portainer
 
 ################################
-# Subdomain
+# Paths
 ################################
 
-portainer_subdomain: "{{ portainer_name }}"
+portainer_paths_folder: "{{ portainer_name }}"
+portainer_paths_location: "{{ server_appdata_path }}/{{ portainer_paths_folder }}"
+portainer_paths_folders_list:
+  - "{{ portainer_paths_location }}"
 
 ################################
-# Folders
+# Web
 ################################
 
-portainer_folder: "{{ portainer_name }}"
-
-portainer_path: "{{ server_appdata_path }}/{{ portainer_folder }}"
-
-portainer_folders:
-  - "{{ portainer_path }}"
-
-################################
-# Files
-################################
-
-portainer_config_override: "{{ portainer_path }}/override"
+portainer_web_subdomain: "{{ portainer_name }}"
+portainer_web_port: "9000"
+portainer_web_url: "{{ 'https://' + portainer_web_subdomain + '.' + user.domain
+                      if (reverse_proxy_is_enabled)
+                      else 'http://localhost:' + portainer_web_port }}"
 
 ################################
-# Docker Container
+# Docker
 ################################
 
+# Container
 portainer_docker_container: "{{ portainer_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+portainer_docker_image_pull: yes
+portainer_docker_image_tag: "latest"
+portainer_docker_image: "portainer/portainer:{{ portainer_docker_image_tag }}"
 
-portainer_docker_image: "portainer/portainer"
-
-portainer_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-portainer_ports:
-  - "9000:9000"
-
-portainer_docker_ports: "{{ portainer_ports
+# Ports
+portainer_docker_ports_defaults:
+  - "{{ portainer_web_port }}:{{ portainer_web_port }}"
+portainer_docker_ports_custom: []
+portainer_docker_ports: "{{ portainer_docker_ports_defaults
+                                + portainer_docker_ports_custom
                             if (not reverse_proxy_is_enabled)
-                            else [] }}"
+                            else [] + portainer_docker_ports_custom }}"
 
-################################
-# Docker Envs
-################################
-
-portainer_web_port: 9000
-
-portainer_docker_envs_standard:
+# Envs
+portainer_docker_envs_default:
   TZ: "{{ tz }}"
-
-portainer_docker_envs_reverse_proxy_extras: {}
-
-portainer_docker_envs: "{{ (portainer_docker_envs_standard |
-                                combine(docker_envs_reverse_proxy) |
-                                combine(portainer_docker_envs_reverse_proxy_extras))
+portainer_docker_envs_custom: {}
+portainer_docker_envs_reverse_proxy: {}
+portainer_docker_envs: "{{ portainer_docker_envs_default
+                                | combine(portainer_docker_envs_custom)
+                                | combine(portainer_docker_envs_reverse_proxy)
+                                | combine(docker_envs_reverse_proxy_common)
                             if (reverse_proxy_is_enabled)
-                            else (portainer_docker_envs_standard) }}"
+                            else portainer_docker_envs_default
+                                | combine(portainer_docker_envs_custom) }}"
 
-################################
-# Docker Volumes
-################################
-
-portainer_docker_volumes:
-  - "{{ portainer_path }}:/data"
+# Volumes
+portainer_docker_volumes_default:
+  - "{{ portainer_paths_location }}:/data"
   - "/var/run/docker.sock:/var/run/docker.sock"
+portainer_docker_volumes_custom: []
+portainer_docker_volumes: "{{ portainer_docker_volumes_default
+                                  + portainer_docker_volumes_custom
+                                  + docker_volumes_downloads_common }}"
 
-################################
-# Docker Devices
-################################
+# Devices
+portainer_docker_devices_default: []
+portainer_docker_devices_custom: []
+portainer_docker_devices: "{{ portainer_docker_devices_default
+                                  + portainer_docker_devices_custom }}"
 
-portainer_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+portainer_docker_hosts_default: []
 portainer_docker_hosts_custom: []
+portainer_docker_hosts: "{{ docker_hosts_common
+                                | combine(portainer_docker_hosts_default)
+                                | combine(portainer_docker_hosts_custom) }}"
 
-portainer_docker_hosts: "{{ docker_hosts_common | combine(portainer_docker_hosts_custom) }}"
-
-################################
-# Docker Labels
-################################
-
+# Labels
+portainer_docker_labels_default: {}
 portainer_docker_labels_custom: {}
+portainer_docker_labels: "{{ docker_labels_common
+                                  | combine(portainer_docker_labels_default)
+                                  | combine(portainer_docker_labels_custom) }}"
 
-portainer_docker_labels: "{{ docker_labels_common | combine(portainer_docker_labels_custom) }}"
-
-################################
-# Docker Hostname
-################################
-
+# Hostname
 portainer_docker_hostname: "{{ portainer_name }}"
 
-################################
-# Docker Networks
-################################
-
+# Networks
 portainer_docker_networks_alias: "{{ portainer_name }}"
-
+portainer_docker_networks_default: []
 portainer_docker_networks_custom: []
+portainer_docker_networks: "{{ docker_networks_common
+                                    + portainer_docker_networks_default
+                                    + portainer_docker_networks_custom }}"
 
-portainer_docker_networks: "{{ docker_networks_common + portainer_docker_networks_custom }}"
+# Capabilities
+portainer_docker_capabilities_default: []
+portainer_docker_capabilities_custom: []
+portainer_docker_capabilities: "{{ portainer_docker_capabilities_default
+                                        + portainer_docker_capabilities_custom }}"
 
-################################
-# Docker Capabilities
-################################
+# Security Opts
+portainer_docker_security_opts_default: []
+portainer_docker_security_opts_custom: []
+portainer_docker_security_opts: "{{ portainer_docker_security_opts_default
+                                        + portainer_docker_security_opts_custom }}"
 
-portainer_docker_capabilities: []
-
-################################
-# Docker Security
-################################
-
-portainer_docker_security_opts: []
-
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 portainer_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 portainer_docker_state: started
