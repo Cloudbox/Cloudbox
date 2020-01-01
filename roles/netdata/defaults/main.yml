@@ -9,149 +9,126 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 netdata_name: netdata
 
 ################################
-# Subdomain
+# Paths
 ################################
 
-netdata_subdomain: "{{ netdata_name }}"
+netdata_paths_folder: "{{ netdata_name }}"
+netdata_paths_location: "{{ server_appdata_path }}/{{ netdata_paths_folder }}"
+netdata_paths_downloads_location: "{{ downloads.nzbs }}/{{ netdata_paths_folder }}"
+netdata_paths_folders_list:
+  - "{{ netdata_paths_location }}"
+netdata_paths_config_override_location: "{{ netdata_paths_location }}/override"
 
 ################################
-# Folders
+# Web
 ################################
 
-netdata_folder: "{{ netdata_name }}"
-
-netdata_path: "{{ server_appdata_path }}/{{ netdata_folder }}"
-
-netdata_folders:
-  - "{{ netdata_path }}"
-
-################################
-# Files
-################################
-
-netdata_config_override: "{{ netdata_path }}/override"
+netdata_web_subdomain: "{{ netdata_name }}"
+netdata_web_port: "19999"
+netdata_web_url: "{{ 'https://' + netdata_web_subdomain + '.' + user.domain
+                      if (reverse_proxy_is_enabled)
+                      else 'http://localhost:' + netdata_web_port }}"
 
 ################################
-# Docker Container
+# Docker
 ################################
 
+# Container
 netdata_docker_container: "{{ netdata_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+netdata_docker_image_pull: yes
+netdata_docker_image_tag: "latest"
+netdata_docker_image: "titpetric/netdata:{{ netdata_docker_image_tag }}"
 
-netdata_docker_image: "titpetric/netdata:latest"
-
-netdata_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-netdata_ports:
-  - "19999:19999"
-
-netdata_docker_ports: "{{ netdata_ports
+# Ports
+netdata_docker_ports_defaults:
+  - "{{ netdata_web_port }}:{{ netdata_web_port }}"
+netdata_docker_ports_custom: []
+netdata_docker_ports: "{{ netdata_docker_ports_defaults
+                              + netdata_docker_ports_custom
                           if (not reverse_proxy_is_enabled)
-                          else [] }}"
+                          else [] + netdata_docker_ports_custom }}"
 
-################################
-# Docker Envs
-################################
-
-netdata_web_port: 19999
-
-netdata_docker_envs_standard:
+# Envs
+netdata_docker_envs_default:
   TZ: "{{ tz }}"
+netdata_docker_envs_custom: {}
+netdata_docker_envs_reverse_proxy: {}
+netdata_docker_envs: "{{ netdata_docker_envs_default
+                            | combine(netdata_docker_envs_custom)
+                            | combine(netdata_docker_envs_reverse_proxy)
+                            | combine(docker_envs_reverse_proxy_common)
+                        if (reverse_proxy_is_enabled)
+                        else netdata_docker_envs_default
+                            | combine(netdata_docker_envs_custom) }}"
 
-netdata_docker_envs_reverse_proxy_extras: {}
-
-netdata_docker_envs: "{{ (netdata_docker_envs_standard |
-                              combine(docker_envs_reverse_proxy) |
-                              combine(netdata_docker_envs_reverse_proxy_extras))
-                          if (reverse_proxy_is_enabled)
-                          else (netdata_docker_envs_standard) }}"
-
-################################
-# Docker Volumes
-################################
-
-netdata_docker_volumes:
-  - "{{ netdata_path }}:/config"
+# Volumes
+netdata_docker_volumes_config_override:
+  - "{{ netdata_paths_config_override_location }}:/etc/netdata/override:ro"
+netdata_docker_volumes_default:
+  - "{{ netdata_paths_location }}:/config"
   - "/proc:/host/proc:ro"
   - "/sys:/host/sys:ro"
   - "/var/run/docker.sock:/var/run/docker.sock"
+netdata_docker_volumes_custom: []
+netdata_docker_volumes: "{{ netdata_docker_volumes_default
+                                + netdata_docker_volumes_custom
+                                + docker_volumes_downloads_common }}"
 
-netdata_docker_volumes_config_override:
-  - "{{ netdata_config_override }}:/etc/netdata/override:ro"
+# Devices
+netdata_docker_devices_default: []
+netdata_docker_devices_custom: []
+netdata_docker_devices: "{{ netdata_docker_devices_default
+                                + netdata_docker_devices_custom }}"
 
-################################
-# Docker Devices
-################################
-
-netdata_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+netdata_docker_hosts_default: []
 netdata_docker_hosts_custom: []
+netdata_docker_hosts: "{{ docker_hosts_common
+                              | combine(netdata_docker_hosts_default)
+                              | combine(netdata_docker_hosts_custom) }}"
 
-netdata_docker_hosts: "{{ docker_hosts_common | combine(netdata_docker_hosts_custom) }}"
-
-################################
-# Docker Labels
-################################
-
+# Labels
+netdata_docker_labels_default: {}
 netdata_docker_labels_custom: {}
+netdata_docker_labels: "{{ docker_labels_common
+                              | combine(netdata_docker_labels_default)
+                              | combine(netdata_docker_labels_custom) }}"
 
-netdata_docker_labels: "{{ docker_labels_common | combine(netdata_docker_labels_custom) }}"
-
-################################
-# Docker Hostname
-################################
-
+# Hostname
 netdata_docker_hostname: "{{ netdata_name }}"
 
-################################
-# Docker Networks
-################################
-
+# Networks
 netdata_docker_networks_alias: "{{ netdata_name }}"
-
+netdata_docker_networks_default: []
 netdata_docker_networks_custom: []
+netdata_docker_networks: "{{ docker_networks_common
+                                + netdata_docker_networks_default
+                                + netdata_docker_networks_custom }}"
 
-netdata_docker_networks: "{{ docker_networks_common + netdata_docker_networks_custom }}"
-
-################################
-# Docker Capabilities
-################################
-
-netdata_docker_capabilities:
+# Capabilities
+netdata_docker_capabilities_default:
   - SYS_PTRACE
+netdata_docker_capabilities_custom: []
+netdata_docker_capabilities: "{{ netdata_docker_capabilities_default
+                                    + netdata_docker_capabilities_custom }}"
 
-################################
-# Docker Security
-################################
-
-netdata_docker_security_opts:
+# Security Opts
+netdata_docker_security_opts_default:
   - apparmor:unconfined
+netdata_docker_security_opts_custom: []
+netdata_docker_security_opts: "{{ netdata_docker_security_opts_default
+                                      + netdata_docker_security_opts_custom }}"
 
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 netdata_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 netdata_docker_state: started
