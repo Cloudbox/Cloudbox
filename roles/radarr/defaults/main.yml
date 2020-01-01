@@ -9,37 +9,30 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 radarr_name: radarr
 
 ################################
-# Web
-################################
-
-radarr_subdomain: "{{ radarr_name }}"
-
-radarr_url: "{{ 'https://' + radarr_subdomain + '.' + user.domain
-                  if (reverse_proxy_is_enabled)
-                  else 'http://localhost:' + radarr_web_port }}"
-
-################################
-# Folders
-################################
-
-radarr_folder: "{{ radarr_name }}"
-
-radarr_path: "{{ server_appdata_path }}/{{ radarr_name }}"
-
-radarr_folders:
-  - "{{ radarr_path }}"
-
-################################
 # Paths
 ################################
 
-radarr_config_file_path: "{{ radarr_path }}/app/config.xml"
+radarr_paths_folder: "{{ radarr_name }}"
+radarr_paths_location: "{{ server_appdata_path }}/{{ radarr_paths_folder }}"
+radarr_paths_folders_list:
+  - "{{ radarr_paths_location }}"
+radarr_paths_config_location: "{{ radarr_paths_location }}/app/config.xml"
+
+################################
+# Web
+################################
+
+radarr_web_subdomain: "{{ radarr_name }}"
+radarr_web_port: "7878"
+radarr_web_url: "{{ 'https://' + radarr_web_subdomain + '.' + user.domain
+                    if (reverse_proxy_is_enabled)
+                    else 'http://localhost:' + radarr_web_port }}"
 
 ################################
 # API
@@ -49,120 +42,99 @@ radarr_config_file_path: "{{ radarr_path }}/app/config.xml"
 radarr_api_key:
 
 ################################
-# Docker Container
+# Docker
 ################################
 
+# Container
 radarr_docker_container: "{{ radarr_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+radarr_docker_image_pull: yes
+radarr_docker_image_tag: "unstable"
+radarr_docker_image: "hotio/radarr:{{ radarr_docker_image_tag }}"
 
-radarr_docker_image: "hotio/radarr:unstable"
+# Ports
+radarr_docker_ports_range: "{{ radarr_web_port }}-{{ radarr_web_port | int + 10 }}"
+radarr_docker_ports_defaults:
+  - "{{ radarr_docker_ports_range }}:{{ radarr_web_port }}"
+radarr_docker_ports_custom: []
+radarr_docker_ports: "{{ radarr_docker_ports_defaults
+                              + radarr_docker_ports_custom
+                          if (not reverse_proxy_is_enabled)
+                          else [] + radarr_docker_ports_custom }}"
 
-radarr_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-radarr_ports:
-  - "7878-7888:7878"
-
-radarr_docker_ports: "{{ radarr_ports
-                         if (not reverse_proxy_is_enabled)
-                         else [] }}"
-
-################################
-# Docker Envs
-################################
-
-radarr_web_port: 7878
-
-radarr_docker_envs_standard:
+# Envs
+radarr_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   UMASK: "002"
   TZ: "{{ tz }}"
-
-radarr_docker_envs_reverse_proxy_extras: {}
-
-radarr_docker_envs: "{{ (radarr_docker_envs_standard |
-                            combine(docker_envs_reverse_proxy) |
-                            combine(radarr_docker_envs_reverse_proxy_extras))
+radarr_docker_envs_custom: {}
+radarr_docker_envs_reverse_proxy: {}
+radarr_docker_envs: "{{ radarr_docker_envs_default
+                            | combine(radarr_docker_envs_custom)
+                            | combine(radarr_docker_envs_reverse_proxy)
+                            | combine(docker_envs_reverse_proxy_common)
                         if (reverse_proxy_is_enabled)
-                        else (radarr_docker_envs_standard) }}"
+                        else radarr_docker_envs_default
+                            | combine(radarr_docker_envs_custom) }}"
 
-################################
-# Docker Volumes
-################################
-
-radarr_docker_volumes_basic:
-  - "{{ radarr_path }}:/config"
+# Volumes
+radarr_docker_volumes_default:
+  - "{{ radarr_paths_location }}:/config"
   - "{{ server_appdata_path }}/scripts:/scripts"
-  - "/mnt:/mnt"
   - "/mnt/unionfs/Media/Movies:/movies"
+  - "/mnt:/mnt"
+radarr_docker_volumes_custom: []
+radarr_docker_volumes: "{{ radarr_docker_volumes_default
+                                + radarr_docker_volumes_custom
+                                + docker_volumes_downloads_common }}"
 
-radarr_docker_volumes: "{{ radarr_docker_volumes_basic + docker_volumes_downloads_common }}"
+# Devices
+radarr_docker_devices_default: []
+radarr_docker_devices_custom: []
+radarr_docker_devices: "{{ radarr_docker_devices_default
+                                + radarr_docker_devices_custom }}"
 
-################################
-# Docker Devices
-################################
-
-radarr_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+radarr_docker_hosts_default: []
 radarr_docker_hosts_custom: []
+radarr_docker_hosts: "{{ docker_hosts_common
+                              | combine(radarr_docker_hosts_default)
+                              | combine(radarr_docker_hosts_custom) }}"
 
-radarr_docker_hosts: "{{ docker_hosts_common | combine(radarr_docker_hosts_custom) }}"
-
-################################
-# Docker Labels
-################################
-
+# Labels
+radarr_docker_labels_default: {}
 radarr_docker_labels_custom: {}
+radarr_docker_labels: "{{ docker_labels_common
+                              | combine(radarr_docker_labels_default)
+                              | combine(radarr_docker_labels_custom) }}"
 
-radarr_docker_labels: "{{ docker_labels_common | combine(radarr_docker_labels_custom) }}"
-
-################################
-# Docker Hostname
-################################
-
+# Hostname
 radarr_docker_hostname: "{{ radarr_name }}"
 
-################################
-# Docker Networks
-################################
-
+# Networks
 radarr_docker_networks_alias: "{{ radarr_name }}"
-
+radarr_docker_networks_default: []
 radarr_docker_networks_custom: []
+radarr_docker_networks: "{{ docker_networks_common
+                                + radarr_docker_networks_default
+                                + radarr_docker_networks_custom }}"
 
-radarr_docker_networks: "{{ docker_networks_common + radarr_docker_networks_custom }}"
+# Capabilities
+radarr_docker_capabilities_default: []
+radarr_docker_capabilities_custom: []
+radarr_docker_capabilities: "{{ radarr_docker_capabilities_default
+                                    + radarr_docker_capabilities_custom }}"
 
-################################
-# Docker Capabilities
-################################
+# Security Opts
+radarr_docker_security_opts_default: []
+radarr_docker_security_opts_custom: []
+radarr_docker_security_opts: "{{ radarr_docker_security_opts_default
+                                      + radarr_docker_security_opts_custom }}"
 
-radarr_docker_capabilities: []
-
-################################
-# Docker Security
-################################
-
-radarr_docker_security_opts: []
-
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 radarr_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 radarr_docker_state: started
