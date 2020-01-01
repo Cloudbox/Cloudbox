@@ -9,145 +9,121 @@
 ##########################################################################
 ---
 ################################
-# Name
+# Basics
 ################################
 
 ombi_name: ombi
 
 ################################
-# Subdomain
+# Paths
 ################################
 
-ombi_subdomain_default: "{{ ombi_name }}"
-
-ombi_subdomain: "{{ ombi.subdomain | default(ombi_subdomain_default,true) }}"
-
-################################
-# Folders
-################################
-
-ombi_folder: "{{ ombi_name }}"
-
-ombi_path: "{{ server_appdata_path }}/{{ ombi_folder }}"
-
-ombi_folders:
-  - "{{ ombi_path }}"
+ombi_paths_folder: "{{ ombi_name }}"
+ombi_paths_location: "{{ server_appdata_path }}/{{ ombi_paths_folder }}"
+ombi_paths_folders_list:
+  - "{{ ombi_paths_location }}"
 
 ################################
-# Files
+# Web
 ################################
 
+ombi_web_subdomain: "{{ ombi_name }}"
+ombi_web_port: "5000"
+ombi_web_url: "{{ 'https://' + ombi_web_subdomain + '.' + user.domain
+                      if (reverse_proxy_is_enabled)
+                      else 'http://localhost:' + ombi_web_port }}"
+
 ################################
-# Docker Container
+# Docker
 ################################
 
+# Container
 ombi_docker_container: "{{ ombi_name }}"
 
-################################
-# Docker Image
-################################
+# Image
+ombi_docker_image_pull: yes
+ombi_docker_image_tag: "latest"
+ombi_docker_image: "hotio/ombi:{{ ombi_docker_image_tag }}"
 
-ombi_docker_image: "hotio/ombi:latest"
-
-ombi_docker_pull: yes
-
-################################
-# Docker Ports
-################################
-
-ombi_ports:
-  - "5000:5000"
-
-ombi_docker_ports: "{{ ombi_ports
+# Ports
+ombi_docker_ports_defaults:
+  - "{{ ombi_web_port }}:{{ ombi_web_port }}"
+ombi_docker_ports_custom: []
+ombi_docker_ports: "{{ ombi_docker_ports_defaults
+                            + ombi_docker_ports_custom
                         if (not reverse_proxy_is_enabled)
-                        else [] }}"
+                        else [] + ombi_docker_ports_custom }}"
 
-################################
-# Docker Envs
-################################
-
-ombi_web_port: 5000
-
-ombi_docker_envs_standard:
+# Envs
+ombi_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   UMASK: "002"
   TZ: "{{ tz }}"
   LC_ALL: "en_US.UTF-8"
+ombi_docker_envs_custom: {}
+ombi_docker_envs_reverse_proxy: {}
+ombi_docker_envs: "{{ ombi_docker_envs_default
+                          | combine(ombi_docker_envs_custom)
+                          | combine(ombi_docker_envs_reverse_proxy)
+                          | combine(docker_envs_reverse_proxy_common)
+                      if (reverse_proxy_is_enabled)
+                      else ombi_docker_envs_default
+                          | combine(ombi_docker_envs_custom) }}"
 
-ombi_docker_envs_reverse_proxy_extras: {}
+# Volumes
+ombi_docker_volumes_default:
+  - "{{ ombi_paths_location }}:/config"
+ombi_docker_volumes_custom: []
+ombi_docker_volumes: "{{ ombi_docker_volumes_default
+                              + ombi_docker_volumes_custom
+                              + docker_volumes_downloads_common }}"
 
-ombi_docker_envs: "{{ (ombi_docker_envs_standard |
-                            combine(docker_envs_reverse_proxy) |
-                            combine(ombi_docker_envs_reverse_proxy_extras))
-                        if (reverse_proxy_is_enabled)
-                        else (ombi_docker_envs_standard) }}"
+# Devices
+ombi_docker_devices_default: []
+ombi_docker_devices_custom: []
+ombi_docker_devices: "{{ ombi_docker_devices_default
+                              + ombi_docker_devices_custom }}"
 
-################################
-# Docker Volumes
-################################
-
-ombi_docker_volumes:
-  - "{{ ombi_path }}:/config"
-
-################################
-# Docker Devices
-################################
-
-ombi_docker_devices: []
-
-################################
-# Docker Hosts
-################################
-
+# Hosts
+ombi_docker_hosts_default: []
 ombi_docker_hosts_custom: []
+ombi_docker_hosts: "{{ docker_hosts_common
+                            | combine(ombi_docker_hosts_default)
+                            | combine(ombi_docker_hosts_custom) }}"
 
-ombi_docker_hosts: "{{ docker_hosts_common | combine(ombi_docker_hosts_custom) }}"
-
-################################
-# Docker Labels
-################################
-
+# Labels
+ombi_docker_labels_default: {}
 ombi_docker_labels_custom: {}
+ombi_docker_labels: "{{ docker_labels_common
+                            | combine(ombi_docker_labels_default)
+                            | combine(ombi_docker_labels_custom) }}"
 
-ombi_docker_labels: "{{ docker_labels_common | combine(ombi_docker_labels_custom) }}"
-
-################################
-# Docker Hostname
-################################
-
+# Hostname
 ombi_docker_hostname: "{{ ombi_name }}"
 
-################################
-# Docker Networks
-################################
-
+# Networks
 ombi_docker_networks_alias: "{{ ombi_name }}"
-
+ombi_docker_networks_default: []
 ombi_docker_networks_custom: []
+ombi_docker_networks: "{{ docker_networks_common
+                              + ombi_docker_networks_default
+                              + ombi_docker_networks_custom }}"
 
-ombi_docker_networks: "{{ docker_networks_common + ombi_docker_networks_custom }}"
+# Capabilities
+ombi_docker_capabilities_default: []
+ombi_docker_capabilities_custom: []
+ombi_docker_capabilities: "{{ ombi_docker_capabilities_default
+                                  + ombi_docker_capabilities_custom }}"
 
-################################
-# Docker Capabilities
-################################
+# Security Opts
+ombi_docker_security_opts_default: []
+ombi_docker_security_opts_custom: []
+ombi_docker_security_opts: "{{ ombi_docker_security_opts_default
+                                    + ombi_docker_security_opts_custom }}"
 
-ombi_docker_capabilities: []
-
-################################
-# Docker Security
-################################
-
-ombi_docker_security_opts: []
-
-################################
-# Docker Restart Policy
-################################
-
+# Restart Policy
 ombi_docker_restart_policy: unless-stopped
 
-################################
-# Docker State
-################################
-
+# State
 ombi_docker_state: started
