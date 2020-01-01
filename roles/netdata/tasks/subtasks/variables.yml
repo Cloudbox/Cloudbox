@@ -8,16 +8,13 @@
 #                   GNU General Public License v3.0                      #
 ##########################################################################
 ---
-################################
-# Docker Volumes
-################################
-
-- name: Variables | Check if '{{ netdata_config_override }}' exists
+- name: Variables | Check if '{{ netdata_paths_config_override_location }}' exists
   stat:
-    path: "{{ netdata_config_override }}"
+    path: "{{ netdata_paths_config_override_location }}"
   register: netdata_override
 
-- name: Variables | Add '{{ netdata_config_override }}' to 'netdata_docker_volumes'
+- name: Variables | Add '{{ netdata_paths_config_override_location }}' to variables
   set_fact:
-    netdata_docker_volumes: "{{ netdata_docker_volumes + netdata_docker_volumes_config_override }}"
+    netdata_paths_folders_list: "{{ netdata_paths_folders_list + [netdata_paths_config_override_location] }}"
+    netdata_docker_volumes_default: "{{ netdata_docker_volumes_default + netdata_docker_volumes_config_override }}"
   when: netdata_override.stat.exists
