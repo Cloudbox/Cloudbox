@@ -1,0 +1,70 @@
+#########################################################################
+# Title:         Cloudbox: User | User Account Tas                      #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: User Account | Create common groups
+  group: "name={{ item }} state=present"
+  with_items:
+    - docker
+    - "{{ user.name }}"
+
+- name: User Account | Copy skeleton files to '/etc/skel'
+  copy:
+    src: "etc/skel/{{ item }}"
+    dest: "/etc/skel/"
+    mode: 0644
+    force: no
+  loop:
+    - ".bash_logout"
+    - ".bashrc"
+    - ".profile"
+
+- name: User Account | Create user '{{ user.name }}'
+  user:
+    name: "{{ user.name }}"
+    group: "{{ user.name }}"
+    groups: "{{ user.name }},sudo,video,docker"
+    password: "{{ user.pass | string | password_hash('sha512') }}"
+    update_password: on_create
+    append: yes
+    create_home: yes
+    skeleton: /etc/skel
+  register: user_info
+
+- name: User Account | Get video group info
+  shell: "getent group video | cut -d: -f3"
+  register: vgid_lookup
+
+- name: User Account | Set 'uid', 'gid', and 'vgid'
+  set_fact:
+    uid: "{{ user_info.uid }}"
+    gid: "{{ user_info.group }}"
+    vgid: "{{ vgid_lookup.stdout }}"
+
+- name: User Account | Check if '/etc/sudoers' exists
+  stat:
+    path: "/etc/sudoers"
+  register: etc_sudoers
+
+- name: User Account | Set sudo group to 'NOPASSWD'
+  lineinfile:
+    path: "/etc/sudoers"
+    regexp: '^%sudo\s'
+    line: '%sudo   ALL=(ALL) NOPASSWD:ALL'
+    state: present
+  when: etc_sudoers.stat.exists
+
+- name: User Account | Reset ownership of '{{ user_paths_home_location }}/' path
+  file:
+    path: "{{ user_paths_home_location }}"
+    state: directory
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    recurse: yes
+    follow: no
