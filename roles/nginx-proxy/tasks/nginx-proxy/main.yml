@@ -38,7 +38,12 @@
     mode: 0775
     force: yes
 
-# Letsencrypt DNS Validation Only
+# Fixes random issue of folder being created in its place
+- name: Nginx-Proxy | Remove previous 'nginx.tmpl' path
+  file:
+    path: "/opt/nginx-proxy/tmpl/nginx.tmpl"
+    state: absent
+
 - name: Nginx-Proxy | Import 'nginx.tmpl' file
   copy:
     src: "dns_validation/nginx.tmpl"
