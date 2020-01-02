@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: User Role                                    #
+# Title:         Cloudbox: User | Default Variables                     #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,9 +8,17 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: User Account
-  import_tasks: "subtasks/user_account.yml"
+# User
+user_paths_home_location: "/home/{{ user.name }}"
+user_paths_home_cloudbox_location: "{{ user_paths_home_location }}/cloudbox"
 
-- name: Cloudbox Migrator
-  import_tasks: "subtasks/cloudbox_migrator.yml"
-  when: (not continuous_integration)
+# Cloudbox
+cloudbox_git_repo_url: "https://github.com/cloudbox/cloudbox.git"
+cloudbox_git_repo_dest: "/srv/git/cloudbox"
+cloudbox_git_repo_branch_primary: "develop"
+cloudbox_git_repo_branch_secondary: "develop"
+
+# CB Scripts
+cb_git_repo_url: "https://github.com/cloudbox/cb.git"
+cb_git_repo_dest: "/srv/git/cb"
+cb_git_repo_branch_primary: "master"
