@@ -238,6 +238,8 @@ upstream {{ $upstream_name }} {
 
 {{ if $is_https }}
 
+{{ if (and (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/fullchain.pem" $default_host)) (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/privkey.pem" $default_host)))
+
 server {
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
 	listen 443 ssl http2;
@@ -258,6 +260,8 @@ server {
 	ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $cert) }};
   {{ end }}
 }
+
+{{ end }}
 
 {{ if eq $https_method "redirect" }}
 server {
