@@ -15,7 +15,7 @@ user_paths_home_cloudbox_location: "{{ user_paths_home_location }}/cloudbox"
 # Cloudbox
 cloudbox_git_repo_url: "https://github.com/cloudbox/cloudbox.git"
 cloudbox_git_repo_dest: "/srv/git/cloudbox"
-cloudbox_git_repo_branch_primary: "master"
+cloudbox_git_repo_branch_primary: "develop"
 cloudbox_git_repo_branch_secondary: "develop"
 
 # CB Scripts
