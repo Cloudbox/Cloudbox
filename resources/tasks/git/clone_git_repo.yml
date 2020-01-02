@@ -19,7 +19,7 @@
     _git_repo_url: "{{ lookup('vars', _var_prefix + '_git_repo_url') }}"
     _git_repo_dest: "{{ lookup('vars', _var_prefix + '_git_repo_dest') }}"
     _git_repo_branch_primary: "{{ lookup('vars', _var_prefix + '_git_repo_branch_primary') }}"
-    _git_repo_branch_secondary: "{{ lookup('vars', _var_prefix + '_git_repo_branch_secondary') }}"
+    _git_repo_branch_secondary: "{{ lookup('vars', _var_prefix + '_git_repo_branch_secondary', default='master') }}"
 
 - name: Resources | Tasks | Git | Clone Git Repo | Check for existing git folder
   stat:
