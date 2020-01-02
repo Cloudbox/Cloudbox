@@ -13,7 +13,7 @@
 * [Vuur](https://github.com/vuur) -  Web Design.
 * [TheBradz](https://github.com/TheBradz) - Cloudbox; Cloudbox Wiki.
 * [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki. Admin on Discord.
-* [Hotio](https://gitlab.com/hotio) - Suitarr Docker Image (creator).
+* [hotio](https://github.com/hotio) - Docker Images (creator).
 * [Mitchell Klijs](https://github.com/mitchellklijs) - Traktarr; Cloudplow.
 * [davemaster223](https://github.com/daghaian) - Traktarr; Cloudplow.
 * [MZA](https://github.com/mza921) - Plex Autoscan.
@@ -51,16 +51,16 @@
 * [Emby](https://emby.media/) ([Docker](https://hub.docker.com/r/emby/embyserver/))
 * [Plex Patrol](https://github.com/l3uddz/plex_patrol) ([Docker](https://hub.docker.com/r/emby/embyserver/))
 * [Tautulli (PlexPy)](http://tautulli.com/) ([Docker](https://github.com/Tautulli/Tautulli-Docker))
-* [Sonarr](https://sonarr.tv) ([Docker](https://gitlab.com/hotio/suitarr))
-* [Radarr](https://radarr.video) ([Docker](https://gitlab.com/hotio/suitarr))
-* [Lidarr](https://lidarr.audio) ([Docker](https://gitlab.com/hotio/suitarr))
+* [Sonarr](https://sonarr.tv) ([Docker](https://github.com/hotio/docker-sonarr))
+* [Radarr](https://radarr.video) ([Docker](https://github.com/hotio/docker-radarr))
+* [Lidarr](https://lidarr.audio) ([Docker](https://github.com/hotio/docker-lidarr))
 * [rTorrent](https://github.com/rakshasa/rtorrent/wiki) / [ruTorrent](https://github.com/Novik/ruTorrent)  ([Docker](https://github.com/horjulf/docker-rutorrent-autodl))
-* [NZBGet](https://nzbget.net) ([Docker](https://gitlab.com/hotio/suitarr))
+* [NZBGet](https://nzbget.net) ([Docker](https://github.com/hotio/docker-nzbget))
 * [NZBHydra](https://github.com/theotherp/nzbhydra) ([Docker](https://github.com/linuxserver/docker-hydra))
-* [NZBHydra 2](https://github.com/theotherp/nzbhydra2) ([Docker](https://gitlab.com/hotio/suitarr))
-* [Jackett](https://github.com/Jackett/Jackett) ([Docker](https://gitlab.com/hotio/suitarr))
+* [NZBHydra 2](https://github.com/theotherp/nzbhydra2) ([Docker](https://github.com/hotio/docker-nzbhydra2))
+* [Jackett](https://github.com/Jackett/Jackett) ([Docker](https://github.com/hotio/docker-jackett))
 * [Plex Requests](https://github.com/lokenx/plexrequests-meteor) ([Docker](https://github.com/linuxserver/docker-plexrequests))
-* [Ombi](https://ombi.io) ([Docker](https://github.com/linuxserver/docker-ombi))
+* [Ombi](https://ombi.io) ([Docker](https://github.com/hotio/docker-ombi))
 * [Organizr](https://github.com/causefx/Organizr) ([Docker](https://github.com/linuxserver/docker-organizr))
 * [Telly](https://github.com/tombowditch/telly) ([Docker](https://hub.docker.com/r/tombowditch/telly/))
 * [NowShowing](https://github.com/ninthwalker/NowShowing) ([Docker](https://hub.docker.com/r/ninthwalker/nowshowing/))
