@@ -4,19 +4,19 @@
 	{{ if .Address }}
 		{{/* If we got the containers from swarm and this container's port is published to host, use host IP:PORT */}}
 		{{ if and .Container.Node.ID .Address.HostPort }}
-			# {{ .Container.Node.Name }}/{{ .Container.Name }}
-			server {{ .Container.Node.Address.IP }}:{{ .Address.HostPort }};
+	# {{ .Container.Node.Name }}/{{ .Container.Name }}
+	server {{ .Container.Node.Address.IP }}:{{ .Address.HostPort }};
 		{{/* If there is no swarm node or the port is not published on host, use container's IP:PORT */}}
 		{{ else if .Network }}
-			# {{ .Container.Name }}
-			server {{ .Network.IP }}:{{ .Address.Port }};
+	# {{ .Container.Name }}
+	server {{ .Network.IP }}:{{ .Address.Port }};
 		{{ end }}
 	{{ else if .Network }}
-		# {{ .Container.Name }}
+	# {{ .Container.Name }}
 		{{ if .Network.IP }}
-			server {{ .Network.IP }} down;
+	server {{ .Network.IP }} down;
 		{{ else }}
-			server 127.0.0.1 down;
+	server 127.0.0.1 down;
 		{{ end }}
 	{{ end }}
 
@@ -178,7 +178,7 @@ upstream {{ $upstream_name }} {
 	{{ range $knownNetwork := $CurrentContainer.Networks }}
 		{{ range $containerNetwork := $container.Networks }}
 			{{ if (and (ne $containerNetwork.Name "ingress") (or (eq $knownNetwork.Name $containerNetwork.Name) (eq $knownNetwork.Name "host"))) }}
-				## Can be connected with "{{ $containerNetwork.Name }}" network
+	## Can be connected with "{{ $containerNetwork.Name }}" network
 
 				{{/* If only 1 port exposed, use that */}}
 				{{ if eq $addrLen 1 }}
@@ -191,8 +191,8 @@ upstream {{ $upstream_name }} {
 					{{ template "upstream" (dict "Container" $container "Address" $address "Network" $containerNetwork) }}
 				{{ end }}
 			{{ else }}
-				# Cannot connect to network of this container
-				server 127.0.0.1 down;
+	# Cannot connect to network of this container
+	server 127.0.0.1 down;
 			{{ end }}
 		{{ end }}
 	{{ end }}
@@ -250,13 +250,13 @@ server {
 	ssl_session_cache shared:SSL:50m;
 	ssl_session_tickets off;
 
- {{ if (and (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/fullchain.pem" $default_host)) (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/privkey.pem" $default_host))) }}
+  {{ if (and (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/fullchain.pem" $default_host)) (exists (printf "/etc/nginx/certs/letsencrypt/live/%s/privkey.pem" $default_host))) }}
 	ssl_certificate /etc/nginx/certs/letsencrypt/live/{{ (printf "%s/fullchain.pem" $default_host) }};
 	ssl_certificate_key /etc/nginx/certs/letsencrypt/live/{{ (printf "%s/privkey.pem" $default_host) }};
   {{ else if (and (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert))) }}
 	ssl_certificate /etc/nginx/certs/{{ (printf "%s.crt" $cert) }};
 	ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $cert) }};
-	{{ end }}
+  {{ end }}
 }
 
 {{ if eq $https_method "redirect" }}
