@@ -1,0 +1,54 @@
+---
+database:
+  maxagehours: 72
+pvr:
+- name: "{{ sonarr_name }}"
+  url: "{{ sonarr_web_url }}"
+  apikey: "{{ sonarr_api_key }}"
+  enabled: true
+  filters:
+    accepts:
+      - TrackerName == "BTN"
+    ignores:
+      - TorrentName contains "HEVC"
+      - TorrentName contains "x265"
+      - TorrentName contains "[HorribleSubs]"
+      - any (Files, {% raw -%}{#{%- endraw %} matches "(?i)\\.(bdmv|mpls|miniso|cci|cer|clpi|m2ts|VOB|IFO|BUP|iso|rar|r01)$"})
+    delays:
+      - 'not (TorrentName contains "1080") ? 15 : 0'
+- name: "{{ radarr_name }}"
+  url: "{{ radarr_web_url }}"
+  apikey: "{{ radarr_api_key }}"
+  enabled: true
+  filters:
+    accepts:
+      - Category contains "Movie"
+    ignores:
+      - Category contains "XXX"
+      - Category contains "Disk"
+      - Category contains "DVD-R"
+      - TrackerName == "IPT" && TorrentName contains "COMPLETE"
+      - TorrentName contains "3D"
+      - TorrentName contains "HEVC" && not (TorrentName contains "2160")
+      - TorrentName contains "x265" && not (TorrentName contains "2160")
+      - any (Files, {% raw -%}{#{%- endraw %} matches "(?i)\\.(bdmv|mpls|miniso|cci|cer|clpi|m2ts|VOB|IFO|BUP|iso|rar|r01)$"})
+server:
+  apikey: "{{ trackarr_server_apikey }}"
+  host: 0.0.0.0
+  pass: "{{ user.pass }}"
+  port: "{{ trackarr_web_port }}"
+  publicurl: "{{ trackarr_web_url }}"
+  user: {{ user.name }}
+trackers:
+  iptorrents:
+    bencode:
+      name: false
+      size: true
+    enabled: false
+    irc:
+      channels:
+        - '#ipt.announce'
+      nickname: YOUR_USER|autodl
+      verbose: false
+    settings:
+      passkey: YOUR-IPTORRENTS-PASSKEY
