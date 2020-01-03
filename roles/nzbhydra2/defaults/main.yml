@@ -32,18 +32,19 @@ nzbhydra_paths_db_location: "{{ server_appdata_path }}/nzbhydra/hydra/nzbhydra.d
 ################################
 
 nzbhydra2_web_subdomain: "{{ nzbhydra2_name }}"
+nzbhydra2_web_domain: "{{ user.domain }}"
 nzbhydra2_web_port: "5076"
-nzbhydra2_web_url: "{{ 'https://' + nzbhydra2_web_subdomain + '.' + user.domain
-                    if (reverse_proxy_is_enabled)
-                    else 'http://localhost:' + nzbhydra2_web_port }}"
+nzbhydra2_web_url: "{{ 'https://' + nzbhydra2_web_subdomain + '.' + nzbhydra2_web_domain
+                        if (reverse_proxy_is_enabled)
+                        else 'http://localhost:' + nzbhydra2_web_port }}"
 
 ################################
 # Config
 ################################
 
 nzbhydra2_config_settings_jvm_memory: "{{ ((ansible_memory_mb.real.total / 1024)
-                                            | round(0,'ceil') | int >= 8 )
-                                            | ternary('512','256') }}"
+                                              | round(0,'ceil') | int >= 8 )
+                                              | ternary('512','256') }}"
 
 nzbhydra2_config_settings_default:
   # Authentication
@@ -82,7 +83,7 @@ nzbhydra2_config_settings_default:
 nzbhydra2_config_settings_custom: []
 
 nzbhydra2_config_settings_list: "{{ nzbhydra2_config_settings_default
-                                      + nzbhydra2_config_settings_custom }}"
+                                        + nzbhydra2_config_settings_custom }}"
 
 ################################
 # Docker

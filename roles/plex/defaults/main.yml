@@ -42,8 +42,9 @@ plex_paths_db_location: "{{ plex_paths_plugin_support_location }}/Databases/com.
 ################################
 
 plex_web_subdomain: "{{ plex_name }}"
+plex_web_domain: "{{ user.domain }}"
 plex_web_port: "32400"
-plex_web_url: "{{ 'https://' + plex_web_subdomain + '.' + user.domain
+plex_web_url: "{{ 'https://' + plex_web_subdomain + '.' + plex_web_domain
                   if (reverse_proxy_is_enabled)
                   else 'http://localhost:' + plex_web_port }}"
 
@@ -75,7 +76,7 @@ plex_docker_ports: "{{ plex_docker_ports_defaults
                         else plex_docker_ports_webtools
                             + plex_docker_ports_custom }}"
 # Envs
-plex_docker_envs_advertise_ip: "{{ 'https://' + plex_web_subdomain + '.' + user.domain + ':443'
+plex_docker_envs_advertise_ip: "{{ plex_web_url + ':443'
                                     if (reverse_proxy_is_enabled)
                                     else '' }}"
 plex_docker_envs_default:

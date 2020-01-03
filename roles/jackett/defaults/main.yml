@@ -28,8 +28,9 @@ jackett_paths_folders_list:
 ################################
 
 jackett_web_subdomain: "{{ jackett_name }}"
+jackett_web_domain: "{{ user.domain }}"
 jackett_web_port: "9117"
-jackett_web_url: "{{ 'https://' + jackett_web_subdomain + '.' + user.domain
+jackett_web_url: "{{ 'https://' + jackett_web_subdomain + '.' + jackett_web_domain
                       if (reverse_proxy_is_enabled)
                       else 'http://localhost:' + jackett_web_port }}"
 

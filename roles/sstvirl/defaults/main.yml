@@ -29,8 +29,9 @@ sstvirl_paths_config_location: "{{ sstvirl_paths_location }}/config.json"
 ################################
 
 sstvirl_web_subdomain: "{{ sstvirl_name }}"
+sstvirl_web_domain: "{{ user.domain }}"
 sstvirl_web_port: "1411"
-sstvirl_web_url: "{{ 'https://' + sstvirl_web_subdomain + '.' + user.domain
+sstvirl_web_url: "{{ 'https://' + sstvirl_web_subdomain + '.' + sstvirl_web_domain
                       if (reverse_proxy_is_enabled)
                       else 'http://localhost:' + sstvirl_web_port }}"
 

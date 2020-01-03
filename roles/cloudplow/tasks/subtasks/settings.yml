@@ -50,13 +50,13 @@
 
   - name: Settings | Update NZBGet credentials in 'config.json'
     shell: |
-      jq '.nzbget.url = "{{ nzbget_url }}"' {{ cloudplow_config_path }} | sponge {{ cloudplow_config_path }}
+      jq '.nzbget.url = "{{ nzbget_web_url_with_login }}"' {{ cloudplow_config_path }} | sponge {{ cloudplow_config_path }}
     become: yes
     become_user: "{{ user.name }}"
 
   - name: Settings | Update Plex URL in 'config.json'
     shell: |
-      jq '.plex.url = "{{ plex_url }}"' {{ cloudplow_config_path }} | sponge {{ cloudplow_config_path }}
+      jq '.plex.url = "{{ plex_web_url }}"' {{ cloudplow_config_path }} | sponge {{ cloudplow_config_path }}
     become: yes
     become_user: "{{ user.name }}"
 

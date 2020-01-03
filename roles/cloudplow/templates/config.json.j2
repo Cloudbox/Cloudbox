@@ -15,11 +15,11 @@
     },
     "nzbget": {
         "enabled": false,
-        "url": "{{ nzbget_url }}"
+        "url": "{{ nzbget_web_url_with_login }}"
     },
     "plex": {
         "enabled": false,
-        "url": "{{ plex_url }}",
+        "url": "{{ plex_web_url }}",
         "token": "{{ plex_auth_token | default('') }}",
         "poll_interval": 60,
         "notifications": false,
