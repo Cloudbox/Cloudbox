@@ -13,14 +13,14 @@
   include_role:
     name: dns
   vars:
-    record: organizr
+    dns_record: organizr
   when: not (organizr.direct_domain|default(false,true))
 
 - name: Create DNS Record
   include_role:
     name: dns
   vars:
-    record: "{{ item }}"
+    dns_record: "{{ item }}"
   with_items:
     - "{{ user.domain }}"
     - "www"

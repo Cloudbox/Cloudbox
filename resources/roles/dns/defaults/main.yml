@@ -8,5 +8,5 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# set default action to blank
-action:
+# set default action to null
+dns_action:

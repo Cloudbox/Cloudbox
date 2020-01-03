@@ -13,7 +13,7 @@
   include_role:
     name: dns
   vars:
-    record: sabnzbd
+    dns_record: sabnzbd
 
 - name: Stop and remove any existing container
   docker_container:

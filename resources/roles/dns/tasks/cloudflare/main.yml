@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: DNS | Cloudflare                             #
-# Author(s):     l3uddz, desimaniac                                     #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -10,8 +10,8 @@
 ---
 - name: Cloudflare | Create DNS Record
   include_tasks: "subtasks/create_dns_record.yml"
-  when: action != 'remove'
+  when: dns_action | default('') != 'remove'
 
 - name: Cloudflare | Remove DNS Record
   include_tasks: "subtasks/remove_dns_record.yml"
-  when: action == 'remove'
+  when: dns_action | default('') == 'remove'
