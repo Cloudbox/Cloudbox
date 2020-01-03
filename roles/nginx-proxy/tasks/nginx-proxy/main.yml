@@ -38,6 +38,11 @@
     mode: 0775
     force: yes
 
+- name: Nginx-Proxy | Remove previous 'default.conf' path
+  file:
+    path: /opt/nginx-proxy/conf.d/default.conf
+    state: absent
+
 # Fixes random issue of folder being created in its place
 - name: Nginx-Proxy | Remove previous 'nginx.tmpl' path
   file:
