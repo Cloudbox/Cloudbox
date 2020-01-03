@@ -30,5 +30,5 @@
     force: no
 
 - name: Post-Install | Settings Tasks
-  include_tasks: "settings.yml"
+  import_tasks: "settings.yml"
   when: reverse_proxy_is_enabled
