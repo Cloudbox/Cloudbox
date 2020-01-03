@@ -75,6 +75,9 @@ plex_docker_ports: "{{ plex_docker_ports_defaults
                         else plex_docker_ports_webtools
                             + plex_docker_ports_custom }}"
 # Envs
+plex_docker_envs_advertise_ip: "{{ 'https://' + plex_web_subdomain + '.' + user.domain + ':443'
+                                    if (reverse_proxy_is_enabled)
+                                    else '' }}"
 plex_docker_envs_default:
   PLEX_UID: "{{ uid }}"
   PLEX_GID: "{{ gid }}"
@@ -86,7 +89,7 @@ plex_docker_envs_default:
   TZ: "{{ tz }}"
 plex_docker_envs_custom: {}
 plex_docker_envs_reverse_proxy:
-  ADVERTISE_IP: "{{ plex_web_url }}"
+  ADVERTISE_IP: "{{ plex_docker_envs_advertise_ip }}"
 plex_docker_envs: "{{ plex_docker_envs_default
                           | combine(plex_docker_envs_custom)
                           | combine(plex_docker_envs_reverse_proxy)
