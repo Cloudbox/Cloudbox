@@ -12,9 +12,8 @@
   include_role:
     name: dns
   vars:
-    record: "{{ item }}"
-  loop:
-    - "{{ lookup('vars', role_name + '_web_subdomain') }}"
+    record: "{{ trackarr_web_subdomain }}"
+    zone: "{{ trackarr_web_domain }}"
 
 - name: Remove existing Docker container
   docker_container:

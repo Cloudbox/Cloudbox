@@ -30,8 +30,9 @@ netdata_paths_config_override_location: "{{ netdata_paths_location }}/override"
 ################################
 
 netdata_web_subdomain: "{{ netdata_name }}"
+netdata_web_domain: "{{ user.domain }}"
 netdata_web_port: "19999"
-netdata_web_url: "{{ 'https://' + netdata_web_subdomain + '.' + user.domain
+netdata_web_url: "{{ 'https://' + netdata_web_subdomain + '.' + netdata_web_domain
                       if (reverse_proxy_is_enabled)
                       else 'http://localhost:' + netdata_web_port }}"
 

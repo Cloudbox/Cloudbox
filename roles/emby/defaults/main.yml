@@ -34,8 +34,9 @@ emby_paths_dlna_xml_location: "{{ emby_paths_location }}/config/dlna.xml"
 ################################
 
 emby_web_subdomain: "{{ emby_name }}"
+emby_web_domain: "{{ user.domain }}"
 emby_web_port: "8096"
-emby_web_url: "{{ 'https://' + emby_web_subdomain + '.' + user.domain
+emby_web_url: "{{ 'https://' + emby_web_subdomain + '.' + emby_web_domain
                   if (reverse_proxy_is_enabled)
                   else 'http://localhost:' + emby_web_port }}"
 
@@ -45,7 +46,7 @@ emby_web_url: "{{ 'https://' + emby_web_subdomain + '.' + user.domain
 
 emby_config_settings_default:
   - { xpath: 'IsBehindProxy', value: 'true' }
-  - { xpath: 'WanDdns', value: 'emby.{{ user.domain }}' }
+  - { xpath: 'WanDdns', value: '{{ emby_web_subdomain }}.{{ emby_web_domain }}' }
   - { xpath: 'PublicPort', value: '80' }
   - { xpath: 'PublicHttpsPort', value: '443' }
   - { xpath: 'EnableHttps', value: 'true' }

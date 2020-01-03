@@ -30,8 +30,9 @@ tautulli_paths_folders_list:
 ################################
 
 tautulli_web_subdomain: "{{ tautulli_name }}"
+tautulli_web_domain: "{{ user.domain }}"
 tautulli_web_port: "8181"
-tautulli_web_url: "{{ 'https://' + tautulli_web_subdomain + '.' + user.domain
+tautulli_web_url: "{{ 'https://' + tautulli_web_subdomain + '.' + tautulli_web_domain
                       if (reverse_proxy_is_enabled)
                       else 'http://localhost:' + tautulli_web_port }}"
 

@@ -8,24 +8,28 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Cloudflare | Remove DNS Record
+- name: Cloudflare | Remove DNS Record | Set 'zone' variable
+  set_fact:
+    zone: "{{ zone | default(user.domain) }}"
+
+- name: Cloudflare | Remove DNS Record | Remove DNS Record
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
     account_email: "{{ cloudflare.email }}"
-    zone: "{{ user.domain }}"
+    zone: "{{ zone }}"
     state: absent
     type: A
     record: "{{ record }}"
   register: cloudflare_dns_record_removal_status
 
-- name: Cloudflare | Tasks on success
+- name: Cloudflare | Remove DNS Record | Tasks on success
   block:
 
-  - name: Cloudflare | Set 'record_temp' variable
+  - name: Cloudflare | Remove DNS Record | Set 'record_temp' variable
     set_fact:
-      record_temp: "{{ (record == user.domain) | ternary(user.domain,record + '.' + user.domain) }}"
+      record_temp: "{{ (record == zone) | ternary(zone,record + '.' + zone) }}"
 
-  - name: Cloudflare | Display DNS record removal status
+  - name: Cloudflare | Remove DNS Record | Display DNS record removal status
     debug:
       msg: "DNS Record for '{{ record_temp }}' was removed."
 
