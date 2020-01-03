@@ -13,7 +13,7 @@
   include_role:
     name: dns
   vars:
-    record: rutorrent
+    dns_record: rutorrent
 
 - name: Stop and remove any existing container
   docker_container:

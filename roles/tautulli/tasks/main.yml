@@ -16,8 +16,8 @@
   include_role:
     name: dns
   vars:
-    record: "{{ tautulli_web_subdomain }}"
-    zone: "{{ tautulli_web_domain }}"
+    dns_record: "{{ tautulli_web_subdomain }}"
+    dns_zone: "{{ tautulli_web_domain }}"
 
 - name: Remove existing Docker container
   docker_container:

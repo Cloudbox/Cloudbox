@@ -12,8 +12,8 @@
   include_role:
     name: dns
   vars:
-    record: plexpy
-    action: remove
+    dns_record: plexpy
+    dns_action: remove
 
 - name: Legacy Migration | Stop and remove 'plexpy' container
   docker_container:

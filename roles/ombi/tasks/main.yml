@@ -12,8 +12,8 @@
   include_role:
     name: dns
   vars:
-    record: "{{ ombi_web_subdomain }}"
-    zone: "{{ ombi_web_domain }}"
+    dns_record: "{{ ombi_web_subdomain }}"
+    dns_zone: "{{ ombi_web_domain }}"
 
 - name: Remove existing Docker container
   docker_container:
