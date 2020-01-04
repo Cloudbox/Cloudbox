@@ -1,0 +1,161 @@
+#########################################################################
+# Title:         Cloudbox: SABnzbd | Default Variables                  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Basics
+################################
+
+sabnzbd_name: sabnzbd
+
+################################
+# Paths
+################################
+
+sabnzbd_paths_folder: "{{ sabnzbd_name }}"
+sabnzbd_paths_location: "{{ server_appdata_path }}/{{ sabnzbd_paths_folder }}"
+sabnzbd_paths_downloads_location: "{{ downloads.nzbs }}/{{ sabnzbd_paths_folder }}"
+sabnzbd_paths_folders_list:
+  - "{{ sabnzbd_paths_location }}"
+  - "{{ sabnzbd_paths_downloads_location }}"
+  - "{{ sabnzbd_paths_downloads_location }}/sabnzbd/complete"
+  - "{{ sabnzbd_paths_downloads_location }}/sabnzbd/incomplete"
+  - "{{ sabnzbd_paths_downloads_location }}/sabnzbd/watch"
+  - "{{ sabnzbd_paths_downloads_location }}/sabnzbd/logs"
+sabnzbd_paths_config_location: "{{ sabnzbd_paths_location }}/app/sabnzbd.ini"
+
+################################
+# Web
+################################
+
+sabnzbd_web_subdomain: "{{ sabnzbd_name }}"
+sabnzbd_web_domain: "{{ user.domain }}"
+sabnzbd_web_port: "8080"
+sabnzbd_web_url: "{{ 'https://' + sabnzbd_web_subdomain + '.' + sabnzbd_web_domain
+                    if (reverse_proxy_is_enabled)
+                    else 'http://localhost:' + sabnzbd_web_port }}"
+
+################################
+# Config
+################################
+
+sabnzbd_config_settings_default:
+  # Web
+  - { option: "host_whitelist", value: "{{ sabnzbd_web_subdomain }}.{{ sabnzbd_web_domain }}" }
+  - { option: "url_base", value: "" }
+  # Authentication
+  - { option: "html_login", value: "1" }
+  - { option: "username", value: "{{ user.name }}" }
+  - { option: "password", value: "{{ user.pass }}" }
+  # Paths
+  - { option: "dirscan_dir", value: "/downloads/nzbs/sabnzbd/watch" }
+  - { option: "download_dir", value: "/downloads/nzbs/sabnzbd/incomplete" }
+  - { option: "complete_dir", value: "/downloads/nzbs/sabnzbd/complete" }
+  - { option: "log_dir", value: "/downloads/nzbs/sabnzbd/logs'" }
+
+sabnzbd_config_settings_custom: []
+
+sabnzbd_config_settings_list: "{{ sabnzbd_config_settings_default
+                                      + sabnzbd_config_settings_custom }}"
+
+################################
+# Docker
+################################
+
+# Container
+sabnzbd_docker_container: "{{ sabnzbd_name }}"
+
+# Image
+sabnzbd_docker_image_pull: yes
+sabnzbd_docker_image_tag: "latest"
+sabnzbd_docker_image: "hotio/sabnzbd:{{ sabnzbd_docker_image_tag }}"
+
+# Ports
+sabnzbd_docker_ports_defaults:
+  - "{{ sabnzbd_web_port }}"
+sabnzbd_docker_ports_custom: []
+sabnzbd_docker_ports: "{{ sabnzbd_docker_ports_defaults
+                              + sabnzbd_docker_ports_custom
+                          if (not reverse_proxy_is_enabled)
+                          else [] + sabnzbd_docker_ports_custom }}"
+
+# Envs
+sabnzbd_docker_envs_default:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  UMASK: "002"
+  TZ: "{{ tz }}"
+sabnzbd_docker_envs_custom: {}
+sabnzbd_docker_envs_reverse_proxy: {}
+sabnzbd_docker_envs: "{{ sabnzbd_docker_envs_default
+                            | combine(sabnzbd_docker_envs_custom)
+                            | combine(sabnzbd_docker_envs_reverse_proxy)
+                            | combine(docker_envs_reverse_proxy_common)
+                        if (reverse_proxy_is_enabled)
+                        else sabnzbd_docker_envs_default
+                            | combine(sabnzbd_docker_envs_custom) }}"
+
+# Volumes
+sabnzbd_docker_volumes_default:
+  - "{{ sabnzbd_paths_location }}:/config"
+  - "{{ server_appdata_path }}/scripts:/scripts"
+  - "/mnt:/mnt"
+sabnzbd_docker_volumes_custom: []
+sabnzbd_docker_volumes: "{{ sabnzbd_docker_volumes_default
+                                + sabnzbd_docker_volumes_custom
+                                + docker_volumes_downloads_common }}"
+
+# Devices
+sabnzbd_docker_devices_default: []
+sabnzbd_docker_devices_custom: []
+sabnzbd_docker_devices: "{{ sabnzbd_docker_devices_default
+                                + sabnzbd_docker_devices_custom }}"
+
+# Hosts
+sabnzbd_docker_hosts_default: []
+sabnzbd_docker_hosts_custom: []
+sabnzbd_docker_hosts: "{{ docker_hosts_common
+                              | combine(sabnzbd_docker_hosts_default)
+                              | combine(sabnzbd_docker_hosts_custom) }}"
+
+# Labels
+sabnzbd_docker_labels_default: {}
+sabnzbd_docker_labels_custom: {}
+sabnzbd_docker_labels: "{{ docker_labels_common
+                              | combine(sabnzbd_docker_labels_default)
+                              | combine(sabnzbd_docker_labels_custom) }}"
+
+# Hostname
+sabnzbd_docker_hostname: "{{ sabnzbd_name }}"
+
+# Networks
+sabnzbd_docker_networks_alias: "{{ sabnzbd_name }}"
+sabnzbd_docker_networks_default: []
+sabnzbd_docker_networks_custom: []
+sabnzbd_docker_networks: "{{ docker_networks_common
+                                + sabnzbd_docker_networks_default
+                                + sabnzbd_docker_networks_custom }}"
+
+# Capabilities
+sabnzbd_docker_capabilities_default: []
+sabnzbd_docker_capabilities_custom: []
+sabnzbd_docker_capabilities: "{{ sabnzbd_docker_capabilities_default
+                                    + sabnzbd_docker_capabilities_custom }}"
+
+# Security Opts
+sabnzbd_docker_security_opts_default: []
+sabnzbd_docker_security_opts_custom: []
+sabnzbd_docker_security_opts: "{{ sabnzbd_docker_security_opts_default
+                                      + sabnzbd_docker_security_opts_custom }}"
+
+# Restart Policy
+sabnzbd_docker_restart_policy: unless-stopped
+
+# State
+sabnzbd_docker_state: started

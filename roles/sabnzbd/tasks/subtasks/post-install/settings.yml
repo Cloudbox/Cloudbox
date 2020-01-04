@@ -1,0 +1,40 @@
+#########################################################################
+# Title:         Cloudbox: SABnzbd | Post-Install | Settings Task       #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Post-Install | Settings | Wait for config file to be created
+  wait_for:
+    path: "{{ sabnzbd_paths_config_location }}"
+    state: present
+
+- name: Post-Install | Settings | Stop container
+  docker_container:
+    name: "{{ sabnzbd_docker_container }}"
+    state: stopped
+
+- name: Post-Install | Settings | Wait for 10 seconds
+  wait_for:
+    timeout: 10
+
+- name: Post-Install | Settings | Update config settings
+  ini_file:
+    path: "{{ sabnzbd_paths_config_location }}"
+    section: misc
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    state: present
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+  loop: "{{ sabnzbd_config_settings_list }}"
+
+- name: Post-Install | Settings | Start container
+  docker_container:
+    name: "{{ sabnzbd_docker_container }}"
+    state: "{{ sabnzbd_docker_state }}"
