@@ -2,7 +2,6 @@
 # Title:         Cloudbox: SABnzbd Role                                 #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/sabnzbd                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,67 +12,29 @@
   include_role:
     name: dns
   vars:
-    dns_record: sabnzbd
+    dns_record: "{{ sabnzbd_web_subdomain }}"
+    dns_zone: "{{ sabnzbd_web_domain }}"
 
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: sabnzbd
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
 
-- name: Create sabnzbd directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
-  with_items:
-    - /opt/sabnzbd
-    - "{{ downloads.nzbs }}"
-    - "{{ downloads.nzbs }}/sabnzbd"
-    - "{{ downloads.nzbs }}/sabnzbd/complete"
-    - "{{ downloads.nzbs }}/sabnzbd/incomplete"
-    - "{{ downloads.nzbs }}/sabnzbd/watch"
-    - "{{ downloads.nzbs }}/sabnzbd/logs"
+- name: Hotio Migration Tasks
+  include_tasks: "{{ resources_tasks_path }}/hotio/migrator/main.yml"
 
-- name: Check sabnzbd.ini exists
+- name: Create directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
+
+- name: Check if existing config exists
   stat:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
-  register: sabnzbd_ini
+    path: "{{ sabnzbd_paths_config_location }}"
+  register: sabnzbd_conf_stat
 
-- name: Set default_volumes variable
-  set_fact:
-    default_volumes:
-      - "/opt/sabnzbd:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt:/mnt"
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
 
-- name: Create and start container
-  docker_container:
-    name: sabnzbd
-    image: "hotio/sabnzbd:latest"
-    pull: yes
-    published_ports:
-      - "127.0.0.1:8081:8080"
-    env:
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      UMASK: "002"
-      VIRTUAL_HOST: "sabnzbd.{{ user.domain }}"
-      VIRTUAL_PORT: "8080"
-      LETSENCRYPT_HOST: "sabnzbd.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    volumes: "{{ default_volumes + docker_volumes_downloads_common }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - sabnzbd
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
-
-- name: Settings Tweaks
-  include_tasks: "subtasks/settings.yml"
-  when: not (
-        (sabnzbd_ini.stat.exists)
-        or
-        (continuous_integration)
-    )
+- name: Post-Install Tasks
+  import_tasks: "subtasks/post-install/main.yml"
+  when: not continuous_integration
