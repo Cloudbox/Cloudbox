@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# https://github.com/mtecer/terraform/blob/master/bmc/files/ansible/custom.fact
+
+PUBLIC_IP=$(curl -s http://whatismyip.akamai.com)
+echo "[ip]"
+echo "public_ip=${PUBLIC_IP}"
