@@ -21,4 +21,4 @@ cloudbox_git_repo_branch_secondary: "develop"
 # CB Scripts
 cb_git_repo_url: "https://github.com/cloudbox/cb.git"
 cb_git_repo_dest: "/srv/git/cb"
-cb_git_repo_branch_primary: "master"
+cb_git_repo_branch_primary: "develop"
