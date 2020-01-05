@@ -22,22 +22,11 @@
 
 ## rtorrent.rc
 
-- name: Settings | Dynamic | Install 'dnsutils'
-  apt: "name=dnsutils state=present"
-
-- name: Settings | Dynamic | Get Public IP Address
-  shell: "{{ ip_address_lookup_command }}"
-  register: public_ip_lookup
-
-- name: Settings | Dynamic | Set 'public_ip' variable
-  set_fact:
-    public_ip: "{{ public_ip_lookup.stdout }}"
-
 - name: Settings | Dynamic | Set 'network.local_address.set'
   lineinfile:
     path: "/opt/rutorrent/rtorrent/rtorrent.rc"
     regexp: '^network\.local_address\.set\s*=.*'
-    line: 'network.local_address.set = {{ public_ip }}'
+    line: 'network.local_address.set = {{ ip_address_public }}'
     state: present
 
 - name: Settings | Dynamic | Add comment for 'network.local_address.set'

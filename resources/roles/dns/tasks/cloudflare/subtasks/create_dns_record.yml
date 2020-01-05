@@ -12,17 +12,6 @@
   set_fact:
     dns_zone: "{{ dns_zone | default(user.domain) }}"
 
-- name: Cloudflare | Create DNS Record | Install 'dnsutils'
-  apt: "name=dnsutils state=present"
-
-- name: Cloudflare | Create DNS Record | Get Public IP Address
-  shell: "{{ ip_address_lookup_command }}"
-  register: public_ip_lookup
-
-- name: Cloudflare | Create DNS Record | Set 'public_ip' variable
-  set_fact:
-    public_ip: "{{ public_ip_lookup.stdout }}"
-
 - name: Cloudflare | Create DNS Record | Set DNS Record
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
@@ -32,7 +21,7 @@
     solo: true
     proxied: no
     type: A
-    value: "{{ public_ip }}"
+    value: "{{ ip_address_public }}"
     record: "{{ dns_record }}"
   register: cloudflare_dns_record_creation_status
 
@@ -45,6 +34,6 @@
 
   - name: Cloudflare | Create DNS Record | Display DNS Record creation status
     debug:
-      msg: "DNS Record for '{{ dns_record_print }}' set to '{{ public_ip }}'."
+      msg: "DNS Record for '{{ dns_record_print }}' set to '{{ ip_address_public }}'."
 
   when: cloudflare_dns_record_creation_status is succeeded

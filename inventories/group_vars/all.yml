@@ -117,12 +117,12 @@ vgid: "{{ ansible_local.group.video.gid }}"
 
 tz: "{{ system.timezone
         if system is defined and
-          system.timezone is defined and
-          'auto' not in system.timezone | lower
+            system.timezone is defined and
+            'auto' not in system.timezone | lower
         else ansible_local.timezone
-          if ansible_local is defined and
-            ansible_local.timezone is defined and
-            ansible_local.timezone | trim | length > 0
+            if ansible_local is defined and
+                ansible_local.timezone is defined and
+                ansible_local.timezone | trim | length > 0
         else 'Etc/UTC' }}"
 
 ################################
@@ -133,7 +133,7 @@ ip_address_host: "0.0.0.0"
 
 ip_address_localhost: "127.0.0.1"
 
-ip_address_lookup_command: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
+ip_address_public: "{{ ansible_local.network.ip.public_ip | default(ansible_default_ipv4.address) }}"
 
 ################################
 # Reverse Proxy
@@ -160,12 +160,12 @@ docker_envs_reverse_proxy_common:
   LETSENCRYPT_EMAIL: "{{ user.email }}"
 
 docker_volumes_downloads_nzbs: "{{ [downloads.nzbs + ':/downloads/nzbs']
-                          if nzbs_downloads_path_is_defined
-                          else [] }}"
+                                    if nzbs_downloads_path_is_defined
+                                    else [] }}"
 
 docker_volumes_downloads_torrents: "{{ [downloads.torrents + ':/downloads/torrents']
-                              if torrents_downloads_path_is_defined
-                              else [] }}"
+                                        if torrents_downloads_path_is_defined
+                                        else [] }}"
 
 docker_volumes_downloads_common: "{{ docker_volumes_downloads_nzbs + docker_volumes_downloads_torrents }}"
 
