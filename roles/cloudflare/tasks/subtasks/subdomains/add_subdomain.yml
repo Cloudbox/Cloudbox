@@ -8,17 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Subdomains | Add Subdomain | Install 'dnsutils'
-  apt: "name=dnsutils state=present"
-
-- name: Subdomains | Add Subdomain | Get Public IP Address
-  shell: "{{ ip_address_lookup_command }}"
-  register: public_ip_lookup
-
-- name: Subdomains | Add Subdomain | Set 'public_ip' variable
-  set_fact:
-    public_ip: "{{ public_ip_lookup.stdout }}"
-
 - name: "Subdomains | Add Subdomain | Cloudflare: Add '{{ cloudbox_type }}' subdomain to '{{ user.domain }}'"
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
@@ -28,5 +17,5 @@
     solo: true
     proxied: no
     type: A
-    value: "{{ public_ip }}"
+    value: "{{ ip_address_public }}"
     record: "{{ cloudbox_type }}"
