@@ -10,7 +10,7 @@
 ---
 - name: Migration Tasks
   include_tasks: "subtasks/legacy_migration.yml"
-  when: lookup('vars', role_name + '_paths_location') != server_appdata_path + '/plexpy'
+  when: tautulli_name == 'tautulli'
 
 - name: Create DNS Record
   include_role:
