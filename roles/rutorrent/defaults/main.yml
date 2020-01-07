@@ -1,0 +1,217 @@
+#########################################################################
+# Title:         Cloudbox: ruTorrent | Default Variables                #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Basics
+################################
+
+rutorrent_name: rutorrent
+
+################################
+# Paths
+################################
+
+rutorrent_paths_folder: "{{ rutorrent_name }}"
+rutorrent_paths_location: "{{ server_appdata_path }}/{{ rutorrent_paths_folder }}"
+rutorrent_paths_downloads_location: "{{ downloads.nzbs }}/{{ rutorrent_paths_folder }}"
+rutorrent_paths_folders_list:
+  - "{{ rutorrent_paths_location }}"
+  - "{{ rutorrent_paths_location }}/plugins"
+  - "{{ rutorrent_paths_location }}/themes"
+  - "{{ rutorrent_paths_downloads_location }}"
+  - "{{ rutorrent_paths_downloads_location }}/rutorrent/completed"
+  - "{{ rutorrent_paths_downloads_location }}/rutorrent/watched"
+
+# Config files
+rutorrent_paths_config_php_location: "{{ rutorrent_paths_location }}/rutorrent/settings/config.php"
+rutorrent_paths_rtorrent_rc_location: "{{ rutorrent_paths_location }}/rtorrent/rtorrent.rc"
+rutorrent_paths_nginx_conf_location: "{{ rutorrent_paths_location }}/nginx/nginx.conf"
+rutorrent_paths_nginx_htpasswd_location: "{{ rutorrent_paths_location }}/nginx/.htpasswd"
+rutorrent_paths_php_local_ini_location: "{{ rutorrent_paths_location }}/php/php-local.ini"
+rutorrent_paths_plugins_ini_location: "{{ rutorrent_paths_location }}/rutorrent/settings/plugins.ini"
+
+################################
+# Web
+################################
+
+rutorrent_web_subdomain: "{{ rutorrent_name }}"
+rutorrent_web_domain: "{{ user.domain }}"
+rutorrent_web_port: "80"
+rutorrent_web_url: "{{ 'https://' + rutorrent_web_subdomain + '.' + rutorrent_web_domain
+                        if (reverse_proxy_is_enabled)
+                        else 'http://localhost:' + rutorrent_web_port }}"
+
+################################
+# Config
+################################
+
+rutorrent_config_public_trackers: no
+
+## New Installs
+
+# rtorrent.rc
+rutorrent_config_new_installs_rutorrent_rc_settings_default:
+  # Minimum number of peers to connect to per torrent
+  - { option: "throttle.min_peers.normal.set", value: "1" }
+  # Maximum number of simultaneous upload slots per torrent
+  - { option: "throttle.max_uploads.set", value: "1024" }
+  # Maximum number of simultaneous download slots, globally
+  - { option: "throttle.max_downloads.global.set", value: "1024" }
+  # Maximum number of simultaneous upload slots, globally
+  - { option: "throttle.max_uploads.global.set", value: "1024" }
+  # Maximum download rate, globally (KiB); 0 = unlimited
+  - { option: "throttle.global_down.max_rate.set_kb", value: "0" }
+  # Maximum upload rate, globally (KiB); 0 = unlimited
+  - { option: "throttle.global_up.max_rate.set_kb", value: "0" }
+  # Maximum number of open files
+  - { option: "network.max_open_files.set", value: "1024" }
+  # Maximum XMLRPC payloads
+  - { option: "network.xmlrpc.size_limit.set", value: "20M" }
+  # Encryption Parameters
+  - { option: "protocol.encryption.set", value: "allow_incoming,try_outgoing,enable_retry,prefer_plaintext" }
+  # Hash check on completion - disabled
+  - { option: "pieces.hash.on_completion.set", value: "no" }
+  # Disk space allocation - disabled
+  - { option: "system.file.allocate.set", value: "0" }
+  # Download Directory
+  - { option: "directory.default.set", value: "/downloads/torrents/rutorrent/completed" }
+  # Watched Directory
+  - { option: "schedule", value: 'watch_directory,5,5,"load.start=/downloads/torrents/rutorrent/watched/*.torrent,d.delete_tied="' }
+rutorrent_config_new_installs_rutorrent_rc_settings_custom: []
+rutorrent_config_new_installs_rutorrent_rc_settings_list: "{{ rutorrent_config_new_installs_rutorrent_rc_settings_default
+                                                                  + rutorrent_config_new_installs_rutorrent_rc_settings_custom }}"
+
+# php-local.ini
+rutorrent_config_new_installs_php_local_ini_settings_default:
+  # Maximum Upload File Size via Web Browser (eg Uploading Torrent Files)
+  - { option: "upload_max_filesize", value: "20M" }
+rutorrent_config_new_installs_php_local_ini_settings_custom: []
+rutorrent_config_new_installs_php_local_ini_settings_list: "{{ rutorrent_config_new_installs_php_local_ini_settings_default
+                                                                    + rutorrent_config_new_installs_php_local_ini_settings_custom }}"
+
+## Existing Installs
+
+# rtorrent.rc
+rutorrent_config_existing_installs_rutorrent_rc_settings_default:
+  # Execute - Initiate Plugins
+  - { option: "execute", value: "{sh,-c,/usr/bin/php7 /app/rutorrent/php/initplugins.php abc &}" }
+  # IP address that is reported to the tracker
+  - { option: "network.local_address.set", value: "{{ ip_address_public }}" }
+  # Enable / Disable Public Trackers
+  - { option: "dht.mode.set", value: "{{ rutorrent_config_public_trackers | ternary('on','disable') }}" }
+  - { option: "trackers.use_udp.set", value: "{{ rutorrent_config_public_trackers | ternary('yes','no') }}" }
+  - { option: "protocol.pex.set", value: "{{ rutorrent_config_public_trackers | ternary('yes','no') }}" }
+rutorrent_config_existing_installs_rutorrent_rc_settings_custom: []
+rutorrent_config_existing_installs_rutorrent_rc_settings_list: "{{ rutorrent_config_existing_installs_rutorrent_rc_settings_default
+                                                                        + rutorrent_config_existing_installs_rutorrent_rc_settings_custom }}"
+
+################################
+# Docker
+################################
+
+# Container
+rutorrent_docker_container: "{{ rutorrent_name }}"
+
+# Image
+rutorrent_docker_image_pull: yes
+rutorrent_docker_image_tag: "latest"
+rutorrent_docker_image: "horjulf/rutorrent-autodl:{{ rutorrent_docker_image_tag }}"
+
+# Ports
+rutorrent_docker_ports_defaults:
+  - "{{ rutorrent_web_port }}"
+# - Internal and External ports need to match for both
+rutorrent_docker_ports_torrents:
+  - "51413:51413"
+  - "6881:6881/udp"
+rutorrent_docker_ports_custom: []
+rutorrent_docker_ports: "{{ rutorrent_docker_ports_defaults
+                                + rutorrent_docker_ports_torrents
+                                + rutorrent_docker_ports_custom
+                            if (not reverse_proxy_is_enabled)
+                            else rutorrent_docker_ports_torrents
+                                + rutorrent_docker_ports_custom }}"
+
+# Envs
+rutorrent_docker_envs_default:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  TZ: "{{ tz }}"
+rutorrent_docker_envs_custom: {}
+rutorrent_docker_envs_reverse_proxy: {}
+rutorrent_docker_envs: "{{ rutorrent_docker_envs_default
+                                | combine(rutorrent_docker_envs_custom)
+                                | combine(rutorrent_docker_envs_reverse_proxy)
+                                | combine(docker_envs_reverse_proxy_common)
+                            if (reverse_proxy_is_enabled)
+                            else rutorrent_docker_envs_default
+                                | combine(rutorrent_docker_envs_custom) }}"
+
+# Volumes
+rutorrent_docker_volumes_default:
+  - "{{ rutorrent_paths_location }}:/config"
+  - "{{ server_appdata_path }}/scripts:/scripts"
+  - "/mnt:/mnt"
+rutorrent_docker_volumes_custom: []
+rutorrent_docker_volumes: "{{ rutorrent_docker_volumes_default
+                                  + rutorrent_docker_volumes_custom
+                                  + docker_volumes_downloads_common }}"
+
+# Devices
+rutorrent_docker_devices_default: []
+rutorrent_docker_devices_custom: []
+rutorrent_docker_devices: "{{ rutorrent_docker_devices_default
+                                  + rutorrent_docker_devices_custom }}"
+
+# Hosts
+rutorrent_docker_hosts_default: []
+rutorrent_docker_hosts_custom: []
+rutorrent_docker_hosts: "{{ docker_hosts_common
+                                | combine(rutorrent_docker_hosts_default)
+                                | combine(rutorrent_docker_hosts_custom) }}"
+
+# Labels
+rutorrent_docker_labels_default: {}
+rutorrent_docker_labels_custom: {}
+rutorrent_docker_labels: "{{ docker_labels_common
+                                  | combine(rutorrent_docker_labels_default)
+                                  | combine(rutorrent_docker_labels_custom) }}"
+
+# Hostname
+rutorrent_docker_hostname: "{{ rutorrent_name }}"
+
+# Networks
+rutorrent_docker_networks_alias: "{{ rutorrent_name }}"
+rutorrent_docker_networks_default: []
+rutorrent_docker_networks_custom: []
+rutorrent_docker_networks: "{{ docker_networks_common
+                                    + rutorrent_docker_networks_default
+                                    + rutorrent_docker_networks_custom }}"
+
+# Capabilities
+rutorrent_docker_capabilities_default: []
+rutorrent_docker_capabilities_custom: []
+rutorrent_docker_capabilities: "{{ rutorrent_docker_capabilities_default
+                                        + rutorrent_docker_capabilities_custom }}"
+
+# Security Opts
+rutorrent_docker_security_opts_default: []
+rutorrent_docker_security_opts_custom: []
+rutorrent_docker_security_opts: "{{ rutorrent_docker_security_opts_default
+                                        + rutorrent_docker_security_opts_custom }}"
+
+# Restart Policy
+rutorrent_docker_restart_policy: unless-stopped
+
+# Stop Timeout
+rutorrent_docker_stop_timeout: 900
+
+# State
+rutorrent_docker_state: started

@@ -1,0 +1,31 @@
+####################################################################################
+# Title:         Cloudbox: ruTorrent | Post-Install | Settings | Existing Installs #
+# Author(s):     desimaniac                                                        #
+# URL:           https://github.com/cloudbox/cloudbox                              #
+# --                                                                               #
+#         Part of the Cloudbox project: https://cloudbox.works                     #
+####################################################################################
+#                   GNU General Public License v3.0                                #
+####################################################################################
+---
+- name: Post-Install | Settings | Existing Installs | Update 'rtorrent.rc' config settings
+  ini_file:
+    path: "{{ rutorrent_paths_rtorrent_rc_location }}"
+    section: null
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    no_extra_spaces: no
+    state: present
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+  loop: "{{ rutorrent_config_existing_installs_rutorrent_rc_settings_list }}"
+
+- name: Post-Install | Settings | Existing Installs | Import custom 'nginx.conf' with htpasswd support
+  copy:
+    src: nginx.conf
+    force: yes
+    dest: "{{ rutorrent_paths_nginx_conf_location }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
