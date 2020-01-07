@@ -5,30 +5,31 @@ skip_tags: true
 
 skip_commits:
   files:
-    # git
+
+    # Git
     - '.gitignore'
     - '.gitmodules'
     - '.github/**/*'
 
-    # docs
+    # Docs
     - '*.md'
 
-    # vagrant
+    # Vagrant
     - 'Vagrantfile'
 
-    # ansible config
+    # Ansible Misc
     - 'defaults/**/*'
+    - 'roles/*/files/**/*'
     - 'filter_plugins/**/*'
     - 'inventories/**/*'
     - 'library/**/*'
 
-    # ansible roles
-    - 'roles/*/files/**/*'
+    # Ansible Roles - Core
     - 'roles/settings/**/*'
     - 'roles/backup/**/*'
     - 'roles/restore/**/*'
 
-    # ansible roles extras
+    # Ansible Roles - Extras
     - 'roles/cloudflare/**/*'
     - 'roles/ddclient/**/*'
     - 'roles/emby/**/*'
@@ -43,10 +44,11 @@ skip_commits:
     - 'roles/plex_dupefinder/**/*'
     - 'roles/plex_patrol/**/*'
     - 'roles/python-plexlibrary/**/*'
-    - 'roles/resilio-sync/**/*'
     - 'roles/sabnzbd/**/*'
     - 'roles/sickbeard_mp4_automator/**/*'
+    - 'roles/sstvirl/**/*'
     - 'roles/subliminal/**/*'
+    - 'roles/trackarr/**/*'
     - 'roles/traktarr/**/*'
 
   message: /\[minor\]/
