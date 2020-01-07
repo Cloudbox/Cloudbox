@@ -69,14 +69,14 @@
     ignore_errors: yes
     register: _git_clone_master_status
 
-  - name: Resources | Tasks | Git | Clone Git Repo | Repair git folder if cloning 'master' fails
+  - name: Resources | Tasks | Git | Clone Git Repo | Repair git folder if cloning '"{{ _git_repo_branch_primary }}"' fails
     shell: |
       cd "{{ _git_repo_dest }}"
       rm -fr .git
       git init
-      git remote add origin "{{ _git_repo_url }}"
+      git remote add origin {{ _git_repo_url }}
       git fetch origin
-      git reset --hard origin/master
+      git reset --hard origin/{{ _git_repo_branch_primary }}
     when: _git_clone_master_status is failed
 
   when: _git_clone_status is failed
