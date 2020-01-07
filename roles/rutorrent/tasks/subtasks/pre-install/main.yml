@@ -1,0 +1,14 @@
+#########################################################################
+# Title:         Cloudbox: ruTorrent | Pre-Install Tasks                #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Pre-Install | Remove existing 'config.php'
+  file:
+    path: "{{ rutorrent_paths_config_php_location }}"
+    state: absent

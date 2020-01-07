@@ -1,8 +1,7 @@
 #########################################################################
 # Title:         Cloudbox: ruTorrent Role                               #
-# Author(s):     l3uddz, desimaniac, horjulf                            #
+# Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  horjulf/rutorrent-autodl                               #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,70 +12,30 @@
   include_role:
     name: dns
   vars:
-    dns_record: rutorrent
+    dns_record: "{{ rutorrent_web_subdomain }}"
+    dns_zone: "{{ rutorrent_web_domain }}"
 
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: rutorrent
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
 
-- name: Create rutorrent directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
-  with_items:
-    - "/opt/rutorrent"
-    - "/opt/rutorrent/plugins"
-    - "/opt/rutorrent/themes"
-    - "{{ downloads.torrents }}"
-    - "{{ downloads.torrents }}/rutorrent"
-    - "{{ downloads.torrents }}/rutorrent/completed"
-    - "{{ downloads.torrents }}/rutorrent/watched"
+- name: Create directories
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
 
-- name: Remove 'config.php' if it exists
-  file:
-    path: "/opt/rutorrent/rutorrent/settings/config.php"
-    state: absent
-
-- name: Check if rtorrent.rc exists
+- name: Check if existing config file exists
   stat:
-    path: "/opt/rutorrent/rtorrent/rtorrent.rc"
-  register: rtorrent_rc
+    path: "{{ rutorrent_paths_rtorrent_rc_location }}"
+  register: rutorrent_paths_rtorrent_rc_location_stat
 
-- name: Set default_volumes variable
-  set_fact:
-    default_volumes:
-      - "/opt/rutorrent:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt:/mnt"
+- name: Pre-Install Tasks
+  import_tasks: "subtasks/pre-install/main.yml"
+  when: not continuous_integration
 
-- name: Create and start container
-  docker_container:
-    name: rutorrent
-    image: horjulf/rutorrent-autodl
-    pull: yes
-    published_ports:
-      - "127.0.0.1:3111:80"
-      - "51413:51413"
-      - "6881:6881/udp"
-    env:
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      VIRTUAL_HOST: "rutorrent.{{ user.domain }}"
-      VIRTUAL_PORT: "80"
-      LETSENCRYPT_HOST: "rutorrent.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    volumes: "{{ default_volumes + docker_volumes_downloads_common }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - rutorrent
-    purge_networks: yes
-    restart_policy: unless-stopped
-    stop_timeout: 900
-    state: started
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
 
-- name: ruTorrent Settings Tasks
-  include_tasks: "settings/main.yml"
-  when: (not continuous_integration)
+- name: Post-Install Tasks
+  import_tasks: "subtasks/post-install/main.yml"
+  when: not continuous_integration

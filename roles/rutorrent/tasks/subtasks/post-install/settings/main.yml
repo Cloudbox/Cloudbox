@@ -1,0 +1,16 @@
+#########################################################################
+# Title:         Cloudbox: ruTorrent | Post-Install | Settings          #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Post-Install | Settings | Update settings For New Installs
+  import_tasks: "new_installs.yml"
+  when: (not rutorrent_paths_rtorrent_rc_location_stat.stat.exists)
+
+- name: Post-Install | Settings | Update settings For Existing Installs
+  import_tasks: "existing_installs.yml"

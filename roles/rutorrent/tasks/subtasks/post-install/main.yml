@@ -1,0 +1,36 @@
+#########################################################################
+# Title:         Cloudbox: ruTorrent | Post-Install Tasks               #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Post-Install | Wait for config files to be created
+  wait_for:
+    path: "{{ item }}"
+    state: present
+  loop:
+    - "{{ rutorrent_paths_rtorrent_rc_location }}"
+    - "{{ rutorrent_paths_nginx_conf_location }}"
+    - "{{ rutorrent_paths_php_local_ini_location }}"
+    - "{{ rutorrent_paths_plugins_ini_location }}"
+
+- name: Post-Install | Wait for 10 seconds
+  wait_for:
+    timeout: 10
+
+- name: Post-Install | Stop container
+  docker_container:
+    name: "{{ rutorrent_docker_container }}"
+    state: stopped
+
+- name: Post-Install | Settings Task
+  import_tasks: "settings/main.yml"
+
+- name: Post-Install | Start container
+  docker_container:
+    name: "{{ rutorrent_docker_container }}"
+    state: "{{ rutorrent_docker_state }}"
