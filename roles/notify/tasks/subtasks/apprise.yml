@@ -16,5 +16,5 @@
 - name: Apprise | Send Notification
   shell: apprise -b '{{ message }}' '{{ apprise }}'
   become: yes
-  becomes: "{{ user.name }}"
+  become_user: "{{ user.name }}"
   ignore_errors: yes
