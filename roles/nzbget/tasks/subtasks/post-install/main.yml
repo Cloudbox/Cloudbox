@@ -8,9 +8,27 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Post-Install | Wait for config file to be created
+  wait_for:
+    path: "{{ nzbget_paths_config_location }}"
+    state: present
+
+- name: Post-Install | Wait for 10 seconds
+  wait_for:
+    timeout: 10
+
+- name: Post-Install | Stop container
+  docker_container:
+    name: "{{ nzbget_docker_container }}"
+    state: stopped
+
 - name: Post-Install | Scripts Task
-  import_tasks: "scripts.yml"
+  import_tasks: "scripts/main.yml"
 
 - name: Post-Install | Settings Task
-  import_tasks: "settings.yml"
-  when: not nzbget_conf_stat.stat.exists
+  import_tasks: "settings/main.yml"
+
+- name: Post-Install | Start container
+  docker_container:
+    name: "{{ nzbget_docker_container }}"
+    state: "{{ nzbget_docker_state }}"
