@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: "UnionFS | Create unionfs fuse path"
-  file: "path={{ unionfs_fuse_path }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path={{ unionfs_fuse_path }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
 
 - name: "UnionFS | Install unionfs"
   apt:

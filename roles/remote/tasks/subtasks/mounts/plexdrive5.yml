@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Plexdrive 5 | Create directories
-  file: "path={{ plexdrive_5_install_path }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path={{ plexdrive_5_install_path }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
 
 - name: Plexdrive 5 | Install Plexdrive 5
   get_url:

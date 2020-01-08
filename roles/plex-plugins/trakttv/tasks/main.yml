@@ -59,7 +59,7 @@
     plex_plugin_trakttv_download_url: "{{ plex_plugin_trakttv_download_url.stdout | default(plex_plugin_trakttv_download_url_backup,true) }}"
 
 - name: "Create {{ plex_name | title }} 'plug-ins' directory"
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
   with_items:
     - "{{ plex_paths_plugins_location }}"
 

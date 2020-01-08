@@ -71,7 +71,7 @@
     when: dir_files.matched|int != 0
 
   - name: "Create backup folders."
-    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+    file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
     with_items:
       - "/home/{{ user.name }}/logs"
       - "/home/{{ user.name }}/logs/backup"
@@ -152,7 +152,7 @@
     ignore_errors: yes
 
   - name: "Reset permissions of folders"
-    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+    file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
     with_items:
       - "/opt/systemd-backup"
       - "/opt/crontab-backup"
