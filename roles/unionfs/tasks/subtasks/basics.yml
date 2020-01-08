@@ -14,8 +14,8 @@
   register: mnt_remote
 
 - name: "Basics | Create '/mnt/remote' directory"
-  file: "path=/mnt/remote state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=no"
+  file: "path=/mnt/remote state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=no"
   when: (not mnt_remote.stat.exists)
 
 - name: "Basics | Create '/mnt/unionfs' directory"
-  file: "path=/mnt/unionfs state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path=/mnt/unionfs state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"

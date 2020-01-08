@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Cloudbox Migrator | Create '/etc/ansible' directory
-  file: "path=/etc/ansible/ state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  file: "path=/etc/ansible/ state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
 
 - name: Cloudbox Migrator | Check if '.ansible_vault' exists in '/home'
   stat:
@@ -27,7 +27,7 @@
   when: (user_home_ansible_vault_stat.stat.exists)
 
 - name: Cloudbox Migrator | Create '/srv/git/' directory
-  file: "path=/srv/git/ state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path=/srv/git/ state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
 
 - name: Cloudbox Migrator | Check if 'cloudbox' folder exists in '/srv'
   stat:
@@ -118,7 +118,7 @@
   when: (home_user_cloudbox_stat.stat.exists and home_user_cloudbox_stat.stat.isdir)
 
 - name: Cloudbox Migrator | Reset '{{ cloudbox_git_repo_dest }}' directory permissions
-  file: "path={{ cloudbox_git_repo_dest }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path={{ cloudbox_git_repo_dest }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
 
 - name: Cloudbox Migrator | Remove 'cloudbox' folder in '/home'
   file:

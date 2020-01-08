@@ -14,7 +14,7 @@
     state: present
 
 - name: Plexdrive 4 | Create directories
-  file: "path={{ plexdrive_4_install_path }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path={{ plexdrive_4_install_path }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
 
 - name: Plexdrive 4 | Install plexdrive
   get_url:

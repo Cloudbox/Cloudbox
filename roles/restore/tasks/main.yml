@@ -35,13 +35,13 @@
     loop_var: outer_item
 
 - name: Create common directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
   with_items:
     - /opt
     - /mnt/local
 
 - name: "Create backup location '{{ local.destination }}'"
-  file: path={{ local.destination }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes
+  file: path={{ local.destination }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes
 
 - name: Check if previous backup exists locally
   find:
