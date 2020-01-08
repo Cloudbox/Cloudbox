@@ -1,0 +1,17 @@
+#########################################################################
+# Title:         Cloudbox: Radarr | Post-Install Tasks                  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Post-Install | Wait for config file to be created
+  wait_for:
+    path: "{{ radarr_paths_config_location }}"
+    state: present
+
+- name: Post-Install | Update ports in '{{ radarr_paths_config_location | basename }}'
+  import_tasks: update_ports.yml
