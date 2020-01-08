@@ -39,6 +39,14 @@
     path: "/opt/nzbget/app/nzbget.conf"
   register: nzbget_conf
 
+- name: Settings | Set ShellOverride
+  lineinfile:
+    path: "/opt/nzbget/app/nzbget.conf"
+    regexp: '^ShellOverride\s?=.*'
+    line: 'ShellOverride=.py=/usr/bin/python3'
+    state: present
+  when: nzbget_conf.stat.exists
+
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
