@@ -45,7 +45,9 @@ nzbget_web_url_with_login: "{{ 'https://' + nzbget_web_login + nzbget_web_subdom
 # Config
 ################################
 
-nzbget_config_settings_default:
+# New Installs
+
+nzbget_config_new_installs_settings_default:
   # Authentication
   - { regexp: '^ControlUsername\s?=.*', line: "ControlUsername={{ user.name }}" }
   - { regexp: '^ControlPassword\s?=.*', line: "ControlPassword={{ user.pass }}" }
@@ -94,11 +96,21 @@ nzbget_config_settings_default:
                                                               .duplicate1.rar, .srs, .info, .txt,
                                                               .com, .md5, .png, .1, .url, .jpg,
                                                               .xxx, .rev, .iso, .img, .ifo, .vob' }
+nzbget_config_new_installs_settings_custom: []
+nzbget_config_new_installs_settings_list: "{{ nzbget_config_new_installs_settings_default
+                                                  + nzbget_config_new_installs_settings_custom }}"
 
-nzbget_config_settings_custom: []
+# Existing Installs
 
-nzbget_config_settings_list: "{{ nzbget_config_settings_default
-                                      + nzbget_config_settings_custom }}"
+nzbget_config_existing_installs_settings_default:
+  # Logging
+  - { regexp: '^WriteLog\s?=.*', line: 'WriteLog=rotate' }
+  - { regexp: '^RotateLog\s?=.*', line: 'RotateLog=3' }
+  # Scripts
+  - { regexp: '^ShellOverride\s?=.*', line: 'ShellOverride=.py=/usr/bin/python3' }
+nzbget_config_existing_installs_settings_custom: []
+nzbget_config_existing_installs_settings_list: "{{ nzbget_config_existing_installs_settings_default
+                                                        + nzbget_config_existing_installs_settings_custom }}"
 
 ################################
 # Scripts
