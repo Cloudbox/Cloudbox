@@ -12,3 +12,18 @@
   file:
     path: "{{ rutorrent_paths_config_php_location }}"
     state: absent
+
+- name: Pre-Install | Get next available port within the range of '51413-51423'
+  find_next_open_port:
+    low_bound: 51413
+    high_bound: 51423
+  register: port_lookup_51413
+  ignore_errors: yes
+
+- name: Pre-Install | Get next available port within the range of '6881-6891'
+  find_next_open_port:
+    low_bound: 6881
+    high_bound: 6891
+    type: udp
+  register: port_lookup_6881
+  ignore_errors: yes

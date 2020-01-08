@@ -104,6 +104,9 @@ rutorrent_config_existing_installs_rutorrent_rc_settings_default:
   - { option: "execute", value: "{sh,-c,/usr/bin/php7 /app/rutorrent/php/initplugins.php abc &}" }
   # IP address that is reported to the tracker
   - { option: "network.local_address.set", value: "{{ ip_address_public }}" }
+  # Ports
+  - { option: "network.port_range.set", value: "{{ rutorrent_docker_ports_51413 }}-{{ rutorrent_docker_ports_51413 }}" }
+  - { option: "dht.port.set", value: "{{ rutorrent_docker_ports_6881 }}" }
   # Enable / Disable Public Trackers
   - { option: "dht.mode.set", value: "{{ rutorrent_config_public_trackers | ternary('on','disable') }}" }
   - { option: "trackers.use_udp.set", value: "{{ rutorrent_config_public_trackers | ternary('yes','no') }}" }
@@ -127,10 +130,19 @@ rutorrent_docker_image: "horjulf/rutorrent-autodl:{{ rutorrent_docker_image_tag 
 # Ports
 rutorrent_docker_ports_defaults:
   - "{{ rutorrent_web_port }}"
-# - Internal and External ports need to match for both
+# - Internal and External ports need to match for the next set of ports
+# - Lookup available ports and set docker ports accordingly
+rutorrent_docker_ports_51413: "{{ port_lookup_51413.port
+                                  if (port_lookup_51413.port is defined)
+                                      and (port_lookup_51413.port | trim | length > 0)
+                                  else '51413' }}"
+rutorrent_docker_ports_6881: "{{ port_lookup_6881.port
+                                  if (port_lookup_6881.port is defined)
+                                      and (port_lookup_6881.port | trim | length > 0)
+                                  else '6881' }}"
 rutorrent_docker_ports_torrents:
-  - "51413:51413"
-  - "6881:6881/udp"
+  - "{{ rutorrent_docker_ports_51413 }}:{{ rutorrent_docker_ports_51413 }}"
+  - "{{ rutorrent_docker_ports_6881 }}:{{ rutorrent_docker_ports_6881 }}/udp"
 rutorrent_docker_ports_custom: []
 rutorrent_docker_ports: "{{ rutorrent_docker_ports_defaults
                                 + rutorrent_docker_ports_torrents
