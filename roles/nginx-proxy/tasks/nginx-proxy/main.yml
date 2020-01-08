@@ -14,7 +14,7 @@
     state: absent
 
 - name: Nginx-Proxy | Create nginx-proxy directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
   with_items:
     - /opt/nginx-proxy
     - /opt/nginx-proxy/certs
@@ -23,7 +23,7 @@
     - /opt/nginx-proxy/vhost.d
 
 - name: Nginx-Proxy | Create nginx-proxy directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
   with_items:
     - /opt/nginx-proxy/tmpl
     - /opt/nginx-proxy/certs/letsencrypt

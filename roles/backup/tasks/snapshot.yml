@@ -75,7 +75,7 @@
     when: (btrfs_snapshot_mounted.stat.isdir is defined) and (btrfs_snapshot_mounted.stat.isdir)
 
   - name: Snapshot | Create BTRFS snapshot directory
-    file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+    file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
     with_items:
       - "{{ backup_snapshot_destination_path | dirname }}"
 

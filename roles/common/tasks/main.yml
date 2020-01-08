@@ -17,7 +17,7 @@
     loop_var: outer_item
 
 - name: Create common directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
   with_items:
     - /home/{{ user.name }}
     - /home/{{ user.name }}/logs

@@ -15,7 +15,7 @@
     state: absent
 
 - name: Create ddclient directories
-  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
   with_items:
     - /opt/ddclient
 

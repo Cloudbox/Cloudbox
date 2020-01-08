@@ -17,7 +17,7 @@
   block:
 
   - name: BTRFS | Create '{{ outer_item }}' path
-    file: "path={{ outer_item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+    file: "path={{ outer_item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
 
   - name: BTRFS | Check file system on '{{ outer_item }}'
     shell: stat -f -c %T "{{ outer_item }}"

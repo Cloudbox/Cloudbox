@@ -20,13 +20,13 @@
   file: "path='/tmp/restore_service' state=absent"
 
 - name: Restore Service | Create '/tmp/restore_service' path
-  file: "path='/tmp/restore_service' state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  file: "path='/tmp/restore_service' state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
 
 - name: Restore Service | Cleanup '/tmp/restore_service_temp' path
   file: "path='/tmp/restore_service_temp' state=absent"
 
 - name: Restore Service | Create '/tmp/restore_service_temp' path
-  file: "path='/tmp/restore_service_temp' state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  file: "path='/tmp/restore_service_temp' state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
 
 - name: Restore Service | Copy Files to '/tmp/restore_service_temp' path
   shell: cp '{{ item }}' '/tmp/restore_service_temp/'

@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Rclone Cache | Reset permissions for 'rclone.conf'
-  file: "path={{ rclone_config_path }} state=file mode=0775 owner={{ user.name }} group={{ user.name }}"
+  file: "path={{ rclone_config_path }} state=file owner={{ user.name }} group={{ user.name }} mode=0775"
 
 - name: Import Plex Auth Token role
   import_role:
