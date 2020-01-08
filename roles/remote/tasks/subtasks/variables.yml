@@ -14,39 +14,31 @@
 
 - name: Variables | Set 'plexdrive4' mount variables
   set_fact:
-    mount_types: ['plexdrive4']
-    service_files: ['plexdrive4.service']
-    mount_paths: ['/mnt/remote']
+    desired_mount_types: ['plexdrive4']
   when: (mounts.remote | lower == 'plexdrive4')
     or ((mounts.remote | lower == 'plexdrive') and ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int < 8))
 
 - name: Variables | Set 'plexdrive5' mount variables
   set_fact:
-    mount_types: ['plexdrive5']
-    service_files: ['plexdrive5.service']
-    mount_paths: ['/mnt/remote']
+    desired_mount_types: ['plexdrive5']
   when: (mounts.remote | lower == 'plexdrive5')
     or ((mounts.remote | lower == 'plexdrive') and ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int >= 8))
 
 - name: Variables | Set 'rclone_cache' mount variables
   set_fact:
-    mount_types: ['rclone_cache']
-    service_files: ['rclone_cache.service']
-    mount_paths: ['/mnt/remote']
+    desired_mount_types: ['rclone_cache']
   when: (mounts.remote | lower == 'rclone_cache')
 
 - name: Variables | Set 'rclone_vfs' mount variables
   set_fact:
-    mount_types: ['rclone_vfs']
-    service_files: ['rclone_vfs.service','rclone_vfs_primer.service','rclone_vfs_primer.timer']
-    mount_paths: ['/mnt/remote']
+    desired_mount_types: ['rclone_vfs']
   when: (mounts.remote | lower == 'rclone_vfs')
 
 - name: Variables | Set 'mount_types_is_defined' variable
   set_fact:
-    mount_types_is_defined: "{{ (mount_types is defined) and
-                                (mount_types is not none) and
-                                (mount_types | trim | length > 0) }}"
+    mount_types_is_defined: "{{ (desired_mount_types is defined) and
+                                (desired_mount_types is not none) and
+                                (desired_mount_types | trim | length > 0) }}"
 
 - name: Variables | Fail when no valid remote mount type is specified.
   fail:
@@ -62,21 +54,34 @@
 
   - name: Variables | Add 'feeder' to 'mount_types' variable
     set_fact:
-      mount_types: "{{ mount_types + ['feeder'] }}"
-
-  - name: Variables | Add '/mnt/feeder' to 'mount_paths' variable
-    set_fact:
-      mount_paths: "{{ mount_paths + ['/mnt/feeder'] }}"
-
-  - name: Variables | Add 'feeder.service' to 'service_files' variable
-    set_fact:
-      service_files: "{{ service_files + ['feeder.service'] }}"
+      desired_mount_types: "{{ desired_mount_types + ['feeder'] }}"
 
   when: feeder_mount_is_enabled
 
 ################################
+# Mount Paths
+################################
+
+- name: Variables | Set 'mount_paths' variable
+  set_fact:
+    mount_paths:
+      - '/mnt/remote'
+      - '/mnt/feeder'
+
+################################
 # Service Files
 ################################
+
+- name: Variables | Set 'service_files' variable
+  set_fact:
+    service_files:
+      - 'plexdrive4.service'
+      - 'plexdrive5.service'
+      - 'rclone_cache.service'
+      - 'rclone_vfs.service'
+      - 'rclone_vfs_primer.service'
+      - 'rclone_vfs_primer.timer'
+      - 'feeder.service'
 
 - name: Variables | Set 'service_files_stat' variable
   stat:

@@ -50,4 +50,4 @@
 
 - name: Mount Tasks
   include_tasks: "subtasks/mounts/{{ item }}.yml"
-  loop: "{{ mount_types }}"
+  loop: "{{ desired_mount_types }}"
