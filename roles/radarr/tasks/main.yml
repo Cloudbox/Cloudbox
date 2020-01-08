@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Radarr Role                                  #
-# Author(s):     l3uddz, desimaniac                                     #
+# Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -46,4 +46,4 @@
   include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
 
 - name: Post-Install Tasks
-  import_tasks: "subtasks/post-install.yml"
+  import_tasks: "subtasks/post-install/main.yml"
