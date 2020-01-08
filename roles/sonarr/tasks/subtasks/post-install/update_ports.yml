@@ -1,0 +1,51 @@
+##########################################################################
+# Title:         Cloudbox: Sonarr | Post-Install | Update Ports          #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+- name: Post-Install | Update Ports | Wait for '{{ sonarr_paths_config_location | basename }}' to be created
+  wait_for:
+    path: "{{ sonarr_paths_config_location }}"
+    state: present
+
+- name: Post-Install | Update Ports | Find external port binding for '{{ sonarr_docker_container }}' docker port '{{ sonarr_web_port }}'
+  block:
+
+  - name: Post-Install | Update Ports | Lookup host port mapped to '{{ sonarr_docker_container }}' docker port '{{ sonarr_web_port }}'
+    shell:
+      docker port {{ sonarr_docker_container }} {{ sonarr_web_port }} | 2> /dev/null | sed 's/[0-9.]*://'
+    register: sonarr_docker_port_lookup_cmd
+    changed_when: no
+
+  - name: Post-Install | Update Ports | Set port variable
+    set_fact:
+      sonarr_docker_port_lookup: >-
+        {{ (sonarr_docker_port_lookup_cmd.stdout | trim)
+            if (sonarr_docker_port_lookup_cmd.stdout | trim | length > 0)
+            else sonarr_web_port }}
+
+  when: not reverse_proxy_is_enabled
+
+- name: Post-Install | Update Ports | Update 'Port' in '{{ sonarr_paths_config_location | basename }}'
+  xml:
+    path: "{{ sonarr_paths_config_location }}"
+    xpath: /Config/Port
+    value: "{{ sonarr_docker_port_lookup | default(sonarr_web_port) }}"
+    state: present
+  become: yes
+  become_user: "{{ user.name }}"
+  ignore_errors: yes
+  register: sonarr_port_update
+
+- name: Post-Install | Update Ports | Reset permissions of '{{ sonarr_paths_config_location | basename }}'
+  file:
+    path: "{{ sonarr_paths_config_location }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0644
+  when: sonarr_port_update is changed

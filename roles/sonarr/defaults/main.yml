@@ -55,9 +55,8 @@ sonarr_docker_image_tag: "phantom"
 sonarr_docker_image: "hotio/sonarr:{{ sonarr_docker_image_tag }}"
 
 # Ports
-sonarr_docker_ports_range: "{{ sonarr_web_port }}-{{ sonarr_web_port | int + 10 }}"
 sonarr_docker_ports_defaults:
-  - "{{ sonarr_docker_ports_range }}:{{ sonarr_web_port }}"
+  - "{{ sonarr_web_port }}"
 sonarr_docker_ports_custom: []
 sonarr_docker_ports: "{{ sonarr_docker_ports_defaults
                               + sonarr_docker_ports_custom
