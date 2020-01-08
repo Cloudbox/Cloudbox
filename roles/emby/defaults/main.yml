@@ -67,7 +67,7 @@ emby_docker_container: "{{ emby_name }}"
 
 # Image
 emby_docker_image_pull: yes
-emby_docker_image_tag: "beta"
+emby_docker_image_tag: "latest"
 emby_docker_image: "emby/embyserver:{{ emby_docker_image_tag }}"
 
 # Ports
