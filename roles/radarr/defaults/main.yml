@@ -55,9 +55,8 @@ radarr_docker_image_tag: "unstable"
 radarr_docker_image: "hotio/radarr:{{ radarr_docker_image_tag }}"
 
 # Ports
-radarr_docker_ports_range: "{{ radarr_web_port }}-{{ radarr_web_port | int + 10 }}"
 radarr_docker_ports_defaults:
-  - "{{ radarr_docker_ports_range }}:{{ radarr_web_port }}"
+  - "{{ radarr_web_port }}"
 radarr_docker_ports_custom: []
 radarr_docker_ports: "{{ radarr_docker_ports_defaults
                               + radarr_docker_ports_custom
