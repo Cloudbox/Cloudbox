@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#########################################################################
+# Title:         Cloudbox: Ansible | Module | Find Next Open Port       #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Description:   Finds and returns next open port in a given range.     #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
+#### begin ansible module boilerplate functions ####
+#### https://gist.github.com/nowayride/3dba8d86bb55a4e35726 ####
+source $1
+
+require() {
+  if [ -z "${!1}" ]
+  then
+    printf '{"failed": true, "msg": "%s must be defined"}' "$1"
+    exit 1
+  fi
+}
+#### end ansible module boilerplate functions ####
+
+require low_bound
+require high_bound
+
+# https://unix.stackexchange.com/a/330776
+function find_port(){
+    nc_cmd="nc -vz"
+    if [ $type == "udp" ]; then
+        nc_cmd=$nc_cmd"u"
+    fi
+    candidate="$low_bound";
+    while [ "$candidate" -le "$high_bound" ]; do
+        ($nc_cmd 0.0.0.0 ${candidate}) >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            echo '{"changed": false, "port": '\"${candidate}\"'}';
+            exit 0
+        fi
+        candidate=$((candidate + 1))
+    done
+    echo '{"changed": false, "port": '\"\"'}';
+    exit 0
+}
+
+find_port
