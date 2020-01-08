@@ -82,7 +82,8 @@ nzbget_config_settings_default:
   - { regexp: '^#?Task2\.WeekDays\s?=.*', line: 'Task2.WeekDays=1-7' }
   - { regexp: '^#?Task2\.Command\s?=.*', line: 'Task2.Command=UnpauseDownload' }
   - { regexp: '^#?Task2\.Param\s?=.*', line: 'Task2.Param=' }
-  # Extensions
+  # Scripts
+  - { regexp: '^ShellOverride\s?=.*', line: 'ShellOverride=.py=/usr/bin/python3' }
   - { regexp: '^Extensions\s?=.*', line: 'Extensions=nzbgetpp/unzip.py, flatten.py, DeleteSamples.py, HashRenamer.py, reverse_name.py' }
   - { regexp: '^ScriptOrder\s?=.*', line: 'ScriptOrder=nzbgetpp/unzip.py, flatten.py, DeleteSamples.py, HashRenamer.py, reverse_name.py' }
   # Unpacking
