@@ -8,17 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Post-Install | Settings | Wait for config file to be created
-  wait_for:
-    path: "{{ nzbget_paths_config_location }}"
-    state: present
-
-- name: Post-Install | Settings | Stop container
-  docker_container:
-    name: "{{ nzbget_docker_container }}"
-    state: stopped
-
-- name: Post-Install | Settings | Update config settings
+- name: Post-Install | Settings | Update settings For New Installs
   lineinfile:
     path: "{{ nzbget_paths_config_location }}"
     regexp: '{{ item.regexp }}'
@@ -27,9 +17,16 @@
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0664
-  loop: "{{ nzbget_config_settings_list }}"
+  loop: "{{ nzbget_config_new_installs_settings_list }}"
+  when: (not nzbget_paths_config_location_stat.stat.exists)
 
-- name: Post-Install | Settings | Start container
-  docker_container:
-    name: "{{ nzbget_docker_container }}"
-    state: "{{ nzbget_docker_state }}"
+- name: Post-Install | Settings | Set settings For Existing Installs
+  lineinfile:
+    path: "{{ nzbget_paths_config_location }}"
+    regexp: '{{ item.regexp }}'
+    line: "{{ item.line }}"
+    state: present
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+  loop: "{{ nzbget_config_existing_installs_settings_list }}"
