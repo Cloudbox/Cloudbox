@@ -103,6 +103,7 @@ rclone_cache_mount_start_command: |-
     --user-agent='{{ user_agent }}' \
     --config={{ rclone_config_path }} \
     --allow-other \
+    --allow-non-empty \
     --cache-db-purge \
     --rc \
     --rc-addr=localhost:5572 \
@@ -132,6 +133,7 @@ rclone_vfs_mount_start_command: |-
     --user-agent='{{ user_agent }}' \
     --config={{ rclone_config_path }} \
     --allow-other \
+    --allow-non-empty \
     --rc \
     --rc-addr=localhost:5572 \
     --fast-list \
