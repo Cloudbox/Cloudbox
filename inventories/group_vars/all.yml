@@ -174,9 +174,9 @@ docker_hosts_common: []
 docker_labels_common:
   "com.github.cloudbox.cloudbox_managed": "true"
 
-docker_networks_name_common: cloudbox
+docker_networks_common_name: cloudbox
 
 docker_networks_common:
-  - name: "{{ docker_networks_name_common }}"
+  - name: "{{ docker_networks_common_name }}"
     aliases:
       - "{{ lookup('vars', role_name + '_docker_networks_alias') }}"
