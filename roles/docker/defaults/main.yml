@@ -9,57 +9,69 @@
 #########################################################################
 ---
 ################################
+# Docker Packages
+################################
+
+# Basic
+docker_packages_docker_version: ""
+
 # Docker APT Key
-################################
+docker_packages_docker_apt_key_id: 0EBFCD88
+docker_packages_docker_apt_key_url: https://download.docker.com/linux/ubuntu/gpg
 
-docker_apt_key_id: 0EBFCD88
-
-docker_apt_key_url: https://download.docker.com/linux/ubuntu/gpg
-
-################################
 # Docker APT Repository
-################################
-
-docker_apt_repo_url: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ 'edge' if docker.repo is defined and docker.repo | lower == 'edge' else 'stable' }}"
-
-docker_apt_repo_filename: docker
-
-################################
-# Docker APT Package
-################################
+docker_packages_docker_apt_repo_url: >-
+  deb [arch=amd64]
+  https://download.docker.com/linux/{{ ansible_distribution | lower }}
+  {{ ansible_distribution_release }}
+  {{ docker_packages_docker_apt_repo_version }}
+docker_packages_docker_apt_repo_version: edge
+docker_packages_docker_apt_repo_filename: docker
 
 # Docker CE
-
-docker_ce_name: "Docker CE"
-
-docker_ce_package: "{{ 'docker-ce' if (docker.version is defined and docker.version | lower == 'latest') else 'docker-ce=*' + docker.version + '*~' + ansible_distribution | lower + '-' + ansible_distribution_release | lower }}"
-
-docker_ce_filepath: "/usr/bin/dockerd"
-
-docker_ce_dpkg: "docker-ce"
+docker_packages_docker_ce_friendly_name: "Docker CE"
+docker_packages_docker_ce_package_name_simple: "docker-ce"
+docker_packages_docker_ce_package_name_specific: "{{ docker_packages_docker_ce_package_name_simple
+                                                          + '=*'
+                                                          + (docker_packages_docker_ce_package_version | string)
+                                                          + '*~'
+                                                          + (ansible_distribution | lower)
+                                                          + '-'
+                                                          + (ansible_distribution_release | lower) }}"
+docker_packages_docker_ce_package_name: "{{ docker_packages_docker_ce_package_name_specific
+                                            if (docker_packages_docker_ce_package_version | trim | length > 0)
+                                                and (docker_packages_docker_ce_package_state | trim | lower != 'present')
+                                            else docker_packages_docker_ce_package_name_simple }}"
+docker_packages_docker_ce_package_version: "{{ docker_packages_docker_version }}"
+docker_packages_docker_ce_package_state: "latest"
+docker_packages_docker_ce_package_path: "/usr/bin/dockerd"
+docker_packages_docker_ce_dpkg_name: "docker-ce"
+docker_packages_docker_ce_dpkg_hold: yes
 
 # Docker CE CLI
-
-docker_ce_cli_name: "Docker CE CLI"
-
-docker_ce_cli_package: "{{ 'docker-ce-cli' if (docker.version is defined and docker.version | lower == 'latest') else 'docker-ce-cli=*' + docker.version + '*~' + ansible_distribution | lower + '-' + ansible_distribution_release | lower }}"
-
-docker_ce_cli_filepath: "/usr/bin/docker"
-
-docker_ce_cli_dpkg: "docker-ce-cli"
+docker_packages_docker_ce_cli_friendly_name: "Docker CE CLI"
+docker_packages_docker_ce_cli_package_name_simple: "docker-ce-cli"
+docker_packages_docker_ce_cli_package_name_specific: "{{ docker_packages_docker_ce_cli_package_name_simple
+                                                              + '=*'
+                                                              + (docker_packages_docker_ce_package_version | string)
+                                                              + '*~'
+                                                              + (ansible_distribution | lower)
+                                                              + '-'
+                                                              + (ansible_distribution_release | lower) }}"
+docker_packages_docker_ce_cli_package_name: "{{ docker_packages_docker_ce_cli_package_name_specific
+                                                if (docker_packages_docker_ce_cli_package_version | trim | length > 0)
+                                                    and (docker_packages_docker_ce_cli_package_state | trim | lower != 'present')
+                                                else docker_packages_docker_ce_cli_package_name_simple }}"
+docker_packages_docker_ce_cli_package_version: "{{ docker_packages_docker_version }}"
+docker_packages_docker_ce_cli_package_state: "latest"
+docker_packages_docker_ce_cli_package_path: "/usr/bin/docker"
+docker_packages_docker_ce_cli_dpkg_name: "docker-ce-cli"
+docker_packages_docker_ce_cli_dpkg_hold: yes
 
 # Containerd
-
-containerd_io_name: "Containerd"
-
-containerd_io_package: "containerd.io"
-
-containerd_io_filepath: "/usr/bin/containerd"
-
-containerd_io_dpkg: "containerd.io"
-
-# Misc
-
-docker_package_state: "{{ 'latest' if (docker.version is defined and docker.version | lower == 'latest') else 'present' }}"
-
-put_docker_dpkg_into_hold: true
+docker_packages_containerd_io_friendly_name: "Containerd"
+docker_packages_containerd_io_package_name: "containerd.io"
+docker_packages_containerd_io_package_state: "latest"
+docker_packages_containerd_io_package_path: "/usr/bin/containerd"
+docker_packages_containerd_io_dpkg_name: "containerd.io"
+docker_packages_containerd_io_dpkg_hold: yes

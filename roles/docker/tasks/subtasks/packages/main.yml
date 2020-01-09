@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Docker | Binary Tasks                        #
-# Author(s):     desimaniac, l3uddz                                     #
+# Title:         Cloudbox: Docker | Packages Task                       #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,30 +8,30 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Binary | Uninstall 'docker-py' pip module
+- name: Packages | Uninstall 'docker-py' pip module
   pip:
     name: docker-py
     state: absent
   ignore_errors: yes
 
-- name: Binary | Add official gpg signing key
+- name: Packages | Add Docker APT repository gpg signing key
   apt_key:
-    id: "{{ docker_apt_key_id }}"
-    url: "{{ docker_apt_key_url }}"
+    id: "{{ docker_packages_docker_apt_key_id }}"
+    url: "{{ docker_packages_docker_apt_key_url }}"
 
-- name: Binary | Add official repository
+- name: Packages | Add Docker APT repository
   apt_repository:
-    repo: "{{ docker_apt_repo_url }}"
-    filename: "{{ docker_apt_repo_filename }}"
+    repo: "{{ docker_packages_docker_apt_repo_url }}"
+    filename: "{{ docker_packages_docker_apt_repo_filename }}"
     update_cache: yes
 
-- name: Binary | Install Docker binaries
-  include_tasks: "binary2.yml"
+- name: Packages | Install Docker packages
+  include_tasks: "main2.yml"
   loop:
     - 'docker_ce'
     - 'docker_ce_cli'
     - 'containerd_io'
 
-- name: Binary | Install 'docker' pip module
+- name: Packages | Install 'docker' pip module
   raw: pip install docker
   ignore_errors: yes

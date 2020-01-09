@@ -1,0 +1,53 @@
+#########################################################################
+# Title:         Cloudbox: Docker | Packages Task                       #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Packages | Set '_docker_*' variables
+  set_fact:
+    _docker_friendly_name: "{{ lookup('vars', 'docker_packages_' + item + '_friendly_name') }}"
+    _docker_package_name: "{{ lookup('vars', 'docker_packages_' + item + '_package_name') }}"
+    _docker_package_state: "{{ lookup('vars', 'docker_packages_' + item + '_package_state') }}"
+    _docker_package_path: "{{ lookup('vars', 'docker_packages_' + item + '_package_path') }}"
+    _docker_dpkg_name: "{{ lookup('vars', 'docker_packages_' + item + '_dpkg_name') }}"
+    _docker_dpkg_hold: "{{ lookup('vars', 'docker_packages_' + item + '_dpkg_hold') }}"
+
+- name: Packages | Release '{{ _docker_dpkg_name }}' from hold
+  dpkg_selections:
+    name: "{{ _docker_dpkg_name }}"
+    selection: install
+
+- name: Packages | Install '{{ _docker_package_name }}'
+  apt:
+    name: "{{ _docker_package_name }}"
+    state: "{{ _docker_package_state }}"
+    update_cache: yes
+    force: yes
+
+- name: Packages | Put '{{ _docker_dpkg_name }}' into hold
+  dpkg_selections:
+    name: "{{ _docker_dpkg_name }}"
+    selection: hold
+  when: _docker_dpkg_hold
+
+- name: Packages | Get '{{ _docker_friendly_name }}' version
+  shell: "{{ _docker_package_path }} --version | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
+  register: _docker_package_version_cmd
+  ignore_errors: yes
+  changed_when: false
+
+- name: Packages | Set '_docker_package_version' variable
+  set_fact:
+    _docker_package_version: "{{ _docker_package_version_cmd.stdout
+                                  if (_docker_package_version_cmd is succeeded)
+                                  else '' }}"
+
+- name: Packages | Display '{{ _docker_friendly_name }}' version
+  debug:
+    msg: "{{ _docker_friendly_name }} version {{ _docker_package_version }} installed."
+  when: (_docker_package_version | trim | length > 0)
