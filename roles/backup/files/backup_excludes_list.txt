@@ -33,7 +33,7 @@
 
 ./python-plexlibrary/plexlibrary.log
 
-./plexpy/logs/*
+./tautulli/logs/*
 
 ./radarr/app/logs/*
 
