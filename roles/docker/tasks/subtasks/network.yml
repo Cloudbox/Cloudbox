@@ -8,24 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# Create Network
+- name: Network | Lookup '{{ docker_networks_common_name }}' Docker network
+  docker_network_info:
+    name: "{{ docker_networks_common_name }}"
+  register: _docker_networks_common_name_lookup
 
-- name: Network | Get list of docker networks
-  shell: docker network ls --format '{{ '{{' }} .Name{{ '}}' }}'
-  register: _docker_networks_list
-  changed_when: false
-
-- name: "Network | Create new cloudbox docker network block"
-  block:
-
-  - name: Create cloudbox network
-    docker_network:
-      name: "{{ docker_networks_common_name }}"
-      state: present
-
-  when: ('cloudbox' not in docker_networks_list.stdout_lines)
-
-- name: Unset variables
-  set_fact:
-    _docker_networks_list:
-    _docker_networks_gateway:
+- name: Network | Create '{{ docker_networks_common_name }}' Docker network
+  docker_network:
+    name: "{{ docker_networks_common_name }}"
+    state: present
+  when: not _docker_networks_common_name_lookup.exists
