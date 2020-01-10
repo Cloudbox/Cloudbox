@@ -8,13 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Network | Lookup '{{ docker_networks_common_name }}' Docker network
+- name: Network | Lookup '{{ docker_networks_common_default_name }}' Docker network
   docker_network_info:
-    name: "{{ docker_networks_common_name }}"
-  register: _docker_networks_common_name_lookup
+    name: "{{ docker_networks_common_default_name }}"
+  register: _docker_networks_common_default_name_lookup
 
-- name: Network | Create '{{ docker_networks_common_name }}' Docker network
+- name: Network | Create '{{ docker_networks_common_default_name }}' Docker network
   docker_network:
-    name: "{{ docker_networks_common_name }}"
+    name: "{{ docker_networks_common_default_name }}"
     state: present
-  when: not _docker_networks_common_name_lookup.exists
+  when: not _docker_networks_common_default_name_lookup.exists
