@@ -9,7 +9,11 @@
 #########################################################################
 ---
 ################################
-# Docker Packages
+# Role
+################################
+
+################################
+# Packages
 ################################
 
 # Basic
@@ -75,3 +79,50 @@ docker_packages_containerd_io_package_state: "latest"
 docker_packages_containerd_io_package_path: "/usr/bin/containerd"
 docker_packages_containerd_io_dpkg_name: "containerd.io"
 docker_packages_containerd_io_dpkg_hold: yes
+
+
+################################
+# Global
+################################
+
+# Envs
+docker_envs_reverse_proxy_common:
+  VIRTUAL_HOST: "{{ lookup('vars', role_name + '_web_subdomain') }}.{{ lookup('vars', role_name + '_web_domain', default=user.domain) }}"
+  VIRTUAL_PORT: "{{ lookup('vars', role_name + '_web_port') }}"
+  LETSENCRYPT_HOST: "{{ lookup('vars', role_name + '_web_subdomain') }}.{{ lookup('vars', role_name + '_web_domain', default=user.domain) }}"
+  LETSENCRYPT_EMAIL: "{{ user.email }}"
+
+# Volumes
+docker_volumes_downloads_nzbs: "{{ [downloads.nzbs + ':/downloads/nzbs']
+                                    if nzbs_downloads_path_is_defined
+                                    else [] }}"
+docker_volumes_downloads_torrents: "{{ [downloads.torrents + ':/downloads/torrents']
+                                        if torrents_downloads_path_is_defined
+                                        else [] }}"
+docker_volumes_downloads_common: "{{ docker_volumes_downloads_nzbs
+                                          + docker_volumes_downloads_torrents }}"
+
+# Hosts
+docker_hosts_common: []
+
+# Labels
+docker_labels_common_default_cloudbox_managed_string: "com.github.cloudbox.cloudbox_managed=true"
+docker_labels_common_default_cloudbox_managed_dict: "{{
+  { docker_labels_common_default_cloudbox_managed_string.split('=')[0]:
+    docker_labels_common_default_cloudbox_managed_string.split('=')[1]
+  } }}"
+docker_labels_common_default: {}
+docker_labels_common_custom: {}
+docker_labels_common: "{{ docker_labels_common_default_cloudbox_managed_dict
+                              | combine(docker_labels_common_default)
+                              | combine(docker_labels_common_custom) }}"
+
+# Networks
+docker_networks_common_default_name: cloudbox
+docker_networks_common_default:
+  - name: "{{ docker_networks_common_default_name }}"
+    aliases:
+      - "{{ lookup('vars', role_name + '_docker_networks_alias') }}"
+docker_networks_common_custom: []
+docker_networks_common: "{{ docker_networks_common_default
+                                + docker_networks_common_default }}"

@@ -21,30 +21,6 @@ resources_tasks_path: "{{ playbook_dir }}/resources/tasks"
 continuous_integration: false
 
 ################################
-# Accounts
-################################
-
-cloudflare_is_enabled: "{{  (cloudflare is defined) and
-                            (cloudflare is not none) and
-                            (cloudflare | trim | length > 0) and
-                            (cloudflare.email is defined) and
-                            (cloudflare.email is not none) and
-                            (cloudflare.email | trim | length > 0) and
-                            (cloudflare.api is defined) and
-                            (cloudflare.api is not none) and
-                            (cloudflare.api | trim | length > 0) }}"
-
-plex_account_is_enabled: "{{  (plex is defined) and
-                              (plex is not none) and
-                              (plex | trim | length > 0) and
-                              (plex.user is defined) and
-                              (plex.user is not none) and
-                              (plex.user | trim | length > 0) and
-                              (plex.pass is defined) and
-                              (plex.pass is not none) and
-                              (plex.pass | trim | length > 0) }}"
-
-################################
 # Role Conditionals
 ################################
 
@@ -136,7 +112,7 @@ ip_address_localhost: "127.0.0.1"
 ip_address_public: "{{ ansible_local.network.ip.public_ip | default(ansible_default_ipv4.address) }}"
 
 ################################
-# Reverse Proxy
+# Accounts
 ################################
 
 reverse_proxy_is_enabled: "{{ (user is defined) and
@@ -149,60 +125,22 @@ reverse_proxy_is_enabled: "{{ (user is defined) and
                               (user.email is not none) and
                               (user.email | trim | length > 0) }}"
 
-################################
-# Docker
-################################
+cloudflare_is_enabled: "{{  (cloudflare is defined) and
+                            (cloudflare is not none) and
+                            (cloudflare | trim | length > 0) and
+                            (cloudflare.email is defined) and
+                            (cloudflare.email is not none) and
+                            (cloudflare.email | trim | length > 0) and
+                            (cloudflare.api is defined) and
+                            (cloudflare.api is not none) and
+                            (cloudflare.api | trim | length > 0) }}"
 
-# Envs
-
-docker_envs_reverse_proxy_common:
-  VIRTUAL_HOST: "{{ lookup('vars', role_name + '_web_subdomain') }}.{{ lookup('vars', role_name + '_web_domain', default=user.domain) }}"
-  VIRTUAL_PORT: "{{ lookup('vars', role_name + '_web_port') }}"
-  LETSENCRYPT_HOST: "{{ lookup('vars', role_name + '_web_subdomain') }}.{{ lookup('vars', role_name + '_web_domain', default=user.domain) }}"
-  LETSENCRYPT_EMAIL: "{{ user.email }}"
-
-# Volumes
-
-docker_volumes_downloads_nzbs: "{{ [downloads.nzbs + ':/downloads/nzbs']
-                                    if nzbs_downloads_path_is_defined
-                                    else [] }}"
-
-docker_volumes_downloads_torrents: "{{ [downloads.torrents + ':/downloads/torrents']
-                                        if torrents_downloads_path_is_defined
-                                        else [] }}"
-
-docker_volumes_downloads_common: "{{ docker_volumes_downloads_nzbs + docker_volumes_downloads_torrents }}"
-
-# Hosts
-
-docker_hosts_common: []
-
-# Labels
-
-docker_labels_common_default_cloudbox_managed_string: "com.github.cloudbox.cloudbox_managed=true"
-
-docker_labels_common_default_cloudbox_managed_dict: "{{
-  { docker_labels_common_default_cloudbox_managed_string.split('=')[0]:
-  docker_labels_common_default_cloudbox_managed_string.split('=')[1] } }}"
-
-docker_labels_common_default: {}
-
-docker_labels_common_custom: {}
-
-docker_labels_common: "{{ docker_labels_common_default_cloudbox_managed_dict
-                              | combine(docker_labels_common_default)
-                              | combine(docker_labels_common_custom) }}"
-
-# Networks
-
-docker_networks_common_default_name: cloudbox
-
-docker_networks_common_default:
-  - name: "{{ docker_networks_common_default_name }}"
-    aliases:
-      - "{{ lookup('vars', role_name + '_docker_networks_alias') }}"
-
-docker_networks_common_custom: []
-
-docker_networks_common: "{{ docker_networks_common_default
-                                + docker_networks_common_default }}"
+plex_account_is_enabled: "{{  (plex is defined) and
+                              (plex is not none) and
+                              (plex | trim | length > 0) and
+                              (plex.user is defined) and
+                              (plex.user is not none) and
+                              (plex.user | trim | length > 0) and
+                              (plex.pass is defined) and
+                              (plex.pass is not none) and
+                              (plex.pass | trim | length > 0) }}"
