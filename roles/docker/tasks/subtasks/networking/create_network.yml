@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Docker | Network Tasks                       #
+# Title:         Cloudbox: Docker | Networking | Create Network         #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,12 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Network | Lookup '{{ docker_networks_common_default_name }}' Docker network
+- name: Networking | Create Network | Lookup '{{ docker_networks_common_default_name }}' Docker network
   docker_network_info:
     name: "{{ docker_networks_common_default_name }}"
   register: _docker_networks_common_default_name_lookup
 
-- name: Network | Create '{{ docker_networks_common_default_name }}' Docker network
+- name: Networking | Create Network | Create '{{ docker_networks_common_default_name }}' Docker network
   docker_network:
     name: "{{ docker_networks_common_default_name }}"
     state: present

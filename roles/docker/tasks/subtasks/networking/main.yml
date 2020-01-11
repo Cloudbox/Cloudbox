@@ -1,0 +1,16 @@
+#########################################################################
+# Title:         Cloudbox: Docker | Networking Tasks                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Networking | Create Docker Network
+  import_tasks: create_network.yml
+
+- name: Networking | Reconnect Docker Containers
+  import_tasks: reconnect_containers.yml
+  tags: docker-reconnect-containers

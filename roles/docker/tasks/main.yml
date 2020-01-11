@@ -77,7 +77,7 @@
   shell: docker stop $(docker ps -aq) &> /dev/null || true
 
 - name: "Import Docker Network tasks"
-  import_tasks: "subtasks/network.yml"
+  import_tasks: "subtasks/networking/main.yml"
 
 - name: "Import Docker Housekeeping tasks"
   import_tasks: "subtasks/housekeeping.yml"

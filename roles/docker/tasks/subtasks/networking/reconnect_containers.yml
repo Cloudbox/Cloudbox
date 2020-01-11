@@ -1,0 +1,53 @@
+#########################################################################
+# Title:         Cloudbox: Docker | Networking | Reconnect Containers   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Networking | Reconnect Containers | Get list of all Cloudbox-Managed Docker containers
+  docker_host_info:
+    containers: yes
+    containers_filters:
+      label: "{{ docker_labels_common_default_cloudbox_managed_string }}"
+  register: _docker_containers_all_lookup
+
+- name: Networking | Reconnect Containers | Set '_docker_containers_all' variable
+  set_fact:
+    _docker_containers_all: "{{
+      (_docker_containers_all_lookup.containers)
+          | map(attribute='Names')
+          | flatten
+          | map('regex_replace', '/','')
+          | list }}"
+
+- name: Networking | Reconnect Containers | Get list of all Cloudbox-Managed Docker containers within the network
+  docker_host_info:
+    containers: yes
+    containers_filters:
+      label: "{{ docker_labels_common_default_cloudbox_managed_string }}"
+      network: "{{ docker_networks_common_default_name }}"
+  register: _docker_containers_with_network_lookup
+
+- name: Networking | Reconnect Containers | Set '_docker_containers_all' variable
+  set_fact:
+    _docker_containers_with_network: "{{
+      (_docker_containers_with_network_lookup.containers)
+          | map(attribute='Names')
+          | flatten
+          | map('regex_replace', '/','')
+          | list }}"
+
+- name: Networking | Reconnect Containers | Set '_docker_containers_without_network' variable
+  set_fact:
+    _docker_containers_without_network: "{{ _docker_containers_all | difference(_docker_containers_with_network) }}"
+
+- name: Networking | Reconnect Containers | Reconnect Cloudbox-Managed Docker containers to network
+  shell: docker network connect {{ docker_networks_common_default_name }} {{ item }} --alias {{ item }}
+  with_items: "{{ _docker_containers_without_network }}"
+  register: q
+  failed_when: q.rc > 1
+  ignore_errors: yes
