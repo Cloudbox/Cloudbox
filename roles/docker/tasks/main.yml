@@ -18,48 +18,53 @@
     path: "/usr/bin/docker"
   register: docker_binary
 
-- name: Populate Service Facts
-  service_facts:
-  when: docker_binary.stat.exists
-
-- name: Get Docker service state
-  set_fact:
-    docker_service_running: "{{ (services['docker.service'] is defined) and (services['docker.service']['state'] == 'running') }}"
-  when: docker_binary.stat.exists
-
-- name: Tasks for when Docker exists and is running
+- name: Tasks for when Docker is installed
   block:
 
-  - name: Gather list of running Docker containers
-    shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | sort | xargs echo -n"
-    register: docker_running_containers
-    ignore_errors: yes
-    changed_when: false
+  - name: Populate Service Facts
+    service_facts:
 
-  - name: Stop all running Docker containers
-    shell: "docker stop {{ docker_running_containers.stdout }} &> /dev/null || true"
-    ignore_errors: yes
-    when: (docker_running_containers.stdout | trim | length > 0)
+  - name: Get Docker service state
+    set_fact:
+      docker_service_running: "{{ (services['docker.service'] is defined)
+                                      and (services['docker.service']['state'] == 'running') }}"
 
-  - name: Import BTRFS Cleanup Tasks
-    include_tasks: "subtasks/btrfs/cleanup.yml"
-    when: ('btrfs' in var_lib_file_system.stdout)
+  - name: Tasks for when Docker is installed and is running
+    block:
 
-  - name: Stop Docker service
-    systemd:
-      name: docker
-      state: stopped
+    - name: Gather list of running Docker containers
+      shell: "docker ps --format '{{ '{{' }} .Names{{ '}}' }}' | sort | xargs echo -n"
+      register: docker_running_containers
+      ignore_errors: yes
+      changed_when: false
 
-  when: (docker_binary.stat.exists) and (docker_service_running)
+    - name: Stop all running Docker containers
+      shell: "docker stop {{ docker_running_containers.stdout }} &> /dev/null || true"
+      ignore_errors: yes
+      when: (docker_running_containers.stdout | trim | length > 0)
 
-- name: "Import Docker Packages Task"
+    - name: BTRFS Cleanup Tasks
+      include_tasks: "subtasks/btrfs/cleanup.yml"
+      when: ('btrfs' in var_lib_file_system.stdout)
+
+    - name: Stop Docker service
+      systemd:
+        name: docker
+        state: stopped
+      when: ('btrfs' not in var_lib_file_system.stdout)
+
+    when: (docker_service_running)
+
+  when: (docker_binary.stat.exists)
+
+- name: Docker Packages Task
   include_tasks: "subtasks/packages/main.yml"
 
-- name: Import BTRFS Psuedo-File-System Tasks
+- name: BTRFS Psuedo-File-System Tasks
   include_tasks: "subtasks/btrfs/pseudo_file_system.yml"
   when: ('btrfs' in var_lib_file_system.stdout)
 
-- name: "Import Daemon Tasks"
+- name: Docker Daemon Tasks
   import_tasks: "subtasks/daemon.yml"
 
 - name: Start Docker service
@@ -76,19 +81,22 @@
 - name: "Stop all Docker containers"
   shell: docker stop $(docker ps -aq) &> /dev/null || true
 
-- name: "Import Docker Network tasks"
+- name: Docker Networking Tasks
   import_tasks: "subtasks/networking/main.yml"
 
-- name: "Import Docker Housekeeping tasks"
+- name: Docker Housekeeping Tasks
   import_tasks: "subtasks/housekeeping.yml"
   tags: docker-housekeeping
 
-- name: "Re-start all previously running Docker containers"
+- name: Re-start all previously running Docker containers
   shell: 'docker start {{ docker_running_containers.stdout }}'
-  when: (docker_binary.stat.exists) and (docker_service_running) and (docker_running_containers.stdout | trim | length > 0)
+  when:
+    - (docker_binary.stat.exists)
+    - (docker_service_running)
+    - (docker_running_containers.stdout | trim | length > 0)
   ignore_errors: yes
 
-- name: "Install ctop"
+- name: Install 'ctop'
   import_role:
     name: ctop
   tags: ctop

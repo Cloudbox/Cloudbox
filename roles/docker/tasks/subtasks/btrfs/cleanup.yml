@@ -22,7 +22,7 @@
     shell: stat -f -c %T /var/lib/docker
     register: var_lib_docker_file_system
 
-  - name: BTRFS | Cleanup | Tasks when '/var/lib/docker' is btrfs
+  - name: BTRFS | Cleanup | Tasks when '/var/lib/docker' is BTRFS
     block:
 
     - name: BTRFS | Cleanup | Remove all docker containers, images, and volumes
