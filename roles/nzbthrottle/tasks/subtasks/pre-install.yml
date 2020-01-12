@@ -1,0 +1,33 @@
+#########################################################################
+# Title:         Cloudbox: NZBThrottle | Pre-Install Tasks              #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Pre-Install | Check if config exists
+  stat:
+    path: "{{ nzbthrottle_paths_config_location }}"
+  register: nzbthrottle_paths_config_location_stat
+
+- name: Pre-Install | New config tasks
+  block:
+
+  - name: Pre-Install | Import Plex Auth Token role
+    import_role:
+      name: plex_auth_token
+    when: (plex_account_is_enabled)
+
+  - name: Pre-Install | Import default config
+    template:
+      src: 'config.json.j2'
+      dest: "{{ nzbthrottle_paths_config_location }}"
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: yes
+
+  when: not nzbthrottle_paths_config_location_stat.stat.exists
