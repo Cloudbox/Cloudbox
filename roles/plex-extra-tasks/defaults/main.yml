@@ -1,0 +1,36 @@
+#########################################################################
+# Title:         Cloudbox: Plex-Extra-Tasks | Default Variables         #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+# Plex DB Cache Size
+
+plex_extra_tasks_db_cache_size_default: '2000'
+
+plex_extra_tasks_db_cache_size_custom: "{{ (plex.db_cache_size | default('')) | regex_replace(',', '') | lower | trim }}"
+
+plex_extra_tasks_db_cache_size: "{{ (plex_extra_tasks_db_cache_size_default | int)
+                                      if (plex_extra_tasks_db_cache_size_custom == 'default')
+                                          or (plex_extra_tasks_db_cache_size_custom | length == 0)
+                                      else (plex_extra_tasks_db_cache_size_custom | int) }}"
+
+# Plex Forced Quality Settings
+
+# Preferences.xml | 'forceAutoAdjustQuality'
+# Forces clients to use automatic quality for media unless the quality is set higher than the quality of the video.
+
+plex_extra_tasks_forced_quality_settings_auto_adjust_quality: "{{ plex.force_auto_adjust_quality | default(false,true) }}"
+plex_extra_tasks_forced_quality_settings_auto_adjust_quality_wording: "{{ plex_extra_tasks_forced_quality_settings_auto_adjust_quality | ternary('Enabled','Disabled') }}"
+plex_extra_tasks_forced_quality_settings_auto_adjust_quality_xml_value: "{{ plex_extra_tasks_forced_quality_settings_auto_adjust_quality | ternary('1','0') }}"
+
+# Preferences.xml | 'AllowHighOutputBitrates'
+# Forces transcode quality to upscale. But can cause high bandwidth usage for clients.
+
+plex_extra_tasks_forced_quality_settings_high_output_bitrate: "{{ plex.force_high_output_bitrate | default(false,true) }}"
+plex_extra_tasks_forced_quality_settings_high_output_bitrate_wording: "{{ plex_extra_tasks_forced_quality_settings_high_output_bitrate | ternary('Enabled','Disabled') }}"
+plex_extra_tasks_forced_quality_settings_high_output_bitrate_xml_value: "{{ plex_extra_tasks_forced_quality_settings_high_output_bitrate | ternary('1','0') }}"

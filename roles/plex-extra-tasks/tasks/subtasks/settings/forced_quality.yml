@@ -1,5 +1,5 @@
 ##########################################################################
-# Title:         Cloudbox: Plex Extra Tasks | Settings | Forced Quality  #
+# Title:         Cloudbox: Plex-Extra-Tasks | Settings | Forced Quality  #
 # Author(s):     desimaniac                                              #
 # URL:           https://github.com/cloudbox/cloudbox                    #
 # --                                                                     #
@@ -10,7 +10,7 @@
 #   Based on the work by Michael Zemsky (https://github.com/zmike808)    #
 ##########################################################################
 ---
-- name: Settings | Forced Quality | Install lxml pip module
+- name: Settings | Forced Quality | Install 'lxml' pip module
   raw: pip install lxml
 
 - name: Settings | Forced Quality | Wait for 'Preferences.xml' to be created by Plex
@@ -18,32 +18,28 @@
     path: "{{ plex_paths_config_location }}"
     state: present
 
-# 'forceAutoAdjustQuality' in Preferences.xml
-# Forces clients to use automatic quality for media unless the quality is set higher than the quality of the video.
-
-- name: "Settings | Forced Quality | Set 'forceAutoAdjustQuality' in 'Preferences.xml' to
-    '{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('Enabled','Disabled') }}'."
+# Preferences.xml | 'forceAutoAdjustQuality'
+- name: Settings | Forced Quality | Set 'forceAutoAdjustQuality' in 'Preferences.xml' to
+    '{{ plex_extra_tasks_forced_quality_settings_auto_adjust_quality_wording }}'
   xml:
     path: "{{ plex_paths_config_location }}"
     xpath: /Preferences
     attribute: forceAutoAdjustQuality
-    value: "{{ (plex.force_auto_adjust_quality|default(false,true)) | ternary('1','0') }}"
+    value: "{{ plex_extra_tasks_forced_quality_settings_auto_adjust_quality_xml_value }}"
     state: present
   become: yes
   become_user: "{{ user.name }}"
   register: x
   ignore_errors: yes
 
-# 'AllowHighOutputBitrates' in Preferences.xml
-# Forces transcode quality to upscale. But can cause high bandwidth usage for clients.
-
-- name: "Settings | Forced Quality | Set 'AllowHighOutputBitrates' in 'Preferences.xml' to
-    '{{ (plex.force_high_output_bitrates|default(false,true)) | ternary('Enabled','Disabled') }}'."
+# Preferences.xml | 'AllowHighOutputBitrates'
+- name: Settings | Forced Quality | Set 'AllowHighOutputBitrates' in 'Preferences.xml' to
+    '{{ plex_extra_tasks_forced_quality_settings_high_output_bitrate_wording }}'
   xml:
     path: "{{ plex_paths_config_location }}"
     xpath: /Preferences
     attribute: AllowHighOutputBitrates
-    value: "{{ (plex.force_high_output_bitrates|default(false,true)) | ternary('1','0') }}"
+    value: "{{ plex_extra_tasks_forced_quality_settings_high_output_bitrate_xml_value }}"
     state: present
   become: yes
   become_user: "{{ user.name }}"
