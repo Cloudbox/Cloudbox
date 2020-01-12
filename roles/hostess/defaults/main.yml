@@ -1,0 +1,21 @@
+#########################################################################
+# Title:         Cloudbox: Hostess | Default Variables                  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+hostess_download_url_lookup_command: |
+  curl -s https://api.github.com/repos/cbednarski/hostess/releases/latest \
+      | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url"
+
+hostess_download_url_backup: https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64
+
+hostess_binary_path: /usr/local/bin/hostess
+
+hostess_binary_version_lookup_command: |
+  {{ hostess_binary_path }} --version \
+      | head -n 1 | awk '{ print $3 }'

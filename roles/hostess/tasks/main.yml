@@ -8,36 +8,35 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Get latest hostess URL
-  shell: curl -s https://api.github.com/repos/cbednarski/hostess/releases/latest | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url"
+- name: Get latest Hostess download URL
+  shell: "{{ hostess_download_url_lookup_command }}"
   args:
     executable: /bin/bash
   register: hostess_download_url
   ignore_errors: yes
 
-- name: Install hostess
+- name: Install Hostess
   get_url:
-    url:  "{{ hostess_download_url.stdout | default('https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64',true) }}"
-    dest: /usr/local/bin/hostess
+    url:  "{{ hostess_download_url.stdout | default(hostess_download_url_backup,true) }}"
+    dest: "{{ hostess_binary_path }}"
     mode: 0775
     owner: root
     group: root
     force: yes
     validate_certs: no
   ignore_errors: yes
-  register: x
+  register: hostess_download_status
 
-- name: "Get hostess version"
-  shell: "/usr/local/bin/hostess --version | head -n 1 | awk '{ print $3 }'"
-  register: hostess_version
-  ignore_errors: yes
-  when: x is success
+- name: Tasks to do when Hostess download is successful
+  block:
 
-- name: "Display hostess version"
-  debug:
-    msg: "hostess {{ hostess_version.stdout }} installed."
-  when: x is success
+  - name: Get Hostess binary version
+    shell: "{{ hostess_binary_version_lookup_command }}"
+    register: hostess_binary_version
+    ignore_errors: yes
 
-- debug:
-    msg: "hostess install failed."
-  when: x is not success
+  - name: Display Hostess binary version
+    debug:
+      msg: "Hostess {{ hostess_binary_version.stdout }} installed."
+
+  when: hostess_download_status is succeeded
