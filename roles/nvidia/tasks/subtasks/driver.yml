@@ -14,18 +14,10 @@
     update_cache: yes
     state: present
 
-- name: Driver | Set 'nvidia_driver_version' variable
-  set_fact:
-    nvidia_driver_version: >-
-      {{  ('%.2f'|format(gpu.nvidia.driver|float))
-          if (gpu.nvidia.driver | type_debug == 'float') or
-              (gpu.nvidia.driver | type_debug == 'int')
-          else (gpu.nvidia.driver | regex_replace('(^v\\.|^v)', '')) }}
-
 - name: Driver | Download Nvidia drivers
   get_url:
-    url:  "https://download.nvidia.com/XFree86/Linux-x86_64/{{ nvidia_driver_version }}/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run"
-    dest: "/tmp/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run"
+    url:  "{{ nvidia_driver_download_url }}"
+    dest: "{{ nvidia_driver_download_dest }}"
     mode: 0775
     owner: root
     group: root
@@ -34,7 +26,7 @@
   register: driver_download
 
 - name: Driver | Install Nvidia drivers
-  shell: "/tmp/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run --silent"
+  shell: "{{ nvidia_driver_install_command }}"
   register: driver_install
   ignore_errors: yes
 

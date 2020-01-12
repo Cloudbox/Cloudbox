@@ -10,8 +10,8 @@
 ---
 - name: Patch | Download Nvidia patch
   get_url:
-    url:  "https://raw.githubusercontent.com/keylase/nvidia-patch/master/patch.sh"
-    dest: /tmp/NVIDIA-patch.sh
+    url:  "{{ nvidia_patch_download_url }}"
+    dest: "{{ nvidia_patch_download_dest }}"
     mode: 0775
     owner: root
     group: root
@@ -19,7 +19,7 @@
     validate_certs: no
 
 - name: Patch | Install Nvidia patch
-  shell: /tmp/NVIDIA-patch.sh
+  shell: "{{ nvidia_patch_download_dest }}"
   args:
     executable: /bin/bash
     warn: no

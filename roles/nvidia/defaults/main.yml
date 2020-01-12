@@ -1,0 +1,88 @@
+#########################################################################
+# Title:         Cloudbox: Nvidia | Default Variables                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Driver
+################################
+
+nvidia_driver_version: "{{ ('%.2f' | format(gpu.nvidia.driver | float))
+                            if (gpu.nvidia.driver | type_debug == 'float')
+                                or (gpu.nvidia.driver | type_debug == 'int')
+                            else (gpu.nvidia.driver | regex_replace('(^v\\.|^v)', '')) }}"
+
+nvidia_driver_download_url: "https://download.nvidia.com/XFree86/Linux-x86_64/{{ nvidia_driver_version }}/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run"
+
+nvidia_driver_download_dest: "/tmp/NVIDIA-driver.run"
+
+nvidia_driver_install_command: "{{ nvidia_driver_download_dest }} --silent"
+
+################################
+# Patch
+################################
+
+nvidia_patch_download_url: "https://raw.githubusercontent.com/keylase/nvidia-patch/master/patch.sh"
+
+nvidia_patch_download_dest: "/tmp/NVIDIA-patch.sh"
+
+# Harcoded in the patch script file
+nvidia_patch_backup_file_location: "/opt/nvidia/libnvidia-encode-backup"
+
+################################
+# Docker
+################################
+
+nvidia_docker_runtime_apt_key_url: https://nvidia.github.io/nvidia-container-runtime/gpgkey
+
+nvidia_docker_runtime_apt_repo_url_list:
+  - 'deb https://nvidia.github.io/libnvidia-container/{{ ansible_distribution|lower }}{{ ansible_distribution_version }}/$(ARCH) /'
+  - 'deb https://nvidia.github.io/nvidia-container-runtime/{{ ansible_distribution|lower }}{{ ansible_distribution_version }}/$(ARCH) /'
+
+nvidia_docker_runtime_apt_repo_file: nvidia-container-runtime.list
+
+nvidia_docker_runtime_apt_package: nvidia-container-runtime
+
+nvidia_docker_runtime_docker_daemon_json_jq_command: |
+  jq '."default-runtime" = "nvidia"
+      | .runtimes.nvidia.path = "/usr/bin/nvidia-container-runtime"
+      | .runtimes.nvidia.runtimeArgs = []' \
+      /etc/docker/daemon.json | jq . | sponge /etc/docker/daemon.json
+
+################################
+# Kernel
+################################
+
+nvidia_kernel_blacklist_nouveau: yes
+
+nvidia_kernel_blacklist_nouveau_conf_location: "/etc/modprobe.d/blacklist-nouveau.conf"
+
+nvidia_kernel_blacklist_nouveau_conf_content: |
+  # Cloudbox - Nvidia Role
+  blacklist nouveau
+  options nouveau modeset=0
+
+################################
+# nvtop
+################################
+
+nvidia_nvtop_git_repo_url: https://github.com/Syllo/nvtop
+
+nvidia_nvtop_binary_build_command: |
+  cd /tmp/nvtop && \
+      mkdir build && \
+      cd build && \
+      cmake .. -DNVML_RETRIEVE_HEADER_ONLINE=True && \
+      make && \
+      make install
+
+nvidia_nvtop_binary_path: /usr/local/bin/nvtop
+
+nvidia_nvtop_binary_version_lookup_command: |
+  {{ nvidia_nvtop_binary_path }} --version \
+      | head -n 1 | awk '{print $3}' | cut -f1,2 -d'-'

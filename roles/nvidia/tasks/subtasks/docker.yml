@@ -8,25 +8,23 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Docker | Add 'nvidia-container-runtime' repo key
+- name: Docker | Add 'nvidia-container-runtime' APT Repo Key
   apt_key:
-    url: https://nvidia.github.io/nvidia-container-runtime/gpgkey
+    url: "{{ nvidia_docker_runtime_apt_key_url }}"
     state: present
 
 - name: Docker | Add 'nvidia-container-runtime' APT list
   apt_repository:
     repo: "{{ item }}"
-    filename: nvidia-container-runtime.list
+    filename: "{{ nvidia_docker_runtime_apt_repo_file }}"
     state: present
     mode: 0644
     update_cache: yes
-  with_items:
-    - 'deb https://nvidia.github.io/libnvidia-container/{{ ansible_distribution|lower }}{{ ansible_distribution_version }}/$(ARCH) /'
-    - 'deb https://nvidia.github.io/nvidia-container-runtime/{{ ansible_distribution|lower }}{{ ansible_distribution_version }}/$(ARCH) /'
+  loop: "{{ nvidia_docker_runtime_apt_repo_url_list }}"
 
 - name: Docker | Install 'nvidia-container-runtime'
   apt:
-    name: nvidia-container-runtime
+    name: "{{ nvidia_docker_runtime_apt_package }}"
     update_cache: yes
     state: present
 
@@ -46,7 +44,7 @@
 - name: Docker | Stop all running Docker containers
   shell: "docker stop {{ docker_running_containers.stdout }}"
   ignore_errors: yes
-  when: (docker_service_running) and not (docker_running_containers.stdout | trim | length == 0)
+  when: (docker_service_running) and (docker_running_containers.stdout | trim | length > 0)
 
 - name: Docker | Stop docker service
   systemd:
@@ -56,11 +54,7 @@
 
 # https://github.com/linkernetworks/vortex-installer/blob/master/roles/common/tasks/nvidia-docker.yml
 - name: Docker | Add runtime to '/etc/docker/daemon.json'
-  shell: |
-    jq '."default-runtime" = "nvidia"
-        | .runtimes.nvidia.path = "/usr/bin/nvidia-container-runtime"
-        | .runtimes.nvidia.runtimeArgs = []' \
-    /etc/docker/daemon.json | jq . | sponge /etc/docker/daemon.json
+  shell: "{{ nvidia_docker_runtime_docker_daemon_json_jq_command }}"
 
 - name: Docker | Start docker service
   systemd:
@@ -71,4 +65,4 @@
 - name: Docker | Re-start all previously running Docker containers
   shell: 'docker start {{ docker_running_containers.stdout }}'
   ignore_errors: yes
-  when: (docker_service_running) and not (docker_running_containers.stdout | trim | length == 0)
+  when: (docker_service_running) and (docker_running_containers.stdout | trim | length > 0)

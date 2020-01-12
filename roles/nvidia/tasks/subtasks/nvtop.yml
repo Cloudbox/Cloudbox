@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Nvidia | Nvtop Tasks                         #
+# Title:         Cloudbox: Nvidia | nvtop Tasks                         #
 # Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,32 +8,32 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Nvtop | Install Nvtop dependencies
-  apt: name="{{ item }}" state=present update_cache=yes
-  become: true
-  with_items:
+- name: nvtop | Install nvtop dependencies
+  apt:
+    state: present
+    update_cache: yes
+    name:
       - cmake
       - libncurses5-dev
       - libncursesw5-dev
 
-- name: Nvtop | Pull Nvtop repo from github
-  git: clone=yes repo=https://github.com/Syllo/nvtop dest=/tmp/nvtop/
-  register: diff
+- name: nvtop | Pull nvtop repo from github
+  git: clone=yes repo="{{ nvidia_nvtop_git_repo_url }}" dest=/tmp/nvtop/
+  register: nvtop_repo_clone_status
 
-- name: Nvtop | Build and install Nvtop
-  shell: "cd /tmp/nvtop && \
-          mkdir build && \
-          cd build && \
-          cmake .. -DNVML_RETRIEVE_HEADER_ONLINE=True && \
-          make && \
-          make install"
-  when: diff.changed
+- name: nvtop | Tasks when nvtop repo is cloned
+  block:
 
-- name: Nvtop | Get Nvtop version
-  shell: "/usr/local/bin/nvtop --version | head -n 1 | awk '{print $3}' | cut -f1,2 -d'-'"
-  register: nvtop_version
-  ignore_errors: yes
+  - name: nvtop | Build and install nvtop
+    shell: "{{ nvidia_nvtop_binary_build_command }}"
 
-- name: Nvtop | Display Nvtop version
-  debug:
-    msg: "nvtop {{ nvtop_version.stdout }} installed."
+  - name: nvtop | Get nvtop binary version
+    shell: "{{ nvidia_nvtop_binary_version_lookup_command }}"
+    register: nvtop_binary_version
+    ignore_errors: yes
+
+  - name: nvtop | Display nvtop binary version
+    debug:
+      msg: "nvtop {{ nvtop_binary_version.stdout }} installed."
+
+  when: nvtop_repo_clone_status is succeeded
