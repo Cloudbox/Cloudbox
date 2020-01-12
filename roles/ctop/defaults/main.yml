@@ -1,0 +1,21 @@
+#########################################################################
+# Title:         Cloudbox: ctop | Default Variables                     #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+ctop_download_url_lookup_command: |
+  curl -s https://api.github.com/repos/bcicen/ctop/releases/latest \
+      | jq -r ".assets[] | select(.name | test(\"linux-amd64\")) | .browser_download_url"
+
+ctop_download_url_backup: https://github.com/bcicen/ctop/releases/download/v0.7.3/ctop-0.7.3-linux-amd64
+
+ctop_binary_path: /usr/local/bin/ctop
+
+ctop_binary_version_lookup_command: |
+  {{ ctop_binary_path }} -v \
+      | head -n 1 | awk '{ print $3 }' | sed 's/,$//'
