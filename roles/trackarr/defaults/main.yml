@@ -64,7 +64,7 @@ trackarr_docker_ports: "{{ trackarr_docker_ports_defaults
                             else [] + trackarr_docker_ports_custom }}"
 
 # Envs
-trackarr_docker_envs_log_level: "0"
+trackarr_docker_envs_log_level: "1"
 trackarr_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
