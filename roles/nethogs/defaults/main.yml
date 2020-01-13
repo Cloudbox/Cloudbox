@@ -1,0 +1,27 @@
+#########################################################################
+# Title:         Cloudbox: Nethogs | Default Variables                  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+nethogs_git_repo_url: "https://github.com/raboof/nethogs.git"
+
+nethogs_git_repo_dest: "/var/tmp/nethogs"
+
+nethogs_binary_path: "/usr/local/bin/nethogs"
+
+nethogs_binary_build_command: |
+  cd {{ nethogs_git_repo_dest }}
+  make
+  make install
+  hash -r
+  setcap 'cap_net_admin,cap_net_raw+pe' {{ nethogs_binary_path }}
+  rm -rf {{ nethogs_git_repo_dest }}
+
+nethogs_binary_version_lookup_command: |
+  {{ nethogs_binary_path }} -V \
+      | head -n 1 | awk '{print $2}' | cut -f1,2 -d'-'
