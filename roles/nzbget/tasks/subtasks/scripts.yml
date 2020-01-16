@@ -27,6 +27,7 @@
     - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/flatten.py"
     - "https://raw.githubusercontent.com/clinton-hall/GetScripts/master/DeleteSamples.py"
     - "https://raw.githubusercontent.com/Prinz23/nzbget-pp-reverse/master/reverse_name.py"
+    - "https://raw.githubusercontent.com/l3uddz/nzbgetScripts/master/HashRenamer.py"
   ignore_errors: yes
 
 - name: Scripts | Download unzip.py script
@@ -48,12 +49,3 @@
     line: 'UNRAR_TOOL = "/app/unrar"'
     state: present
   when: unzip_py is success
-
-- name: Scripts | Import HashRenamer.py
-  copy:
-    src: "HashRenamer.py"
-    dest: "/opt/scripts/nzbget/HashRenamer.py"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    force: yes
