@@ -37,8 +37,7 @@ mariadb_docker_image_tag: "latest"
 mariadb_docker_image: "linuxserver/mariadb:{{ mariadb_docker_image_tag }}"
 
 # Ports
-mariadb_docker_ports_defaults:
-  - "{{ mariadb_web_port }}:{{ mariadb_web_port }}"
+mariadb_docker_ports_defaults: []
 mariadb_docker_ports_custom: []
 mariadb_docker_ports: "{{ mariadb_docker_ports_defaults
                               + mariadb_docker_ports_custom
