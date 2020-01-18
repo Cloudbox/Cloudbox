@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: DNS | Cloudflare | Create DNS Record         #
+# Title:         Cloudbox: DNS | Cloudflare | Add DNS Record            #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,11 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Cloudflare | Create DNS Record | Set 'dns_zone' variable
-  set_fact:
-    dns_zone: "{{ dns_zone | default(user.domain) }}"
-
-- name: Cloudflare | Create DNS Record | Set DNS Record
+- name: Cloudflare | Add DNS Record | Add DNS Record
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
     account_email: "{{ cloudflare.email }}"
@@ -25,15 +21,15 @@
     record: "{{ dns_record }}"
   register: cloudflare_dns_record_creation_status
 
-- name: Cloudflare | Create DNS Record | Tasks on success
+- name: Cloudflare | Add DNS Record | Tasks on success
   block:
 
-  - name: Cloudflare | Create DNS Record | Set 'dns_record_print' variable
+  - name: Cloudflare | Add DNS Record | Set 'dns_record_print' variable
     set_fact:
       dns_record_print: "{{ (dns_record == dns_zone) | ternary(dns_zone,dns_record + '.' + dns_zone) }}"
 
-  - name: Cloudflare | Create DNS Record | Display DNS Record creation status
+  - name: Cloudflare | Add DNS Record | Display DNS Record creation status
     debug:
-      msg: "DNS Record for '{{ dns_record_print }}' set to '{{ ip_address_public }}'."
+      msg: "DNS Record for '{{ dns_record_print }}', set to '{{ ip_address_public }}', was added."
 
   when: cloudflare_dns_record_creation_status is succeeded

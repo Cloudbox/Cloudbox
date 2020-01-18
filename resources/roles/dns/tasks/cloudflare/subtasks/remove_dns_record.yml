@@ -8,10 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Cloudflare | Remove DNS Record | Set 'dns_zone' variable
-  set_fact:
-    dns_zone: "{{ dns_zone | default(user.domain) }}"
-
 - name: Cloudflare | Remove DNS Record | Remove DNS Record
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"

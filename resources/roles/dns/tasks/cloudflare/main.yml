@@ -8,10 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Cloudflare | Create DNS Record
-  include_tasks: "subtasks/create_dns_record.yml"
-  when: dns_action | default('') != 'remove'
+- name: Cloudflare | Add DNS Record
+  include_tasks: "subtasks/add_dns_record.yml"
+  when: dns_action != 'remove'
 
 - name: Cloudflare | Remove DNS Record
   include_tasks: "subtasks/remove_dns_record.yml"
-  when: dns_action | default('') == 'remove'
+  when: dns_action == 'remove'

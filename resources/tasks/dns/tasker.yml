@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: DNS | Default Variables                      #
+# Title:         Cloudbox: Resources | Tasks | DNS | Tasker             #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,5 +8,16 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-# set default action to null
-dns_action:
+- name: Resources | Tasks | DNS | Tasker | Set '_dns_*' variables
+  set_fact:
+    _dns_tasker_record: "{{ [dns_record] | flatten }}"
+    _dns_tasker_zone: "{{ dns_zone | default(user.domain) }}"
+    _dns_tasker_action: "{{ dns_action | default('add') }}"
+
+- name: Resources | Tasks | DNS | Tasker | Sent task to DNS Role
+  include_role:
+    name: dns
+  vars:
+    _dns_role_record: "{{ _dns_tasker_record }}"
+    _dns_role_zone: "{{ _dns_tasker_zone }}"
+    _dns_role_action: "{{ _dns_tasker_action }}"
