@@ -43,6 +43,16 @@ lidarr_dns_record: "{{ lidarr_web_subdomain }}"
 lidarr_dns_zone: "{{ lidarr_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+lidarr_reverse_proxy_virtual_host: "{{ lidarr_web_subdomain }}.{{ lidarr_web_domain }}"
+lidarr_reverse_proxy_virtual_port: "{{ lidarr_web_port }}"
+
+lidarr_reverse_proxy_letsencrypt_host: "{{ lidarr_web_subdomain }}.{{ lidarr_web_domain }}"
+lidarr_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # API
 ################################
 

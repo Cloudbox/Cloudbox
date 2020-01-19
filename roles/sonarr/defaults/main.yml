@@ -43,6 +43,16 @@ sonarr_dns_record: "{{ sonarr_web_subdomain }}"
 sonarr_dns_zone: "{{ sonarr_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+sonarr_reverse_proxy_virtual_host: "{{ sonarr_web_subdomain }}.{{ sonarr_web_domain }}"
+sonarr_reverse_proxy_virtual_port: "{{ sonarr_web_port }}"
+
+sonarr_reverse_proxy_letsencrypt_host: "{{ sonarr_web_subdomain }}.{{ sonarr_web_domain }}"
+sonarr_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # API
 ################################
 

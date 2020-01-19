@@ -48,6 +48,16 @@ emby_dns_record: "{{ emby_web_subdomain }}"
 emby_dns_zone: "{{ emby_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+emby_reverse_proxy_virtual_host: "{{ emby_web_subdomain }}.{{ emby_web_domain }}"
+emby_reverse_proxy_virtual_port: "{{ emby_web_port }}"
+
+emby_reverse_proxy_letsencrypt_host: "{{ emby_web_subdomain }}.{{ emby_web_domain }}"
+emby_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Settings
 ################################
 

@@ -43,6 +43,16 @@ radarr_dns_record: "{{ radarr_web_subdomain }}"
 radarr_dns_zone: "{{ radarr_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+radarr_reverse_proxy_virtual_host: "{{ radarr_web_subdomain }}.{{ radarr_web_domain }}"
+radarr_reverse_proxy_virtual_port: "{{ radarr_web_port }}"
+
+radarr_reverse_proxy_letsencrypt_host: "{{ radarr_web_subdomain }}.{{ radarr_web_domain }}"
+radarr_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # API
 ################################
 

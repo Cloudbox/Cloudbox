@@ -42,6 +42,16 @@ portainer_dns_record: "{{ portainer_web_subdomain }}"
 portainer_dns_zone: "{{ portainer_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+portainer_reverse_proxy_virtual_host: "{{ portainer_web_subdomain }}.{{ portainer_web_domain }}"
+portainer_reverse_proxy_virtual_port: "{{ portainer_web_port }}"
+
+portainer_reverse_proxy_letsencrypt_host: "{{ portainer_web_subdomain }}.{{ portainer_web_domain }}"
+portainer_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Docker
 ################################
 

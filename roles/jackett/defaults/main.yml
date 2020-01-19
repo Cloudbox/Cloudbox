@@ -42,6 +42,16 @@ jackett_dns_record: "{{ jackett_web_subdomain }}"
 jackett_dns_zone: "{{ jackett_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+jackett_reverse_proxy_virtual_host: "{{ jackett_web_subdomain }}.{{ jackett_web_domain }}"
+jackett_reverse_proxy_virtual_port: "{{ jackett_web_port }}"
+
+jackett_reverse_proxy_letsencrypt_host: "{{ jackett_web_subdomain }}.{{ jackett_web_domain }}"
+jackett_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Docker
 ################################
 

@@ -87,10 +87,10 @@ docker_packages_containerd_io_dpkg_hold: yes
 
 # Envs
 docker_envs_reverse_proxy_common:
-  VIRTUAL_HOST: "{{ lookup('vars', role_name + '_web_subdomain') }}.{{ lookup('vars', role_name + '_web_domain', default=user.domain) }}"
-  VIRTUAL_PORT: "{{ lookup('vars', role_name + '_web_port') }}"
-  LETSENCRYPT_HOST: "{{ lookup('vars', role_name + '_web_subdomain') }}.{{ lookup('vars', role_name + '_web_domain', default=user.domain) }}"
-  LETSENCRYPT_EMAIL: "{{ user.email }}"
+  VIRTUAL_HOST: "{{ lookup('vars', role_name + '_reverse_proxy_virtual_host') }}"
+  VIRTUAL_PORT: "{{ lookup('vars', role_name + '_reverse_proxy_virtual_port') }}"
+  LETSENCRYPT_HOST: "{{ lookup('vars', role_name + '_reverse_proxy_letsencrypt_host') }}"
+  LETSENCRYPT_EMAIL: "{{ lookup('vars', role_name + '_reverse_proxy_letsencrypt_email') }}"
 
 # Volumes
 docker_volumes_downloads_nzbs: "{{ [downloads.nzbs + ':/downloads/nzbs']

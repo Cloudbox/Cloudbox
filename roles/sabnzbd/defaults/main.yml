@@ -49,6 +49,16 @@ sabnzbd_dns_record: "{{ sabnzbd_web_subdomain }}"
 sabnzbd_dns_zone: "{{ sabnzbd_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+sabnzbd_reverse_proxy_virtual_host: "{{ sabnzbd_web_subdomain }}.{{ sabnzbd_web_domain }}"
+sabnzbd_reverse_proxy_virtual_port: "{{ sabnzbd_web_port }}"
+
+sabnzbd_reverse_proxy_letsencrypt_host: "{{ sabnzbd_web_subdomain }}.{{ sabnzbd_web_domain }}"
+sabnzbd_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Config
 ################################
 

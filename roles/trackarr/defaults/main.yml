@@ -43,6 +43,16 @@ trackarr_dns_record: "{{ trackarr_web_subdomain }}"
 trackarr_dns_zone: "{{ trackarr_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+trackarr_reverse_proxy_virtual_host: "{{ trackarr_web_subdomain }}.{{ trackarr_web_domain }}"
+trackarr_reverse_proxy_virtual_port: "{{ trackarr_web_port }}"
+
+trackarr_reverse_proxy_letsencrypt_host: "{{ trackarr_web_subdomain }}.{{ trackarr_web_domain }}"
+trackarr_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # API
 ################################
 

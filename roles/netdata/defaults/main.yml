@@ -44,6 +44,16 @@ netdata_dns_record: "{{ netdata_web_subdomain }}"
 netdata_dns_zone: "{{ netdata_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+netdata_reverse_proxy_virtual_host: "{{ netdata_web_subdomain }}.{{ netdata_web_domain }}"
+netdata_reverse_proxy_virtual_port: "{{ netdata_web_port }}"
+
+netdata_reverse_proxy_letsencrypt_host: "{{ netdata_web_subdomain }}.{{ netdata_web_domain }}"
+netdata_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Docker
 ################################
 

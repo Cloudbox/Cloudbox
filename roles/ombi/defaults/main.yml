@@ -42,6 +42,16 @@ ombi_dns_record: "{{ ombi_web_subdomain }}"
 ombi_dns_zone: "{{ ombi_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+ombi_reverse_proxy_virtual_host: "{{ ombi_web_subdomain }}.{{ ombi_web_domain }}"
+ombi_reverse_proxy_virtual_port: "{{ ombi_web_port }}"
+
+ombi_reverse_proxy_letsencrypt_host: "{{ ombi_web_subdomain }}.{{ ombi_web_domain }}"
+ombi_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Docker
 ################################
 

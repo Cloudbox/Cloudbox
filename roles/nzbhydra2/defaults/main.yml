@@ -46,6 +46,16 @@ nzbhydra2_dns_record: "{{ nzbhydra2_web_subdomain }}"
 nzbhydra2_dns_zone: "{{ nzbhydra2_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+nzbhydra2_reverse_proxy_virtual_host: "{{ nzbhydra2_web_subdomain }}.{{ nzbhydra2_web_domain }}"
+nzbhydra2_reverse_proxy_virtual_port: "{{ nzbhydra2_web_port }}"
+
+nzbhydra2_reverse_proxy_letsencrypt_host: "{{ nzbhydra2_web_subdomain }}.{{ nzbhydra2_web_domain }}"
+nzbhydra2_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Config
 ################################
 

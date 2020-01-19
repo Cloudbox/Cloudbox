@@ -56,6 +56,16 @@ rutorrent_dns_record: "{{ rutorrent_web_subdomain }}"
 rutorrent_dns_zone: "{{ rutorrent_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+rutorrent_reverse_proxy_virtual_host: "{{ rutorrent_web_subdomain }}.{{ rutorrent_web_domain }}"
+rutorrent_reverse_proxy_virtual_port: "{{ rutorrent_web_port }}"
+
+rutorrent_reverse_proxy_letsencrypt_host: "{{ rutorrent_web_subdomain }}.{{ rutorrent_web_domain }}"
+rutorrent_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Config
 ################################
 

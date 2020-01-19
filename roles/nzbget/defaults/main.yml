@@ -49,6 +49,16 @@ nzbget_dns_record: "{{ nzbget_web_subdomain }}"
 nzbget_dns_zone: "{{ nzbget_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+nzbget_reverse_proxy_virtual_host: "{{ nzbget_web_subdomain }}.{{ nzbget_web_domain }}"
+nzbget_reverse_proxy_virtual_port: "{{ nzbget_web_port }}"
+
+nzbget_reverse_proxy_letsencrypt_host: "{{ nzbget_web_subdomain }}.{{ nzbget_web_domain }}"
+nzbget_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Config
 ################################
 

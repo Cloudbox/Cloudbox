@@ -56,6 +56,16 @@ plex_dns_record: "{{ plex_web_subdomain }}"
 plex_dns_zone: "{{ plex_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+plex_reverse_proxy_virtual_host: "{{ plex_web_subdomain }}.{{ plex_web_domain }}"
+plex_reverse_proxy_virtual_port: "{{ plex_web_port }}"
+
+plex_reverse_proxy_letsencrypt_host: "{{ plex_web_subdomain }}.{{ plex_web_domain }}"
+plex_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Docker
 ################################
 

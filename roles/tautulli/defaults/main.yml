@@ -44,6 +44,16 @@ tautulli_dns_record: "{{ tautulli_web_subdomain }}"
 tautulli_dns_zone: "{{ tautulli_web_domain }}"
 
 ################################
+# Reverse Proxy
+################################
+
+tautulli_reverse_proxy_virtual_host: "{{ tautulli_web_subdomain }}.{{ tautulli_web_domain }}"
+tautulli_reverse_proxy_virtual_port: "{{ tautulli_web_port }}"
+
+tautulli_reverse_proxy_letsencrypt_host: "{{ tautulli_web_subdomain }}.{{ tautulli_web_domain }}"
+tautulli_reverse_proxy_letsencrypt_email: "{{ user.email }}"
+
+################################
 # Docker
 ################################
 
