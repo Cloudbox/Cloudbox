@@ -75,6 +75,12 @@ nginx_reverse_proxy_letsencrypt_host: "{{ (nginx_web_subdomain
 nginx_reverse_proxy_letsencrypt_email: "{{ user.email }}"
 
 ################################
+# Config
+################################
+
+nginx_config_create_htpasswd: yes
+
+################################
 # Docker
 ################################
 
