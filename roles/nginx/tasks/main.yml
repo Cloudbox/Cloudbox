@@ -1,8 +1,7 @@
 #########################################################################
-# Title:         Cloudbox: Nginx Role                                   #
+# Title:         Cloudbox: Nginx Web Server                             #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
-# Docker Image:  linuxserver/nginx                                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -12,48 +11,17 @@
 - name: Add DNS record
   include_tasks: "{{ resources_tasks_path }}/dns/tasker.yml"
   vars:
-    dns_record: "{{ nginx.subdomain|default('web',true) }}"
-  when: not (nginx.direct_domain|default(false,true))
+    dns_record: "{{ lookup('vars', role_name + '_dns_record') }}"
+    dns_zone: "{{ lookup('vars', role_name + '_dns_zone') }}"
 
-- name: Add DNS record
-  include_tasks: "{{ resources_tasks_path }}/dns/tasker.yml"
-  vars:
-    dns_record:
-      - "{{ user.domain }}"
-      - "www"
-  when: (nginx.direct_domain|default(false,true))
-
-- name: Create nginx directories
-  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
-  with_items:
-    - /opt/nginx
-
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: nginx
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
 
-- name: Create and start container
-  docker_container:
-    name: nginx
-    image: linuxserver/nginx
-    pull: yes
-    env:
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      VIRTUAL_HOST: "{{ (nginx.direct_domain|default(false,true)) | ternary(user.domain + ',' + 'www.' + user.domain, nginx.subdomain|default('web',true) + '.' + user.domain) }}"
-      VIRTUAL_PORT: "80"
-      LETSENCRYPT_HOST: "{{ (nginx.direct_domain|default(false,true)) | ternary(user.domain + ',' + 'www.' + user.domain, nginx.subdomain|default('web',true) + '.' + user.domain) }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "/opt/nginx:/config"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - nginx
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
+- name: Create directories
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
+
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
