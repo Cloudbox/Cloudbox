@@ -43,10 +43,22 @@
   ignore_errors: yes
   register: plex_port_update
 
+- name: Post-Install | Update Ports | Update remote access in '{{ plex_paths_config_location | basename }}'
+  xml:
+    path: "{{ plex_paths_config_location }}"
+    xpath: /Preferences
+    attribute: PublishServerOnPlexOnlineKey
+    value: "{{ (plex.open_main_ports or not reverse_proxy_is_enabled) | ternary('1','0') }}"
+    state: present
+  become: yes
+  become_user: "{{ user.name }}"
+  ignore_errors: yes
+  register: plex_remote_access_update
+
 - name: Post-Install | Update Ports | Reset permissions of '{{ plex_paths_config_location | basename }}'
   file:
     path: "{{ plex_paths_config_location }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0644
-  when: plex_port_update is changed
+  when: plex_port_update is changed or plex_remote_access_update is changed
