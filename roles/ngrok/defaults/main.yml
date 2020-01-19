@@ -1,0 +1,17 @@
+#########################################################################
+# Title:         Cloudbox: ngrok | Default Variables                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+ngrok_download_url: https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip
+
+ngrok_binary_path: /usr/local/bin/ngrok
+
+ngrok_binary_version_lookup_command: |
+  {{ ngrok_binary_path }} -v \
+      | head -n 1 | awk '{ print $3 }'

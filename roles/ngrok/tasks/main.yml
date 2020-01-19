@@ -10,25 +10,23 @@
 ---
 - name: Install ngrok
   unarchive:
-    src: https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-    dest: /usr/local/bin
+    src: "{{ ngrok_download_url }}"
+    dest: "{{ ngrok_binary_path | dirname }}"
     copy: no
     mode: 0775
     validate_certs: no
   ignore_errors: yes
-  register: x
+  register: ngrok_download_status
 
-- name: "Get ngrok version"
-  shell: "/usr/local/bin/ngrok -v | head -n 1 | awk '{ print $3 }'"
-  register: ngrok_version
-  ignore_errors: yes
-  when: x is success
+- name: Tasks to do when ngrok download is successful
+  block:
 
-- name: "Display ngrok version"
-  debug:
-    msg: "ngrok {{ ngrok_version.stdout }} installed."
-  when: x is success
+  - name: Get ngrok binary version
+    shell: "{{ ngrok_binary_version_lookup_command }}"
+    register: ngrok_binary_version
 
-- debug:
-    msg: "ngrok install failed."
-  when: x is not success
+  - name: Display ngrok binary version
+    debug:
+      msg: "ngrok {{ ngrok_binary_version.stdout }} installed."
+
+  when: ngrok_download_status is succeeded
