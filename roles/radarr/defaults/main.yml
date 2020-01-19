@@ -36,6 +36,13 @@ radarr_web_url: "{{ 'https://' + radarr_web_subdomain + '.' + radarr_web_domain
                     else 'http://localhost:' + radarr_web_port }}"
 
 ################################
+# DNS
+################################
+
+radarr_dns_record: "{{ radarr_web_subdomain }}"
+radarr_dns_zone: "{{ radarr_web_domain }}"
+
+################################
 # API
 ################################
 

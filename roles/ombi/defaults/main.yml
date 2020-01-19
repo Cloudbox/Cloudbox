@@ -35,6 +35,13 @@ ombi_web_url: "{{ 'https://' + ombi_web_subdomain + '.' + ombi_web_domain
                   else 'http://localhost:' + ombi_web_port }}"
 
 ################################
+# DNS
+################################
+
+ombi_dns_record: "{{ ombi_web_subdomain }}"
+ombi_dns_zone: "{{ ombi_web_domain }}"
+
+################################
 # Docker
 ################################
 

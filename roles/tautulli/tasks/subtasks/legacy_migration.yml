@@ -8,11 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Legacy Migration | Cloudflare: Remove 'plexpy' subdomain from '{{ user.domain }}'"
-  include_role:
-    name: dns
+- name: Legacy Migration | Remove 'plexpy' subdomain from '{{ lookup('vars', role_name + '_web_domain') }}'
+  include_tasks: "{{ resources_tasks_path }}/dns/tasker.yml"
   vars:
     dns_record: plexpy
+    dns_zone: "{{ lookup('vars', role_name + '_web_domain') }}"
     dns_action: remove
 
 - name: Legacy Migration | Stop and remove 'plexpy' container

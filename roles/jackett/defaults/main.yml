@@ -35,6 +35,13 @@ jackett_web_url: "{{ 'https://' + jackett_web_subdomain + '.' + jackett_web_doma
                       else 'http://localhost:' + jackett_web_port }}"
 
 ################################
+# DNS
+################################
+
+jackett_dns_record: "{{ jackett_web_subdomain }}"
+jackett_dns_zone: "{{ jackett_web_domain }}"
+
+################################
 # Docker
 ################################
 

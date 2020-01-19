@@ -9,21 +9,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create DNS Record
-  include_role:
-    name: dns
+- name: Add DNS record
+  include_tasks: "{{ resources_tasks_path }}/dns/tasker.yml"
   vars:
     dns_record: "{{ nginx.subdomain|default('web',true) }}"
   when: not (nginx.direct_domain|default(false,true))
 
-- name: Create DNS Record
-  include_role:
-    name: dns
+- name: Add DNS record
+  include_tasks: "{{ resources_tasks_path }}/dns/tasker.yml"
   vars:
-    dns_record: "{{ item }}"
-  with_items:
-    - "{{ user.domain }}"
-    - "www"
+    dns_record:
+      - "{{ user.domain }}"
+      - "www"
   when: (nginx.direct_domain|default(false,true))
 
 - name: Create nginx directories

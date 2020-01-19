@@ -39,6 +39,13 @@ nzbhydra2_web_url: "{{ 'https://' + nzbhydra2_web_subdomain + '.' + nzbhydra2_we
                         else 'http://localhost:' + nzbhydra2_web_port }}"
 
 ################################
+# DNS
+################################
+
+nzbhydra2_dns_record: "{{ nzbhydra2_web_subdomain }}"
+nzbhydra2_dns_zone: "{{ nzbhydra2_web_domain }}"
+
+################################
 # Config
 ################################
 

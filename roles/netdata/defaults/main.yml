@@ -37,6 +37,13 @@ netdata_web_url: "{{ 'https://' + netdata_web_subdomain + '.' + netdata_web_doma
                       else 'http://localhost:' + netdata_web_port }}"
 
 ################################
+# DNS
+################################
+
+netdata_dns_record: "{{ netdata_web_subdomain }}"
+netdata_dns_zone: "{{ netdata_web_domain }}"
+
+################################
 # Docker
 ################################
 

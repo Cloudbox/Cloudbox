@@ -37,6 +37,13 @@ tautulli_web_url: "{{ 'https://' + tautulli_web_subdomain + '.' + tautulli_web_d
                       else 'http://localhost:' + tautulli_web_port }}"
 
 ################################
+# DNS
+################################
+
+tautulli_dns_record: "{{ tautulli_web_subdomain }}"
+tautulli_dns_zone: "{{ tautulli_web_domain }}"
+
+################################
 # Docker
 ################################
 

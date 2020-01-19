@@ -36,6 +36,13 @@ trackarr_web_url: "{{ 'https://' + trackarr_web_subdomain + '.' + trackarr_web_d
                       else 'http://localhost:' + trackarr_web_port }}"
 
 ################################
+# DNS
+################################
+
+trackarr_dns_record: "{{ trackarr_web_subdomain }}"
+trackarr_dns_zone: "{{ trackarr_web_domain }}"
+
+################################
 # API
 ################################
 

@@ -36,6 +36,13 @@ sstvirl_web_url: "{{ 'https://' + sstvirl_web_subdomain + '.' + sstvirl_web_doma
                       else 'http://localhost:' + sstvirl_web_port }}"
 
 ################################
+# DNS
+################################
+
+sstvirl_dns_record: "{{ sstvirl_web_subdomain }}"
+sstvirl_dns_zone: "{{ sstvirl_web_domain }}"
+
+################################
 # Docker
 ################################
 

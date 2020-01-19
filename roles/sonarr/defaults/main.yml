@@ -36,6 +36,13 @@ sonarr_web_url: "{{ 'https://' + sonarr_web_subdomain + '.' + sonarr_web_domain
                     else 'http://localhost:' + sonarr_web_port }}"
 
 ################################
+# DNS
+################################
+
+sonarr_dns_record: "{{ sonarr_web_subdomain }}"
+sonarr_dns_zone: "{{ sonarr_web_domain }}"
+
+################################
 # API
 ################################
 

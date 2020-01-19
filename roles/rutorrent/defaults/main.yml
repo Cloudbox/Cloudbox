@@ -49,6 +49,13 @@ rutorrent_web_url: "{{ 'https://' + rutorrent_web_subdomain + '.' + rutorrent_we
                         else 'http://localhost:' + rutorrent_web_port }}"
 
 ################################
+# DNS
+################################
+
+rutorrent_dns_record: "{{ rutorrent_web_subdomain }}"
+rutorrent_dns_zone: "{{ rutorrent_web_domain }}"
+
+################################
 # Config
 ################################
 

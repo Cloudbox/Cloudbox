@@ -8,12 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create DNS Record
-  include_role:
-    name: dns
+- name: Add DNS record
+  include_tasks: "{{ resources_tasks_path }}/dns/tasker.yml"
   vars:
-    dns_record: "{{ trackarr_web_subdomain }}"
-    dns_zone: "{{ trackarr_web_domain }}"
+    dns_record: "{{ lookup('vars', role_name + '_dns_record') }}"
+    dns_zone: "{{ lookup('vars', role_name + '_dns_zone') }}"
 
 - name: Remove existing Docker container
   docker_container:

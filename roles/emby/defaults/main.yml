@@ -41,6 +41,13 @@ emby_web_url: "{{ 'https://' + emby_web_subdomain + '.' + emby_web_domain
                   else 'http://localhost:' + emby_web_port }}"
 
 ################################
+# DNS
+################################
+
+emby_dns_record: "{{ emby_web_subdomain }}"
+emby_dns_zone: "{{ emby_web_domain }}"
+
+################################
 # Settings
 ################################
 

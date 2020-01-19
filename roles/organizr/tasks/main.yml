@@ -9,21 +9,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Create DNS Record
-  include_role:
-    name: dns
+- name: Add DNS record
+  include_tasks: "{{ resources_tasks_path }}/dns/tasker.yml"
   vars:
     dns_record: organizr
-  when: not (organizr.direct_domain|default(false,true))
+    dns_action: "{{ not (organizr.direct_domain|default(false,true)) | ternary('add','remove') }}"
 
-- name: Create DNS Record
-  include_role:
-    name: dns
+- name: Add DNS record
+  include_tasks: "{{ resources_tasks_path }}/dns/tasker.yml"
   vars:
-    dns_record: "{{ item }}"
-  with_items:
-    - "{{ user.domain }}"
-    - "www"
+    dns_record:
+      - "{{ user.domain }}"
+      - "www"
   when: (organizr.direct_domain|default(false,true))
 
 - name: Stop and remove any existing container

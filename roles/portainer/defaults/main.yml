@@ -35,6 +35,13 @@ portainer_web_url: "{{ 'https://' + portainer_web_subdomain + '.' + portainer_we
                         else 'http://localhost:' + portainer_web_port }}"
 
 ################################
+# DNS
+################################
+
+portainer_dns_record: "{{ portainer_web_subdomain }}"
+portainer_dns_zone: "{{ portainer_web_domain }}"
+
+################################
 # Docker
 ################################
 
