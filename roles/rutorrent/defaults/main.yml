@@ -20,7 +20,7 @@ rutorrent_name: rutorrent
 
 rutorrent_paths_folder: "{{ rutorrent_name }}"
 rutorrent_paths_location: "{{ server_appdata_path }}/{{ rutorrent_paths_folder }}"
-rutorrent_paths_downloads_location: "{{ downloads.nzbs }}/{{ rutorrent_paths_folder }}"
+rutorrent_paths_downloads_location: "{{ downloads.torrents }}/{{ rutorrent_paths_folder }}"
 rutorrent_paths_folders_list:
   - "{{ rutorrent_paths_location }}"
   - "{{ rutorrent_paths_location }}/plugins"
