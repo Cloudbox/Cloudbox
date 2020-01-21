@@ -20,14 +20,14 @@ rutorrent_name: rutorrent
 
 rutorrent_paths_folder: "{{ rutorrent_name }}"
 rutorrent_paths_location: "{{ server_appdata_path }}/{{ rutorrent_paths_folder }}"
-rutorrent_paths_downloads_location: "{{ downloads.nzbs }}/{{ rutorrent_paths_folder }}"
+rutorrent_paths_downloads_location: "{{ downloads.torrents }}/{{ rutorrent_paths_folder }}"
 rutorrent_paths_folders_list:
   - "{{ rutorrent_paths_location }}"
   - "{{ rutorrent_paths_location }}/plugins"
   - "{{ rutorrent_paths_location }}/themes"
   - "{{ rutorrent_paths_downloads_location }}"
-  - "{{ rutorrent_paths_downloads_location }}/rutorrent/completed"
-  - "{{ rutorrent_paths_downloads_location }}/rutorrent/watched"
+  - "{{ rutorrent_paths_downloads_location }}/completed"
+  - "{{ rutorrent_paths_downloads_location }}/watched"
 
 # Config files
 rutorrent_paths_config_php_location: "{{ rutorrent_paths_location }}/rutorrent/settings/config.php"
