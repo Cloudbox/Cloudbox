@@ -1,0 +1,35 @@
+#########################################################################
+# Title:         Cloudbox: Shell | z (jump around)                      #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: z | Create 'z' directories
+  file:
+    path: "{{ shell_z_git_repo_dest }}"
+    state: directory
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    recurse: yes
+
+- name: z | Clone 'z' repo
+  git:
+    repo: "{{ shell_z_git_repo_url }}"
+    dest: "{{ shell_z_git_repo_dest }}"
+    clone: yes
+    version: HEAD
+    force: yes
+  become: yes
+  become_user: "{{ user.name }}"
+  register: shell_z_git_clone_status
+  ignore_errors: yes
+
+- name: z | 'z' Installed
+  debug:
+    msg: "'z (jump around)' Installed"
+  when: shell_z_git_clone_status is succeeded

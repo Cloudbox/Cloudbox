@@ -1,0 +1,38 @@
+#########################################################################
+# Title:         Cloudbox: Shell | Bash Tasks                           #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Bash | Add items to '{{ shell_bash_bashrc_path }}'
+  blockinfile:
+    path: "{{ shell_bash_bashrc_path }}"
+    marker: "### CLOUDBOX MANAGED BLOCK - {mark} ###"
+    block: "{{ shell_bash_bashrc_block_content }}"
+    state: present
+    create: no
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+
+- name: Bash | Set Bash as default shell
+  user:
+    name: "{{ user.name }}"
+    shell: "{{ shell_bash_binary_path }}"
+  register: shell_update_task
+
+- name: Bash | Set Bash as default shell
+  debug:
+    msg:
+      - "Set Bash as default shell"
+  when: (shell_update_task is changed)
+
+- name: Bash | Default shell set to Bash
+  debug:
+    msg:
+      - "Changes will apply on session restart."
+  when: (shell_update_task is changed) and ('shell' in ansible_run_tags)

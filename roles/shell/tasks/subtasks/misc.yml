@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Shell Role                                   #
+# Title:         Cloudbox: Shell | Misc                                 #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,11 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Import 'misc' subtask
-  include_tasks: "subtasks/misc.yml"
+- name: Misc | Install argcomplete
+  pip:
+    state: present
+    name: "{{ shell_misc_argcomplete_pip_package }}"
+  ignore_errors: yes
 
-- name: Import 'z' subtask
-  include_tasks: "subtasks/z.yml"
-
-- name: Import '{{ shell_type }}' subtask
-  include_tasks: "subtasks/shell/{{ shell_type }}.yml"
+# For Ansible command line utilities
+- name: Misc | Activate argcomplete
+  shell: "{{ shell_misc_argcomplete_command }}"
+  ignore_errors: yes
