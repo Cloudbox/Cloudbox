@@ -52,13 +52,7 @@ mariadb_docker_envs_default:
   TZ: "{{ tz }}"
   MYSQL_ROOT_PASSWORD: "{{ mariadb_docker_envs_mysql_root_password }}"
 mariadb_docker_envs_custom: {}
-mariadb_docker_envs_reverse_proxy: {}
 mariadb_docker_envs: "{{ mariadb_docker_envs_default
-                            | combine(mariadb_docker_envs_custom)
-                            | combine(mariadb_docker_envs_reverse_proxy)
-                            | combine(docker_envs_reverse_proxy_common)
-                        if (reverse_proxy_is_enabled)
-                        else mariadb_docker_envs_default
                             | combine(mariadb_docker_envs_custom) }}"
 
 # Volumes
