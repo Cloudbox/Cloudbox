@@ -22,6 +22,7 @@ radarr_paths_folder: "{{ radarr_name }}"
 radarr_paths_location: "{{ server_appdata_path }}/{{ radarr_paths_folder }}"
 radarr_paths_folders_list:
   - "{{ radarr_paths_location }}"
+  - "{{ radarr_paths_location }}/script.d"
 radarr_paths_config_location: "{{ radarr_paths_location }}/app/config.xml"
 
 ################################
@@ -99,6 +100,7 @@ radarr_docker_envs: "{{ radarr_docker_envs_default
 # Volumes
 radarr_docker_volumes_default:
   - "{{ radarr_paths_location }}:/config"
+  - "{{ radarr_paths_location }}/99-cont-init-script-runner.sh:/etc/cont-init.d/99-cont-init-script-runner.sh"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media/Movies:/movies"
   - "/mnt:/mnt"
