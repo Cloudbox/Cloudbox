@@ -79,11 +79,11 @@ plex_docker_image: "plexinc/pms-docker:{{ plex_docker_image_tag }}"
 
 # Ports
 plex_docker_ports_defaults:
-  - "{{ plex_web_port }}"
+  - "{{ plex_web_port }}-{{ plex_web_port | int + 10 }}:{{ plex_web_port }}"
 plex_docker_ports_custom: []
 plex_docker_ports_webtools:
-  - "33400/tcp"
-  - "33443/tcp"
+  - "33400-33410:33400/tcp"
+  - "33443-33453:33443/tcp"
 plex_docker_ports: "{{ plex_docker_ports_defaults
                             + plex_docker_ports_webtools
                             + plex_docker_ports_custom
