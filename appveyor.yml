@@ -74,7 +74,7 @@ init:
   - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh
 
 install:
-  - sh: sudo pip install 'ansible>=2.8,<2.9'
+  - sh: sudo pip install 'ansible>=2.9,<2.10'
   - sh: git submodule update --init --recursive
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
