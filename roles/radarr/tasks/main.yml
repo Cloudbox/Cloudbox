@@ -29,12 +29,6 @@
 - name: Darkerr Tasks
   import_tasks: "subtasks/darkerr.yml"
 
-- name: SMA Tasks
-  include_tasks: "{{ resources_tasks_path }}/hotio/sickbeard_mp4_automator/install_reqs.yml"
-  when:
-    - ('hotio' in lookup('vars', role_name + '_docker_image'))
-    - (use_sma)
-
 - name: Import '99-cont-init-script-runner.sh' script
   copy:
     src: "{{ resources_tasks_path }}/hotio/cont-init.d/files/99-cont-init-script-runner.sh"
@@ -43,6 +37,9 @@
     group: "{{ user.name }}"
     mode: 0775
     force: yes
+
+- name: SMA Tasks
+  include_tasks: "{{ resources_tasks_path }}/hotio/sickbeard_mp4_automator/install_reqs.yml"
 
 - name: Docker Devices Task
   include_tasks: "{{ resources_tasks_path }}/docker/set_docker_devices_variable.yml"
