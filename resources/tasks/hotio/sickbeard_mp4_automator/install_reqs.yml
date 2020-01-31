@@ -10,7 +10,8 @@
 ---
 - name: Set 'script_d_path' variable
   set_fact:
-    script_d_path: "{{ lookup('vars', role_name + '_paths_location') }}/script.d/"
+    script_d_path: "{{ lookup('vars', role_name + '_paths_location') }}/script.d"
+    sma_req_is_to_be_installed: "{{ ('hotio' in lookup('vars', role_name + '_docker_image')) and (use_sma) }}"
 
 - name: Create directories
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
@@ -25,17 +26,10 @@
     group: "{{ user.name }}"
     mode: 0775
     force: yes
+  when: sma_req_is_to_be_installed
 
-- name: Set 'sma_req_volume' variable
-  set_fact:
-    sma_req_volume:
-      - "{{ script_d_path }}/99-sma_req.sh:/etc/cont-init.d/99-sma_req.sh"
-
-- name: Set 'docker_volumes_var_*' temp variables
-  set_fact:
-      docker_volumes_var_name: "{{ role_name + '_docker_volumes' }}"
-      docker_volumes_var_value: "{{ lookup('vars', role_name + '_docker_volumes') }}"
-
-- name: Rebuild 'docker_volumes' variable
-  set_fact:
-    "{{ docker_volumes_var_name }}": "{{ docker_volumes_var_value + sma_req_volume }}"
+- name: Remove 'sma_req.sh' script
+  file:
+    path: "{{ script_d_path }}/99-sma_req.sh"
+    state: absent
+  when: not sma_req_is_to_be_installed
