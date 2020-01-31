@@ -99,6 +99,7 @@ sonarr_docker_envs: "{{ sonarr_docker_envs_default
 # Volumes
 sonarr_docker_volumes_default:
   - "{{ sonarr_paths_location }}:/config"
+  - "{{ sonarr_paths_location }}/99-cont-init-script-runner.sh:/etc/cont-init.d/99-cont-init-script-runner.sh"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt/unionfs/Media/TV:/tv"
   - "/mnt:/mnt"
