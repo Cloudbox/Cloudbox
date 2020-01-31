@@ -204,6 +204,7 @@ nzbget_docker_envs: "{{ nzbget_docker_envs_default
 # Volumes
 nzbget_docker_volumes_default:
   - "{{ nzbget_paths_location }}:/config"
+  - "{{ nzbget_paths_location }}/99-cont-init-script-runner.sh:/etc/cont-init.d/99-cont-init-script-runner.sh"
   - "{{ server_appdata_path }}/scripts:/scripts"
   - "/mnt:/mnt"
 nzbget_docker_volumes_custom: []

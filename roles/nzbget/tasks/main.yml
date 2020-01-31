@@ -42,6 +42,15 @@
     - (gpu.intel or gpu.nvidia.enabled)
     - (use_sma)
 
+- name: Import '99-cont-init-script-runner.sh' script
+  copy:
+    src: "{{ resources_tasks_path }}/hotio/cont-init.d/files/99-cont-init-script-runner.sh"
+    dest: "{{ lookup('vars', role_name + '_paths_location') }}/99-cont-init-script-runner.sh"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: yes
+
 - name: Check if existing config exists
   stat:
     path: "{{ nzbget_paths_config_location }}"
