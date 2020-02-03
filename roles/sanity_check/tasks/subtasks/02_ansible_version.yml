@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Sanity Check | Touch Logs                    #
+# Title:         Cloudbox: Sanity Check | Ansible Version               #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,15 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Touch Logs | Get 'cloudbox.yml' info."
-  stat:
-    path: "{{ playbook_dir }}/cloudbox.yml"
-  register: cloudbox_yml
-
-- name: "Touch Logs | Touch 'cloudbox.log'"
-  file:
-    path: "{{ playbook_dir }}/cloudbox.log"
-    state: touch
-    owner: "{{ cloudbox_yml.stat.uid }}"
-    group: "{{ cloudbox_yml.stat.gid }}"
-    mode: 0664
+- name: Ansible Version | Ensure required Ansible version is installed
+  assert:
+    that:
+      - ansible_version.full is version(sanity_check_ansible_version_min, '>=')
+    fail_msg: >-
+      Installed Ansible version: {{ ansible_version.full }}.
+      You need to have Ansible version >= {{ sanity_check_ansible_version_min }} installed.
+      Run `sudo pip install 'ansible>=2.9,<2.10'` to update.
+    success_msg:  >-
+      Ansible Version: {{ ansible_version.full }}

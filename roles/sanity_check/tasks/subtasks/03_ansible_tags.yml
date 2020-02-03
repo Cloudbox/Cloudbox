@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Sanity Check | Tags Check                    #
+# Title:         Cloudbox: Sanity Check | Ansible Tags                  #
 # Author(s):     desimaniac, EnorMOZ                                    #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -9,10 +9,8 @@
 #########################################################################
 ---
 # Source: http://blog.leifmadsen.com/blog/2017/01/04/finding-available-ansible-tags-in-playbooks-and-roles/
-- name: "Tags Check | Get all available tags"
-  shell: |
-    ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" \
-      | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
+- name: Ansible Tags | Get all available Ansible tags
+  shell: "{{ sanity_check_ansible_tags_lookup_command }}"
   register: t
   changed_when: no
   when:
@@ -20,7 +18,7 @@
    - "'cloudbox_mod' not in playbook_dir"
    - "'community' not in playbook_dir"
 
-- name: "Tags Check | Ensure valid tag(s) were provided."
+- name: Ansible Tags | Ensure valid Ansible tag(s) were provided
   assert:
     that:
       - '"{{ item }}" in t.stdout_lines'

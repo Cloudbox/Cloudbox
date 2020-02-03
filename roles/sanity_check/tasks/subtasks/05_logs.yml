@@ -1,0 +1,22 @@
+#########################################################################
+# Title:         Cloudbox: Sanity Check | Logs                          #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Logs | Get '{{ sanity_check_logs_playbook_path | basename }}' info
+  stat:
+    path: "{{ sanity_check_logs_playbook_path }}"
+  register: cloudbox_yml
+
+- name: Logs | Touch '{{ sanity_check_logs_logfile_path | basename }}'
+  file:
+    path: "{{ sanity_check_logs_logfile_path }}"
+    state: touch
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664
