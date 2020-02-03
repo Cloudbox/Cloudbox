@@ -71,19 +71,17 @@
   with_fileglob:
     - "recipes/*.yml"
 
-- name: "Copy 'plexlibrary.sh' to '/opt/python-plexlibrary' folder"
+- name: "Copy helper scripts to '/opt/python-plexlibrary' folder"
   copy:
-    src: "plexlibrary.sh"
-    dest: "/opt/python-plexlibrary/plexlibrary.sh"
+    src: "{{ item }}"
+    dest: "/opt/python-plexlibrary/{{ item }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
-    mode: 0775
+    mode: 0775,a+x
     force: yes
-
-- name: Set 'plexlibrary.sh' as executable
-  file:
-    path: "/opt/python-plexlibrary/plexlibrary.sh"
-    mode: a+x
+  loop:
+    - "plexlibrary.sh"
+    - "plexlibrary-cron-helper.sh"
 
 - name: "Create '/usr/local/bin' symlink"
   file:
@@ -100,12 +98,13 @@
   with_items:
     - "recipes/examples/cloudbox/*.yml"
     - "plexlibrary.sh"
+    - "plexlibrary-cron-helper.sh"
     - "*.log"
 
 - name: "Schedule cron task for daily update."
   cron:
     name: "Python-PlexLibrary"
     user: "{{ user.name }}"
-    job: "/opt/python-plexlibrary/plexlibrary.sh"
+    job: "/opt/python-plexlibrary/plexlibrary-cron-helper.sh"
     special_time: daily
     state: present
