@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Kernel Role                                  #
-# Author(s):     l3uddz, desimaniac                                     #
+# Author(s):     desimaniac, l3uddz                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,30 +8,34 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Set default 'reboot_is_necessary' variable
-  set_fact:
-    reboot_is_necessary: false
+- name: Variables Task
+  include_tasks: "subtasks/00_variables.yml"
 
-- name: Preinstall task
-  include_tasks: "subtasks/preinstall.yml"
+- name: Preinstall Task
+  include_tasks: "subtasks/01_preinstall.yml"
   when: ('preinstall' in ansible_run_tags)
 
-- name: "Cron Tasks"
-  include_tasks: "subtasks/cron.yml"
+- name: Cron Tasks
+  include_tasks: "subtasks/02_cron.yml"
 
-- name: "Mainline Kernel Script Tasks"
-  include_tasks: "subtasks/script.yml"
+# Ubuntu Mainline Kernel Updater Script
+- name: Script Tasks
+  include_tasks: "subtasks/03_script.yml"
+  when: (ansible_distribution == 'Ubuntu')
 
-- name: "Update Tasks"
-  include_tasks: "subtasks/update.yml"
+# Ubuntu 16.04 HWE Update
+- name: Update Tasks
+  include_tasks: "subtasks/04_update.yml"
+  when:
+    - (ansible_distribution == 'Ubuntu')
+    - (ansible_distribution_version is version('16.04', '=='))
+    - (ansible_kernel is version('4.10', '<'))
 
-- name: "Header Tasks"
-  include_tasks: "subtasks/headers.yml"
+- name: Restart Tasks
+  include_tasks: "subtasks/05_restart.yml"
+  when:
+    - (reboot_is_necessary)
+    - (not continuous_integration)
 
-- name: "Restart Tasks"
-  include_tasks: "subtasks/restart.yml"
-  when: (reboot_is_necessary) and
-    (not continuous_integration)
-
-- name: "Checks Tasks"
-  include_tasks: "subtasks/checks.yml"
+- name: Checks Task
+  include_tasks: "subtasks/06_checks.yml"

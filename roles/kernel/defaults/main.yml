@@ -1,0 +1,31 @@
+#########################################################################
+# Title:         Cloudbox: Kernel | Default Variables                   #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Cron
+################################
+
+kernel_cron_task: "PATH='/usr/sbin:/usr/bin:/sbin:/bin' purge-old-kernels -qy"
+
+################################
+# Script
+################################
+
+kernel_script_path: /usr/local/bin/ubuntu-mainline-kernel.sh
+
+kernel_script_url: https://api.github.com/repos/pimlie/ubuntu-mainline-kernel.sh/contents/ubuntu-mainline-kernel.sh
+
+################################
+# Update
+################################
+
+kernel_update_apt_package: linux-generic-hwe-16.04
+
+kernel_update_apt_fix: apt-get --fix-broken --yes install

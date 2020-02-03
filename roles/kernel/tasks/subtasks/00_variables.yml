@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Kernel | Cron Tasks                          #
-# Author(s):     l3uddz, desimaniac                                     #
+# Title:         Cloudbox: Kernel | Variables Task                      #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,8 +8,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Cron | Purge old kernels on reboot
-  cron:
-    name: "Remove old kernels on reboot"
-    special_time: reboot
-    job: "PATH='/usr/sbin:/usr/bin:/sbin:/bin' purge-old-kernels -qy"
+- name: Variables | Set default 'reboot_is_necessary' variable
+  set_fact:
+    reboot_is_necessary: false

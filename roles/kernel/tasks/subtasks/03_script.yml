@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Kernel | Mainline Kernel Script Tasks        #
+# Title:         Cloudbox: Kernel | Script Tasks                        #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,39 +8,40 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Mainline Kernel Script | Check for existing 'ubuntu-mainline-kernel.sh'
+- name: Script | Check for existing 'ubuntu-mainline-kernel.sh'
   stat:
-    path: /usr/local/bin/ubuntu-mainline-kernel.sh
+    path: "{{ kernel_script_path }}"
   register: existing_local_script
 
-- name: Mainline Kernel Script | Tasks for when 'ubuntu-mainline-kernel.sh' exists
+- name: Script | Tasks for when 'ubuntu-mainline-kernel.sh' exists
   block:
 
-  - name: Mainline Kernel Script | Calculate hash blob for existing 'ubuntu-mainline-kernel.sh'
-    shell: git hash-object /usr/local/bin/ubuntu-mainline-kernel.sh
+  - name: Script | Calculate hash blob for existing 'ubuntu-mainline-kernel.sh'
+    shell: |
+      git hash-object {{ kernel_script_path }}
     register: existing_local_script_hash_raw
 
-  - name: Mainline Kernel Script | Set 'existing_local_script_hash' variable
+  - name: Script | Set 'existing_local_script_hash' variable
     set_fact:
       existing_local_script_hash: "{{ existing_local_script_hash_raw.stdout }}"
 
-  - name: Mainline Kernel Script | Get hash blob for latest 'ubuntu-mainline-kernel.sh'
+  - name: Script | Get hash blob for latest 'ubuntu-mainline-kernel.sh'
     uri:
-      url: https://api.github.com/repos/pimlie/ubuntu-mainline-kernel.sh/contents/ubuntu-mainline-kernel.sh
+      url: "{{ kernel_script_url }}"
       method: GET
       body_format: json
     register: blob_lookup
     ignore_errors: yes
 
-  - name: Mainline Kernel Script | Set 'remote_script_hash' variables
+  - name: Script | Set 'remote_script_hash' variables
     set_fact:
       remote_script_hash: "{{ blob_lookup.json.sha }}"
     when: (blob_lookup is succeeded) and (blob_lookup.json.sha is defined)
 
-  - name: Mainline Kernel Script | Download and install 'ubuntu-mainline-kernel.sh'
+  - name: Script | Download and install 'ubuntu-mainline-kernel.sh'
     get_url:
-      url:  https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
-      dest: /usr/local/bin/ubuntu-mainline-kernel.sh
+      url:  "{{ kernel_script_url }}"
+      dest: "{{ kernel_script_path }}"
       mode: 0775
       owner: root
       group: root
@@ -61,10 +62,10 @@
 
   when: existing_local_script.stat.exists
 
-- name: Mainline Kernel Script | Download and install 'ubuntu-mainline-kernel.sh'
+- name: Script | Download and install 'ubuntu-mainline-kernel.sh'
   get_url:
-    url:  https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
-    dest: /usr/local/bin/ubuntu-mainline-kernel.sh
+    url:  "{{ kernel_script_url }}"
+    dest: "{{ kernel_script_path }}"
     mode: 0775
     owner: root
     group: root
@@ -73,22 +74,23 @@
   ignore_errors: yes
   when: (not existing_local_script.stat.exists)
 
-- name: Mainline Kernel Script | Look for '/usr/local/bin/ubuntu-mainline-kernel.sh'
+- name: Script | Look for '{{ kernel_script_path }}'
   stat:
-    path: /usr/local/bin/ubuntu-mainline-kernel.sh
+    path: "{{ kernel_script_path }}"
   register: new_local_script
 
-- name: Mainline Kernel Script | Mainline Kernel Script | Validate '/usr/local/bin/ubuntu-mainline-kernel.sh'
-  shell: head -1 /usr/local/bin/ubuntu-mainline-kernel.sh | grep -q '#!/usr/bin/env bash\b'
+- name: Script | Validate '{{ kernel_script_path }}'
+  shell: |
+    head -1 {{ kernel_script_path }} | grep -q '#!/usr/bin/env bash\b'
   register: validate_script
   ignore_errors: yes
   failed_when: validate_script.rc > 1
   when: new_local_script.stat.exists
 
-- name: Mainline Kernel Script | Import script if validation failed
+- name: Script | Import script if validation failed
   copy:
     src: "ubuntu-mainline-kernel.sh"
-    dest: "/usr/local/bin/ubuntu-mainline-kernel.sh"
+    dest: "{{ kernel_script_path }}"
     owner: "root"
     group: "root"
     mode: 0775
