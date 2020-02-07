@@ -3,7 +3,7 @@ downloads:
   nzbs: /mnt/local/downloads/nzbs
   torrents: /mnt/local/downloads/torrents
 plex:
-  tag: public
+  tag: latest
   transcodes: /mnt/local/transcodes
 rclone:
   version: latest
