@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Sanity Check Role                            #
-# Author(s):     l3uddz, desimaniac                                     #
+# Title:         Sanity Check - Logs Check                              #
+# Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,18 +8,15 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Sanity Check: System Checks"
-  import_tasks: "sanity_check_system.yml"
-  tags: always
+- name: Get 'cloudbox.yml' info
+  stat:
+    path: "{{ playbook_dir }}/cloudbox.yml"
+  register: cloudbox_yml
 
-- name: "Sanity Check: Tag Checks"
-  import_tasks: "sanity_check_tags.yml"
-  tags: always
-
-- name: "Sanity Check: Backup Checks"
-  import_tasks: "sanity_check_backup.yml"
-  tags: always
-
-- name: "Sanity Check: Logs Checks"
-  import_tasks: "sanity_check_logs.yml"
-  tags: always
+- name: Touch 'cloudbox.log' file
+  file:
+    path: "{{ playbook_dir }}/cloudbox.log"
+    state: touch
+    owner: "{{ cloudbox_yml.stat.uid }}"
+    group: "{{ cloudbox_yml.stat.gid }}"
+    mode: 0664
