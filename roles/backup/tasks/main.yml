@@ -359,6 +359,7 @@
         --ignore-failed-read \
         --warning=no-file-changed \
         --warning=no-file-removed \
+        --warning=failed-read \
         --exclude='./snapshots' \
         --exclude-from '{{ backup_excludes_list_path }}' \
         -cf '{{ local.destination }}/opt/{{ item | basename }}.tar' -C '{{ item | dirname }}' './{{ item | basename }}' \
