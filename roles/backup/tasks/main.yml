@@ -361,8 +361,7 @@
         --warning=no-file-removed \
         --exclude='./snapshots' \
         --exclude-from '{{ backup_excludes_list_path }}' \
-        -cf '{{ local.destination }}/opt/{{ item | basename }}.tar' -C '{{ item | dirname }}' './{{ item | basename }}' \
-        2> /dev/null
+        -cf '{{ local.destination }}/opt/{{ item | basename }}.tar' -C '{{ item | dirname }}' './{{ item | basename }}'
     args:
       executable: /bin/bash
       warn: no
