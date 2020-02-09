@@ -46,6 +46,11 @@
   import_tasks: "plex_autoscan_py.yml"
   when: not plex_autoscan_py.stat.exists
 
+- name: Create 'sma_update_container' variable
+  set_fact:
+    sma_update_container: "{{ ('sma' in ansible_run_tags
+                                  or 'sickbeard_mp4_automator' in ansible_run_tags) }}"
+
 - name: "Update Docker Containers Task"
   include_tasks: "update_docker_containers.yml"
   loop:
@@ -54,3 +59,4 @@
     - "nzbget"
   loop_control:
     loop_var: app
+  when: sma_update_container
