@@ -75,7 +75,7 @@ plex_docker_container: "{{ plex_name }}"
 # Image
 plex_docker_image_pull: yes
 plex_docker_image_tag: "{{ plex.tag }}"
-plex_docker_image: "plexinc/pms-docker:{{ plex_docker_image_tag }}"
+plex_docker_image: "cloudb0x/plex:{{ plex_docker_image_tag }}"
 
 # Ports
 plex_docker_ports_defaults:
