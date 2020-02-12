@@ -1,0 +1,72 @@
+#########################################################################
+# Title:         Cloudbox: Trackarr | Get API Keys                      #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Get API Keys | Check if Sonarr exists
+  stat:
+    path: "/opt/sonarr/app/config.xml"
+  register: sonarr_paths_config_location_stat
+
+- name: Get API Keys | Sonarr API Key tasks
+  block:
+
+  - name: Get API Keys | Fetch Sonarr API Key
+    xml:
+      path: "/opt/sonarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Get API Keys | Set 'sonarr_api_key' variable
+    set_fact:
+      sonarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (sonarr_paths_config_location_stat.stat.exists)
+
+- name: Get API Keys | Check if Radarr exists
+  stat:
+    path: "/opt/radarr/app/config.xml"
+  register: radarr_paths_config_location_stat
+
+- name: Get API Keys | Radarr API Key tasks
+  block:
+
+  - name: Get API Keys | Fetch Radarr API Key
+    xml:
+      path: "/opt/radarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Get API Keys | Set 'radarr_api_key' variable
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (radarr_paths_config_location_stat.stat.exists)
+
+- name: Get API Keys | Check if Lidarr exists
+  stat:
+    path: "/opt/lidarr/app/config.xml"
+  register: lidarr_paths_config_location_stat
+
+- name: Get API Keys | Lidarr API Key tasks
+  block:
+
+  - name: Get API Keys | Fetch Lidarr API Key
+    xml:
+      path: "/opt/lidarr/app/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Get API Keys | Set 'lidarr_api_key' variable
+    set_fact:
+      lidarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: (lidarr_paths_config_location_stat.stat.exists)

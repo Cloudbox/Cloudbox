@@ -1,0 +1,26 @@
+##########################################################################
+# Title:         Cloudbox: Trackarr | Default Variables                  #
+# Author(s):     desimaniac                                              #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# API
+################################
+
+# default to blank
+trackarr_server_apikey:
+
+################################
+# Docker
+################################
+
+# Image
+trackarr_docker_image_tag: "latest"
+
+# Envs
+trackarr_docker_envs_log_level: "1"

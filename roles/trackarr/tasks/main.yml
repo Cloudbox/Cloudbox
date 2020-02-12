@@ -1,0 +1,57 @@
+#########################################################################
+# Title:         Cloudbox: Trackarr Role                                #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare-dns
+  vars:
+    subdomain: "trackarr"
+  when: cloudflare_enabled
+
+- name: Remove existing Docker container
+  docker_container:
+    name: "trackarr"
+    state: absent
+
+- name: Create directories
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
+  with_items: "/opt/trackarr"
+
+- name: Pre-Install Tasks
+  include_tasks: "subtasks/pre-install.yml"
+
+- name: "Create and start container"
+  docker_container:
+    name: "trackarr"
+    image: "cloudb0x/trackarr:{{ trackarr_docker_image_tag }}"
+    pull: yes
+    published_ports:
+      "127.0.0.1:7337:7337"
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      TZ: "{{ tz }}"
+      VERBOSE: "{{ trackarr_docker_envs_log_level }}"
+      VIRTUAL_HOST: "trackarr.{{ user.domain }}"
+      VIRTUAL_PORT: 7337
+      LETSENCRYPT_HOST: "trackarr.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+    volumes:
+      - "/opt/trackarr:/config"
+      - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - trackarr
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: "{{ trackarr_docker_state }}"
