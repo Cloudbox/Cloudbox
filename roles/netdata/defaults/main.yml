@@ -46,7 +46,7 @@ netdata_docker_container: "{{ netdata_name }}"
 # Image
 netdata_docker_image_pull: yes
 netdata_docker_image_tag: "latest"
-netdata_docker_image: "titpetric/netdata:{{ netdata_docker_image_tag }}"
+netdata_docker_image: "netdata/netdata:{{ netdata_docker_image_tag }}"
 
 # Ports
 netdata_docker_ports_defaults:
