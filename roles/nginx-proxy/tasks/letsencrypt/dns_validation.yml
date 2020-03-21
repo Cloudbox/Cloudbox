@@ -8,34 +8,46 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Letsencrypt | DNS Validation | Import 'domains.conf' file
+- name: Letsencrypt | DNS Validation | Create dnsrobocert directory
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
+  with_items:
+    - /opt/nginx-proxy/certs/dnsrobocert
+
+- name: Letsencrypt | DNS Validation | Set config path variables
+  set_fact:
+    dnsrobocert_config_default_path: "/opt/nginx-proxy/certs/dnsrobocert/config.yml"
+    dnsrobocert_config_custom_path: "/opt/nginx-proxy/certs/dnsrobocert/config-custom.yml"
+
+- name: Letsencrypt | DNS Validation | Import 'config.yml' file
   template:
-    src: "dns_validation/domains.conf.j2"
-    dest: "/opt/nginx-proxy/certs/letsencrypt/domains.conf"
+    src: "dns_validation/config.yml.j2"
+    dest: "{{ dnsrobocert_config_default_path }}"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
     force: yes
 
+- name: Letsencrypt | DNS Validation | Check for existing 'config-custom.yml' file
+  stat:
+    path: "{{ dnsrobocert_config_custom_path }}"
+  register: dnsrobocert_config_custom_path_stat
+
+- name: Letsencrypt | DNS Validation | Set final config path variable
+  set_fact:
+    dnsrobocert_config_path: "{{ dnsrobocert_config_custom_path_stat.stat.exists | ternary(dnsrobocert_config_custom_path,dnsrobocert_config_default_path) }}"
+
 - name: Letsencrypt | DNS Validation | Create and start container
   docker_container:
     name: letsencrypt
-    image: "adferrand/letsencrypt-dns"
+    image: "adferrand/dnsrobocert"
     pull: yes
     volumes:
       - "/etc/passwd:/etc/passwd:ro"
       - "/etc/group:/etc/group:ro"
       - "/opt/nginx-proxy/certs/letsencrypt:/etc/letsencrypt"
+      - "{{ dnsrobocert_config_path }}:/etc/dnsrobocert/config.yml"
       - "/var/run/docker.sock:/var/run/docker.sock"
     env:
-      CERTS_USER_OWNER: "{{ user.name }}"
-      CERTS_GROUP_OWNER: "{{ user.name }}"
-      CERTS_FILES_MODE: "0664"
-      CERTS_DIRS_MODE: "0775"
-      LETSENCRYPT_USER_MAIL: "{{ user.email }}"
-      LEXICON_PROVIDER: "cloudflare"
-      LEXICON_CLOUDFLARE_USERNAME: "{{ cloudflare.email }}"
-      LEXICON_CLOUDFLARE_TOKEN: "{{ cloudflare.api }}"
       TZ: "{{ tz }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
