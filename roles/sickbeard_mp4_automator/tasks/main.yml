@@ -25,7 +25,7 @@
 
 - name: "Wait for 'autoProcess.ini.sample' file"
   wait_for:
-    path: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini.sample"
+    path: "/opt/scripts/sickbeard_mp4_automator/setup/autoProcess.ini.sample"
     state: present
 
 - name: "Check if 'autoProcess.ini' file exists"
