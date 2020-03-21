@@ -1,0 +1,24 @@
+draft: false
+acme:
+  email_account: {{ user.email }}
+  certs_permissions:
+    files_mode: 0644
+    dirs_mode: 0775
+    user: {{ user.name }}
+    group: {{ user.name }}
+profiles:
+  - name: cloudflare
+    provider: cloudflare
+    provider_options:
+      auth_username: {{ cloudflare.email }}
+      auth_token: {{ cloudflare.api }}
+    max_checks: 5
+certificates:
+  - name: {{ user.domain }}
+    domains:
+    - "{{ user.domain }}"
+    - "*.{{ user.domain }}"
+    profile: cloudflare
+    autorestart:
+    - container:
+      - nginx-proxy
