@@ -35,7 +35,7 @@
 - name: Create and start container
   docker_container:
     name: netdata
-    image: "titpetric/netdata:latest"
+    image: "netdata/netdata:latest"
     pull: yes
     capabilities:
       - SYS_PTRACE
