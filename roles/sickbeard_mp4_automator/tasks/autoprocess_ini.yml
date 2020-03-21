@@ -10,7 +10,7 @@
 ---
 - name: Create 'autoProcess.ini' file
   copy:
-    src: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini.sample"
+    src: "/opt/scripts/sickbeard_mp4_automator/setup/autoProcess.ini.sample"
     dest: "/opt/scripts/sickbeard_mp4_automator/autoProcess.ini"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
