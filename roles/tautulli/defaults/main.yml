@@ -45,7 +45,7 @@ tautulli_docker_container: "{{ tautulli_name }}"
 
 # Image
 tautulli_docker_image_pull: yes
-tautulli_docker_image_tag: "latest"
+tautulli_docker_image_tag: "nightly"
 tautulli_docker_image: "tautulli/tautulli:{{ tautulli_docker_image_tag }}"
 
 # Ports
@@ -58,13 +58,11 @@ tautulli_docker_ports: "{{ tautulli_docker_ports_defaults
                             else [] + tautulli_docker_ports_custom }}"
 
 # Envs
-tautulli_docker_envs_git_branch: "nightly"
 tautulli_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   UMASK: "002"
   TZ: "{{ tz }}"
-  ADVANCED_GIT_BRANCH: "{{ tautulli_docker_envs_git_branch }}"
 tautulli_docker_envs_custom: {}
 tautulli_docker_envs_reverse_proxy: {}
 tautulli_docker_envs: "{{ tautulli_docker_envs_default
