@@ -180,3 +180,9 @@ docker_networks_common:
   - name: "{{ docker_networks_name_common }}"
     aliases:
       - "{{ lookup('vars', role_name + '_docker_networks_alias') }}"
+
+################################
+# Cloudbox Version Manager
+################################
+
+cvm: http://cvm.cloudbox.works:1337/version?url=
