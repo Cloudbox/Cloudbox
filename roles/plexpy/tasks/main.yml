@@ -36,7 +36,7 @@
 - name: Create and start container
   docker_container:
     name: plexpy
-    image: tautulli/tautulli
+    image: "tautulli/tautulli:nightly"
     pull: yes
     published_ports:
       - "127.0.0.1:8181:8181"
@@ -47,7 +47,6 @@
       VIRTUAL_PORT: 8181
       LETSENCRYPT_HOST: "plexpy.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      ADVANCED_GIT_BRANCH: nightly
       TZ: "{{ tz }}"
     volumes:
       - "/opt/plexpy:/config"
