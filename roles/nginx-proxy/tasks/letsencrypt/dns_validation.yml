@@ -8,6 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Letsencrypt | DNS Validation | Create dnsrobocert directory
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
+  with_items:
+    - /opt/nginx-proxy/dnsrobocert
+
 - name: Letsencrypt | DNS Validation | Import 'config.yml' file
   template:
     src: "dns_validation/config.yml.j2"
