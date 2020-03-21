@@ -18,7 +18,7 @@ local_mount_branch: "{{ '/mnt/feeder' if (feeder_remote_is_active is defined and
 # MergerFS
 ################################
 
-mergerfs_releases_url: https://api.github.com/repos/trapexit/mergerfs/releases/latest
+mergerfs_releases_url: "{{ cvm }}https://api.github.com/repos/trapexit/mergerfs/releases/latest"
 
 mergerfs_releases_download_url: https://github.com/trapexit/mergerfs/releases/download
 
