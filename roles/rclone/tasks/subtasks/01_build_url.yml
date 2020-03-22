@@ -38,7 +38,7 @@
   when: rclone_version_is_specified
 
 - name: Build URL | Check if github rate limit is active
-  shell: curl -s https://api.github.com/repos/ncw/rclone/git/refs/tags | head -n 4
+  shell: "curl -s {{ cvm }}https://api.github.com/repos/ncw/rclone/git/refs/tags | head -n 4"
   register: github_rate_limit_check
 
 - name: Build URL | Set 'github_rate_limited'
@@ -77,7 +77,7 @@
 
   - name: Build URL | Check if version '{{ rclone_version_specified0 }}' is available
     shell: |
-      curl -sL https://api.github.com/repos/ncw/rclone/git/refs/tags \
+      curl -sL {{ cvm }}https://api.github.com/repos/ncw/rclone/git/refs/tags \
       | jq -r  '.[] | .ref' | sed 's/\/\?refs\/tags\/v//g' \
       | grep '{{ rclone_version_specified0 }}'
     register: rclone_version_specified0_check
