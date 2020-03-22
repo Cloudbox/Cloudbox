@@ -185,4 +185,4 @@ docker_networks_common:
 # Cloudbox Version Manager
 ################################
 
-cvm: http://cvm.cloudbox.works:1337/version?url=
+cvm: https://cvm.cloudbox.works/version?url=
