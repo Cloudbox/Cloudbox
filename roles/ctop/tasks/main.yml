@@ -9,7 +9,8 @@
 #########################################################################
 ---
 - name: Get latest ctop URL
-  shell: curl -s https://api.github.com/repos/bcicen/ctop/releases/latest | jq -r ".assets[] | select(.name | test(\"linux-amd64\")) | .browser_download_url"
+  shell: |
+    curl -s {{ cvm }}https://api.github.com/repos/bcicen/ctop/releases/latest | jq -r ".assets[] | select(.name | test(\"linux-amd64\")) | .browser_download_url"
   args:
     executable: /bin/bash
   register: ctop_download_url
