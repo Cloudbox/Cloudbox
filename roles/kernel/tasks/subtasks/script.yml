@@ -26,7 +26,7 @@
 
   - name: Mainline Kernel Script | Get hash blob for latest 'ubuntu-mainline-kernel.sh'
     uri:
-      url: https://api.github.com/repos/pimlie/ubuntu-mainline-kernel.sh/contents/ubuntu-mainline-kernel.sh
+      url: "{{ cvm }}https://api.github.com/repos/pimlie/ubuntu-mainline-kernel.sh/contents/ubuntu-mainline-kernel.sh"
       method: GET
       body_format: json
     register: blob_lookup
