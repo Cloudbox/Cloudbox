@@ -16,7 +16,8 @@
       - jq
 
 - name: Get latest yyq URL
-  shell: curl -s https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r ".assets[] | select(.name | test(\"yq_linux_amd64\")) | .browser_download_url"
+  shell: |
+    curl -s {{ cvm }}https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r ".assets[] | select(.name | test(\"yq_linux_amd64\")) | .browser_download_url"
   args:
     executable: /bin/bash
   register: yyq_download_url
