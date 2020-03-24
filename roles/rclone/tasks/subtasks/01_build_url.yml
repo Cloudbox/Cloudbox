@@ -37,27 +37,11 @@
     msg: "Rclone version specified: {{ rclone.version }}"
   when: rclone_version_is_specified
 
-- name: Build URL | Check if github rate limit is active
-  shell: "curl -s {{ cvm }}https://api.github.com/repos/ncw/rclone/git/refs/tags | head -n 4"
-  register: github_rate_limit_check
-
-- name: Build URL | Set 'github_rate_limited'
-  set_fact:
-    github_rate_limited: "{{ 'API rate limit exceeded' in github_rate_limit_check.stdout }}"
-
-- name: Build URL | Display message about GitHub API limit
-  debug:
-    msg: >-
-      GitHub API limit has been reached.
-      Unable to check if Rclone version {{ rclone.version }} is available.
-      Installing the latest available version instead...
-  when: github_rate_limited
-
 - name: Build URL | Set vars for current version
   set_fact:
     rclone_version_specified: "latest"
     rclone_download_url: "https://downloads.rclone.org/rclone-current-linux-amd64.zip"
-  when: (not rclone_version_is_specified) or (rclone.version == 'latest') or (rclone.version == 'current') or (github_rate_limited)
+  when: (not rclone_version_is_specified) or (rclone.version == 'latest') or (rclone.version == 'current')
 
 - name: Build URL | Set vars for beta version
   set_fact:
@@ -103,4 +87,3 @@
   when:
     - (rclone_version_is_specified)
     - not ((rclone.version == 'beta') or (rclone.version == 'latest') or (rclone.version == 'current'))
-    - (not github_rate_limited)
