@@ -42,6 +42,7 @@
     published_ports:
       - "127.0.0.1:19999:19999"
     env:
+      PGID: "{{ gid }}"
       VIRTUAL_HOST: "netdata.{{ user.domain }}"
       VIRTUAL_PORT: 19999
       LETSENCRYPT_HOST: "netdata.{{ user.domain }}"
