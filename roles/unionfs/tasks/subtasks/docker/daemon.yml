@@ -20,7 +20,7 @@
     dest: /etc/systemd/system/docker.service.d/override.conf
     mode: 0775
     force: no
-  register: import
+  register: import_override
 
 - name: "Docker | Daemon | Edit override file"
   ini_file:
@@ -30,7 +30,7 @@
     value: "{{ mount_type }}.service"
     state: present
     no_extra_spaces: yes
-  register: edit
+  register: edit_override
 
 - name: Docker | Daemon | Restart Docker Service
   block:
@@ -45,4 +45,4 @@
     wait_for:
       timeout: 30
 
-  when: import.changed or edit.changed
+  when: import_override.changed or edit_override.changed
