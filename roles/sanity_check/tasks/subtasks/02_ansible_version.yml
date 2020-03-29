@@ -1,0 +1,20 @@
+#########################################################################
+# Title:         Cloudbox: Sanity Check | Ansible Version               #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Ansible Version | Ensure required Ansible version is installed
+  assert:
+    that:
+      - ansible_version.full is version(sanity_check_ansible_version_min, '>=')
+    fail_msg: >-
+      Installed Ansible version: {{ ansible_version.full }}.
+      You need to have Ansible version >= {{ sanity_check_ansible_version_min }} installed.
+      Run `sudo pip install '{{ sanity_check_ansible_version_pip_version }}'` to update.
+    success_msg:  >-
+      Ansible Version: {{ ansible_version.full }}

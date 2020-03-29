@@ -12,15 +12,18 @@
   import_tasks: "subtasks/01_system_check.yml"
   tags: always
 
-- name: Tags Check
-  import_tasks: "subtasks/02_ansible_tags.yml"
+- name: Ansible Version Check
+  import_tasks: "subtasks/02_ansible_version.yml"
+  tags: always
+
+- name: Ansible Tags Check
+  import_tasks: "subtasks/03_ansible_tags.yml"
   tags: always
 
 - name: Backup Lock Check
-  import_tasks: "subtasks/03_backup_lock.yml"
+  import_tasks: "subtasks/04_backup_lock.yml"
   tags: always
 
-- name: Touch Logs
-  import_tasks: "subtasks/04_cloudbox_log.yml"
 - name: Cloudbox Log Reset
+  import_tasks: "subtasks/05_cloudbox_log.yml"
   tags: always
