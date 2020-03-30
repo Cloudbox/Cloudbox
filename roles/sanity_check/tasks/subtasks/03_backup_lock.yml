@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Sanity Check | Backup Lock Check             #
+# Title:         Cloudbox: Sanity Check | Backup Lock                   #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,25 +8,25 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Backup Lock Check | Check if 'backup.lock' is present"
+- name: Backup Lock | Check if '{{ sanity_check_backup_lock_path | basename }}' is present
   stat:
-    path: "{{ playbook_dir }}/backup.lock"
+    path: "{{ sanity_check_backup_lock_path }}"
   register: backup_lock
 
 # Age in hours
-- name: "Backup Lock Check | Get age of 'backup.lock' file"
+- name: Backup Lock | Get age of '{{ sanity_check_backup_lock_path | basename }}' file
   set_fact:
     backup_lock_age: "{{ ( ( ( (ansible_date_time.epoch|int) - (backup_lock.stat.ctime|int) ) / (60*60) ) | int ) }}"
   when: backup_lock.stat.exists
 
 # Delete if older than 2 hours.
-- name: "Backup Lock Check | Delete stale 'backup.lock'"
+- name: Backup Lock | Delete stale '{{ sanity_check_backup_lock_path | basename }}'
   file:
-    path: "{{ playbook_dir }}/backup.lock"
+    path: "{{ sanity_check_backup_lock_path }}"
     state: absent
   when: (backup_lock.stat.exists) and (backup_lock_age|int >= 2)
 
-- name: "Backup Lock Check | Fail when 'backup.lock' exists."
+- name: Backup Lock | Fail when '{{ sanity_check_backup_lock_path | basename }}' exists
   fail:
     msg: "A Backup task is currently in progress. Please wait for it to complete."
   when: (backup_lock.stat.exists) and (backup_lock_age|int < 1)

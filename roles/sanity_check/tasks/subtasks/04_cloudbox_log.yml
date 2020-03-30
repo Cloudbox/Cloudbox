@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Sanity Check | Touch Logs                    #
+# Title:         Cloudbox: Sanity Check | Cloudbox Log                  #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,14 +8,14 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Touch Logs | Get 'cloudbox.yml' info."
+- name: Cloudbox Log | Get '{{ sanity_check_misc_playbook_path | basename }}' info
   stat:
-    path: "{{ playbook_dir }}/cloudbox.yml"
+    path: "{{ sanity_check_misc_playbook_path }}"
   register: cloudbox_yml
 
-- name: "Touch Logs | Touch 'cloudbox.log'"
+- name: Cloudbox Log | Touch '{{ sanity_check_cloudbox_log_path | basename }}'
   file:
-    path: "{{ playbook_dir }}/cloudbox.log"
+    path: "{{ sanity_check_cloudbox_log_path }}"
     state: touch
     owner: "{{ cloudbox_yml.stat.uid }}"
     group: "{{ cloudbox_yml.stat.gid }}"

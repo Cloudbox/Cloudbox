@@ -8,18 +8,19 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "System Check"
-  import_tasks: "subtasks/check_system.yml"
+- name: System Check
+  import_tasks: "subtasks/01_system_check.yml"
   tags: always
 
-- name: "Tags Check"
-  import_tasks: "subtasks/check_tags.yml"
+- name: Tags Check
+  import_tasks: "subtasks/02_ansible_tags.yml"
   tags: always
 
-- name: "Backup Lock Check"
-  import_tasks: "subtasks/check_backup_lock.yml"
+- name: Backup Lock Check
+  import_tasks: "subtasks/03_backup_lock.yml"
   tags: always
 
-- name: "Touch Logs"
-  import_tasks: "subtasks/touch_logs.yml"
+- name: Touch Logs
+  import_tasks: "subtasks/04_cloudbox_log.yml"
+- name: Cloudbox Log Reset
   tags: always

@@ -1,0 +1,35 @@
+#########################################################################
+# Title:         Cloudbox: Sanity Check | Version Check                 #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Ansible Tags
+################################
+
+sanity_check_ansible_tags_lookup_command: |
+    ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" \
+      | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
+
+################################
+# Backup Lock
+################################
+
+sanity_check_backup_lock_path: "{{ playbook_dir }}/backup.lock"
+
+################################
+# Cloudbox Log
+################################
+
+sanity_check_cloudbox_log_path: "{{ playbook_dir }}/cloudbox.log"
+
+################################
+# Misc
+################################
+
+sanity_check_misc_playbook_path: "{{ playbook_dir }}/cloudbox.yml"

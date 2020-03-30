@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Sanity Check | Tags Check                    #
+# Title:         Cloudbox: Sanity Check | Ansible Tags                  #
 # Author(s):     desimaniac, EnorMOZ                                    #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,24 +8,9 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Tags Check | Ensure provided TAGS are not being skipped
-  assert:
-    that:
-      - '"{{ item }}" not in ansible_skip_tags'
-    msg: "The tag you are trying to run is currently being skipped. Check your 'ansible.cfg' file."
-    quiet: yes
-  loop: "{{ ansible_run_tags }}"
-  when:
-   - not continuous_integration
-   - "'cloudbox_' not in playbook_dir"
-   - "'community' not in playbook_dir"
-
-# http://blog.leifmadsen.com/blog/2017/01/04/finding-available-ansible-tags-in-playbooks-and-roles/
-
-- name: Tags Check | Get all available TAGS
-  shell: |
-    ansible-playbook cloudbox.yml --list-tags 2>&1 | grep "TASK TAGS" \
-      | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | sed -e 's/,//g' | xargs -n 1 | sort -u
+# Source: http://blog.leifmadsen.com/blog/2017/01/04/finding-available-ansible-tags-in-playbooks-and-roles/
+- name: Ansible Tags | Get all available Ansible tags
+  shell: "{{ sanity_check_ansible_tags_lookup_command }}"
   register: available_tags
   changed_when: no
   check_mode: no
@@ -34,7 +19,7 @@
    - "'cloudbox_mod' not in playbook_dir"
    - "'community' not in playbook_dir"
 
-- name: Tags Check | Ensure provided TAGS are valid
+- name: Ansible Tags | Ensure valid Ansible tag(s) were provided
   assert:
     that:
       - '"{{ item }}" in available_tags.stdout_lines'
