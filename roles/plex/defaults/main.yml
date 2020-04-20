@@ -79,7 +79,7 @@ plex_docker_volumes:
 
 localhost_ip: "127.0.0.1"
 
-lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
+lazyman_ip: "{{ ( lookup('dig', 'nhl.freegamez.ga', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
 
 plex_default_hosts:
   "metric.plex.tv": "{{ localhost_ip }}"
