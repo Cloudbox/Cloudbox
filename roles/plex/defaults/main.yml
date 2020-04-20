@@ -119,7 +119,7 @@ plex_docker_devices: "{{ plex_docker_devices_default
                               + plex_docker_devices_custom }}"
 
 # Hosts
-lazyman_ip: "{{ ( lookup('dig', 'powersports.ml', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
+lazyman_ip: "{{ ( lookup('dig', 'nhl.freegamez.ga', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
 
 plex_docker_hosts_default:
   "metric.plex.tv": "{{ ip_address_localhost }}"
