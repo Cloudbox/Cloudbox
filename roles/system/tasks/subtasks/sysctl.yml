@@ -70,7 +70,7 @@
     # Set default_qdisc to fq
     - { name: net.core.default_qdisc, value: fq }
     # Set max_user_watches for plex inotify
-    - { name: fs.inotify.max_user_watches, value: 131072 }
+    - { name: fs.inotify.max_user_watches, value: 1524288 }
     # Set net.core.netdev_budget
     - { name: net.core.netdev_budget, value: 50000 }
 
