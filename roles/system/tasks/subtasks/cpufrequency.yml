@@ -60,6 +60,18 @@
     option: 'GOVENOR'
     state: absent
 
+- name: Populate Service Facts
+  service_facts:
+
+- name: Remove ondemand | Stop and disable 'ondemand.service'
+  systemd:
+    name: ondemand
+    state: stopped
+    enabled: no
+    daemon_reload: yes
+  ignore_errors: yes
+  when: "services['ondemand.service']['status'] == 'enabled'"
+
 - name: CPU Frequency | Disable “ondemand” CPU scaling daemon
   shell: "update-rc.d ondemand disable"
   when: ansible_distribution_version == "16.04"
