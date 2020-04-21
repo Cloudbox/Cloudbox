@@ -32,6 +32,7 @@
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/ombi
+    - /opt/ombi/app
 
 - name: Settings | Check if 'database.json' exists
   stat:
