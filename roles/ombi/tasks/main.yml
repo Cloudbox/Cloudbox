@@ -9,6 +9,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: MariaDB Role
+  include_role:
+    name: mariadb
+
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare-dns
@@ -28,6 +32,29 @@
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/ombi
+
+- name: Settings | Check if 'database.json' exists
+  stat:
+    path: "/opt/ombi/app/database.json"
+  register: ombi_database_config
+
+- name: Settings | New 'database.json' tasks
+  block:
+
+  - name: Settings | Import default 'database.json'
+    template:
+      src: database.json.j2
+      dest: /opt/ombi/app/database.json
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: yes
+
+  when: not ombi_database_config.stat.exists
+
+- name: "Create Ombi database"
+  command: "docker exec mariadb mysql -u root -ppassword321 -e 'CREATE DATABASE IF NOT EXISTS `Ombitest` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;'"
+  ignore_errors: yes
 
 - name: Create and start container
   docker_container:
