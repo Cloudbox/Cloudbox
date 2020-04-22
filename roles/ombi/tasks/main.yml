@@ -68,9 +68,9 @@
       BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      UMASK: 002
+      UMASK: "002"
       VIRTUAL_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ user.domain }}"
-      VIRTUAL_PORT: 5000
+      VIRTUAL_PORT: "5000"
       LETSENCRYPT_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       LC_ALL: "en_US.UTF-8"
