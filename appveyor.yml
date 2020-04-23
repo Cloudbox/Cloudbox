@@ -51,7 +51,7 @@ skip_commits:
 
   message: /\[minor\]/
 
-image: Ubuntu1604
+image: Linux
 
 matrix:
   fast_finish: true
