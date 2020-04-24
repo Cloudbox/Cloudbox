@@ -51,7 +51,7 @@ skip_commits:
 
   message: /\[minor\]/
 
-image: Linux
+image: Test
 
 matrix:
   fast_finish: true
