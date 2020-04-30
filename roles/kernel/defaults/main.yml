@@ -20,7 +20,7 @@ kernel_cron_task: "PATH='/usr/sbin:/usr/bin:/sbin:/bin' purge-old-kernels -qy"
 
 kernel_script_path: /usr/local/bin/ubuntu-mainline-kernel.sh
 
-kernel_script_url: ""{{ cvm }}https://api.github.com/repos/pimlie/ubuntu-mainline-kernel.sh/contents/ubuntu-mainline-kernel.sh"
+kernel_script_url: "{{ cvm }}https://api.github.com/repos/pimlie/ubuntu-mainline-kernel.sh/contents/ubuntu-mainline-kernel.sh"
 
 ################################
 # Update
