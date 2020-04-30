@@ -14,6 +14,10 @@
     dns_record: "{{ lookup('vars', role_name + '_dns_record') }}"
     dns_zone: "{{ lookup('vars', role_name + '_dns_zone') }}"
 
+- name: MariaDB Role
+  include_role:
+    name: mariadb
+
 - name: Remove existing Docker container
   docker_container:
     name: "{{ lookup('vars', role_name + '_docker_container') }}"
@@ -25,6 +29,29 @@
 - name: Create directories
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
   with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
+
+- name: Settings | Check if 'database.json' exists
+  stat:
+    path: "/opt/ombi/app/database.json"
+  register: ombi_database_config
+
+- name: Settings | New 'database.json' tasks
+  block:
+
+  - name: Settings | Import default 'database.json'
+    template:
+      src: database.json.j2
+      dest: /opt/ombi/app/database.json
+      owner: "{{ user.name }}"
+      group: "{{ user.name }}"
+      mode: 0775
+      force: yes
+
+  when: not ombi_database_config.stat.exists
+
+- name: "Create Ombi database"
+  command: "docker exec mariadb mysql -u root -ppassword321 -e 'CREATE DATABASE IF NOT EXISTS `Ombitest` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;'"
+  ignore_errors: yes
 
 - name: Create Docker container
   include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"

@@ -22,6 +22,7 @@ ombi_paths_folder: "{{ ombi_name }}"
 ombi_paths_location: "{{ server_appdata_path }}/{{ ombi_paths_folder }}"
 ombi_paths_folders_list:
   - "{{ ombi_paths_location }}"
+  - "{{ ombi_paths_location }}/app"
 
 ################################
 # Web
