@@ -14,6 +14,12 @@
     update_cache: yes
     state: present
 
+- name: Install 'dkms'
+  apt:
+    name: dkms
+    update_cache: yes
+    state: present
+
 - name: Driver | Download Nvidia drivers
   get_url:
     url:  "{{ nvidia_driver_download_url }}"
