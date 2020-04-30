@@ -22,6 +22,6 @@ plex_plugin_webtools_paths_preferences_location: "{{ plex_paths_plugin_support_l
 # Repository
 ################################
 
-plex_plugin_webtools_release_url: https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest
+plex_plugin_webtools_release_url: "{{ cvm }}https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest"
 
 plex_plugin_webtools_download_url_backup: https://github.com/ukdtom/WebTools.bundle/releases/download/3.0.0/WebTools.bundle.zip

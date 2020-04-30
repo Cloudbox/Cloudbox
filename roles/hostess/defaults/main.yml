@@ -9,8 +9,7 @@
 #########################################################################
 ---
 hostess_download_url_lookup_command: |
-  curl -s https://api.github.com/repos/cbednarski/hostess/releases/latest \
-      | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url"
+  curl -s {{ cvm }}https://api.github.com/repos/cbednarski/hostess/releases/latest | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url"
 
 hostess_download_url_backup: https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64
 

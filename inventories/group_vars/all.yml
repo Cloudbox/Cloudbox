@@ -144,3 +144,9 @@ plex_account_is_enabled: "{{  (plex is defined) and
                               (plex.pass is defined) and
                               (plex.pass is not none) and
                               (plex.pass | trim | length > 0) }}"
+
+################################
+# Cloudbox Version Manager
+################################
+
+cvm: https://cvm.cloudbox.works/version?url=

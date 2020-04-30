@@ -20,6 +20,6 @@ plex_plugin_subzero_paths_info_plist_location: "{{ plex_plugin_subzero_paths_loc
 # Repository
 ################################
 
-plex_plugin_subzero_release_url: https://api.github.com/repos/pannal/Sub-Zero.bundle/releases/latest
+plex_plugin_subzero_release_url: "{{ cvm }}https://api.github.com/repos/pannal/Sub-Zero.bundle/releases/latest"
 
 plex_plugin_subzero_download_url_backup: https://github.com/pannal/Sub-Zero.bundle/releases/download/2.6.5.3152/Sub-Zero.bundle-2.6.5.3152.zip
