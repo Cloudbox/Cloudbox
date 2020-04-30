@@ -21,7 +21,7 @@ nvidia_driver_download_url: "https://download.nvidia.com/XFree86/Linux-x86_64/{{
 
 nvidia_driver_download_dest: "/tmp/NVIDIA-driver.run"
 
-nvidia_driver_install_command: "{{ nvidia_driver_download_dest }} --silent"
+nvidia_driver_install_command: "{{ nvidia_driver_download_dest }} --dkms --silent"
 
 ################################
 # Patch
