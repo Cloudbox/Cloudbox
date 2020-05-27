@@ -62,7 +62,7 @@ tautulli_docker_container: "{{ tautulli_name }}"
 
 # Image
 tautulli_docker_image_pull: yes
-tautulli_docker_image_tag: "nightly"
+tautulli_docker_image_tag: "latest"
 tautulli_docker_image: "tautulli/tautulli:{{ tautulli_docker_image_tag }}"
 
 # Ports
