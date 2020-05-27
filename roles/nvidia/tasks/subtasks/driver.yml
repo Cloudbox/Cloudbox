@@ -14,6 +14,12 @@
     update_cache: yes
     state: present
 
+- name: Install 'dkms'
+  apt:
+    name: dkms
+    update_cache: yes
+    state: present
+
 - name: Driver | Set 'nvidia_driver_version' variable
   set_fact:
     nvidia_driver_version: >-
@@ -34,7 +40,7 @@
   register: driver_download
 
 - name: Driver | Install Nvidia drivers
-  shell: "/tmp/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run --silent"
+  shell: "/tmp/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run --dkms --silent"
   register: driver_install
   ignore_errors: yes
 
