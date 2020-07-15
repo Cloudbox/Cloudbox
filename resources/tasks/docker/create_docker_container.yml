@@ -32,4 +32,5 @@
     capabilities: "{{ lookup('vars', _var_prefix + '_docker_capabilities') }}"
     security_opts: "{{ lookup('vars', _var_prefix + '_docker_security_opts') }}"
     stop_timeout: "{{ lookup('vars', _var_prefix + '_docker_stop_timeout', default='180') }}"
+    user: "{{ lookup('vars', _var_prefix + '_docker_user', default=omit) }}"
     state: "started"

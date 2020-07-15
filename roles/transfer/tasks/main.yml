@@ -1,0 +1,28 @@
+#########################################################################
+# Title:         Cloudbox: Transfer.sh Role                             #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create DNS Record
+  include_role:
+    name: dns
+  vars:
+    dns_record: "{{ transfer_web_subdomain }}"
+    dns_zone: "{{ transfer_web_domain }}"
+
+- name: Remove existing Docker container
+  docker_container:
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
+    state: absent
+
+- name: Create directories
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
+
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
