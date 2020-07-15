@@ -18,7 +18,7 @@
 
 - name: "MergerFS | Install mergerfs"
   apt:
-    deb: "{{ mergerfs_download_url.stdout | default('{{ mergerfs_download_url_backup }}') }}"
+    deb: "{{ mergerfs_download_url.stdout | default(mergerfs_download_backup_url, true) }}"
     state: present
 
 - name: "MergerFS | Import 'mergerfs.service'"
