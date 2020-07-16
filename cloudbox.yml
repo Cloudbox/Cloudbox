@@ -61,3 +61,4 @@
     - { role: ddclient, tags: ['ddclient'] }
     - { role: trackarr, tags: ['trackarr'] }
     - { role: sstvirl, tags: ['sstvirl'] }
+    - { role: transfer, tags: ['transfer'] }

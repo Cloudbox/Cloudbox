@@ -1,0 +1,93 @@
+#########################################################################
+# Title:         Cloudbox: Transfer.sh Role                             #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Create DNS Record
+  include_role:
+    name: dns
+  vars:
+    dns_record: "{{ transfer_web_subdomain }}"
+    dns_zone: "{{ transfer_web_domain }}"
+
+- name: Remove existing Docker container
+  docker_container:
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
+    state: absent
+
+- name: Create directories
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
+
+- name: Check if 'transfer' nginx-proxy configuration exists
+  stat:
+    path: "/opt/nginx-proxy/vhost.d/{{ transfer_web_subdomain }}.{{ transfer_web_domain }}"
+  register: transfer_nginx_config
+
+- name: Set 'transfer' nginx-proxy configuration
+  block:
+
+    - name: Import transfer nginx-proxy vhost.d config file
+      copy:
+        src: nginx-proxy.vhostd
+        force: yes
+        dest: "/opt/nginx-proxy/vhost.d/{{ transfer_web_subdomain }}.{{ transfer_web_domain }}"
+        owner: "{{ user.name }}"
+        group: "{{ user.name }}"
+        mode: 0775
+
+  when: not transfer_nginx_config.stat.exists
+
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
+
+- name: Check if 'transfer' exists
+  stat:
+    path: "/usr/local/bin/transfer"
+  register: transfer_binary
+
+- name: Install 'transfer' utility
+  block:
+
+    - name: Get latest transfer URL
+      shell: |
+        curl -s {{ cvm }}https://api.github.com/repos/l3uddz/transfer/releases/latest | jq -r ".assets[] | select(.name | test(\"transfer_v[0-9].[0-9].[0-9]_linux_amd64\")) | .browser_download_url"
+      args:
+        executable: /bin/bash
+      register: transfer_download_url
+      ignore_errors: yes
+
+    - name: Install transfer
+      get_url:
+        url:  "{{ transfer_download_url.stdout | default('https://github.com/l3uddz/transfer/releases/download/v1.0.0/transfer_v1.0.0_linux_amd64',true) }}"
+        dest: /usr/local/bin/transfer
+        mode: 0775
+        owner: root
+        group: root
+        force: yes
+        validate_certs: no
+      ignore_errors: yes
+      register: x
+
+    - name: "Get transfer version"
+      shell: "/usr/local/bin/transfer --version | head -n 1 | awk '{ print $1 }'"
+      register: transfer_version
+      ignore_errors: yes
+      when: x is success
+
+    - name: "Display transfer version"
+      debug:
+        msg: "transfer {{ transfer_version.stdout }} installed."
+      when: x is success
+
+    - debug:
+        msg: "transfer install failed."
+      when: x is not success
+
+  when: not transfer_binary.stat.exists
+
