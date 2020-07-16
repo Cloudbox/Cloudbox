@@ -36,7 +36,7 @@
 - name: Create and start container
   docker_container:
     name: plexpy
-    image: "tautulli/tautulli:nightly"
+    image: "tautulli/tautulli:latest"
     pull: yes
     published_ports:
       - "127.0.0.1:8181:8181"
