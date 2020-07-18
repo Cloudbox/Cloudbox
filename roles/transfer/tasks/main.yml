@@ -24,25 +24,6 @@
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
   with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
 
-- name: Check if 'transfer' nginx-proxy configuration exists
-  stat:
-    path: "/opt/nginx-proxy/vhost.d/{{ transfer_web_subdomain }}.{{ transfer_web_domain }}"
-  register: transfer_nginx_config
-
-- name: Set 'transfer' nginx-proxy configuration
-  block:
-
-    - name: Import transfer nginx-proxy vhost.d config file
-      copy:
-        src: nginx-proxy.vhostd
-        force: yes
-        dest: "/opt/nginx-proxy/vhost.d/{{ transfer_web_subdomain }}.{{ transfer_web_domain }}"
-        owner: "{{ user.name }}"
-        group: "{{ user.name }}"
-        mode: 0775
-
-  when: not transfer_nginx_config.stat.exists
-
 - name: Create Docker container
   include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
 
