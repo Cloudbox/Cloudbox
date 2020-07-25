@@ -1,8 +1,8 @@
 #########################################################################
 # Title:         Cloudbox: Organizr Role                                #
-# Author(s):     l3uddz, desimaniac                                     #
+# Author(s):     l3uddz, desimaniac, jonfinley                          #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  lsiocommunity/organizr                                 #
+# Docker Image:  organizr/organizr                                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -64,11 +64,13 @@
 - name: Create and start container
   docker_container:
     name: organizr
-    image: "organizrtools/organizr-v2:plex"
+    image: "organizr/organizr"
     pull: yes
     published_ports:
       - "127.0.0.1:7421:80"
     env:
+      fpm: "true"
+      branch: "v2-develop"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(user.domain + ',' + 'www.' + user.domain,'organizr.' + user.domain) }}"
@@ -95,7 +97,7 @@
 
 - name: Download Plex Theme
   get_url:
-    url:  "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
+    url:  "https://raw.githubusercontent.com/gilbN/theme.park/master/CSS/themes/organizr/plex.css"
     dest: "/opt/organizr/www/Dashboard/css/themes/"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
