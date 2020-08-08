@@ -69,8 +69,8 @@
     published_ports:
       - "127.0.0.1:7421:80"
     env:
-      fpm: "true"
-      branch: "v2-develop"
+      fpm: "{{ (organizr.fpm|default(false,true)) }}"
+      branch: "{{ (organizr.branch|default(false,true)) }}"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(user.domain + ',' + 'www.' + user.domain,'organizr.' + user.domain) }}"
@@ -95,13 +95,73 @@
     path: "/opt/organizr/www/Dashboard/css/themes/Organizr.css"
     state: present
 
-- name: Download Plex Theme
+- name: Download Gilbn Plex Theme
   get_url:
-    url:  "https://raw.githubusercontent.com/gilbN/theme.park/master/CSS/themes/organizr/plex.css"
+    url:  "https://raw.githubusercontent.com/gilbN/theme.park/master/CSS/themes/plex/plex-base.css"
     dest: "/opt/organizr/www/Dashboard/css/themes/"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0664
     force: yes
     validate_certs: no
+
+- name: Download Gilbn AquaMarine Theme
+  get_url:
+    url:  "https://raw.githubusercontent.com/gilbN/theme.park/master/CSS/themes/plex/aquamarine.css"
+    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+
+- name: Download Gilbn Dark Theme
+  get_url:
+    url:  "https://raw.githubusercontent.com/gilbN/theme.park/master/CSS/themes/plex/dark.css"
+    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+
+- name: Download Gilbn Hotline Theme
+  get_url:
+    url:  "https://github.com/gilbN/theme.park/blob/master/CSS/themes/plex/hotline.css"
+    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+
+- name: Download Gilbn Organizr Dark Theme
+  get_url:
+    url:  "https://github.com/gilbN/theme.park/blob/master/CSS/themes/plex/organizr-dark.css"
+    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+
+- name: Download Gilbn Space Grey Theme
+  get_url:
+    url:  "https://github.com/gilbN/theme.park/blob/master/CSS/themes/plex/space-gray.css"
+    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+
+- name: Download Burry Plex Theme
+  get_url: "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
+    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+    
   ignore_errors: yes
