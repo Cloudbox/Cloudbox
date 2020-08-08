@@ -156,7 +156,8 @@
     validate_certs: no
 
 - name: Download Burry Plex Theme
-  get_url: "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
+  get_url: 
+    url: "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
     dest: "/opt/organizr/www/Dashboard/css/themes/"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
