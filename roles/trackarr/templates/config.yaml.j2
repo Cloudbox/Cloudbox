@@ -2,8 +2,8 @@
 database:
   maxagehours: 72
 pvr:
-- name: "{{ sonarr_name }}"
-  url: "{{ sonarr_web_url }}"
+- name: "sonarr"
+  url: "https://sonarr.{{ user.domain }}"
   apikey: "{{ sonarr_api_key }}"
   enabled: true
   filters:
@@ -16,8 +16,8 @@ pvr:
       - any (Files, {% raw -%}{#{%- endraw %} matches "(?i)\\.(bdmv|mpls|miniso|cci|cer|clpi|m2ts|VOB|IFO|BUP|iso|rar|r01)$"})
     delays:
       - 'not (TorrentName contains "1080") ? 15 : 0'
-- name: "{{ radarr_name }}"
-  url: "{{ radarr_web_url }}"
+- name: "radarr"
+  url: "https://radarr.{{ user.domain }}"
   apikey: "{{ radarr_api_key }}"
   enabled: true
   filters:
