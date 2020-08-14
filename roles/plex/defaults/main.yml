@@ -53,6 +53,7 @@ plex_extra_ports:
 
 web_tools_ports:
   - "33400:33400/tcp"
+  - "33433:33433/tcp"
 
 plex_docker_ports: "{{ (web_tools_ports + plex_main_ports) if (plex.open_main_ports and not plex.open_extra_ports)
   else (web_tools_ports + plex_main_ports + plex_extra_ports) if (plex.open_main_ports and plex.open_extra_ports)
