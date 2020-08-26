@@ -21,7 +21,7 @@ darkerr:
   enable: no
 organizr:
   direct_domain: no
-  fpm: yes
+  fpm: "yes"
   branch: v2-develop
 nginx:
   direct_domain: no
