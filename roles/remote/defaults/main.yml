@@ -138,10 +138,14 @@ rclone_vfs_mount_start_command: |-
     --rc-addr=localhost:5572 \
     --fast-list \
     --drive-skip-gdocs \
-    --vfs-read-chunk-size=64M \
-    --vfs-read-chunk-size-limit=2048M \
-    --buffer-size=64M \
     --poll-interval=1m \
+    --buffer-size=32M \
+    --vfs-read-ahead=128M \
+    --vfs-read-chunk-size=32M \
+    --vfs-read-chunk-size-limit=2G \
+    --vfs-cache-mode=full \
+    --vfs-cache-max-age=168h \
+    --vfs-cache-max-size=150G \
     --dir-cache-time=168h \
     --timeout=10m \
     --drive-chunk-size=64M \
