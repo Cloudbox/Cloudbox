@@ -22,6 +22,8 @@ Cloudbox is an Ansible-based solution for rapidly deploying a Docker containeriz
 
 This project was designed for x64 machines running Ubuntu Server 16.04/18.04 with limited support for other Debian distributions.
 
+Please refer to the [![Wiki: http://cloudbox.wiki](https://img.shields.io/badge/Wiki-gray.svg?style=for-the-badge)](http://cloudbox.wiki) for detailed information on system requirements, installation, and configuration.
+
 Featured Applications:
 
 - Plex
