@@ -51,7 +51,7 @@ sonarr_docker_container: "{{ sonarr_name }}"
 
 # Image
 sonarr_docker_image_pull: yes
-sonarr_docker_image_tag: "phantom"
+sonarr_docker_image_tag: "nightly"
 sonarr_docker_image: "hotio/sonarr:{{ sonarr_docker_image_tag }}"
 
 # Ports
