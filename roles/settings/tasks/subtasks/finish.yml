@@ -70,4 +70,4 @@
       - '"{{ user.pass }}" != "password123"'
       - '"{{ user.email }}" != "your@email.com"'
     msg: "'user' values in 'accounts.yml' cannot be left at their defaults"
-    when: not continuous_integration
+  when: not continuous_integration
