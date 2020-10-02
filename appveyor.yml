@@ -51,7 +51,7 @@ skip_commits:
 
   message: /\[minor\]/
 
-image: Ubuntu1604
+image: Ubuntu1804-minimal
 
 matrix:
   fast_finish: true
@@ -60,7 +60,7 @@ matrix:
 build: off
 
 init:
-  - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh
+  - sh: curl -s https://raw.githubusercontent.com/saltydk/scripts/master/dep.sh | sudo -H sh &> /dev/null
 
 install:
   - sh: git submodule update --init --recursive
