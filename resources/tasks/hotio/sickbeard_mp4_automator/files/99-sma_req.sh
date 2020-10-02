@@ -13,10 +13,10 @@
 if [[ ! -f /sma_req_installed ]]; then
     apt update
     apt install -y --no-install-recommends --no-install-suggests \
-        python-pip \
-        python-setuptools \
+        python3-pip \
+        python3-setuptools \
         ffmpeg
-    pip --no-cache-dir install \
+    pip3 --no-cache-dir install \
         requests \
         requests[security] \
         requests-cache \
