@@ -136,7 +136,6 @@ rclone_vfs_mount_start_command: |-
     --allow-non-empty \
     --rc \
     --rc-addr=localhost:5572 \
-    --no-checksum \
     --drive-skip-gdocs \
     --poll-interval=1m \
     --buffer-size=32M \
