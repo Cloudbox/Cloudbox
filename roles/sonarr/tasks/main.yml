@@ -49,7 +49,7 @@
 - name: Create and start container
   docker_container:
     name: sonarr
-    image: "hotio/sonarr:phantom"
+    image: "hotio/sonarr:nightly"
     pull: yes
     published_ports:
       - "127.0.0.1:8989:8989"
