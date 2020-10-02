@@ -155,7 +155,7 @@ nzbget_docker_container: "{{ nzbget_name }}"
 
 # Image
 nzbget_docker_image_pull: yes
-nzbget_docker_image_tag: "unstable"
+nzbget_docker_image_tag: "testing"
 nzbget_docker_image: "hotio/nzbget:{{ nzbget_docker_image_tag }}"
 
 # Ports
