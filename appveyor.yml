@@ -62,7 +62,7 @@ matrix:
 build: off
 
 init:
-  - sh: curl -s https://raw.githubusercontent.com/saltydk/scripts/master/dep.sh | sudo -H sh &> /dev/null
+  - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh &> /dev/null
 
 install:
   - sh: sudo pip install 'ansible>=2.9,<2.10'
