@@ -1,8 +1,8 @@
 #########################################################################
 # Title:         Cloudbox: Organizr Role                                #
-# Author(s):     l3uddz, desimaniac                                     #
+# Author(s):     l3uddz, desimaniac, jonfinley                          #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  lsiocommunity/organizr                                 #
+# Docker Image:  organizr/organizr                                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -64,11 +64,13 @@
 - name: Create and start container
   docker_container:
     name: organizr
-    image: "organizrtools/organizr-v2:plex"
+    image: "organizr/organizr"
     pull: yes
     published_ports:
       - "127.0.0.1:7421:80"
     env:
+      fpm: "{{ (organizr.fpm|default(false,true)) }}"
+      branch: "{{ (organizr.branch|default(false,true)) }}"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       VIRTUAL_HOST: "{{ (organizr.direct_domain|default(false,true)) | ternary(user.domain + ',' + 'www.' + user.domain,'organizr.' + user.domain) }}"
@@ -90,16 +92,83 @@
 
 - name: Wait for Organizr.css to be created
   wait_for:
-    path: "/opt/organizr/www/Dashboard/css/themes/Organizr.css"
+    path: "/opt/organizr/www/organizr/css/themes/Organizr.css"
     state: present
 
-- name: Download Plex Theme
+- name: Download Gilbn Plex Theme
   get_url:
-    url:  "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
-    dest: "/opt/organizr/www/Dashboard/css/themes/"
+    url:  "https://raw.githubusercontent.com/gilbN/theme.park/master/CSS/themes/plex/plex-base.css"
+    dest: "/opt/organizr/www/organizr/css/themes/"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0664
     force: yes
     validate_certs: no
   ignore_errors: yes
+
+- name: Download Gilbn AquaMarine Theme
+  get_url:
+    url:  "https://raw.githubusercontent.com/gilbN/theme.park/master/CSS/themes/plex/aquamarine.css"
+    dest: "/opt/organizr/www/organizr/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
+
+- name: Download Gilbn Dark Theme
+  get_url:
+    url:  "https://raw.githubusercontent.com/gilbN/theme.park/master/CSS/themes/plex/dark.css"
+    dest: "/opt/organizr/www/organizr/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
+
+- name: Download Gilbn Hotline Theme
+  get_url:
+    url:  "https://github.com/gilbN/theme.park/blob/master/CSS/themes/plex/hotline.css"
+    dest: "/opt/organizr/www/organizr/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
+
+- name: Download Gilbn Organizr Dark Theme
+  get_url:
+    url:  "https://github.com/gilbN/theme.park/blob/master/CSS/themes/plex/organizr-dark.css"
+    dest: "/opt/organizr/www/organizr/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
+
+- name: Download Gilbn Space Grey Theme
+  get_url:
+    url:  "https://github.com/gilbN/theme.park/blob/master/CSS/themes/plex/space-gray.css"
+    dest: "/opt/organizr/www/organizr/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
+
+- name: Download Burry Plex Theme
+  get_url: 
+    url: "https://raw.githubusercontent.com/Burry/organizr-v2-plex-theme/master/css/Plex.css"
+    dest: "/opt/organizr/www/organizr/css/themes/"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+    force: yes
+    validate_certs: no
+  ignore_errors: yes
+
