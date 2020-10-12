@@ -3,6 +3,7 @@ system:
   timezone: auto
 dns:
   enabled: yes
+  proxied: no
 reverse_proxy:
   wildcard_certs: yes
 docker:
