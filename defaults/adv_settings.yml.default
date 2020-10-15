@@ -1,6 +1,7 @@
 ---
 system:
   timezone: auto
+  inotify: 524288
 dns:
   enabled: yes
 reverse_proxy:
