@@ -4,6 +4,7 @@ system:
   inotify: 524288
 dns:
   enabled: yes
+  proxied: no
 reverse_proxy:
   wildcard_certs: yes
 docker:
