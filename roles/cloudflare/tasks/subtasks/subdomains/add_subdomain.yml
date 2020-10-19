@@ -15,7 +15,7 @@
     zone: "{{ user.domain }}"
     state: present
     solo: true
-    proxied: "{{ dns.proxied }}"
+    proxied: "{{ dns.proxied | default('no') }}"
     type: A
     value: "{{ ip_address_public }}"
     record: "{{ cloudbox_type }}"
