@@ -80,8 +80,7 @@ tautulli_docker_volumes_default:
   - "{{ plex_paths_log_location }}:/logs:ro"
 tautulli_docker_volumes_custom: []
 tautulli_docker_volumes: "{{ tautulli_docker_volumes_default
-                                  + tautulli_docker_volumes_custom
-                                  + docker_volumes_downloads_common }}"
+                                  + tautulli_docker_volumes_custom }}"
 
 # Devices
 tautulli_docker_devices_default: []
