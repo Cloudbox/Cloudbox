@@ -123,7 +123,7 @@ netdata_docker_capabilities: "{{ netdata_docker_capabilities_default
 
 # Security Opts
 netdata_docker_security_opts_default:
-  - apparmor:unconfined
+  - apparmor=unconfined
 netdata_docker_security_opts_custom: []
 netdata_docker_security_opts: "{{ netdata_docker_security_opts_default
                                       + netdata_docker_security_opts_custom }}"
