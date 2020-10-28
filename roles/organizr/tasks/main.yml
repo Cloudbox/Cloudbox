@@ -66,8 +66,6 @@
     name: organizr
     image: "organizr/organizr"
     pull: yes
-    published_ports:
-      - "127.0.0.1:7421:80"
     env:
       fpm: "{{ (organizr.fpm|default(false,true)) }}"
       branch: "{{ (organizr.branch|default(false,true)) }}"
