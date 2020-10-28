@@ -116,7 +116,10 @@
     - (gpu.intel)
 
 - name: Install 'intel-gpu-tools'
-  apt: "name=intel-gpu-tools state=present"
+  apt:
+    state: present
+    name:
+      - "intel-gpu-tools"
   when:
     - (gpu.intel)
     - ('i915' in lscpi_resp.stdout)
