@@ -46,7 +46,7 @@ netdata_docker_container: "{{ netdata_name }}"
 # Image
 netdata_docker_image_pull: yes
 netdata_docker_image_tag: "latest"
-netdata_docker_image: "titpetric/netdata:{{ netdata_docker_image_tag }}"
+netdata_docker_image: "netdata/netdata:{{ netdata_docker_image_tag }}"
 
 # Ports
 netdata_docker_ports_defaults:
@@ -60,6 +60,7 @@ netdata_docker_ports: "{{ netdata_docker_ports_defaults
 # Envs
 netdata_docker_envs_default:
   TZ: "{{ tz }}"
+  PGID: "{{ ansible_local.group.docker.gid }}"
 netdata_docker_envs_custom: {}
 netdata_docker_envs_reverse_proxy: {}
 netdata_docker_envs: "{{ netdata_docker_envs_default
@@ -77,11 +78,10 @@ netdata_docker_volumes_default:
   - "{{ netdata_paths_location }}:/config"
   - "/proc:/host/proc:ro"
   - "/sys:/host/sys:ro"
-  - "/var/run/docker.sock:/var/run/docker.sock"
+  - "/var/run/docker.sock:/var/run/docker.sock:ro"
 netdata_docker_volumes_custom: []
 netdata_docker_volumes: "{{ netdata_docker_volumes_default
-                                + netdata_docker_volumes_custom
-                                + docker_volumes_downloads_common }}"
+                                + netdata_docker_volumes_custom }}"
 
 # Devices
 netdata_docker_devices_default: []
