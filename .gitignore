@@ -31,3 +31,4 @@
 ### Misc ###
 /changelog.txt
 /*.log
+.vscode/settings.json
