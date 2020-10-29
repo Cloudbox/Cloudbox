@@ -29,28 +29,6 @@ skip_commits:
     - 'roles/backup/**/*'
     - 'roles/restore/**/*'
 
-    # Ansible Roles - Extras
-    - 'roles/cloudflare/**/*'
-    - 'roles/ddclient/**/*'
-    - 'roles/emby/**/*'
-    - 'roles/feeder/**/*'
-    - 'roles/mariadb/**/*'
-    - 'roles/nginx/**/*'
-    - 'roles/netdata/**/*'
-    - 'roles/notify/**/*'
-    - 'roles/nvidia/**/*'
-    - 'roles/nzbthrottle/**/*'
-    - 'roles/plex_auth_token/**/*'
-    - 'roles/plex_dupefinder/**/*'
-    - 'roles/plex_patrol/**/*'
-    - 'roles/python-plexlibrary/**/*'
-    - 'roles/sabnzbd/**/*'
-    - 'roles/sickbeard_mp4_automator/**/*'
-    - 'roles/sstvirl/**/*'
-    - 'roles/subliminal/**/*'
-    - 'roles/trackarr/**/*'
-    - 'roles/traktarr/**/*'
-
   message: /\[minor\]/
 
 image: Ubuntu1804-minimal
