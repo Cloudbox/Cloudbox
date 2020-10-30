@@ -50,7 +50,7 @@
       VIRTUAL_PORT: 19999
       LETSENCRYPT_HOST: "netdata.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      PGID: "{{ docker_group_id }}"
+      PGID: "{{ docker_group_id.stdout }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"
