@@ -28,6 +28,24 @@ skip_commits:
     - 'roles/backup/**/*'
     - 'roles/restore/**/*'
 
+    # ansible roles extras	
+    - 'roles/cloudflare/**/*'	
+    - 'roles/ddclient/**/*'	
+    - 'roles/feeder/**/*'	
+    - 'roles/mariadb/**/*'	
+    - 'roles/nginx/**/*'	
+    - 'roles/notify/**/*'	
+    - 'roles/nvidia/**/*'	
+    - 'roles/nzbthrottle/**/*'	
+    - 'roles/plex_auth_token/**/*'	
+    - 'roles/plex_dupefinder/**/*'	
+    - 'roles/plex_patrol/**/*'	
+    - 'roles/python-plexlibrary/**/*'	
+    - 'roles/resilio-sync/**/*'	
+    - 'roles/sickbeard_mp4_automator/**/*'	
+    - 'roles/subliminal/**/*'	
+    - 'roles/traktarr/**/*'	
+
   message: /\[minor\]/
 
 image: Ubuntu1804-minimal
@@ -46,7 +64,7 @@ install:
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
   - sh: |
-      sudo ansible-playbook cloudbox.yml --tags "cloudbox" \
+      sudo ansible-playbook cloudbox.yml --tags "cloudbox,emby,netdata,sabnzbd" \
           --skip-tags "settings" \
           --extra-vars '{"continuous_integration":true}'
 
