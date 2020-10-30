@@ -18,3 +18,9 @@
     netdata_paths_folders_list: "{{ netdata_paths_folders_list + [netdata_paths_config_override_location] }}"
     netdata_docker_volumes_default: "{{ netdata_docker_volumes_default + netdata_docker_volumes_config_override }}"
   when: netdata_override.stat.exists
+
+- name: Get Docker group id.
+  shell: "cut -d: -f3 < <(getent group docker)"
+  args:
+    executable: /bin/bash
+  register: docker_group_id

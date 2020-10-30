@@ -60,7 +60,7 @@ netdata_docker_ports: "{{ netdata_docker_ports_defaults
 # Envs
 netdata_docker_envs_default:
   TZ: "{{ tz }}"
-  PGID: "{{ ansible_local.group.docker.gid }}"
+  PGID: "{{ docker_group_id.stdout }}"
 netdata_docker_envs_custom: {}
 netdata_docker_envs_reverse_proxy: {}
 netdata_docker_envs: "{{ netdata_docker_envs_default
