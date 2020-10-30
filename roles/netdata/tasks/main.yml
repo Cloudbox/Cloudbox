@@ -18,6 +18,8 @@
 
 - name: Get Docker group id.
   shell: "cut -d: -f3 < <(getent group docker)"
+  args:
+    executable: /bin/bash
   register: docker_group_id
 
 - name: Create htpasswd
