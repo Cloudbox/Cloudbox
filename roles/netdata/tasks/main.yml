@@ -16,6 +16,10 @@
     subdomain: netdata
   when: cloudflare_enabled
 
+- name: Get Docker group id.
+  shell: "cut -d: -f3 < <(getent group docker)"
+  register: docker_group_id
+
 - name: Create htpasswd
   htpasswd:
     path: "/opt/nginx-proxy/htpasswd/{{ item }}.{{ user.domain }}"
@@ -44,7 +48,7 @@
       VIRTUAL_PORT: 19999
       LETSENCRYPT_HOST: "netdata.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      PGID: "{{ ansible_local.group.docker.gid }}"
+      PGID: "{{ docker_group_id }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/proc:/host/proc:ro"
