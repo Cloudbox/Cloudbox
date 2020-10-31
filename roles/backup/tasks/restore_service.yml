@@ -9,7 +9,9 @@
 #########################################################################
 ---
 - name: Restore Service | Install 'curl'
-  apt: "name=curl state=present"
+  apt:
+    name: curl
+    state: present
 
 - name: Restore Service | Set variables
   set_fact:

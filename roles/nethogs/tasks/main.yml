@@ -9,7 +9,9 @@
 #########################################################################
 ---
 - name: Make sure nethogs package is not installed
-  apt: "name=nethogs state=absent"
+  apt:
+    name: nethogs
+    state: present
 
 - name: Install nethog dependencies
   apt:

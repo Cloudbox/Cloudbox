@@ -121,7 +121,9 @@
   register: sshd_config
 
 - name: Install 'openssh-server'
-  apt: "name=openssh-server state=present"
+  apt:
+    name: openssh-server
+    state: present
   when: (not sshd_config.stat.exists)
 
 - name: Wait for '/etc/ssh/sshd_config' to be created

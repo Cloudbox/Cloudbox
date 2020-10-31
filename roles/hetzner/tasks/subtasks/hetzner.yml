@@ -9,7 +9,9 @@
 #########################################################################
 ---
 - name: Hetzner | Install 'pciutils'
-  apt: "name=pciutils state=present"
+  apt:
+    name: pciutils
+    state: present
 
 - name: Hetzner | Fetch PCI info
   shell: "lspci -v -s $(lspci | grep -E '.*VGA.*Intel.*' | cut -d' ' -f 1) 2>/dev/null || :"

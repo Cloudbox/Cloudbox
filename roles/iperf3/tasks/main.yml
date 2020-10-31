@@ -9,7 +9,9 @@
 #########################################################################
 ---
 - name: Make sure iperf3 package is not installed
-  apt: "name=iperf3 state=absent"
+  apt:
+    name: iperf3
+    state: present
 
 - name: "Clone iperf3 repo"
   git:

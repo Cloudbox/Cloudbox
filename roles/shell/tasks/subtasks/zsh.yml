@@ -9,7 +9,9 @@
 #########################################################################
 ---
 - name: Zsh | Install 'zsh'
-  apt: "name=zsh state=present"
+  apt:
+    name: zsh
+    state: present
 
 - name: Zsh | Clone oh-my-zsh repo
   git:

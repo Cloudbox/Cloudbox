@@ -55,6 +55,7 @@
       - name: cloudbox
         aliases:
           - plex_patrol
+    network_mode: "{{ docker_networks_name_common }}"
     purge_networks: yes
     restart_policy: unless-stopped
     state: started

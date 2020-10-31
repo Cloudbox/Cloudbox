@@ -13,6 +13,7 @@
   docker_container:
     name: ddclient
     state: absent
+    container_default_behavior: compatibility
 
 - name: Create ddclient directories
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
@@ -23,7 +24,7 @@
   set_fact:
     subdomains:
       - plex
-      - plexpy
+      - tautulli
       - "{{ ombi.subdomain|default('ombi',true) }}"
       - portainer
       - organizr
@@ -62,5 +63,6 @@
         aliases:
           - ddclient
     purge_networks: yes
+    network_mode: "{{ docker_networks_name_common }}"
     restart_policy: unless-stopped
     state: started
