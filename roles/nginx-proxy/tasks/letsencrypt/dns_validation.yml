@@ -51,7 +51,6 @@
       TZ: "{{ tz }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
-    networks_cli_compatible: yes
     networks:
       - name: cloudbox
         aliases:
