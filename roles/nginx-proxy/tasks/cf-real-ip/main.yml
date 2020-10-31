@@ -12,6 +12,7 @@
   docker_container:
     name: cfrealip
     state: absent
+    container_default_behavior: compatibility
 
 - name: CF-Real-IP | Create and start container
   docker_container:

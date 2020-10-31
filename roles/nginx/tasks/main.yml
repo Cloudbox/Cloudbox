@@ -35,6 +35,7 @@
   docker_container:
     name: nginx
     state: absent
+    container_default_behavior: compatibility
 
 - name: Create and start container
   docker_container:

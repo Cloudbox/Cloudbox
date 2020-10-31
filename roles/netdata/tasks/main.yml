@@ -19,6 +19,7 @@
   docker_container:
     name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
+    container_default_behavior: compatibility
 
 - name: Variables Task
   import_tasks: "subtasks/variables.yml"

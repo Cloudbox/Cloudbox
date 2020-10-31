@@ -20,6 +20,7 @@
   docker_container:
     name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
+    container_default_behavior: compatibility
 
 - name: Hotio Migration Tasks
   include_tasks: "{{ resources_tasks_path }}/hotio/migrator/main.yml"

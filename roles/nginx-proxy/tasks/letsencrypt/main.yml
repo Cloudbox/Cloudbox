@@ -12,6 +12,7 @@
   docker_container:
     name: letsencrypt
     state: absent
+    container_default_behavior: compatibility
 
 - name: Letsencrypt | DNS Validation
   import_tasks: "dns_validation.yml"

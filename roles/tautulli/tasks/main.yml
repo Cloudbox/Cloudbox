@@ -23,6 +23,7 @@
   docker_container:
     name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
+    container_default_behavior: compatibility
 
 - name: Wait for Plex Logs folder to be created by Plex
   wait_for:

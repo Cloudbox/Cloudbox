@@ -12,6 +12,7 @@
   docker_container:
     name: plex_patrol
     state: absent
+    container_default_behavior: compatibility
 
 - name: Create plex_patrol directories
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"

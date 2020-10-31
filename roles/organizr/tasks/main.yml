@@ -30,6 +30,7 @@
   docker_container:
     name: organizr
     state: absent
+    container_default_behavior: compatibility
 
 # START - Migration Tasks
 - name: Check if previous organizr exists
