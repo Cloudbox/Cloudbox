@@ -32,6 +32,7 @@
           - cfrealip
     network_mode: "{{ docker_networks_name_common }}"
     purge_networks: yes
+    container_default_behavior: compatibility
     restart_policy: unless-stopped
     state: started
 
