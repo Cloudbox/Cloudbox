@@ -30,6 +30,7 @@
       - name: cloudbox
         aliases:
           - letsencrypt
+    network_mode: "{{ docker_networks_name_common }}"
     purge_networks: yes
     restart_policy: unless-stopped
     state: started
