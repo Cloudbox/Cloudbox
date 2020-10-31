@@ -28,6 +28,7 @@
     hostname: "{{ lookup('vars', _var_prefix + '_docker_hostname') }}"
     networks: "{{ lookup('vars', _var_prefix + '_docker_networks') }}"
     networks_cli_compatible: yes
+    network_mode: "{{ docker_networks_name_common }}"
     restart_policy: "{{ lookup('vars', _var_prefix + '_docker_restart_policy') }}"
     capabilities: "{{ lookup('vars', _var_prefix + '_docker_capabilities') }}"
     security_opts: "{{ lookup('vars', _var_prefix + '_docker_security_opts') }}"

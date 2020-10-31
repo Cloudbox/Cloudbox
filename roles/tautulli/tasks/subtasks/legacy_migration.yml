@@ -19,6 +19,7 @@
   docker_container:
     name: plexpy
     state: absent
+    container_default_behavior: compatibility
 
 # Migrate folder
 
