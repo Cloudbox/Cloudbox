@@ -25,7 +25,7 @@
 - name: Install pip requirements
   pip:
     requirements: "/opt/python-plexlibrary/requirements.txt"
-    executable: pip
+    executable: pip3
 
 - name: Check config exists
   stat:
