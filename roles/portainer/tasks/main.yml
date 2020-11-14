@@ -29,10 +29,8 @@
 - name: Create and start container
   docker_container:
     name: portainer
-    image: "portainer/portainer"
+    image: "portainer/portainer-ce"
     pull: yes
-    published_ports:
-      - "127.0.0.1:9000:9000"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/portainer:/data"
