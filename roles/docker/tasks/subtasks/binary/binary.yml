@@ -35,3 +35,7 @@
 - name: Binary | Install 'docker' pip module
   raw: pip install docker
   ignore_errors: yes
+
+- name: Binary | Install 'docker' pip3 module
+  raw: pip3 install docker
+  ignore_errors: yes
