@@ -171,6 +171,16 @@
     - passlib
   ignore_errors: yes
 
+- name: Install pip3 modules needed by Ansible via raw method
+  raw: "pip3 install {{ item }}"
+  loop:
+    - apprise
+    - dnspython
+    - lxml
+    - jmespath
+    - passlib
+  ignore_errors: yes
+
 - name: Uninstall apt 'glances'
   apt:
     name: glances
