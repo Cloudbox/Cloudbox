@@ -7,7 +7,7 @@
     - ['backup_config.yml', 'defaults/backup_config.yml.default']
   roles:
     - { role: sanity_check, tags: ['sanity_check'] }
-    - { role: settings, tags: ['always'] }
+    - { role: settings, tags: ['always', 'settings'] }
     - { role: pre_tasks, tags: ['pre_tasks'] }
     - { role: backup, tags: ['backup'] }
     - { role: restore, tags: ['restore'] }
