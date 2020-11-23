@@ -106,6 +106,7 @@ plex_docker_volumes_default:
   - "/mnt:/mnt"
   - "/tmp:/tmp"
   - "/dev/shm:/dev/shm"
+  - "/usr/lib/x86_64-linux-gnu/libOpenCL.so.1.0.0:/usr/lib/x86_64-linux-gnu/libOpenCL.so.1.0.0"
   - "{{ plex_paths_transcodes_location }}:/transcode"
 plex_docker_volumes_custom: []
 plex_docker_volumes: "{{ plex_docker_volumes_default
