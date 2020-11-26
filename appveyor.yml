@@ -63,6 +63,8 @@ install:
   - sh: git submodule update --init --recursive
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
+  - sh: sudo ansible-playbook cloudbox.yml --tags docker
+  - sh: sudo docker login -u $DOCKER_USER -p $DOCKER_PWD
   - sh: |
       sudo ansible-playbook cloudbox.yml --tags "cloudbox,emby,netdata,sabnzbd" \
           --skip-tags "settings" \
