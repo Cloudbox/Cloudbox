@@ -96,6 +96,7 @@
      - "{{ playbook_dir }}/settings.yml"
      - "{{ playbook_dir }}/adv_settings.yml"
      - "{{ playbook_dir }}/backup_config.yml"
+     - "{{ playbook_dir }}/inventories/host_vars/localhost.yml"
      - "/home/{{ user.name }}/.config/rclone/rclone.conf"
     ignore_errors: yes
 
