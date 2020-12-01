@@ -11,7 +11,7 @@
 - name: Letsencrypt | HTTP Validation | Create and start container
   docker_container:
     name: letsencrypt
-    image: "jrcs/letsencrypt-nginx-proxy-companion"
+    image: "jrcs/letsencrypt-nginx-proxy-companion:v1.13.1"
     pull: yes
     volumes:
       - "/opt/nginx-proxy/certs:/etc/nginx/certs:rw"
