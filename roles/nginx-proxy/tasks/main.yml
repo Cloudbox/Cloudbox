@@ -104,7 +104,7 @@
 - name: Create and start letsencrypt container
   docker_container:
     name: letsencrypt
-    image: "jrcs/letsencrypt-nginx-proxy-companion"
+    image: "jrcs/letsencrypt-nginx-proxy-companion:v1.13.1"
     pull: yes
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
