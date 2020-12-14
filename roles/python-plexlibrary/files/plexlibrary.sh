@@ -17,7 +17,7 @@ echo "" | tee -a /opt/python-plexlibrary/plexlibrary.log
 for file in /opt/python-plexlibrary/recipes/*
 do
     if [ ! -d "${file}" ]; then
-        /usr/bin/python /opt/python-plexlibrary/plexlibrary/plexlibrary.py $(basename "$file" .yml) | tee -a /opt/python-plexlibrary/plexlibrary.log
+        /usr/bin/python3 /opt/python-plexlibrary/plexlibrary/plexlibrary.py $(basename "$file" .yml) | tee -a /opt/python-plexlibrary/plexlibrary.log
         echo "" | tee -a /opt/python-plexlibrary/plexlibrary.log
     fi
 done
