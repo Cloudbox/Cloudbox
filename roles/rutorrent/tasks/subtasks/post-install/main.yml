@@ -25,6 +25,7 @@
 - name: Post-Install | Stop container
   docker_container:
     name: "{{ rutorrent_docker_container }}"
+    container_default_behavior: compatibility
     state: stopped
 
 - name: Post-Install | Settings Task
