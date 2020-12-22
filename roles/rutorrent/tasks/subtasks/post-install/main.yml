@@ -34,4 +34,5 @@
 - name: Post-Install | Start container
   docker_container:
     name: "{{ rutorrent_docker_container }}"
+    container_default_behavior: compatibility
     state: "{{ rutorrent_docker_state }}"
