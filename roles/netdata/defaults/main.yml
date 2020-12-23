@@ -60,7 +60,7 @@ netdata_docker_ports: "{{ netdata_docker_ports_defaults
 # Envs
 netdata_docker_envs_default:
   TZ: "{{ tz }}"
-  PGID: "{{ docker_group_id.stdout }}"
+  DOCKER_HOST: "docker-socket-proxy:2375"
 netdata_docker_envs_custom: {}
 netdata_docker_envs_reverse_proxy: {}
 netdata_docker_envs: "{{ netdata_docker_envs_default
@@ -75,10 +75,11 @@ netdata_docker_envs: "{{ netdata_docker_envs_default
 netdata_docker_volumes_config_override:
   - "{{ netdata_paths_config_override_location }}:/etc/netdata/override:ro"
 netdata_docker_volumes_default:
-  - "{{ netdata_paths_location }}:/config"
+  - "/etc/passwd:/host/etc/passwd:ro"
+  - "/etc/group:/host/etc/group:ro"
   - "/proc:/host/proc:ro"
   - "/sys:/host/sys:ro"
-  - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  - "/etc/os-release:/host/etc/os-release:ro"
 netdata_docker_volumes_custom: []
 netdata_docker_volumes: "{{ netdata_docker_volumes_default
                                 + netdata_docker_volumes_custom }}"

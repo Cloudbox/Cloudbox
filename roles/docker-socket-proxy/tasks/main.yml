@@ -1,0 +1,25 @@
+- name: Remove existing Docker container
+  docker_container:
+    name: "docker-socket-proxy"
+    state: absent
+    container_default_behavior: compatibility
+
+- name: Create and start container
+  docker_container:
+    name: docker-socket-proxy
+    image: "tecnativa/docker-socket-proxy"
+    pull: yes
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    env:
+      CONTAINERS: "1"
+    networks:
+      - name: cloudbox
+        aliases:
+          - docker-socket-proxy
+    networks_cli_compatible: yes
+    network_mode: "{{ docker_networks_name_common }}"
+    container_default_behavior: compatibility
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started

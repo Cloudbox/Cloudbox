@@ -15,6 +15,10 @@
     dns_record: "{{ netdata_web_subdomain }}"
     dns_zone: "{{ netdata_web_domain }}"
 
+- name: Create Docker Socket Proxy container
+  include_role:
+    name: docker-socket-proxy
+
 - name: Remove existing Docker container
   docker_container:
     name: "{{ lookup('vars', role_name + '_docker_container') }}"
