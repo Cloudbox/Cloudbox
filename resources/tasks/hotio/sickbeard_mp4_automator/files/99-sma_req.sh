@@ -21,11 +21,14 @@ if [[ ! -f /sma_req_installed ]]; then
         requests[security] \
         requests-cache \
         babelfish \
-        stevedore==1.19.1 \
+        tmdbsimple \
+        mutagen \
+        guessit \
+        stevedore \
         python-dateutil \
         deluge-client \
         qtfaststart \
-        "guessit<2" \
-        "subliminal<2"
+        pymediainfo \
+        subliminal
     touch /sma_req_installed
 fi
