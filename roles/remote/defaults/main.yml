@@ -152,14 +152,5 @@ rclone_vfs_mount_start_command: |-
 
 rclone_vfs_mount_stop_command: /bin/fusermount -uz /mnt/remote
 
-rclone_vfs_mount_primer_command: |-
-  /usr/bin/rclone rc vfs/refresh \
-    dir=Media \
-    recursive=true \
-    --user-agent='{{ user_agent }}' \
-    --config={{ rclone_config_path }} \
-    --timeout=1h \
-    -vvv \
-    --rc-addr=localhost:5572
-
-rclone_vfs_mount_primer_interval: 167h
+rclone_vfs_mount_start_post_command: |-
+  /usr/bin/rclone rc vfs/refresh recursive=true --rc-addr localhost:5572 _async=true
