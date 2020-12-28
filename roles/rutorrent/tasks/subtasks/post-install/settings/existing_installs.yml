@@ -21,11 +21,20 @@
     mode: 0664
   loop: "{{ rutorrent_config_existing_installs_rutorrent_rc_settings_list }}"
 
-- name: Post-Install | Settings | Existing Installs | Import custom 'nginx.conf' with htpasswd support
-  copy:
-    src: nginx.conf
-    force: yes
-    dest: "{{ rutorrent_paths_nginx_conf_location }}"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
+- name: Post-Install | Settings | Existing Installs | Check if 'nginx.conf' exists
+  stat:
+    path: "{{ rutorrent_paths_nginx_conf_location }}"
+  register: rutorrent_nginx_config
+
+- name: Post-Install | Settings | Existing Installs | Import 'nginx.conf' if it does not exist
+  block:
+    - name: Post-Install | Settings | Existing Installs | Import custom 'nginx.conf' with htpasswd support
+      copy:
+        src: nginx.conf
+        force: yes
+        dest: "{{ rutorrent_paths_nginx_conf_location }}"
+        owner: "{{ user.name }}"
+        group: "{{ user.name }}"
+        mode: 0775
+
+  when: not rutorrent_nginx_config.stat.exists
