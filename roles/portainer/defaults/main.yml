@@ -74,8 +74,7 @@ portainer_docker_volumes_default:
   - "/var/run/docker.sock:/var/run/docker.sock"
 portainer_docker_volumes_custom: []
 portainer_docker_volumes: "{{ portainer_docker_volumes_default
-                                  + portainer_docker_volumes_custom
-                                  + docker_volumes_downloads_common }}"
+                                  + portainer_docker_volumes_custom }}"
 
 # Devices
 portainer_docker_devices_default: []
