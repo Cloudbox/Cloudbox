@@ -11,23 +11,14 @@
 ---
 ## nginx.conf
 
-- name: Post-Install | Dynamic | Check if 'nginx.conf' exists
-  stat:
-    path: "/opt/rutorrent/nginx/nginx.conf"
-  register: rutorrent_nginx_config
-
-- name: Settings | Dynamic | Import 'nginx.conf' if it does not exist
-  block:
-    - name: Settings | Dynamic | Import custom 'nginx.conf' with htpasswd support
-      copy:
-        src: nginx.conf
-        dest: /opt/rutorrent/nginx/nginx.conf
-        owner: "{{ user.name }}"
-        group: "{{ user.name }}"
-        mode: 0775
-        force: yes
-        
-  when: not rutorrent_nginx_config.stat.exists
+- name: Settings | Static | Import custom 'nginx.conf' with htpasswd support
+  copy:
+    src: nginx.conf
+    dest: /opt/rutorrent/nginx/nginx.conf
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: yes
 
 ## rtorrent.rc
 
