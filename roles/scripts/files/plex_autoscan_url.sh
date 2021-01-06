@@ -67,7 +67,7 @@ function sanity_check() {
         exit 1
     elif ! [[ -x "$(command -v yq)" ]]; then
         echo -e ${BRED}" Error: "${NORMAL}"'"${BWHITE}"yq"${NORMAL}"' is not installed."\
-        ${NORMAL}"Run '"${BWHITE}"sudo pip install yq"${NORMAL}"' to install." >&2
+        ${NORMAL}"Run '"${BWHITE}"sudo pip3 install yq"${NORMAL}"' to install." >&2
         echo ""
         exit 1
     elif [[ ! -f ${PAS_CONFIG} ]]; then

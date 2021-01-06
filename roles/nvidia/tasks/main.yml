@@ -9,7 +9,7 @@
 #########################################################################
 ---
 - name: Install common pip modules
-  raw: pip install jmespath
+  raw: pip3 install jmespath
 
 - name: Fetch Nvidia card info
   shell: |

@@ -21,6 +21,7 @@
 - name: Install common pip modules
   pip:
     state: present
+    executable: pip3
     name:
       - yq
 

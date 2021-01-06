@@ -42,7 +42,7 @@
 - name: Install pip requirements
   pip:
     requirements: /opt/plex_autoscan/requirements.txt
-    executable: pip2
+    executable: pip3
 
 - name: Set 'scan.py' as executable
   file:

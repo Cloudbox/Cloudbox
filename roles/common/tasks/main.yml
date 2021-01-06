@@ -142,15 +142,6 @@
   ignore_errors: yes
   when: (not unrar_binary.stat.exists)
 
-- name: "Import 'pip.conf'"
-  copy:
-    src: "pip.conf"
-    dest: "/home/{{ user.name }}/.config/pip/pip.conf"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    force: yes
-
 - name: Install common pip modules
   pip:
     state: present
@@ -159,16 +150,7 @@
       - ansible-toolbox
       - ndg-httpsclient
       - yq
-  ignore_errors: yes
-
-- name: Install pip modules needed by Ansible via raw method
-  raw: "pip install {{ item }}"
-  loop:
-    - apprise
-    - dnspython
-    - lxml
-    - jmespath
-    - passlib
+    executable: pip3
   ignore_errors: yes
 
 - name: Install pip3 modules needed by Ansible via raw method
@@ -189,7 +171,7 @@
   tags: glances
 
 - name: Install pip 'glances'
-  shell: pip install glances[action,browser,cloud,cpuinfo,docker,folders,gpu,graph,ip,raid,snmp,web]
+  shell: pip3 install glances[action,browser,cloud,cpuinfo,docker,folders,gpu,graph,ip,raid,snmp,web]
   ignore_errors: yes
   tags: glances
 

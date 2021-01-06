@@ -12,6 +12,7 @@
   pip:
     name: apprise
     state: present
+    executable: pip3
 
 - name: Apprise | Send Notification
   shell: apprise -b '{{ message }}' '{{ apprise }}'

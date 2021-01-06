@@ -15,6 +15,6 @@
     fail_msg: >-
       Installed Ansible version: {{ ansible_version.full }}.
       You need to have Ansible version >= {{ sanity_check_ansible_version_min }} installed.
-      Run `sudo pip install 'ansible>=2.9,<2.10'` to update.
+      Run `sudo pip3 install 'ansible>=2.9,<2.10'` to update.
     success_msg:  >-
       Ansible Version: {{ ansible_version.full }}
