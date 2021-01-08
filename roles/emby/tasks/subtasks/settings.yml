@@ -17,6 +17,7 @@
   docker_container:
     name: "{{ emby_docker_container }}"
     state: stopped
+    container_default_behavior: compatibility
 
 - name: Settings | Update config file
   xml:
