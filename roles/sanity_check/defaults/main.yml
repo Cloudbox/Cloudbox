@@ -35,3 +35,9 @@ sanity_check_backup_lockfile_path: "{{ playbook_dir }}/backup.lock"
 sanity_check_logs_playbook_path: "{{ playbook_dir }}/cloudbox.yml"
 
 sanity_check_logs_logfile_path: "{{ playbook_dir }}/cloudbox.log"
+
+################################
+# Python Version
+################################
+
+sanity_check_python_version_min: 3.6

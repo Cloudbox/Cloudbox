@@ -1,0 +1,20 @@
+#########################################################################
+# Title:         Cloudbox: Sanity Check | Python Version                #
+# Author(s):     salty                                                  #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Python Version | Ensure Ansible is running on Python3.
+  assert:
+    that:
+      - ansible_python_version is version(sanity_check_python_version_min, '>=')
+    fail_msg: >-
+      Using Python version: {{ ansible_python_version.full }}.
+      You need to run Ansible Python3.
+      Go to the wiki and reinstall your dependencies.
+    success_msg:  >-
+      Ansible running on Python3 version: {{ ansible_python_version.full }}

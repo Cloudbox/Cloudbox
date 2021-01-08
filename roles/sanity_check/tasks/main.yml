@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Sanity Check                                 #
-# Author(s):     l3uddz, desimaniac                                     #
+# Author(s):     l3uddz, desimaniac, salty                              #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -26,4 +26,8 @@
 
 - name: Touch Logs
   import_tasks: "subtasks/05_logs.yml"
+  tags: always
+
+- name: Python Version Check
+  import_tasks: "subtasks/06_python_version.yml"
   tags: always
