@@ -136,6 +136,14 @@
     force: yes
   when: (playbook_dir == cloudbox_git_repo_dest)
 
+- name: User Account | Create symlink to cloudbox in root's home folder
+  file:
+    src: "{{ cloudbox_git_repo_dest }}"
+    dest: "/root/cloudbox"
+    state: link
+    force: yes
+  when: (playbook_dir == cloudbox_git_repo_dest)
+
 - name: Cloudbox Migrator | Check if '.ansible_vault' exists in '/etc/ansible'
   stat:
     path: "/etc/ansible/.ansible_vault"
