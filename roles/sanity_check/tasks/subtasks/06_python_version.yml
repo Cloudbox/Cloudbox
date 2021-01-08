@@ -8,13 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Python Version | Ensure Ansible is running on Python3.
+- name: Python Version | Ensure Ansible is running on Python 3.
   assert:
     that:
       - ansible_python_version is version(sanity_check_python_version_min, '>=')
     fail_msg: >-
-      Using Python version: {{ ansible_python_version.full }}.
-      You need to run Ansible Python3.
+      Using Python version: {{ ansible_python_version }}.
+      You need to run Ansible with Python 3.
       Go to the wiki and reinstall your dependencies.
     success_msg:  >-
-      Ansible running on Python3 version: {{ ansible_python_version.full }}
+      Ansible running on Python version: {{ ansible_python_version }}
