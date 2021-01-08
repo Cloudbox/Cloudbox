@@ -66,6 +66,11 @@
     path: "{{ user_paths_home_cloudbox_location }}"
   register: home_user_cloudbox_stat
 
+- name: Cloudbox Migrator | Check if 'cloudbox' folder exists in '/root'
+  stat:
+    path: "/root/cloudbox"
+  register: root_cloudbox_stat
+
 - name: Cloudbox Migrator | Tasks block for when 'cloudbox' folder exist in '/home'
   block:
 
@@ -127,6 +132,14 @@
   when:
     - (playbook_dir == cloudbox_git_repo_dest)
     - (home_user_cloudbox_stat.stat.exists and home_user_cloudbox_stat.stat.isdir)
+
+- name: Cloudbox Migrator | Remove 'cloudbox' folder in '/root'
+  file:
+    path: "/root/cloudbox"
+    state: absent
+  when:
+    - (playbook_dir == cloudbox_git_repo_dest)
+    - (root_cloudbox_stat.stat.exists and root_cloudbox_stat.stat.isdir)
 
 - name: User Account | Create symlink to cloudbox in user's home folder
   file:
