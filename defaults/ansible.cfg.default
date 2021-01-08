@@ -7,4 +7,4 @@ log_path = ./cloudbox.log
 callback_whitelist = profile_tasks
 command_warnings = False
 retry_files_enabled = False
-ansible_python_interpreter=/usr/bin/python3
+interpreter_python = /usr/bin/python3
