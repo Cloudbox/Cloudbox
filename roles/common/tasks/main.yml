@@ -161,6 +161,7 @@
     - lxml
     - jmespath
     - passlib
+    - PyMySQL
   ignore_errors: yes
 
 - name: Uninstall apt 'glances'
