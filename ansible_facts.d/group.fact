@@ -3,8 +3,6 @@
 
 import json
 
-cmd = "cat /etc/group"
-
 file = open("/etc/group", "r+")
 
 list = {}
