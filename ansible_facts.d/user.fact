@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
 # https://github.com/ifor2u/specbase
 
-import sys
 import json
-import subprocess
 
-cmd = "cat /etc/passwd"
-
-p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,stderr=subprocess.STDOUT, close_fds=True)
-(stdouterr, stdin) = (p.stdout, p.stdin)
+file = open("/etc/passwd", "r+")
 
 list = {}
 while True:
-  line = stdouterr.readline()
+  line = file.readline()
   if not line:
     break
   tokens = line.rstrip().split(":")
@@ -24,4 +19,4 @@ while True:
   user["shell"] = tokens[6]
   list[tokens[0]] = user
 
-print json.dumps(list)
+print(json.dumps(list))
