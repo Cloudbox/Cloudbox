@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: UnionFS | MergerFS Tasks                     #
-# Author(s):     EnorMOZ, desimaniac                                    #
+# Author(s):     EnorMOZ, desimaniac, salty                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -15,6 +15,11 @@
     warn: no
   register: mergerfs_download_url
   ignore_errors: yes
+
+- name: "MergerFS | Uninstall mergerfs"
+  apt:
+    name: mergerfs
+    state: absent
 
 - name: "MergerFS | Install mergerfs"
   apt:
