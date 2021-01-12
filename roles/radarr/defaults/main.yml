@@ -79,6 +79,12 @@ radarr_docker_envs: "{{ radarr_docker_envs_default
                         else radarr_docker_envs_default
                             | combine(radarr_docker_envs_custom) }}"
 
+# Commands
+radarr_docker_commands_default: []
+radarr_docker_commands_custom: []
+radarr_docker_commands: "{{ radarr_docker_commands_default
+                              + radarr_docker_commands_custom}}"
+
 # Volumes
 radarr_docker_volumes_default:
   - "{{ radarr_paths_location }}:/config"

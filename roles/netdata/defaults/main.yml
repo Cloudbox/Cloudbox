@@ -71,6 +71,12 @@ netdata_docker_envs: "{{ netdata_docker_envs_default
                         else netdata_docker_envs_default
                             | combine(netdata_docker_envs_custom) }}"
 
+# Commands
+netdata_docker_commands_default: []
+netdata_docker_commands_custom: []
+netdata_docker_commands: "{{ netdata_docker_commands_default
+                              + netdata_docker_commands_custom}}"
+
 # Volumes
 netdata_docker_volumes_config_override:
   - "{{ netdata_paths_config_override_location }}:/etc/netdata/override:ro"

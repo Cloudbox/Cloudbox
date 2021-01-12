@@ -101,6 +101,12 @@ sabnzbd_docker_envs: "{{ sabnzbd_docker_envs_default
                         else sabnzbd_docker_envs_default
                             | combine(sabnzbd_docker_envs_custom) }}"
 
+# Commands
+sabnzbd_docker_commands_default: []
+sabnzbd_docker_commands_custom: []
+sabnzbd_docker_commands: "{{ sabnzbd_docker_commands_default
+                              + sabnzbd_docker_commands_custom}}"
+
 # Volumes
 sabnzbd_docker_volumes_default:
   - "{{ sabnzbd_paths_location }}:/config"

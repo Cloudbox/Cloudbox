@@ -73,6 +73,12 @@ tautulli_docker_envs: "{{ tautulli_docker_envs_default
                           else tautulli_docker_envs_default
                               | combine(tautulli_docker_envs_custom) }}"
 
+# Commands
+tautulli_docker_commands_default: []
+tautulli_docker_commands_custom: []
+tautulli_docker_commands: "{{ tautulli_docker_commands_default
+                              + tautulli_docker_commands_custom}}"
+
 # Volumes
 tautulli_docker_volumes_default:
   - "{{ tautulli_paths_location }}:/config"
