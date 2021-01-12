@@ -166,6 +166,12 @@ rutorrent_docker_envs: "{{ rutorrent_docker_envs_default
                             else rutorrent_docker_envs_default
                                 | combine(rutorrent_docker_envs_custom) }}"
 
+# Commands
+rutorrent_docker_commands_default: []
+rutorrent_docker_commands_custom: []
+rutorrent_docker_commands: "{{ rutorrent_docker_commands_default
+                              + rutorrenty_docker_commands_custom}}"
+
 # Volumes
 rutorrent_docker_volumes_default:
   - "{{ rutorrent_paths_location }}:/config"

@@ -79,6 +79,12 @@ sonarr_docker_envs: "{{ sonarr_docker_envs_default
                         else sonarr_docker_envs_default
                             | combine(sonarr_docker_envs_custom) }}"
 
+# Commands
+sonarr_docker_commands_default: []
+sonarr_docker_commands_custom: []
+sonarr_docker_commands: "{{ sonarr_docker_commands_default
+                              + sonarr_docker_commands_custom}}"
+
 # Volumes
 sonarr_docker_volumes_default:
   - "{{ sonarr_paths_location }}:/config"

@@ -122,6 +122,12 @@ nzbhydra2_docker_envs: "{{ nzbhydra2_docker_envs_default
                             else nzbhydra2_docker_envs_default
                                 | combine(nzbhydra2_docker_envs_custom) }}"
 
+# Commands
+nzbhydra2_docker_commands_default: []
+nzbhydra2_docker_commands_custom: []
+nzbhydra2_docker_commands: "{{ nzbhydra2_docker_commands_default
+                              + nzbhydra2_docker_commands_custom}}"
+
 # Volumes
 nzbhydra2_docker_volumes_nzbhydra1_migration:
   - "{{ nzbhydra_paths_db_location }}:/nzbhydra1:ro"

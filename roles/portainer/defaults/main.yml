@@ -68,6 +68,12 @@ portainer_docker_envs: "{{ portainer_docker_envs_default
                             else portainer_docker_envs_default
                                 | combine(portainer_docker_envs_custom) }}"
 
+# Commands
+portainer_docker_commands_default: []
+portainer_docker_commands_custom: []
+portainer_docker_commands: "{{ portainer_docker_commands_default
+                              + portainer_docker_commands_custom}}"
+
 # Volumes
 portainer_docker_volumes_default:
   - "{{ portainer_paths_location }}:/data"

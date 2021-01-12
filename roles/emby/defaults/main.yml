@@ -97,6 +97,12 @@ emby_docker_envs: "{{ emby_docker_envs_default
                       else emby_docker_envs_default
                           | combine(emby_docker_envs_custom) }}"
 
+# Commands
+emby_docker_commands_default: []
+emby_docker_commands_custom: []
+emby_docker_commands: "{{ emby_docker_commands_default
+                              + emby_docker_commands_custom}}"
+
 # Volumes
 emby_docker_volumes_default:
   - "{{ emby_paths_location }}:/config"

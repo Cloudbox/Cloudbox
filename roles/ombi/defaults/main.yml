@@ -72,6 +72,12 @@ ombi_docker_envs: "{{ ombi_docker_envs_default
                       else ombi_docker_envs_default
                           | combine(ombi_docker_envs_custom) }}"
 
+# Commands
+ombi_docker_commands_default: []
+ombi_docker_commands_custom: []
+ombi_docker_commands: "{{ ombi_docker_commands_default
+                              + ombi_docker_commands_custom}}"
+
 # Volumes
 ombi_docker_volumes_default:
   - "{{ ombi_paths_location }}:/config"

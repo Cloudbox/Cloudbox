@@ -55,6 +55,12 @@ mariadb_docker_envs_custom: {}
 mariadb_docker_envs: "{{ mariadb_docker_envs_default
                             | combine(mariadb_docker_envs_custom) }}"
 
+# Commands
+mariadb_docker_commands_default: []
+mariadb_docker_commands_custom: []
+mariadb_docker_commands: "{{ mariadb_docker_commands_default
+                              + mariadb_docker_commands_custom}}"
+
 # Volumes
 mariadb_docker_volumes_default:
   - "{{ mariadb_paths_location }}:/config"

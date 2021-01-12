@@ -184,6 +184,12 @@ nzbget_docker_envs: "{{ nzbget_docker_envs_default
                         else nzbget_docker_envs_default
                             | combine(nzbget_docker_envs_custom) }}"
 
+# Commands
+nzbget_docker_commands_default: []
+nzbget_docker_commands_custom: []
+nzbget_docker_commands: "{{ nzbget_docker_commands_default
+                              + nzbget_docker_commands_custom}}"
+
 # Volumes
 nzbget_docker_volumes_default:
   - "{{ nzbget_paths_location }}:/config"

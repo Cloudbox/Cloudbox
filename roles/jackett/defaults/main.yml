@@ -72,6 +72,12 @@ jackett_docker_envs: "{{ jackett_docker_envs_default
                           else jackett_docker_envs_default
                               | combine(jackett_docker_envs_custom) }}"
 
+# Commands
+jackett_docker_commands_default: []
+jackett_docker_commands_custom: []
+jackett_docker_commands: "{{ jackett_docker_commands_default
+                              + jackett_docker_commands_custom}}"
+
 # Volumes
 jackett_docker_volumes_default:
   - "{{ jackett_paths_location }}:/config"
