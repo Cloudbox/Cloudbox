@@ -41,6 +41,13 @@ emby_web_url: "{{ 'https://' + emby_web_subdomain + '.' + emby_web_domain
                   else 'http://localhost:' + emby_web_port }}"
 
 ################################
+# Traefik
+################################
+
+emby_traefik_middleware: "secureHeaders@file"
+emby_traefik_host: "{{ emby_web_subdomain + '.' + emby_web_domain }}"
+
+################################
 # Settings
 ################################
 

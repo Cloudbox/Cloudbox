@@ -1,7 +1,6 @@
 [defaults]
 inventory = ./inventories/local
 roles_path = roles:resources/roles
-hash_behaviour = merge
 fact_path = ./ansible_facts.d
 log_path = ./cloudbox.log
 callback_whitelist = profile_tasks

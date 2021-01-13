@@ -33,4 +33,8 @@
     force: "{{ 'yes' if ('mounts_override' in ansible_run_tags) else 'no' }}"
 
 - name: "MergerFS | Start 'mergerfs.service'"
-  systemd: name=mergerfs.service state=started enabled=yes daemon_reload=yes
+  systemd: 
+    name: mergerfs.service 
+    state: started 
+    enabled: yes 
+    daemon_reload: yes

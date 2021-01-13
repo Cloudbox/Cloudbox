@@ -42,6 +42,13 @@ nzbget_web_url_with_login: "{{ 'https://' + nzbget_web_login + '@' + nzbget_web_
                                 else 'http://' + nzbget_web_login + '@' + 'localhost:' + nzbget_web_port }}"
 
 ################################
+# Traefik
+################################
+
+nzbget_traefik_middleware: "secureHeaders@file"
+nzbget_traefik_host: "{{ nzbget_web_subdomain + '.' + nzbget_web_domain }}"
+
+################################
 # Config
 ################################
 

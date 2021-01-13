@@ -36,6 +36,13 @@ radarr_web_url: "{{ 'https://' + radarr_web_subdomain + '.' + radarr_web_domain
                     else 'http://localhost:' + radarr_web_port }}"
 
 ################################
+# Traefik
+################################
+
+traefik_traefik_middleware: "secureHeaders@file"
+traefik_traefik_host: "{{ traefik_web_subdomain + '.' + traefik_web_domain }}"
+
+################################
 # API
 ################################
 

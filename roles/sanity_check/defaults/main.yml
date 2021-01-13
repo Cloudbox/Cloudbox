@@ -12,7 +12,8 @@
 # Ansible Version
 ################################
 
-sanity_check_ansible_version_min: 2.9
+sanity_check_ansible_version_min: 2.10.0
+ansible_update: false
 
 ################################
 # Ansible Tags

@@ -35,6 +35,13 @@ jackett_web_url: "{{ 'https://' + jackett_web_subdomain + '.' + jackett_web_doma
                       else 'http://localhost:' + jackett_web_port }}"
 
 ################################
+# Traefik
+################################
+
+jackett_traefik_middleware: "secureHeaders@file"
+jackett_traefik_host: "{{ jackett_web_subdomain + '.' + jackett_web_domain }}"
+
+################################
 # Docker
 ################################
 
@@ -103,7 +110,9 @@ jackett_docker_hosts: "{{ docker_hosts_common
 # Labels
 jackett_docker_labels_default: {}
 jackett_docker_labels_custom: {}
-jackett_docker_labels: "{{ docker_labels_common | combine(jackett_docker_labels_default) | combine(jackett_docker_labels_custom) }}"
+jackett_docker_labels: "{{ docker_labels_common 
+                              | combine(jackett_docker_labels_default) 
+                              | combine(jackett_docker_labels_custom) }}"
 
 # Hostname
 jackett_docker_hostname: "{{ jackett_name }}"

@@ -49,6 +49,13 @@ plex_web_url: "{{ 'https://' + plex_web_subdomain + '.' + plex_web_domain
                   else 'http://localhost:' + plex_web_port }}"
 
 ################################
+# Traefik
+################################
+
+plex_traefik_middleware: "secureHeaders@file"
+plex_traefik_host: "{{ plex_web_subdomain + '.' + plex_web_domain }}"
+
+################################
 # Docker
 ################################
 

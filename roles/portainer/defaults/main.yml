@@ -35,6 +35,13 @@ portainer_web_url: "{{ 'https://' + portainer_web_subdomain + '.' + portainer_we
                         else 'http://localhost:' + portainer_web_port }}"
 
 ################################
+# Traefik
+################################
+
+portainer_traefik_middleware: "secureHeaders@file"
+portainer_traefik_host: "{{ portainer_web_subdomain + '.' + portainer_web_domain }}"
+
+################################
 # Docker
 ################################
 

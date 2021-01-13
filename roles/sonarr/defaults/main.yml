@@ -36,6 +36,13 @@ sonarr_web_url: "{{ 'https://' + sonarr_web_subdomain + '.' + sonarr_web_domain
                     else 'http://localhost:' + sonarr_web_port }}"
 
 ################################
+# Traefik
+################################
+
+sonarr_traefik_middleware: "secureHeaders@file"
+sonarr_traefik_host: "{{ sonarr_web_subdomain + '.' + sonarr_web_domain }}"
+
+################################
 # API
 ################################
 

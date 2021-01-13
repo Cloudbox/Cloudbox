@@ -21,6 +21,7 @@
     pull: "{{ lookup('vars', _var_prefix + '_docker_image_pull') }}"
     published_ports: "{{ lookup('vars', _var_prefix + '_docker_ports') }}"
     env: "{{ lookup('vars', _var_prefix + '_docker_envs') }}"
+    command: "{{ lookup('vars', _var_prefix + '_docker_commands') }}"
     volumes: "{{ lookup('vars', _var_prefix + '_docker_volumes') }}"
     devices: "{{ lookup('vars', _var_prefix + '_docker_devices') }}"
     etc_hosts: "{{ lookup('vars', _var_prefix + '_docker_hosts') }}"

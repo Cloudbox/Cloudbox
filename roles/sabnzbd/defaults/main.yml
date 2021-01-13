@@ -42,6 +42,13 @@ sabnzbd_web_url: "{{ 'https://' + sabnzbd_web_subdomain + '.' + sabnzbd_web_doma
                     else 'http://localhost:' + sabnzbd_web_port }}"
 
 ################################
+# Traefik
+################################
+
+sabnzbd_traefik_middleware: "secureHeaders@file"
+sabnzbd_traefik_host: "{{ sabnzbd_web_subdomain + '.' + sabnzbd_web_domain }}"
+
+################################
 # Config
 ################################
 

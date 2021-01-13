@@ -179,13 +179,14 @@
     - name: Create lists of ignored apps
       set_fact:
         reverse_proxy_apps:
-          - nginx-proxy
-          - letsencrypt
+          - traefik
         torrent_apps:
           - deluge
           - delugevpn
           - qbittorrent
+          - qbittorrentvpn
           - rutorrent
+          - transmissionvpn
 
     - name: Filter out ignored apps from Docker containers list
       set_fact:
@@ -301,7 +302,7 @@
 
     when: (use_snapshot)
 
-  # Start Plexdrive and Docker containers when snapshot is enabled
+   # Start Plexdrive and Docker containers when snapshot is enabled
 
   - name: Snapshot | Start Plexdrive and Docker containers
     block:

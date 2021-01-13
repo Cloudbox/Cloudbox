@@ -49,6 +49,13 @@ rutorrent_web_url: "{{ 'https://' + rutorrent_web_subdomain + '.' + rutorrent_we
                         else 'http://localhost:' + rutorrent_web_port }}"
 
 ################################
+# Traefik
+################################
+
+rutorrent_traefik_middleware: "secureHeaders@file"
+rutorrent_traefik_host: "{{ rutorrent_web_subdomain + '.' + rutorrent_web_domain }}"
+
+################################
 # Config
 ################################
 

@@ -1,6 +1,6 @@
 #########################################################################
-# Title:         Cloudbox: Netdata Role                                 #
-# Author(s):     desimaniac, l3uddz                                     #
+# Title:         Cloudbox: Traefik Role                                 #
+# Author(s):     RXWatcher, salty                                       #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -12,12 +12,26 @@
   include_role:
     name: dns
   vars:
-    dns_record: "{{ netdata_web_subdomain }}"
-    dns_zone: "{{ netdata_web_domain }}"
+    dns_record: "{{ jackett_web_subdomain }}"
+    dns_zone: "{{ jackett_web_domain }}"
 
-- name: Create Docker Socket Proxy container
-  include_role:
-    name: docker-socket-proxy
+- name: Remove existing nginx-proxy container
+  docker_container:
+    name: "nginx-proxy"
+    state: absent
+    container_default_behavior: compatibility
+
+- name: Remove existing letsencrypt container
+  docker_container:
+    name: "letsencrypt"
+    state: absent
+    container_default_behavior: compatibility
+
+- name: Remove existing cfrealip container
+  docker_container:
+    name: "cfrealip"
+    state: absent
+    container_default_behavior: compatibility
 
 - name: Remove existing Docker container
   docker_container:
@@ -25,12 +39,13 @@
     state: absent
     container_default_behavior: compatibility
 
-- name: Variables Task
-  import_tasks: "subtasks/variables.yml"
-
 - name: Create directories
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
   with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
+
+- name: Traefik config Tasks
+  import_tasks: "subtasks/config.yml"
+  when: (not continuous_integration)
 
 - name: Create Docker container
   include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"

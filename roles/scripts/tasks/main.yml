@@ -33,10 +33,9 @@
     - /opt/scripts/frontail
     - /opt/scripts/nzbget
     - /opt/scripts/sabnzbd
-    - /opt/scripts/nginx-proxy
     - /opt/scripts/plex
     - /opt/scripts/plex_autoscan
-    - /opt/scripts/plexpy
+    - /opt/scripts/tautulli
     - /opt/scripts/torrents
     - /opt/scripts/rclone
 
@@ -77,15 +76,6 @@
   copy:
     src: "plex_token.sh"
     dest: "/opt/scripts/plex/plex_token.sh"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    force: yes
-
-- name: Import 'revoke_certs.sh'
-  template:
-    src: "revoke_certs.sh.j2"
-    dest: "/opt/scripts/nginx-proxy/revoke_certs.sh"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775

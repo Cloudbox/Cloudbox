@@ -1,0 +1,157 @@
+##########################################################################
+# Title:         Cloudbox: Traefik | Default Variables                   #
+# Author(s):     RXWatcher, salty                                        #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Basics
+################################
+
+traefik_name: traefik
+
+################################
+# Paths
+################################
+
+traefik_paths_folder: "{{ traefik_name }}"
+traefik_paths_location: "{{ server_appdata_path }}/{{ traefik_paths_folder }}"
+traefik_paths_folders_list:
+  - "{{ traefik_paths_location }}"
+
+################################
+# Web
+################################
+
+traefik_web_subdomain: "{{ traefik_name }}"
+traefik_web_domain: "{{ user.domain }}"
+traefik_web_url: "{{ 'https://' + traefik_web_subdomain + '.' + traefik_web_domain
+                      if (reverse_proxy_is_enabled)
+                      else 'http://localhost:' + traefik_web_port }}"
+
+################################
+# Docker
+################################
+
+# Container
+traefik_docker_container: "{{ traefik_name }}"
+
+# Image
+traefik_docker_image_pull: yes
+traefik_docker_image_tag: "latest"
+traefik_docker_image: "traefik:{{ traefik_docker_image_tag }}"
+
+# Ports
+traefik_docker_ports_defaults:
+  - "80:80/tcp"
+  - "443:443/tcp"
+  - "8080:8080/tcp"
+traefik_docker_ports_custom: []
+traefik_docker_ports: "{{ traefik_docker_ports_defaults
+                              + traefik_docker_ports_custom}}"
+
+# Envs
+traefik_docker_envs_default:
+  TZ: "{{ tz }}"
+  CLOUDFLARE_EMAIL: "{{ cloudflare.email }}"
+  CLOUDFLARE_API_KEY: "{{ cloudflare.api }}"
+traefik_docker_envs_custom: {}
+traefik_docker_envs_reverse_proxy: {}
+traefik_docker_envs: "{{ traefik_docker_envs_default
+                              | combine(traefik_docker_envs_custom)
+                              | combine(traefik_docker_envs_reverse_proxy)}}"
+
+# Commands
+traefik_docker_commands_default:
+  - "--global.sendanonymoususage=false"
+  - "--providers.file.directory=/etc/traefik"
+  - "--providers.docker=true"
+  - "--providers.docker.exposedbydefault=false"
+  - "--entrypoints.websecure.address=:443"
+  - "--entryPoints.websecure.forwardedHeaders.insecure"
+  - "--entryPoints.websecure.forwardedHeaders.insecure=true"
+  - "--entryPoints.websecure.proxyProtocol.insecure=true"
+  - "--certificatesresolvers.cfdns.acme.dnschallenge.provider=cloudflare"
+  - "{{ '--certificatesresolvers.cfdns.acme.email=' + user.email }}"
+  - "--certificatesresolvers.cfdns.acme.storage=/etc/traefik/acme.json"
+  - "--accesslog=true"
+  - "--log=true"
+  - "--log.filepath=/var/log/traefik.log"
+  - "--log.level=debug"
+  - "--api.dashboard=true"
+  - "--api=true"
+traefik_docker_commands_custom: []
+traefik_docker_commands: "{{ traefik_docker_commands_default
+                              + traefik_docker_commands_custom}}"
+
+# Volumes
+traefik_docker_volumes_default:
+  - "/etc/localtime:/etc/localtime:ro"
+  - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  - "{{ traefik_paths_location }}:/etc/traefik"
+traefik_docker_volumes_custom: []
+traefik_docker_volumes: "{{ traefik_docker_volumes_default
+                                + traefik_docker_volumes_custom }}"
+
+# Devices
+traefik_docker_devices_default: []
+traefik_docker_devices_custom: []
+traefik_docker_devices: "{{ traefik_docker_devices_default
+                                + traefik_docker_devices_custom }}"
+
+# Hosts
+traefik_docker_hosts_default: []
+traefik_docker_hosts_custom: []
+traefik_docker_hosts: "{{ docker_hosts_common
+                              | combine(traefik_docker_hosts_default)
+                              | combine(traefik_docker_hosts_custom) }}"
+
+# Labels
+traefik_docker_labels_default: 
+  traefik.enable: "true"
+  traefik.http.routers.traefik.rule: "Host(`dash.{{ user.domain }}`)"
+  traefik.http.routers.traefik.entrypoints: "websecure"
+  traefik.http.routers.traefik.tls: "true"
+  traefik.http.routers.traefik.tls.options: "securetls@file"
+  traefik.http.routers.traefik.tls.certresolver: "cfdns"
+  traefik.http.routers.traefik.tls.domains[0].main: "{{ user.domain }}"
+  traefik.http.routers.traefik.tls.domains[0].sans: "{{ '*.' + user.domain }}"
+  traefik.http.routers.traefik.middlewares: "traefik-auth"
+  traefik.http.routers.traefik.service: "api@internal"
+  traefik.http.middlewares.traefik-auth.basicauth.users: "admin:$apr1$u2LO3tCW$3EckKPCq3iUhr7sfIp0M./"
+traefik_docker_labels_custom: {}
+traefik_docker_labels: "{{ traefik_docker_labels_default
+                              | combine(traefik_docker_labels_custom) }}"
+
+# Hostname
+traefik_docker_hostname: "{{ traefik_name }}"
+
+# Networks
+traefik_docker_networks_alias: "{{ traefik_name }}"
+traefik_docker_networks_default: []
+traefik_docker_networks_custom: []
+traefik_docker_networks: "{{ docker_networks_common
+                                  + traefik_docker_networks_default
+                                  + traefik_docker_networks_custom }}"
+
+# Capabilities
+traefik_docker_capabilities_default: []
+traefik_docker_capabilities_custom: []
+traefik_docker_capabilities: "{{ traefik_docker_capabilities_default
+                                      + traefik_docker_capabilities_custom }}"
+
+# Security Opts
+traefik_docker_security_opts_default: []
+traefik_docker_security_opts_custom: []
+traefik_docker_security_opts: "{{ traefik_docker_security_opts_default
+                                      + traefik_docker_security_opts_custom }}"
+
+# Restart Policy
+traefik_docker_restart_policy: unless-stopped
+
+# State
+traefik_docker_state: started

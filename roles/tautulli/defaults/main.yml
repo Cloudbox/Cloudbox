@@ -37,6 +37,13 @@ tautulli_web_url: "{{ 'https://' + tautulli_web_subdomain + '.' + tautulli_web_d
                       else 'http://localhost:' + tautulli_web_port }}"
 
 ################################
+# Traefik
+################################
+
+tautulli_traefik_middleware: "secureHeaders@file"
+tautulli_traefik_host: "{{ tautulli_web_subdomain + '.' + tautulli_web_domain }}"
+
+################################
 # Docker
 ################################
 

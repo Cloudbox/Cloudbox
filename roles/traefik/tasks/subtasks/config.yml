@@ -1,0 +1,28 @@
+#########################################################################
+# Title:         Cloudbox: Traefik | Config Task                        #
+# Author(s):     RXWatcher, salty                                       #
+# URL:           https://github.com/Cloudbox/Community                  #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Import 'dynamic.yml'"
+  template:
+    src: dynamic.yml
+    dest: "{{ traefik_paths_location }}/dynamic.yml"
+    force: yes
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+
+- name: Settings | Static | Create '.htpasswd'
+  htpasswd:
+    path: "{{ traefik_paths_location }}/.htpasswd"
+    name: "{{ user.name }}"
+    password: "{{ user.pass }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+

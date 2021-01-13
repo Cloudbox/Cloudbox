@@ -39,6 +39,13 @@ nzbhydra2_web_url: "{{ 'https://' + nzbhydra2_web_subdomain + '.' + nzbhydra2_we
                         else 'http://localhost:' + nzbhydra2_web_port }}"
 
 ################################
+# Traefik
+################################
+
+nzbhydra2_traefik_middleware: "secureHeaders@file"
+nzbhydra2_traefik_host: "{{ nzbhydra2_web_subdomain + '.' + nzbhydra2_web_domain }}"
+
+################################
 # Config
 ################################
 

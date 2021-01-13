@@ -8,13 +8,30 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Ansible Version | Ensure required Ansible version is installed
-  assert:
-    that:
-      - ansible_version.full is version(sanity_check_ansible_version_min, '>=')
-    fail_msg: >-
-      Installed Ansible version: {{ ansible_version.full }}.
-      You need to have Ansible version >= {{ sanity_check_ansible_version_min }} installed.
-      Run `sudo pip3 install 'ansible>=2.9,<2.10'` to update.
-    success_msg:  >-
-      Ansible Version: {{ ansible_version.full }}
+- name: Print Ansible version
+  debug:
+    msg: "Installed Ansible version: {{ ansible_version.full }}."
+
+- name: Check if Ansible needs upgrading
+  set_fact:
+    ansible_update: true
+  when: ansible_version.full is version(sanity_check_ansible_version_min, '<=')
+
+- name: Upgrade Ansible
+  script:
+    cmd: /srv/git/cloudbox/scripts/update.sh
+  become: true
+  become_user: root
+  when: ansible_update
+
+- name: "Upgrade Ansible | Check if Ansible was upgraded"
+  block:
+  - name: "Upgrade Ansible | Print Instructions"
+    debug:
+      msg:
+        - "Ansible was upgraded"
+        - "You will need to re-run your previous tag."
+
+  - name: "Upgrade Ansible | Exit"
+    meta: end_play
+  when: ansible_update
