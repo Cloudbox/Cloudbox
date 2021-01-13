@@ -152,6 +152,13 @@ reverse_proxy_is_enabled: "{{ (user is defined) and
 reverse_proxy_auth: "{{ ansible_local.auth.auth }}"
 
 ################################
+# Theme
+################################
+
+# Options can be found at https://github.com/gilbN/theme.park
+global_themepark_theme: organizr-dark
+
+################################
 # Docker
 ################################
 

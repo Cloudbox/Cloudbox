@@ -55,7 +55,7 @@ sonarr_api_key:
 
 # Options can be found at https://github.com/gilbN/theme.park
 sonarr_themepark_enabled: no
-sonarr_themepark_theme: organizr-dark
+sonarr_themepark_theme: "{{ global_themepark_theme }}"
 
 ################################
 # Docker
