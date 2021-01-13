@@ -71,6 +71,7 @@ traefik_docker_commands_default:
   - "--providers.file.directory=/etc/traefik"
   - "--providers.docker=true"
   - "--providers.docker.exposedbydefault=false"
+  - "--entrypoints.web.address=:80"
   - "--entrypoints.websecure.address=:443"
   - "--entryPoints.websecure.forwardedHeaders.insecure"
   - "--entryPoints.websecure.forwardedHeaders.insecure=true"
@@ -123,6 +124,10 @@ traefik_docker_labels_default:
   traefik.http.routers.traefik.middlewares: "traefik-auth"
   traefik.http.routers.traefik.service: "api@internal"
   traefik.http.middlewares.traefik-auth.basicauth.users: "admin:$apr1$u2LO3tCW$3EckKPCq3iUhr7sfIp0M./"
+  traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"   
+  traefik.http.routers.redirs.rule: "hostregexp(`{host:.+}`)"  
+  traefik.http.routers.redirs.entrypoints: "web"  
+  traefik.http.routers.redirs.middlewares: "redirect-to-https" 
 traefik_docker_labels_custom: {}
 traefik_docker_labels: "{{ traefik_docker_labels_default
                               | combine(traefik_docker_labels_custom) }}"
