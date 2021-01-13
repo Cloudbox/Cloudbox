@@ -21,6 +21,7 @@
   docker_container:
     name: "{{ nzbget_docker_container }}"
     state: stopped
+    container_default_behavior: compatibility
 
 - name: Post-Install | Scripts Task
   import_tasks: "scripts/main.yml"
@@ -32,3 +33,4 @@
   docker_container:
     name: "{{ nzbget_docker_container }}"
     state: "{{ nzbget_docker_state }}"
+    container_default_behavior: compatibility
