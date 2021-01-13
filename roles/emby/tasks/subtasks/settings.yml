@@ -32,3 +32,4 @@
   docker_container:
     name: "{{ emby_docker_container }}"
     state: "{{ emby_docker_state }}"
+    container_default_behavior: compatibility
