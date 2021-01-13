@@ -302,7 +302,7 @@
 
     when: (use_snapshot)
 
-   # Start Plexdrive and Docker containers when snapshot is enabled
+  # Start Plexdrive and Docker containers when snapshot is enabled
 
   - name: Snapshot | Start Plexdrive and Docker containers
     block:
