@@ -123,7 +123,7 @@ traefik_docker_labels_default:
   traefik.http.routers.traefik.tls.domains[0].sans: "{{ '*.' + user.domain }}"
   traefik.http.routers.traefik.middlewares: "traefik-auth"
   traefik.http.routers.traefik.service: "api@internal"
-  traefik.http.middlewares.traefik-auth.basicauth.users: "admin:$apr1$u2LO3tCW$3EckKPCq3iUhr7sfIp0M./"
+  traefik.http.middlewares.traefik-auth.basicauth.users: "{{ reverse_proxy_auth }}"
   traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"   
   traefik.http.routers.redirs.rule: "hostregexp(`{host:.+}`)"  
   traefik.http.routers.redirs.entrypoints: "web"  

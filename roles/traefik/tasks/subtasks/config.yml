@@ -16,13 +16,3 @@
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
-
-- name: Settings | Static | Create '.htpasswd'
-  htpasswd:
-    path: "{{ traefik_paths_location }}/.htpasswd"
-    name: "{{ user.name }}"
-    password: "{{ user.pass }}"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-
