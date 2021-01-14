@@ -27,7 +27,7 @@ traefik_paths_folders_list:
 # Web
 ################################
 
-traefik_web_subdomain: "{{ traefik_name }}"
+traefik_web_subdomain: "dash"
 traefik_web_domain: "{{ user.domain }}"
 traefik_web_url: "{{ 'https://' + traefik_web_subdomain + '.' + traefik_web_domain
                       if (reverse_proxy_is_enabled)

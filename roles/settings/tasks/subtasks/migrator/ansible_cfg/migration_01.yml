@@ -25,6 +25,7 @@
     - { section: 'defaults', option: 'hash_behaviour', value: 'merge' }
     - { section: 'defaults', option: 'fact_path', value: './ansible_facts.d' }
     - { section: 'defaults', option: 'log_path', value: './cloudbox.log' }
+    - { section: 'defaults', option: 'interpreter_python', value: '/usr/bin/python3' }
 
 - name: "Migrator | 'ansible.cfg' | Build 'files_updated_successfully' list"
   set_fact:

@@ -12,8 +12,8 @@
   include_role:
     name: dns
   vars:
-    dns_record: "{{ jackett_web_subdomain }}"
-    dns_zone: "{{ jackett_web_domain }}"
+    dns_record: "{{ traefik_web_subdomain }}"
+    dns_zone: "{{ traefik_web_domain }}"
 
 - name: Remove existing nginx-proxy container
   docker_container:
