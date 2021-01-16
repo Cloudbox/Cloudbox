@@ -21,7 +21,7 @@ Environment=LC_ALL=C.UTF-8
 Environment=LANG=C.UTF-8
 Environment=FLASK_ENV=development
 WorkingDirectory=/opt/plex_autoscan/
-ExecStart=/opt/plex_autoscan/scan.py server --loglevel=INFO
+ExecStart=/usr/bin/python3 /opt/plex_autoscan/scan.py server --loglevel=INFO
 Restart=always
 RestartSec=10
 

@@ -72,7 +72,7 @@
 # Update 'config.json' for new and existing setups
 
 - name: Settings | Upgrade 'config.json'
-  shell: "/opt/plex_autoscan/scan.py update_config"
+  shell: "/usr/bin/python3 /opt/plex_autoscan/scan.py update_config"
   become: yes
   become_user: "{{ user.name }}"
   ignore_errors: yes
