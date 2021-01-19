@@ -1,3 +1,0 @@
-[submodule "library/ansible-ghetto-json"]
-	path = library/ansible-ghetto-json
-	url = https://github.com/FauxFaux/ansible-ghetto-json
