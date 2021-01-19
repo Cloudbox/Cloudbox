@@ -537,7 +537,7 @@
         --drive-chunk-size=128M \
         --stats=30s \
         -vv \
-        --log-file='/home/{{ user.name }}/logs/backup/cloudbox_backup_rclone.log' \
+        --log-file='{{ playbook_dir }}/backup_rclone.log' \
         '{{ local.destination }}' '{{ rclone.destination }}'
     become: yes
     become_user: "{{ user.name }}"
