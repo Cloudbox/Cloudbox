@@ -149,8 +149,6 @@ reverse_proxy_is_enabled: "{{ (user is defined) and
                               (user.email is not none) and
                               (user.email | trim | length > 0) }}"
 
-reverse_proxy_auth: "{{ ansible_local.auth.auth }}"
-
 ################################
 # Theme
 ################################
