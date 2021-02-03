@@ -30,7 +30,7 @@
 
 - name: Import '98-themepark'
   template:
-    src: "98-themepark.sh.j2"
+    src: "98-themepark.sh"
     dest: "{{ sonarr_paths_location }}/98-themepark.sh"
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
