@@ -15,7 +15,7 @@
   tags: nodejs
 
 - name: "Get nodejs binary path"
-  shell: "command -v nodejs || true"
+  shell: "command -v node || true"
   register: nodejs_binary
 
 - name: "Get nodejs version"
