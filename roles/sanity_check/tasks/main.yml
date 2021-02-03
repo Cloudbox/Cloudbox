@@ -16,6 +16,10 @@
   import_tasks: "subtasks/02_ansible_version.yml"
   tags: always
 
+- name: Python Version Check
+  import_tasks: "subtasks/06_python_version.yml"
+  tags: always
+
 - name: Tags Check
   import_tasks: "subtasks/03_ansible_tags.yml"
   tags: always
@@ -26,8 +30,4 @@
 
 - name: Touch Logs
   import_tasks: "subtasks/05_logs.yml"
-  tags: always
-
-- name: Python Version Check
-  import_tasks: "subtasks/06_python_version.yml"
   tags: always
