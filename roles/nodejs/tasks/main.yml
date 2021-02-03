@@ -49,9 +49,9 @@
   when: npm_binary.stdout | trim | length > 0
 
 - name: Install frontail npm module
-  npm: "name={{ item }} global=yes state=present"
-  with_items:
-    - frontail
+  npm:
+    name: frontail
+    global: yes
 
 - name: "Get frontail binary path"
   shell: "command -v frontail || true"
@@ -68,9 +68,9 @@
   when: frontail_binary.stdout | trim | length > 0
 
 - name: Install hastebin npm module
-  npm: "name={{ item }} global=yes state=present"
-  with_items:
-    - hastebin
+  npm:
+    name: hastebin
+    global: yes
 
 - name: "Get hastebin binary path"
   shell: "command -v hastebin || true"
