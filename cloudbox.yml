@@ -62,3 +62,4 @@
     - { role: trackarr, tags: ['trackarr'] }
     - { role: sstvirl, tags: ['sstvirl'] }
     - { role: transfer, tags: ['transfer'] }
+    - { role: yyq, tags: ['yyq'] }
