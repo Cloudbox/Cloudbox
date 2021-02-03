@@ -111,8 +111,7 @@ netdata_docker_hosts: "{{ docker_hosts_common
                               | combine(netdata_docker_hosts_custom) }}"
 
 # Labels
-netdata_docker_labels_default: 
-  traefik.http.middlewares.netdata-auth.basicauth.users: "{{ reverse_proxy_auth }}"
+netdata_docker_labels_default: {}
 netdata_docker_labels_custom: {}
 netdata_docker_labels: "{{ docker_labels_common
                               | combine(netdata_docker_labels_default)
