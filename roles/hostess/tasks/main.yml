@@ -29,7 +29,7 @@
   register: x
 
 - name: "Get hostess version"
-  shell: "/usr/local/bin/hostess --version | head -n 1 | awk '{ print $3 }'"
+  shell: "/usr/local/bin/hostess --version"
   register: hostess_version
   ignore_errors: yes
   when: x is success
