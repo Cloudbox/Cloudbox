@@ -176,6 +176,20 @@
   ignore_errors: yes
   tags: glances
 
+- name: Create glances directory
+  file: "path={{ item }} state=directory owner=root group=root mode=0775"
+  with_items:
+    - /etc/glances
+
+- name: Copy glances.conf if it doesn't exist
+  ansible.builtin.copy:
+    src: /usr/local/share/doc/glances/glances.conf
+    dest: /etc/glances/glances.conf
+    owner: root
+    group: root
+    mode: '0644'
+    force: no
+
 - name: Install 'z jump'
   import_role:
     name: z
