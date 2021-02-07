@@ -35,17 +35,11 @@
 
   tags:
     - plex-db-cache-size
-    - plex-forced-quality
 
 - name: "DB Cache Size Settings"
   import_tasks: "subtasks/settings/db_cache_size.yml"
   tags:
     - plex-db-cache-size
-
-- name: "Forced Automatic Quality Settings"
-  import_tasks: "subtasks/settings/forced_quality.yml"
-  tags:
-    - plex-forced-quality
 
 - name: "Install Sub-Zero Plugin"
   import_role:
@@ -67,4 +61,3 @@
     - plex_is_running_outer_state
   tags:
     - plex-db-cache-size
-    - plex-forced-quality

@@ -5,6 +5,8 @@ downloads:
 plex:
   tag: public
   transcodes: /mnt/local/transcodes
+  open_main_ports: no
+  db_cache_size: default
 rclone:
   version: latest
   remote: google

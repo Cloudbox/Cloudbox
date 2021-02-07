@@ -22,7 +22,6 @@
 
   tags:
     - plex-db-cache-size
-    - plex-forced-quality
 
 - name: "Continue when Plex Docker container exists"
   import_tasks: "main2.yml"
