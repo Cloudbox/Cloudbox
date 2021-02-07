@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: yyq Role                                     #
-# Author(s):     desimaniac                                             #
+# Author(s):     desimaniac, salty                                      #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -25,7 +25,7 @@
 
 - name: Install yyq
   get_url:
-    url:  "{{ yyq_download_url.stdout | default('https://github.com/mikefarah/yq/releases/download/2.2.1/yq_linux_amd64',true) }}"
+    url:  "{{ yyq_download_url.stdout | default('https://github.com/mikefarah/yq/releases/download/v4.5.0/yq_linux_amd64',true) }}"
     dest: /usr/local/bin/yyq
     mode: 0775
     owner: root
