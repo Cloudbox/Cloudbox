@@ -36,12 +36,12 @@
 
 - name: Check nzbget.conf exists
   stat:
-    path: "/opt/nzbget/app/nzbget.conf"
+    path: "/opt/nzbget/nzbget.conf"
   register: nzbget_conf
 
 - name: Settings | Set ShellOverride
   lineinfile:
-    path: "/opt/nzbget/app/nzbget.conf"
+    path: "/opt/nzbget/nzbget.conf"
     regexp: '^ShellOverride\s?=.*'
     line: 'ShellOverride=.py=/usr/bin/python3'
     state: present
