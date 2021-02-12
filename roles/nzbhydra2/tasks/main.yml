@@ -31,7 +31,7 @@
 
 - name: Check if nzbhydra.yml exists
   stat:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    path: "/opt/nzbhydra2/nzbhydra.yml"
   register: nzbhydra2_yml
 
 - name: Set default_volumes variable

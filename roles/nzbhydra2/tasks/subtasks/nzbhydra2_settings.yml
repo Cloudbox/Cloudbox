@@ -10,7 +10,7 @@
 ---
 - name: Wait for nzbhydra.yml to be created
   wait_for:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    path: "/opt/nzbhydra2/nzbhydra.yml"
     state: present
     delay: 30
 
@@ -21,7 +21,7 @@
 
 - name: Set URL Base
   lineinfile:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    path: "/opt/nzbhydra2/nzbhydra.yml"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
@@ -31,7 +31,7 @@
 
 - name: Update auth settings
   lineinfile:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    path: "/opt/nzbhydra2/nzbhydra.yml"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
@@ -47,7 +47,7 @@
 
 - name: Add login settings
   lineinfile:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    path: "/opt/nzbhydra2/nzbhydra.yml"
     insertafter: 'users:'
     line: "{{ item.line }}"
     state: present
@@ -61,7 +61,7 @@
 
 - name: Increase JVM memory
   lineinfile:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    path: "/opt/nzbhydra2/nzbhydra.yml"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
@@ -72,7 +72,7 @@
 
 - name: Add downloaders section
   lineinfile:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    path: "/opt/nzbhydra2/nzbhydra.yml"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
@@ -82,7 +82,7 @@
 
 - name: Add NZBGet downloader
   lineinfile:
-    path: "/opt/nzbhydra2/app/nzbhydra.yml"
+    path: "/opt/nzbhydra2/nzbhydra.yml"
     insertafter: 'downloaders:'
     line: "{{ item.line }}"
     state: present
