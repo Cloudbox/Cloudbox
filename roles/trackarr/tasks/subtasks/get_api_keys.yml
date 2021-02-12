@@ -10,7 +10,7 @@
 ---
 - name: Get API Keys | Check if Sonarr exists
   stat:
-    path: "/opt/sonarr/app/config.xml"
+    path: "/opt/sonarr/config.xml"
   register: sonarr_paths_config_location_stat
 
 - name: Get API Keys | Sonarr API Key tasks
@@ -18,7 +18,7 @@
 
   - name: Get API Keys | Fetch Sonarr API Key
     xml:
-      path: "/opt/sonarr/app/config.xml"
+      path: "/opt/sonarr/config.xml"
       xpath: /Config/ApiKey
       content: text
     register: xmlresp
@@ -31,7 +31,7 @@
 
 - name: Get API Keys | Check if Radarr exists
   stat:
-    path: "/opt/radarr/app/config.xml"
+    path: "/opt/radarr/config.xml"
   register: radarr_paths_config_location_stat
 
 - name: Get API Keys | Radarr API Key tasks
@@ -39,7 +39,7 @@
 
   - name: Get API Keys | Fetch Radarr API Key
     xml:
-      path: "/opt/radarr/app/config.xml"
+      path: "/opt/radarr/config.xml"
       xpath: /Config/ApiKey
       content: text
     register: xmlresp
@@ -52,7 +52,7 @@
 
 - name: Get API Keys | Check if Lidarr exists
   stat:
-    path: "/opt/lidarr/app/config.xml"
+    path: "/opt/lidarr/config.xml"
   register: lidarr_paths_config_location_stat
 
 - name: Get API Keys | Lidarr API Key tasks
@@ -60,7 +60,7 @@
 
   - name: Get API Keys | Fetch Lidarr API Key
     xml:
-      path: "/opt/lidarr/app/config.xml"
+      path: "/opt/lidarr/config.xml"
       xpath: /Config/ApiKey
       content: text
     register: xmlresp
