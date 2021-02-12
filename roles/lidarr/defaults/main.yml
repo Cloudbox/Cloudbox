@@ -20,7 +20,7 @@ lidarr_name: lidarr
 
 lidarr_paths_folder: "{{ lidarr_name }}"
 lidarr_paths_location: "{{ server_appdata_path }}/{{ lidarr_paths_folder }}"
-lidarr_paths_config_location: "{{ lidarr_paths_location }}/app/config.xml"
+lidarr_paths_config_location: "{{ lidarr_paths_location }}/config.xml"
 lidarr_paths_folders_list:
   - "{{ lidarr_paths_location }}"
 
