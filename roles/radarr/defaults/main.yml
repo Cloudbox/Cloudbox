@@ -22,7 +22,7 @@ radarr_paths_folder: "{{ radarr_name }}"
 radarr_paths_location: "{{ server_appdata_path }}/{{ radarr_paths_folder }}"
 radarr_paths_folders_list:
   - "{{ radarr_paths_location }}"
-radarr_paths_config_location: "{{ radarr_paths_location }}/app/config.xml"
+radarr_paths_config_location: "{{ radarr_paths_location }}/config.xml"
 
 ################################
 # Web
