@@ -21,9 +21,6 @@
     name: ombi
     state: absent
 
-- name: Suitarr | Migration Tasks
-  import_tasks: "subtasks/suitarr/migration.yml"
-
 - name: Create ombi directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
