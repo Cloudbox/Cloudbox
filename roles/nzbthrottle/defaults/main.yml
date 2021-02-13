@@ -36,12 +36,26 @@ nzbthrottle_docker_image_pull: yes
 nzbthrottle_docker_image_tag: "latest"
 nzbthrottle_docker_image: "daghaian/nzbthrottle:{{ nzbthrottle_docker_image_tag }}"
 
+# Ports
+nzbthrottle_docker_ports_defaults: []
+nzbthrottle_docker_ports_custom: []
+nzbthrottle_docker_ports: "{{ nzbthrottle_docker_ports_defaults
+                              + nzbthrottle_docker_ports_custom
+                          if (not reverse_proxy_is_enabled)
+                          else [] + nzbthrottle_docker_ports_custom }}"
+
 # Envs
 nzbthrottle_docker_envs_default:
   TZ: "{{ tz }}"
 nzbthrottle_docker_envs_custom: {}
 nzbthrottle_docker_envs: "{{ nzbthrottle_docker_envs_default
                                   | combine(nzbthrottle_docker_envs_custom) }}"
+
+# Commands
+nzbthrottle_docker_commands_default: []
+nzbthrottle_docker_commands_custom: []
+nzbthrottle_docker_commands: "{{ nzbthrottle_docker_commands_default
+                              + nzbthrottle_docker_commands_custom}}"
 
 # Volumes
 nzbthrottle_docker_volumes_default:
@@ -51,12 +65,25 @@ nzbthrottle_docker_volumes_custom: []
 nzbthrottle_docker_volumes: "{{ nzbthrottle_docker_volumes_default
                                     + nzbthrottle_docker_volumes_custom }}"
 
+# Devices
+nzbthrottle_docker_devices_default: []
+nzbthrottle_docker_devices_custom: []
+nzbthrottle_docker_devices: "{{ nzbthrottle_docker_devices_default
+                                + nzbthrottle_docker_devices_custom }}"
+
+# Hosts
+nzbthrottle_docker_hosts_default: []
+nzbthrottle_docker_hosts_custom: []
+nzbthrottle_docker_hosts: "{{ docker_hosts_common
+                              | combine(nzbthrottle_docker_hosts_default)
+                              | combine(nzbthrottle_docker_hosts_custom) }}"
+
 # Labels
 nzbthrottle_docker_labels_default: {}
 nzbthrottle_docker_labels_custom: {}
 nzbthrottle_docker_labels: "{{ docker_labels_common
-                                    | combine(nzbthrottle_docker_labels_default)
-                                    | combine(nzbthrottle_docker_labels_custom) }}"
+                              | combine(nzbthrottle_docker_labels_default)
+                              | combine(nzbthrottle_docker_labels_custom) }}"
 
 # Hostname
 nzbthrottle_docker_hostname: "{{ nzbthrottle_name }}"
@@ -66,5 +93,23 @@ nzbthrottle_docker_networks_alias: "{{ nzbthrottle_name }}"
 nzbthrottle_docker_networks_default: []
 nzbthrottle_docker_networks_custom: []
 nzbthrottle_docker_networks: "{{ docker_networks_common
-                                      + nzbthrottle_docker_networks_default
-                                      + nzbthrottle_docker_networks_custom }}"
+                                + nzbthrottle_docker_networks_default
+                                + nzbthrottle_docker_networks_custom }}"
+
+# Capabilities
+nzbthrottle_docker_capabilities_default: []
+nzbthrottle_docker_capabilities_custom: []
+nzbthrottle_docker_capabilities: "{{ nzbthrottle_docker_capabilities_default
+                                    + nzbthrottle_docker_capabilities_custom }}"
+
+# Security Opts
+nzbthrottle_docker_security_opts_default: []
+nzbthrottle_docker_security_opts_custom: []
+nzbthrottle_docker_security_opts: "{{ nzbthrottle_docker_security_opts_default
+                                      + nzbthrottle_docker_security_opts_custom }}"
+
+# Restart Policy
+nzbthrottle_docker_restart_policy: unless-stopped
+
+# State
+nzbthrottle_docker_state: started
