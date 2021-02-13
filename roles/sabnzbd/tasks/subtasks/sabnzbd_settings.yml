@@ -11,7 +11,7 @@
 # Stop Container
 - name: Wait for sabnzbd.ini to be created
   wait_for:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     state: present
 
 - name: "Wait for 10 seconds before stopping sabnzbd container"
@@ -25,7 +25,7 @@
 
 - name: Add domain to whitelist
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     regexp: '(^host_whitelist\s?=.*,)'
     backrefs: yes
     line: '\1 sabnzbd.{{ user.domain }}'
@@ -33,7 +33,7 @@
 
 - name: Remove url_base
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     regexp: '^url_base\s?=.*'
     line: 'url_base = ""'
     state: present
@@ -41,7 +41,7 @@
 # Authentication
 - name: Set Username
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     insertafter: '^warn_dupl_jobs\s?=.*'
     regexp: '^username\s?=.*'
     line: "username = {{ user.name }}"
@@ -49,7 +49,7 @@
 
 - name: Set Password
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     insertafter: '^rss_filenames\s?=.*'
     regexp: '^password\s?=.*'
     line: "password = {{ user.pass }}"
@@ -57,7 +57,7 @@
 
 - name: Set Form Auth
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     regexp: '^html_login\s?=.*'
     line: 'html_login = 1'
     state: present
@@ -65,35 +65,35 @@
 # Paths
 - name: Change incomplete downloads directory
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     regexp: '^download_dir\s?=.*'
     line: 'download_dir = /downloads/nzbs/sabnzbd/incomplete'
     state: present
 
 - name: Change complete downloads directory
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     regexp: '^complete_dir\s?=.*'
     line: 'complete_dir = /downloads/nzbs/sabnzbd/complete'
     state: present
 
 - name: Change watched directory
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     regexp: '^dirscan_dir\s?=.*'
     line: 'dirscan_dir = /downloads/nzbs/sabnzbd/watched'
     state: present
 
 - name: Change script directory
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     regexp: '^script_dir\s?=.*'
     line: 'script_dir = /scripts'
     state: present
 
 - name: Change logs directory
   lineinfile:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
     regexp: '^log_dir\s?=.*'
     line: 'log_dir = /downloads/nzbs/sabnzbd/logs'
     state: present

@@ -34,7 +34,7 @@
 
 - name: Check sabnzbd.ini exists
   stat:
-    path: "/opt/sabnzbd/app/sabnzbd.ini"
+    path: "/opt/sabnzbd/sabnzbd.ini"
   register: sabnzbd_ini
 
 - name: Set default_volumes variable
