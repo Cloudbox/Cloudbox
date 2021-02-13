@@ -25,6 +25,13 @@ nzbthrottle_paths_folders_list:
 nzbthrottle_paths_config_location: "{{ nzbthrottle_paths_location }}/config.json"
 
 ################################
+# Traefik
+################################
+
+nzbthrottle_traefik_middleware: "secureHeaders@file"
+nzbthrottle_traefik_host: ""
+
+################################
 # Docker
 ################################
 
