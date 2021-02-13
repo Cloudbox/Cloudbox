@@ -16,3 +16,12 @@
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
     mode: 0775
+
+- name: Create auth file
+  community.general.htpasswd:
+    path: /opt/traefik/auth
+    name: {{ user.name }}
+    password: {{ user.pass }}
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
