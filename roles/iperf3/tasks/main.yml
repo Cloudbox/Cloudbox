@@ -9,41 +9,29 @@
 #########################################################################
 ---
 - name: Make sure iperf3 package is not installed
-  apt:
-    name: iperf3
-    state: present
+  apt: "name=iperf3 state=absent"
 
-- name: "Clone iperf3 repo"
+- name: Clone iperf3 repo
   git:
-    repo: "https://github.com/esnet/iperf.git"
-    dest: "/var/tmp/iperf3"
+    repo: "{{ iperf3_git_repo_url }}"
+    dest: "{{ iperf3_git_repo_dest }}"
     clone: yes
     version: HEAD
     force: yes
-  register: diff
+  register: iperf_clone_status
 
-- name: "Build and install iperf3"
-  shell: |
-    export LD_RUN_PATH=/usr/local/lib
-    cd /var/tmp/iperf3
-    ./configure
-    make
-    make install
-    ldconfig
-    rm -rf /var/tmp/iperf3
-  register: diff
+- name: Tasks to do with git clone is a success
+  block:
 
-- name: "Get iperf3 binary path"
-  shell: "which iperf3"
-  register: iperf3_binary
-  when: diff is success
+  - name: Build and install iperf3
+    shell: "{{ iperf3_binary_build_command }}"
 
-- name: "Get iperf3 version"
-  shell: "{{ iperf3_binary.stdout }} --version | head -n 1 | awk '{ print $2 }'"
-  register: iperf3_version
-  when: diff is success
+  - name: Get iperf3 binary version
+    shell: "{{ iperf3_binary_version_lookup_command }}"
+    register: iperf3_binary_version
 
-- name: "Display iperf3 version"
-  debug:
-    msg: "iperf3 {{ iperf3_version.stdout }} installed."
-  when: diff is success
+  - name: Display iperf3 binary version
+    debug:
+      msg: "iperf3 {{ iperf3_binary_version.stdout }} installed."
+
+  when: iperf_clone_status is success

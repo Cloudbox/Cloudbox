@@ -20,7 +20,9 @@ docker_apt_key_url: https://download.docker.com/linux/ubuntu/gpg
 # Docker APT Repository
 ################################
 
-docker_apt_repo_url: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ 'edge' if docker.repo is defined and docker.repo | lower == 'edge' else 'stable' }}"
+docker_apt_repo_version: stable
+
+docker_apt_repo_url: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ docker_apt_repo_version }}"
 
 docker_apt_repo_filename: docker
 

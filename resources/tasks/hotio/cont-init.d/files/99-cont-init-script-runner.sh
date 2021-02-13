@@ -1,5 +1,7 @@
+#!/usr/bin/with-contenv bash
+
 #########################################################################
-# Title:         Cloudbox: Node.js                                      #
+# Title:         Cloudbox: cont-init.d Script Runner                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -7,15 +9,10 @@
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
----
-- name: Node.js Tasks
-  import_tasks: subtasks/nodejs.yml
 
-- name: NPM Tasks
-  import_tasks: subtasks/npm.yml
+scripts=$(find /config/script.d/ -name "*.sh" -type f | sort)
 
-- name: Frontail Tasks
-  import_tasks: subtasks/frontail.yml
-
-- name: Hastebin Tasks
-  import_tasks: subtasks/hastebin.yml
+for script in $scripts; do
+    echo "[cont-init.d script-runner] ${script}: executing... "
+    bash $file
+done

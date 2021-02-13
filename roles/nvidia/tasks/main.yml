@@ -46,12 +46,14 @@
 
     - name: Check if 'blacklist-nouveau.conf' exists
       stat:
-        path: "/etc/modprobe.d/blacklist-nouveau.conf"
+        path: "{{ nvidia_kernel_blacklist_nouveau_conf_location }}"
       register: blacklist_nouveau_conf
 
     - name: "Nvidia Kernel Task"
       include_tasks: "subtasks/kernel.yml"
-      when: (not blacklist_nouveau_conf.stat.exists)
+      when:
+        - (not blacklist_nouveau_conf.stat.exists)
+        - (nvidia_kernel_blacklist_nouveau)
 
     when: manual_install_is_disabled
 
@@ -62,7 +64,7 @@
 
     - name: "Nvidia Driver Task"
       include_tasks: "subtasks/driver.yml"
-      when: (gpu.nvidia.driver | lower != 'ignore')
+      when: (nvidia_driver_version | lower != 'ignore')
 
     when: manual_install_is_disabled
 
@@ -73,7 +75,7 @@
 
     - name: Check to see if patch backup files exist
       find:
-        paths: "/opt/nvidia/libnvidia-encode-backup"
+        paths: "{{ nvidia_patch_backup_file_location }}"
         file_type: file
         recurse: yes
         patterns: '*.so*'
@@ -109,7 +111,7 @@
 
     - name: Check if 'nvtop' exists
       stat:
-        path: "/usr/local/bin/nvtop"
+        path: "{{ nvidia_nvtop_location }}"
       register: nvtop_binary
 
     - name: "Nvidia Nvtop Task"

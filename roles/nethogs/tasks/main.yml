@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Nethogs Role                                 #
-# Author(s):     EnorMOZ                                                #
+# Author(s):     EnorMOZ, desimaniac                                    #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,12 +8,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Make sure nethogs package is not installed
-  apt:
-    name: nethogs
-    state: present
+- name: Make sure NetHogs package is not installed
+  apt: "name=nethogs state=absent"
 
-- name: Install nethog dependencies
+- name: Install NetHogs dependencies
   apt:
     name:
       - build-essential
@@ -22,39 +20,27 @@
     state: present
     update_cache: yes
 
-- name: Pull nethogs repo from github
+- name: Pull NetHogs repo from github
   git:
-    repo: "https://github.com/raboof/nethogs.git"
-    dest: "/var/tmp/nethogs"
+    repo: "{{ nethogs_git_repo_url }}"
+    dest: "{{ nethogs_git_repo_dest }}"
     clone: yes
     version: HEAD
     force: yes
-  register: diff
+  register: nethogs_clone_status
 
-- name: Build and install nethogs
-  shell: |
-    cd /var/tmp/nethogs
-    make
-    make install
-    hash -r
-    setcap 'cap_net_admin,cap_net_raw+pe' /usr/local/sbin/nethogs
-    rm -rf /var/tmp/nethogs
-  when: diff is success
+- name: Tasks to do with git clone is a success
+  block:
 
-- name: Symlink binary to /usr/local/bin
-  file:
-    src: "/usr/local/sbin/nethogs"
-    dest: "/usr/local/bin/nethogs"
-    state: link
-    force: yes
-  when: diff is success
+  - name: Build and install NetHogs
+    shell: "{{ nethogs_binary_build_command }}"
 
-- name: "Get nethogs version"
-  shell: "/usr/local/sbin/nethogs -V | head -n 1 | awk '{print $2}' | cut -f1,2 -d'-'"
-  register: nethogs_version
-  when: diff is success
+  - name: Get NetHogs binary version
+    shell: "{{ nethogs_binary_version_lookup_command }}"
+    register: nethogs_binary_version
 
-- name: "Display nethogs version"
-  debug:
-    msg: "nethogs {{ nethogs_version.stdout }} installed."
-  when: diff is success
+  - name: Display nethogs binary version
+    debug:
+      msg: "NetHogs {{ nethogs_binary_version.stdout }} installed."
+
+  when: nethogs_clone_status is succeeded

@@ -1,0 +1,141 @@
+##########################################################################
+# Title:         Cloudbox: Nginx Web Server | Default Variables          #
+# Author(s):     desimaniac, salty                                       #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# Basics
+################################
+
+nginx_name: nginx
+
+################################
+# Paths
+################################
+
+nginx_paths_folder: "{{ nginx_name }}"
+nginx_paths_location: "{{ server_appdata_path }}/{{ nginx_paths_folder }}"
+nginx_paths_folders_list:
+  - "{{ nginx_paths_location }}"
+
+################################
+# Web
+################################
+
+nginx_web_subdomain: "web"
+nginx_web_domain: "{{ user.domain }}"
+nginx_web_port: "80"
+nginx_web_url: "{{ 'https://' + nginx_web_subdomain + '.' + nginx_web_domain
+                      if (reverse_proxy_is_enabled
+                      else 'http://localhost:' + nginx_web_port }}"
+
+################################
+# Traefik
+################################
+
+nginx_traefik_middleware: "secureHeaders@file"
+nginx_traefik_host: "{{ nginx_web_subdomain + '.' + nginx_web_domain }}"
+
+################################
+# Docker
+################################
+
+# Container
+nginx_docker_container: "{{ nginx_name }}"
+
+# Image
+nginx_docker_image_pull: yes
+nginx_docker_image_tag: "latest"
+nginx_docker_image: "linuxserver/nginx:{{ nginx_docker_image_tag }}"
+
+# Ports
+nginx_docker_ports_defaults:
+  - "{{ nginx_web_port }}"
+nginx_docker_ports_custom: []
+nginx_docker_ports: "{{ nginx_docker_ports_defaults
+                              + nginx_docker_ports_custom
+                          if (not reverse_proxy_is_enabled)
+                          else [] + nginx_docker_ports_custom }}"
+
+# Envs
+nginx_docker_envs_default:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  TZ: "{{ tz }}"
+nginx_docker_envs_custom: {}
+nginx_docker_envs_reverse_proxy: {}
+nginx_docker_envs: "{{ nginx_docker_envs_default
+                            | combine(nginx_docker_envs_custom)
+                            | combine(nginx_docker_envs_reverse_proxy)
+                            | combine(docker_envs_reverse_proxy_common)
+                        if (reverse_proxy_is_enabled)
+                        else nginx_docker_envs_default
+                            | combine(nginx_docker_envs_custom) }}"
+
+# Commands
+nginx_docker_commands_default: []
+nginx_docker_commands_custom: []
+nginx_docker_commands: "{{ nginx_docker_commands_default
+                              + nginx_docker_commands_custom}}"
+
+# Volumes
+nginx_docker_volumes_default:
+  - "{{ nginx_paths_location }}:/config"
+nginx_docker_volumes_custom: []
+nginx_docker_volumes: "{{ nginx_docker_volumes_default
+                              + nginx_docker_volumes_custom
+                              + docker_volumes_downloads_common }}"
+
+# Devices
+nginx_docker_devices_default: []
+nginx_docker_devices_custom: []
+nginx_docker_devices: "{{ nginx_docker_devices_default
+                              + nginx_docker_devices_custom }}"
+
+# Hosts
+nginx_docker_hosts_default: []
+nginx_docker_hosts_custom: []
+nginx_docker_hosts: "{{ docker_hosts_common
+                            | combine(nginx_docker_hosts_default)
+                            | combine(nginx_docker_hosts_custom) }}"
+
+# Labels
+nginx_docker_labels_default: {}
+nginx_docker_labels_custom: {}
+nginx_docker_labels: "{{ docker_labels_common
+                              | combine(nginx_docker_labels_default)
+                              | combine(nginx_docker_labels_custom) }}"
+
+# Hostname
+nginx_docker_hostname: "{{ nginx_name }}"
+
+# Networks
+nginx_docker_networks_alias: "{{ nginx_name }}"
+nginx_docker_networks_default: []
+nginx_docker_networks_custom: []
+nginx_docker_networks: "{{ docker_networks_common
+                                + nginx_docker_networks_default
+                                + nginx_docker_networks_custom }}"
+
+# Capabilities
+nginx_docker_capabilities_default: []
+nginx_docker_capabilities_custom: []
+nginx_docker_capabilities: "{{ nginx_docker_capabilities_default
+                                    + nginx_docker_capabilities_custom }}"
+
+# Security Opts
+nginx_docker_security_opts_default: []
+nginx_docker_security_opts_custom: []
+nginx_docker_security_opts: "{{ nginx_docker_security_opts_default
+                                    + nginx_docker_security_opts_custom }}"
+
+# Restart Policy
+nginx_docker_restart_policy: unless-stopped
+
+# State
+nginx_docker_state: started

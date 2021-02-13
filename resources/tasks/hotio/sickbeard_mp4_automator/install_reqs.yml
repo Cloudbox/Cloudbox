@@ -1,16 +1,7 @@
-##############################################################################
-# Title:         Cloudbox: Resources | Tasks | Hotio | SMA | Install Reqs    #
-# Author(s):     desimaniac                                                  #
-# URL:           https://github.com/cloudbox/cloudbox                        #
-# --                                                                         #
-#         Part of the Cloudbox project: https://cloudbox.works               #
-##############################################################################
-#                   GNU General Public License v3.0                          #
-##############################################################################
 ---
 - name: Set 'script_d_path' variable
   set_fact:
-    script_d_path: "{{ lookup('vars', role_name + '_paths_location') }}/script.d"
+    script_d_path: "{{ lookup('vars', role_name + '_paths_location') }}/script.d/"
 
 - name: Create directories
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"

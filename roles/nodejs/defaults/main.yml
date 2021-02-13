@@ -1,0 +1,52 @@
+#########################################################################
+# Title:         Cloudbox: Node.js | Default Variables                  #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Node.js
+################################
+
+nodejs_nodejs_install_command: |
+  curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash - \
+      && sudo apt-get install -y nodejs
+nodejs_nodejs_binary_path: /usr/bin/node
+
+nodejs_nodejs_binary_version_lookup_command: |
+  {{ nodejs_nodejs_binary_path }} --version \
+      | head -n 1 | awk '{ print substr($1, 2) }'
+################################
+# NPM
+################################
+
+nodejs_npm_remove_module_paths_list:
+  - "/usr/lib/node_modules/frontail"
+
+nodejs_npm_install_command: "npm install -g npm"
+
+nodejs_npm_update_command: "npm update -g"
+
+nodejs_npm_binary_path: /usr/bin/npm
+
+nodejs_npm_binary_version_lookup_command: |
+  {{ nodejs_npm_binary_path }} --version \
+      | head -n 1 | awk '{ print $1 }'
+################################
+# Frontail
+################################
+
+nodejs_frontail_binary_path: /usr/bin/frontail
+
+nodejs_frontail_binary_version_lookup_command: |
+  {{ nodejs_frontail_binary_path }} --version \
+      | head -n 1 | awk '{ print $1 }'
+################################
+# Hastebin
+################################
+
+nodejs_hastebin_binary_path: /usr/bin/hastebin

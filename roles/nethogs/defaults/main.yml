@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Node.js                                      #
+# Title:         Cloudbox: Nethogs | Default Variables                  #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,14 +8,19 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Node.js Tasks
-  import_tasks: subtasks/nodejs.yml
+nethogs_git_repo_url: "https://github.com/raboof/nethogs.git"
 
-- name: NPM Tasks
-  import_tasks: subtasks/npm.yml
+nethogs_git_repo_dest: "/var/tmp/nethogs"
 
-- name: Frontail Tasks
-  import_tasks: subtasks/frontail.yml
+nethogs_binary_path: "/usr/local/bin/nethogs"
 
-- name: Hastebin Tasks
-  import_tasks: subtasks/hastebin.yml
+nethogs_binary_build_command: |
+  cd {{ nethogs_git_repo_dest }}
+  make
+  make install
+  hash -r
+  setcap 'cap_net_admin,cap_net_raw+pe' {{ nethogs_binary_path }}
+  rm -rf {{ nethogs_git_repo_dest }}
+nethogs_binary_version_lookup_command: |
+  {{ nethogs_binary_path }} -V \
+      | head -n 1 | awk '{print $2}' | cut -f1,2 -d'-'

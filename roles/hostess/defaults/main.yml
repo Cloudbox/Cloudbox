@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Node.js                                      #
+# Title:         Cloudbox: Hostess | Default Variables                  #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,14 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Node.js Tasks
-  import_tasks: subtasks/nodejs.yml
+hostess_download_url_lookup_command: |
+  curl -s https://api.github.com/repos/cbednarski/hostess/releases/latest \
+      | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url"
+hostess_download_url_backup: https://github.com/cbednarski/hostess/releases/download/v0.3.0/hostess_linux_amd64
 
-- name: NPM Tasks
-  import_tasks: subtasks/npm.yml
+hostess_binary_path: /usr/local/bin/hostess
 
-- name: Frontail Tasks
-  import_tasks: subtasks/frontail.yml
-
-- name: Hastebin Tasks
-  import_tasks: subtasks/hastebin.yml
+hostess_binary_version_lookup_command: |
+  {{ hostess_binary_path }} --version

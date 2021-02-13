@@ -10,8 +10,8 @@
 ---
 - name: Kernel | Copy 'blacklist-nouveau.conf'
   copy:
-    src: "blacklist-nouveau.conf"
-    dest: "/etc/modprobe.d/blacklist-nouveau.conf"
+    content: "{{ nvidia_kernel_blacklist_nouveau_conf_content }}"
+    dest: "{{ nvidia_kernel_blacklist_nouveau_conf_location }}"
     owner: "root"
     group: "root"
     mode: 0664

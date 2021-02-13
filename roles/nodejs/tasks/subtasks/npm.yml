@@ -1,0 +1,32 @@
+#########################################################################
+# Title:         Cloudbox: Node.js | NPM                                #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: NPM | Remove NPM Modules
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ nodejs_npm_remove_module_paths_list }}"
+
+- name: NPM | Install NPM
+  shell: "{{ nodejs_npm_install_command }}"
+
+- name: NPM | Update NPM
+  shell: "{{ nodejs_npm_update_command }}"
+
+- name: NPM | Get binary version
+  shell: "{{ nodejs_npm_binary_version_lookup_command }}"
+  register: npm_binary_version
+
+- name: NPM | Display binary version
+  debug:
+    msg: "NPM {{ npm_binary_version }} installed."
+  when:
+    - npm_binary_version is succeeded
+    - npm_binary_version.stdout | trim | length > 0

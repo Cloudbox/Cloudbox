@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Node.js                                      #
+# Title:         Cloudbox: ctop | Default Variables                     #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,14 +8,13 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Node.js Tasks
-  import_tasks: subtasks/nodejs.yml
+ctop_download_url_lookup_command: |
+  curl -s https://api.github.com/repos/bcicen/ctop/releases/latest \
+      | jq -r ".assets[] | select(.name | test(\"linux-amd64\")) | .browser_download_url"
+ctop_download_url_backup: https://github.com/bcicen/ctop/releases/download/v0.7.3/ctop-0.7.3-linux-amd64
 
-- name: NPM Tasks
-  import_tasks: subtasks/npm.yml
+ctop_binary_path: /usr/local/bin/ctop
 
-- name: Frontail Tasks
-  import_tasks: subtasks/frontail.yml
-
-- name: Hastebin Tasks
-  import_tasks: subtasks/hastebin.yml
+ctop_binary_version_lookup_command: |
+  {{ ctop_binary_path }} -v \
+      | head -n 1 | awk '{ print $3 }' | sed 's/,$//'

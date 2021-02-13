@@ -9,36 +9,34 @@
 #########################################################################
 ---
 - name: Get latest ctop URL
-  shell: |
-    curl -s {{ cvm }}https://api.github.com/repos/bcicen/ctop/releases/latest | jq -r ".assets[] | select(.name | test(\"linux-amd64\")) | .browser_download_url"
+  shell: "{{ ctop_download_url_lookup_command }}"
   args:
     executable: /bin/bash
-  register: ctop_download_url
+  register: ctop_download_url_lookup
   ignore_errors: yes
 
 - name: Install ctop
   get_url:
-    url:  "{{ ctop_download_url.stdout | default('https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64',true) }}"
-    dest: /usr/local/bin/ctop
+    url:  "{{ ctop_download_url_lookup.stdout | default(ctop_download_url_backup,true) }}"
+    dest: "{{ ctop_binary_path }}"
     mode: 0775
     owner: root
     group: root
     force: yes
     validate_certs: no
   ignore_errors: yes
-  register: x
+  register: ctop_download_status
 
-- name: "Get ctop version"
-  shell: "/usr/local/bin/ctop -v | head -n 1 | awk '{ print $3 }' | sed 's/,$//'"
-  register: ctop_version
-  ignore_errors: yes
-  when: x is success
+- name: Tasks to do when ctop download is successful
+  block:
 
-- name: "Display ctop version"
-  debug:
-    msg: "ctop {{ ctop_version.stdout }} installed."
-  when: x is success
+  - name: Get ctop binary version
+    shell: "{{ ctop_binary_version_lookup_command }}"
+    register: ctop_binary_version
+    ignore_errors: yes
 
-- debug:
-    msg: "ctop install failed."
-  when: x is not success
+  - name: Display ctop binary version
+    debug:
+      msg: "ctop {{ ctop_binary_version.stdout }} installed."
+
+  when: ctop_download_status is succeeded

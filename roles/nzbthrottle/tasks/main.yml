@@ -1,62 +1,24 @@
 #########################################################################
-# Title:            Cloudbox: NZB Throttle                              #
+# Title:            Cloudbox: NZBThrottle                               #
 # Author(s):        desimaniac                                          #
 # URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  daghaian/nzbthrottle                                #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Stop and remove any existing container
+- name: Remove existing Docker container
   docker_container:
-    name: nzbthrottle
+    name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
-    container_default_behavior: compatibility
 
-- name: Create nzbthrottle directories
-  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
-  with_items:
-    - /opt/nzbthrottle
+- name: Create directories
+  file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
+  with_items: "{{ lookup('vars', role_name + '_paths_folders_list') }}"
 
-- name: Check config exists
-  stat:
-    path: "/opt/nzbthrottle/config.json"
-  register: nzbthrottle_config
+- name: Pre-Install Tasks
+  include_tasks: "subtasks/pre-install.yml"
 
-- name: Import Plex Auth Token role
-  import_role:
-    name: plex_auth_token
-  when: (not nzbthrottle_config.stat.exists) and (plex_account_is_enabled)
-
-- name: Import default config
-  template:
-    src: "config.json.j2"
-    dest: "/opt/nzbthrottle/config.json"
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: 0775
-    force: yes
-  when: (not nzbthrottle_config.stat.exists)
-
-- name: Create and start container
-  docker_container:
-    name: nzbthrottle
-    image: "daghaian/nzbthrottle"
-    pull: yes
-    volumes:
-      - "/opt/nzbthrottle/config.json:/nzbthrottle/config.json:ro"
-    env:
-      TZ: "{{ tz }}"
-    labels:
-      "com.github.cloudbox.cloudbox_managed": "true"
-    networks:
-      - name: cloudbox
-        aliases:
-          - nzbthrottle
-    networks_cli_compatible: yes
-    network_mode: "{{ docker_networks_name_common }}"
-    purge_networks: yes
-    restart_policy: unless-stopped
-    state: started
+- name: Create Docker container
+  include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"

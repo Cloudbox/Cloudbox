@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Node.js                                      #
+# Title:         Cloudbox: iperf3 | Default Variables                   #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,14 +8,20 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Node.js Tasks
-  import_tasks: subtasks/nodejs.yml
+iperf3_git_repo_url: "https://github.com/esnet/iperf.git"
 
-- name: NPM Tasks
-  import_tasks: subtasks/npm.yml
+iperf3_git_repo_dest: "/var/tmp/iperf3"
 
-- name: Frontail Tasks
-  import_tasks: subtasks/frontail.yml
+iperf3_binary_build_command: |
+  export LD_RUN_PATH=/usr/local/lib
+  cd {{ iperf3_git_repo_dest }}
+  ./configure
+  make
+  make install
+  ldconfig
+  rm -rf {{ iperf3_git_repo_dest }}
+iperf3_binary_path: /usr/local/bin/iperf3
 
-- name: Hastebin Tasks
-  import_tasks: subtasks/hastebin.yml
+iperf3_binary_version_lookup_command: |
+  {{ iperf3_binary_path }} --version \
+      | head -n 1 | awk '{ print $2 }'
