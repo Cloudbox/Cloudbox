@@ -37,7 +37,7 @@
 # Sonarr Section
 - name: "Check if sonarr config exists"
   stat:
-    path: "/opt/sonarr/app/config.xml"
+    path: "/opt/sonarr/config.xml"
   register: sonarr_config_xml
 
 - name: "When sonarr exists, get config items, and set Sonarr section of 'autoProcess.ini'"
@@ -45,21 +45,21 @@
 
   - name: Get sonarr port
     xml:
-      path: "/opt/sonarr/app/config.xml"
+      path: "/opt/sonarr/config.xml"
       xpath: /Config/Port
       content: text
     register: sonarr_xmlresp_port
 
   - name: Get sonarr web_root
     xml:
-      path: "/opt/sonarr/app/config.xml"
+      path: "/opt/sonarr/config.xml"
       xpath: /Config/UrlBase
       content: text
     register: sonarr_xmlresp_urlbase
 
   - name: Pull sonarr api key
     xml:
-      path: "/opt/sonarr/app/config.xml"
+      path: "/opt/sonarr/config.xml"
       xpath: /Config/ApiKey
       content: text
     register: sonarr_xmlresp_apikey
@@ -91,7 +91,7 @@
 # Radarr Section
 - name: "Check if radarr config exists"
   stat:
-    path: "/opt/radarr/app/config.xml"
+    path: "/opt/radarr/config.xml"
   register: radarr_config_xml
 
 - name: "When sonarr exists, get config items, and set Radarr section of 'autoProcess.ini'"
@@ -99,21 +99,21 @@
 
   - name: Get radarr port
     xml:
-      path: "/opt/radarr/app/config.xml"
+      path: "/opt/radarr/config.xml"
       xpath: /Config/Port
       content: text
     register: radarr_xmlresp_port
 
   - name: Get radarr web_root
     xml:
-      path: "/opt/radarr/app/config.xml"
+      path: "/opt/radarr/config.xml"
       xpath: /Config/UrlBase
       content: text
     register: radarr_xmlresp_urlbase
 
   - name: Pull radarr api key
     xml:
-      path: "/opt/radarr/app/config.xml"
+      path: "/opt/radarr/config.xml"
       xpath: /Config/ApiKey
       content: text
     register: radarr_xmlresp_apikey

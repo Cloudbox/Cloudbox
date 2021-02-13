@@ -8,7 +8,7 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 
-./bazarr/app/log/*
+./bazarr/log/*
 
 ./cloudbox/backup/modified_files/*
 
@@ -18,7 +18,7 @@
 
 ./drive_strm/*.log*
 
-./lidarr/app/logs/*
+./lidarr/logs/*
 
 ./nvidia/*
 
@@ -35,10 +35,10 @@
 
 ./tautulli/logs/*
 
-./radarr/app/logs/*
+./radarr/logs/*
 
-./radarr4k/app/logs/*
+./radarr4k/logs/*
 
-./sonarr/app/logs/*
+./sonarr/logs/*
 
-./sonarr4k/app/logs/*
+./sonarr4k/logs/*
