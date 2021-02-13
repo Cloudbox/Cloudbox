@@ -25,6 +25,17 @@ nzbthrottle_paths_folders_list:
 nzbthrottle_paths_config_location: "{{ nzbthrottle_paths_location }}/config.json"
 
 ################################
+# Web
+################################
+
+nzbthrottle_web_subdomain: "{{ nzbthrottle_name }}"
+nzbthrottle_web_domain: "{{ user.domain }}"
+nzbthrottle_web_port: ""
+nzbthrottle_web_url: "{{ 'https://' + nzbthrottle_web_subdomain + '.' + nzbthrottle_web_domain
+                    if (reverse_proxy_is_enabled)
+                    else 'http://localhost:' + nzbthrottle_web_port }}"
+
+################################
 # Traefik
 ################################
 
