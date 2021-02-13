@@ -1,0 +1,83 @@
+#########################################################################
+# Title:         Cloudbox: Shell | ZSH Tasks                            #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: ZSH | Install 'zsh'
+  apt:
+    name: "{{ shell_zsh_apt_packages_list }}"
+    state: present
+
+- name: ZSH | Clone 'oh-my-zsh' repo
+  git:
+    repo: "{{ shell_zsh_omzsh_git_repo_url }}"
+    dest: "{{ shell_zsh_omzsh_git_repo_dest }}"
+    clone: yes
+    version: HEAD
+    force: yes
+  become: yes
+  become_user: "{{ user.name }}"
+  register: cloning
+  ignore_errors: yes
+
+- name: ZSH | Check if an existing '.zshrc' file is present
+  stat:
+    path: "{{ shell_zsh_zshrc_path }}"
+  register: existing_zshrc
+
+- name: ZSH | Create '{{ shell_zsh_zshrc_path }}' file
+  copy:
+    src: "{{ shell_zsh_zshrc_template_path }}"
+    dest: "{{ shell_zsh_zshrc_path }}"
+    group: "{{ user.name }}"
+    owner: "{{ user.name }}"
+    mode: 0664
+  when: (cloning is success) and (not existing_zshrc.stat.exists)
+
+- name: ZSH | Add items to '{{ shell_zsh_zshrc_path }}'
+  blockinfile:
+    path: "{{ shell_zsh_zshrc_path }}"
+    marker: "### CLOUDBOX MANAGED BLOCK - {mark} ###"
+    block: "{{ shell_zsh_zshrc_block_content }}"
+    state: present
+    create: no
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0664
+
+# alternatives link
+- name: ZSH | Check if '/bin/zsh' exists
+  stat:
+    path: "{{ shell_zsh_binary_path }}"
+  register: shell_zsh_binary_path_stat
+
+- name: ZSH | Create an 'alternatives link' to '{{ shell_zsh_binary_path }}'
+  alternatives:
+    name: zsh
+    link: "{{ shell_zsh_binary_path }}"
+    path: "{{ shell_zsh_binary_previous_path }}"
+  when: not shell_zsh_binary_path_stat.stat.exists
+
+# set as default shell
+- name: ZSH | Set ZSH as default shell
+  user:
+    name: "{{ user.name }}"
+    shell: "{{ shell_zsh_binary_path }}"
+  register: shell_update_task
+
+- name: ZSH | Set ZSH as default shell
+  debug:
+    msg:
+      - "Set ZSH as default shell"
+  when: (shell_update_task is changed)
+
+- name: ZSH | Default shell set to ZSH
+  debug:
+    msg:
+      - "Changes will apply on session restart."
+  when: (shell_update_task is changed) and ('shell' in ansible_run_tags)

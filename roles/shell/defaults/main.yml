@@ -1,0 +1,94 @@
+#########################################################################
+# Title:         Cloudbox: Shell | Default Variables                    #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Basics
+################################
+
+shell_type: "{{ shell | default('zsh') }}"
+
+################################
+# Misc
+################################
+
+shell_misc_argcomplete_pip_package: argcomplete
+
+shell_misc_argcomplete_command: "activate-global-python-argcomplete"
+
+################################
+# z (jump around)
+################################
+
+shell_z_git_repo_url: "https://github.com/rupa/z.git"
+
+shell_z_git_repo_dest: "/opt/z"
+
+################################
+# Bash
+################################
+
+shell_bash_bashrc_path: "/home/{{ user.name }}/.bashrc"
+
+shell_bash_bashrc_block_content: |
+  # Editor
+  export EDITOR=nano
+  # Include Z
+  . /opt/z/z.sh
+  # Aliases
+  alias lso="ls -alG | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
+shell_bash_binary_path: "/bin/bash"
+
+################################
+# Zsh
+################################
+
+shell_zsh_apt_packages_list:
+  - zsh
+
+shell_zsh_omzsh_git_repo_url: https://github.com/robbyrussell/oh-my-zsh.git
+
+shell_zsh_omzsh_git_repo_dest: "/home/{{ user.name }}/.oh-my-zsh"
+
+shell_zsh_zshrc_template_path: "/home/{{ user.name }}/.oh-my-zsh/templates/zshrc.zsh-template"
+
+shell_zsh_zshrc_path: "/home/{{ user.name }}/.zshrc"
+
+shell_zsh_zshrc_block_content: |
+  # Oh-my-zsh - auto update zsh without prompt
+  DISABLE_UPDATE_PROMPT=true
+  # zsh - allows commmands to run with the un-expanded glob
+  unsetopt nomatch
+  # zsh - set TIMEFMT
+  export TIMEFMT=$'
+  real	%E
+  user	%U
+  sys	%S'
+  # Editor
+  export EDITOR=nano
+  # Include Z
+  . /opt/z/z.sh
+  # Aliases
+  alias lso="ls -alG | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
+  # Load compinit and bashcompinit
+  autoload -U +X compinit && compinit
+  autoload -U +X bashcompinit && bashcompinit
+  # Ansible autocomplete
+  eval $(register-python-argcomplete ansible)
+  eval $(register-python-argcomplete ansible-config)
+  eval $(register-python-argcomplete ansible-console)
+  eval $(register-python-argcomplete ansible-doc)
+  eval $(register-python-argcomplete ansible-galaxy)
+  eval $(register-python-argcomplete ansible-inventory)
+  eval $(register-python-argcomplete ansible-playbook)
+  eval $(register-python-argcomplete ansible-pull)
+  eval $(register-python-argcomplete ansible-vault)
+shell_zsh_binary_previous_path: "/bin/zsh5"
+
+shell_zsh_binary_path: "/bin/zsh"
