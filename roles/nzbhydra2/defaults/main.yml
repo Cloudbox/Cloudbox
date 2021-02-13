@@ -23,7 +23,7 @@ nzbhydra2_paths_location: "{{ server_appdata_path }}/{{ nzbhydra2_paths_folder }
 nzbhydra2_paths_downloads_location: "{{ downloads.nzbs }}/{{ nzbhydra2_paths_folder }}"
 nzbhydra2_paths_folders_list:
   - "{{ nzbhydra2_paths_location }}"
-nzbhydra2_paths_config_location: "{{ nzbhydra2_paths_location }}/app/nzbhydra.yml"
+nzbhydra2_paths_config_location: "{{ nzbhydra2_paths_location }}/nzbhydra.yml"
 
 nzbhydra_paths_db_location: "{{ server_appdata_path }}/nzbhydra/hydra/nzbhydra.db"
 

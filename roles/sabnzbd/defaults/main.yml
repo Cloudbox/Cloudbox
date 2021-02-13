@@ -28,7 +28,7 @@ sabnzbd_paths_folders_list:
   - "{{ sabnzbd_paths_downloads_location }}/sabnzbd/incomplete"
   - "{{ sabnzbd_paths_downloads_location }}/sabnzbd/watch"
   - "{{ sabnzbd_paths_downloads_location }}/sabnzbd/logs"
-sabnzbd_paths_config_location: "{{ sabnzbd_paths_location }}/app/sabnzbd.ini"
+sabnzbd_paths_config_location: "{{ sabnzbd_paths_location }}/sabnzbd.ini"
 
 ################################
 # Web

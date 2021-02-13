@@ -22,7 +22,7 @@ sonarr_paths_folder: "{{ sonarr_name }}"
 sonarr_paths_location: "{{ server_appdata_path }}/{{ sonarr_paths_folder }}"
 sonarr_paths_folders_list:
   - "{{ sonarr_paths_location }}"
-sonarr_paths_config_location: "{{ sonarr_paths_location }}/app/config.xml"
+sonarr_paths_config_location: "{{ sonarr_paths_location }}/config.xml"
 
 ################################
 # Web

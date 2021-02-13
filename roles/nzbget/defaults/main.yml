@@ -24,7 +24,7 @@ nzbget_paths_downloads_location: "{{ downloads.nzbs }}/{{ nzbget_paths_folder }}
 nzbget_paths_folders_list:
   - "{{ nzbget_paths_location }}"
   - "{{ nzbget_paths_downloads_location }}"
-nzbget_paths_config_location: "{{ nzbget_paths_location }}/app/nzbget.conf"
+nzbget_paths_config_location: "{{ nzbget_paths_location }}/nzbget.conf"
 
 ################################
 # Web
