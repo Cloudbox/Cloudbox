@@ -32,6 +32,7 @@ nzbthrottle_paths_config_location: "{{ nzbthrottle_paths_location }}/config.json
 nzbthrottle_docker_container: "{{ nzbthrottle_name }}"
 
 # Image
+nzbthrottle_docker_image_pull: yes
 nzbthrottle_docker_image_tag: "latest"
 nzbthrottle_docker_image: "daghaian/nzbthrottle:{{ nzbthrottle_docker_image_tag }}"
 
