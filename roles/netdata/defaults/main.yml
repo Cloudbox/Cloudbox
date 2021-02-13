@@ -42,6 +42,7 @@ netdata_web_url: "{{ 'https://' + netdata_web_subdomain + '.' + netdata_web_doma
 
 netdata_traefik_middleware: "secureHeaders@file,netdata-auth"
 netdata_traefik_host: "{{ netdata_web_subdomain + '.' + netdata_web_domain }}"
+netdata_auth: "/etc/traefik/auth"
 
 ################################
 # Docker
@@ -112,7 +113,7 @@ netdata_docker_hosts: "{{ docker_hosts_common
 
 # Labels
 netdata_docker_labels_default: 
-  traefik.http.routers.traefik.middlewares: "traefik-auth"
+  traefik.http.middlewares.netdata-auth.basicauth.usersfile: "{{ netdata_auth }}"
 netdata_docker_labels_custom: {}
 netdata_docker_labels: "{{ docker_labels_common
                               | combine(netdata_docker_labels_default)
