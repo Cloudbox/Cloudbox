@@ -1,5 +1,5 @@
 #########################################################################
-# Title:         Cloudbox: Kernel | Check Tasks                         #
+# Title:         Cloudbox: Kernel | Preinstall Tasks                    #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
@@ -8,13 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Checks | Fail when linux kernel version is lower than 4.00
-  fail: msg="Your system must be running Linux kernel version 4.00 or higher."
-  when: ansible_kernel is version_compare('4.00', '<')
-
-- name: Checks | Warn when linux kernel version is lower than 4.10
+- name: "Preinstall | Cloudbox pre-install has started!"
   debug:
-    msg:
-      - "Cloudbox was designed for use on linux kernel version 4.10+."
-      - "Running Cloudbox on a lower kernel may lead to reduced performance."
-  when: (ansible_kernel is version('4.00', '>=')) and (ansible_kernel is version('4.10', '<'))
+    msg: "Cloudbox pre-install has started!"
+
+- name: Preinstall | Set default preinstall variables
+  set_fact:
+    preinstall_kernel_restart: false
+    preinstall_user_relogin: false
