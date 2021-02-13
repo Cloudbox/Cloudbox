@@ -14,7 +14,9 @@
   register: traktarr_service
 
 - name: Stop existing traktarr service
-  systemd: state=stopped name=traktarr
+  systemd: 
+    state: stopped 
+    name: traktarr
   when: traktarr_service.stat.exists
 
 - name: Create traktarr directories
@@ -43,7 +45,7 @@
 
 - name: "Check if sonarr exists"
   stat:
-    path: "/opt/sonarr/app/config.xml"
+    path: "/opt/sonarr/config.xml"
   register: sonarr_config
   when: not traktarr_config.stat.exists
 
@@ -52,7 +54,7 @@
 
   - name: Pull sonarr api key
     xml:
-      path: "/opt/sonarr/app/config.xml"
+      path: "/opt/sonarr/config.xml"
       xpath: /Config/ApiKey
       content: text
     register: xmlresp
@@ -65,7 +67,7 @@
 
 - name: "Check if radarr exists"
   stat:
-    path: "/opt/radarr/app/config.xml"
+    path: "/opt/radarr/config.xml"
   register: radarr_config
   when: not traktarr_config.stat.exists
 
@@ -74,7 +76,7 @@
 
   - name: Pull radarr api key
     xml:
-      path: "/opt/radarr/app/config.xml"
+      path: "/opt/radarr/config.xml"
       xpath: /Config/ApiKey
       content: text
     register: xmlresp

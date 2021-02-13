@@ -64,7 +64,7 @@ nzbget_config_new_installs_settings_default:
   - { regexp: '^QueueDir\s?=.*', line: "QueueDir=${MainDir}/queue" }
   - { regexp: '^TempDir\s?=.*', line: "TempDir=${MainDir}/tmp" }
   - { regexp: '^ScriptDir\s?=.*', line: 'ScriptDir=/scripts/nzbget' }
-  - { regexp: '^LockFile\s?=.*', line: 'LockFile=config/app/nzbget.lock' }
+  - { regexp: '^LockFile\s?=.*', line: 'LockFile=config/nzbget.lock' }
   - { regexp: '^LogFile\s?=.*', line: "LogFile=${MainDir}/nzbget.log" }
   # Default Categories
   - { regexp: '^Category1\.Name\s?=.*', line: 'Category1.Name=movies' }
