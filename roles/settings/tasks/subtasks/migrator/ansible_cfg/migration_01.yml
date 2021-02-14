@@ -22,10 +22,15 @@
   register: ansible_cfg_update_status
   loop:
     - { section: 'defaults', option: 'roles_path', value: 'roles:resources/roles' }
-    - { section: 'defaults', option: 'hash_behaviour', value: 'replace' }
     - { section: 'defaults', option: 'fact_path', value: './ansible_facts.d' }
     - { section: 'defaults', option: 'log_path', value: './cloudbox.log' }
     - { section: 'defaults', option: 'interpreter_python', value: '/usr/bin/python3' }
+
+- name: "Migrator | 'ansible.cfg' | Remove deprecated hash_behaviour entry"
+  shell: |
+    sed -i '/hash_behaviour/d' /srv/git/cloudbox/ansible.cfg
+  become: yes
+  become_user: "{{ cloudbox_yml.stat.pw_name }}"
 
 - name: "Migrator | 'ansible.cfg' | Build 'files_updated_successfully' list"
   set_fact:
