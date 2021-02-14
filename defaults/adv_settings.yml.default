@@ -1,23 +1,14 @@
 ---
 system:
   timezone: auto
-  inotify: 524288
 dns:
   enabled: yes
   proxied: no
-docker:
-  repo: stable
-  version: latest
 mounts:
   unionfs: mergerfs
   remote: rclone_vfs
   feeder: no
-organizr:
-  fpm: "yes"
-  branch: v2-master
 sickbeard_mp4_automator: no
 gpu:
   intel: yes
-  nvidia:
-    enabled: no
-    driver: 418.30
+  nvidia: no

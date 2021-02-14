@@ -9,47 +9,6 @@
 ########################################################################################
 
 ---
-- name: "Migrator | 'adv_settings.yml' | Migration 01 | Set variables"
-  set_fact:
-    old_settings: "{{ true if not(
-        (plex.open_port is undefined)
-        or
-        (plex.open_port is none)
-        or
-        (plex.open_port | trim | length == 0)
-        or
-        (plex.all_ports is undefined)
-        or
-        (plex.all_ports is none)
-        or
-        (plex.all_ports | trim | length == 0)
-      )
-        else false }}"
-    new_settings: "{{ true if not(
-        (plex.open_main_ports is undefined)
-        or
-        (plex.open_main_ports is none)
-        or
-        (plex.open_main_ports | trim | length == 0)
-        or
-        (plex.all_ports is undefined)
-        or
-        (plex.all_ports is none)
-        or
-        (plex.all_ports | trim | length == 0)
-      )
-        else false }}"
-
-- name: Migrator | 'adv_settings.yml' | Migration 01 | Rename 'plex' dict items
-  shell: |
-    yyq w -i {{ playbook_dir }}/{{ file }} plex.open_main_ports {{ plex.open_port }}
-    yyq w -i {{ playbook_dir }}/{{ file }} plex.open_extra_ports {{ plex.all_ports }}
-    yyq d -i {{ playbook_dir }}/{{ file }} plex.open_port
-    yyq d -i {{ playbook_dir }}/{{ file }} plex.all_ports
-  become: yes
-  become_user: "{{ cloudbox_yml.stat.pw_name }}"
-  when: (old_settings) and not (new_settings)
-
 - name: Migrator | 'adv_settings.yml' | Migration 01 | Remove 'null' values
   replace:
     path: "{{ playbook_dir }}/{{ file }}"

@@ -67,8 +67,8 @@ organizr_docker_envs_default:
   PUID: "{{ uid }}"
   PGID: "{{ gid }}"
   TZ: "{{ tz }}"
-  fpm: "{{ (organizr.fpm|default(false,true)) }}"
-  branch: "{{ (organizr.branch|default(false,true)) }}"
+  fpm: "yes"
+  branch: "v2-master"
 organizr_docker_envs_custom: {}
 organizr_docker_envs_reverse_proxy: {}
 organizr_docker_envs: "{{ organizr_docker_envs_default

@@ -12,10 +12,7 @@
 # Driver
 ################################
 
-nvidia_driver_version: "{{ ('%.2f' | format(gpu.nvidia.driver | float))
-                            if (gpu.nvidia.driver | type_debug == 'float')
-                                or (gpu.nvidia.driver | type_debug == 'int')
-                            else (gpu.nvidia.driver | regex_replace('(^v\\.|^v)', '')) }}"
+nvidia_driver_version: "460.39"
 
 nvidia_driver_download_url: "https://download.nvidia.com/XFree86/Linux-x86_64/{{ nvidia_driver_version }}/NVIDIA-Linux-x86_64-{{ nvidia_driver_version }}.run"
 

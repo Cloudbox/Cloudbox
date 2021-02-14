@@ -91,8 +91,8 @@ plex_docker_envs_default:
   PLEX_CLAIM: "{{ (plex_claim_code) | default(omit) }}"
   CHANGE_CONFIG_DIR_OWNERSHIP: "false"
   HEALTHCHECK_MOUNT: /mnt/unionfs
-  NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia.enabled) | default(false) else omit }}"
-  NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
+  NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia) | default(false) else omit }}"
+  NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia) | default(false) else omit }}"
   TZ: "{{ tz }}"
 plex_docker_envs_custom: {}
 plex_docker_envs_reverse_proxy:

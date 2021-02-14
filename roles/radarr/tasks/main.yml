@@ -37,7 +37,7 @@
 - name: Docker Devices Task
   include_tasks: "{{ resources_tasks_path }}/docker/set_docker_devices_variable.yml"
   when:
-    - (gpu.intel or gpu.nvidia.enabled)
+    - (gpu.intel or gpu.nvidia)
     - (use_sma)
 
 - name: Create Docker container

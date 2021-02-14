@@ -23,19 +23,13 @@
         (gpu.nvidia is none)
         or
         (gpu.nvidia | trim | length == 0)
-        or
-        (gpu.nvidia.enabled is undefined)
-        or
-        (gpu.nvidia.enabled is none)
-        or
-        (gpu.nvidia.enabled | trim | length == 0)
       )
         else false }}"
 
 - name: Migrator | 'adv_settings.yml' | Migration 02 | Rebuild 'gpu.nvidia' dict
   shell: |
     yyq d -i {{ playbook_dir }}/{{ file }} gpu.nvidia
-    yyq w -i {{ playbook_dir }}/{{ file }} gpu.nvidia.enabled {{ gpu.nvidia if (gpu is defined and gpu.nvidia is defined) else 'no' }}
+    yyq w -i {{ playbook_dir }}/{{ file }} gpu.nvidia {{ gpu.nvidia if (gpu is defined and gpu.nvidia is defined) else 'no' }}
   become: yes
   become_user: "{{ cloudbox_yml.stat.pw_name }}"
   when: not new_settings

@@ -91,8 +91,8 @@ emby_docker_envs_default:
   UID: "{{ uid }}"
   GID: "{{ gid }}"
   GIDLIST: "{{ vgid }}"
-  NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia.enabled) | default(false) else omit }}"
-  NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia.enabled) | default(false) else omit }}"
+  NVIDIA_DRIVER_CAPABILITIES: "{{ 'compute,video,utility' if (gpu.nvidia) | default(false) else omit }}"
+  NVIDIA_VISIBLE_DEVICES: "{{ 'all' if (gpu.nvidia) | default(false) else omit }}"
   TZ: "{{ tz }}"
 emby_docker_envs_custom: {}
 emby_docker_envs_reverse_proxy: {}

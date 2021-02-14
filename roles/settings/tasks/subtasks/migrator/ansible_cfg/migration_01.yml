@@ -22,7 +22,7 @@
   register: ansible_cfg_update_status
   loop:
     - { section: 'defaults', option: 'roles_path', value: 'roles:resources/roles' }
-    - { section: 'defaults', option: 'hash_behaviour', value: 'merge' }
+    - { section: 'defaults', option: 'hash_behaviour', value: 'replace' }
     - { section: 'defaults', option: 'fact_path', value: './ansible_facts.d' }
     - { section: 'defaults', option: 'log_path', value: './cloudbox.log' }
     - { section: 'defaults', option: 'interpreter_python', value: '/usr/bin/python3' }

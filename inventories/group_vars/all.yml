@@ -83,7 +83,7 @@ rclone_remote_is_defined: "{{ (rclone is defined) and
 
 use_remote: "{{ feeder_mount_is_enabled or rclone_remote_is_defined }}"
 
-use_nvidia: "{{ gpu.nvidia.enabled  }}"
+use_nvidia: "{{ gpu.nvidia }}"
 
 use_sma: "{{ sickbeard_mp4_automator  | default(false,true) }}"
 
