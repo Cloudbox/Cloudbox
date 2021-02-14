@@ -15,17 +15,9 @@
       - curl
       - jq
 
-- name: Get latest yyq URL
-  shell: |
-    curl -s {{ cvm }}https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r ".assets[] | select(.name | test(\"yq_linux_amd64$\")) | .browser_download_url"
-  args:
-    executable: /bin/bash
-  register: yyq_download_url
-  ignore_errors: yes
-
 - name: Install yyq
   get_url:
-    url:  "{{ yyq_download_url.stdout | default('https://github.com/mikefarah/yq/releases/download/v4.5.0/yq_linux_amd64',true) }}"
+    url:  "https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64"
     dest: /usr/local/bin/yyq
     mode: 0775
     owner: root
