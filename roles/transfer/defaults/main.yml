@@ -1,6 +1,6 @@
 ##########################################################################
 # Title:         Cloudbox: Transfer.sh | Default Variables               #
-# Author(s):     l3uddz, desimaniac                                      #
+# Author(s):     l3uddz, desimaniac, salty                               #
 # URL:           https://github.com/cloudbox/cloudbox                    #
 # --                                                                     #
 #         Part of the Cloudbox project: https://cloudbox.works           #
@@ -36,6 +36,13 @@ transfer_web_url: "{{ 'https://' + transfer_web_subdomain + '.' + transfer_web_d
                       else 'http://localhost:' + transfer_web_port }}"
 transfer_web_user: "{{ user.name }}"
 transfer_web_pass: "{{ user.pass }}"
+
+################################
+# Traefik
+################################
+
+transfer_traefik_middleware: "secureHeaders@file"
+transfer_traefik_host: "{{ transfer_web_subdomain + '.' + transfer_web_domain }}"
 
 ################################
 # Docker
@@ -79,6 +86,12 @@ transfer_docker_envs: "{{ transfer_docker_envs_default
 
 # User
 transfer_docker_user: "{{ uid }}:{{ gid }}"
+
+# Commands
+transfer_docker_commands_default: []
+transfer_docker_commands_custom: []
+transfer_docker_commands: "{{ transfer_docker_commands_default
+                              + transfer_docker_commands_custom}}"
 
 # Volumes
 transfer_docker_volumes_default:
