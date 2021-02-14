@@ -23,6 +23,8 @@
         (gpu.nvidia is none)
         or
         (gpu.nvidia | trim | length == 0)
+        or
+        (gpu.nvidia.enabled is defined)
       )
         else false }}"
 
