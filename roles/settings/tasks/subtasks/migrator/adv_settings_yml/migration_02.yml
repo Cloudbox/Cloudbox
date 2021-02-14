@@ -31,7 +31,7 @@
 - name: Migrator | 'adv_settings.yml' | Migration 02 | Rebuild 'gpu.nvidia' dict
   shell: |
     yyq d -i {{ playbook_dir }}/{{ file }} gpu.nvidia
-    yyq w -i {{ playbook_dir }}/{{ file }} gpu.nvidia no
+    yyq w -i {{ playbook_dir }}/{{ file }} gpu.nvidia {{ gpu.nvidia.enabled if (gpu is defined and gpu.nvidia is defined and gpu.nvidia.enabled is defined) else 'no' }}
   become: yes
   become_user: "{{ cloudbox_yml.stat.pw_name }}"
   when: not new_settings
