@@ -4,6 +4,7 @@
 
 * [l3uddz](https://github.com/l3uddz) - Creator of Cloudbox, Plex Autoscan, Cloudplow, Traktarr, Plex Dupefinder, Plex Patrol, Arrpush, and others.
 * [desimaniac](https://github.com/desimaniac) - Cloudbox; Cloudbox Wiki; Documentation for Plex Autoscan, Cloudplow, and Traktarr.
+* [saltydk](https://github.com/saltydk) - Cloudbox
 
 ### Contributors
 
@@ -12,7 +13,7 @@
 * [RXWatcher1](https://github.com/RXWatcher1) - Cloudbox.
 * [Vuur](https://github.com/vuur) -  Web Design.
 * [TheBradz](https://github.com/TheBradz) - Cloudbox; Cloudbox Wiki.
-* [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki. Admin on Discord.
+* [Kasper56](https://github.com/After-Shock) - Cloudbox Wiki. Admin on Discord. Hosting AppVeyor.
 * [hotio](https://github.com/hotio) - Docker Images (creator).
 * [Mitchell Klijs](https://github.com/mitchellklijs) - Traktarr; Cloudplow.
 * [davemaster223](https://github.com/daghaian) - Traktarr; Cloudplow.
@@ -24,7 +25,7 @@
 
 #### Operating System
 
-* [Ubuntu Server 16.04 / 18.04](https://www.ubuntu.com/download/server)
+* [Ubuntu Server 18.04 / 20.04](https://www.ubuntu.com/download/server)
 
 #### Packages
 
