@@ -29,6 +29,8 @@ if [[ ! -f /sma_req_installed ]]; then
         deluge-client \
         qtfaststart \
         pymediainfo \
+        python-qbittorrent \
+        gevent \
         subliminal
     touch /sma_req_installed
 fi
