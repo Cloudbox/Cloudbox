@@ -1,4 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Support via Discord - this is the outlet for support. Do not continue with opening an issue for support requests.
+  - name: Support via Discord
     url: https://discord.io/cloudbox
+    about: This is the outlet for support. Do not continue with opening an issue for support requests.
