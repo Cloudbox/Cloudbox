@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve Cloudbox. Do not use this for a support request - please go to the Discord for support. Errors do not mean there are bugs, they mean support is required. Issues relating to support will be closed immediately.
+about: Help us improve. Do not use this for support requests - please use the Discord for support. Errors do not mean bugs, they mean support is required. Support will be closed immediately.
 labels: Bug
 ---
 
