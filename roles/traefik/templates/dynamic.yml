@@ -15,7 +15,7 @@ http:
     secureHeaders:
       headers:
         FrameDeny: false
-        SSLRedirect: true
+        sslRedirect: true
         stsSeconds: 315360000
         stsPreload: true
         stsIncludeSubdomains: true
@@ -23,5 +23,6 @@ http:
         browserXssFilter: true
         customRequestHeaders:
           X-Script-Name: "X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+          X-Forwarded-Proto: "https"
         customResponseHeaders:
           X-Custom-Response-Header: "X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
