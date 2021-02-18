@@ -15,7 +15,7 @@ http:
     secureHeaders:
       headers:
         FrameDeny: false
-        SSLRedirect: true
+        sslRedirect: true
         stsSeconds: 315360000
         stsPreload: true
         stsIncludeSubdomains: true
