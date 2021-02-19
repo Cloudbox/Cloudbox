@@ -38,8 +38,10 @@ organizr_web_url: "{{ 'https://' + organizr_web_subdomain + '.' + organizr_web_d
 # Traefik
 ################################
 
-organizr_traefik_middleware: "secureHeaders@file"
+organizr_traefik_middleware: "secureHeaders@file,gzip"
 organizr_traefik_host: "{{ organizr_web_subdomain + '.' + organizr_web_domain }}"
+organizr_traefik_certresolver: "{{ traefik_default_certresolver }}"
+organizr_traefik_enabled: yes
 
 ################################
 # Docker

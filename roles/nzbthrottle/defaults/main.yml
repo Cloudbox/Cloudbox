@@ -25,20 +25,10 @@ nzbthrottle_paths_folders_list:
 nzbthrottle_paths_config_location: "{{ nzbthrottle_paths_location }}/config.json"
 
 ################################
-# Web
-################################
-
-nzbthrottle_web_subdomain: ""
-nzbthrottle_web_domain: ""
-nzbthrottle_web_port: ""
-nzbthrottle_web_url: ""
-
-################################
 # Traefik
 ################################
 
-nzbthrottle_traefik_middleware: ""
-nzbthrottle_traefik_host: ""
+nzbthrottle_traefik_enabled: no
 
 ################################
 # Docker

@@ -25,6 +25,12 @@ mariadb_paths_folders_list:
   - "{{ mariadb_paths_location }}"
 
 ################################
+# Traefik
+################################
+
+mariadb_traefik_enabled: no
+
+################################
 # Docker
 ################################
 

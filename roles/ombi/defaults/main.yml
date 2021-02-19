@@ -38,8 +38,10 @@ ombi_web_url: "{{ 'https://' + ombi_web_subdomain + '.' + ombi_web_domain
 # Traefik
 ################################
 
-ombi_traefik_middleware: "secureHeaders@file"
+ombi_traefik_middleware: "secureHeaders@file,gzip"
 ombi_traefik_host: "{{ ombi_web_subdomain + '.' + ombi_web_domain }}"
+ombi_traefik_certresolver: "{{ traefik_default_certresolver }}"
+ombi_traefik_enabled: yes
 
 ################################
 # Docker

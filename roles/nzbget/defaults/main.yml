@@ -45,8 +45,10 @@ nzbget_web_url_with_login: "{{ 'https://' + nzbget_web_login + '@' + nzbget_web_
 # Traefik
 ################################
 
-nzbget_traefik_middleware: "secureHeaders@file"
+nzbget_traefik_middleware: "secureHeaders@file,gzip"
 nzbget_traefik_host: "{{ nzbget_web_subdomain + '.' + nzbget_web_domain }}"
+nzbget_traefik_certresolver: "{{ traefik_default_certresolver }}"
+nzbget_traefik_enabled: yes
 
 ################################
 # Config
