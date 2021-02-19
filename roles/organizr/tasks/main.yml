@@ -20,6 +20,7 @@
   docker_container:
     name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: absent
+    container_default_behavior: compatibility
 
 - name: Create directories
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775"
