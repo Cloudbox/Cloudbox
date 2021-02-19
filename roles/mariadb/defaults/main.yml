@@ -25,9 +25,21 @@ mariadb_paths_folders_list:
   - "{{ mariadb_paths_location }}"
 
 ################################
+# Web
+################################
+
+mariadb_web_subdomain: ""
+mariadb_web_domain: ""
+mariadb_web_port: ""
+mariadb_web_url: ""
+
+################################
 # Traefik
 ################################
 
+mariadb_traefik_middleware: ""
+mariadb_traefik_host: ""
+mariadb_traefik_certresolver: ""
 mariadb_traefik_enabled: no
 
 ################################
