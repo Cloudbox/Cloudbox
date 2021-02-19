@@ -52,8 +52,10 @@ rutorrent_web_url: "{{ 'https://' + rutorrent_web_subdomain + '.' + rutorrent_we
 # Traefik
 ################################
 
-rutorrent_traefik_middleware: "secureHeaders@file"
+rutorrent_traefik_middleware: "secureHeaders@file,gzip"
 rutorrent_traefik_host: "{{ rutorrent_web_subdomain + '.' + rutorrent_web_domain }}"
+rutorrent_traefik_certresolver: "{{ traefik_default_certresolver }}"
+rutorrent_traefik_enabled: yes
 
 ################################
 # Config

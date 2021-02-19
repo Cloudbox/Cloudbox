@@ -40,8 +40,10 @@ tautulli_web_url: "{{ 'https://' + tautulli_web_subdomain + '.' + tautulli_web_d
 # Traefik
 ################################
 
-tautulli_traefik_middleware: "secureHeaders@file"
+tautulli_traefik_middleware: "secureHeaders@file,gzip"
 tautulli_traefik_host: "{{ tautulli_web_subdomain + '.' + tautulli_web_domain }}"
+tautulli_traefik_certresolver: "{{ traefik_default_certresolver }}"
+tautulli_traefik_enabled: yes
 
 ################################
 # Docker

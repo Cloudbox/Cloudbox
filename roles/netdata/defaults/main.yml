@@ -40,8 +40,10 @@ netdata_web_url: "{{ 'https://' + netdata_web_subdomain + '.' + netdata_web_doma
 # Traefik
 ################################
 
-netdata_traefik_middleware: "secureHeaders@file,netdata-auth"
+netdata_traefik_middleware: "secureHeaders@file,gzip,netdata-auth"
 netdata_traefik_host: "{{ netdata_web_subdomain + '.' + netdata_web_domain }}"
+netdata_traefik_certresolver: "{{ traefik_default_certresolver }}"
+netdata_traefik_enabled: yes
 netdata_auth: "/etc/traefik/auth"
 
 ################################

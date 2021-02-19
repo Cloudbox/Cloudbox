@@ -41,8 +41,10 @@ transfer_web_pass: "{{ user.pass }}"
 # Traefik
 ################################
 
-transfer_traefik_middleware: "secureHeaders@file"
+transfer_traefik_middleware: "secureHeaders@file,gzip"
 transfer_traefik_host: "{{ transfer_web_subdomain + '.' + transfer_web_domain }}"
+transfer_traefik_certresolver: "{{ traefik_default_certresolver }}"
+transfer_traefik_enabled: yes
 
 ################################
 # Docker

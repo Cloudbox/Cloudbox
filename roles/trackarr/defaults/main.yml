@@ -39,8 +39,10 @@ trackarr_web_url: "{{ 'https://' + trackarr_web_subdomain + '.' + trackarr_web_d
 # Traefik
 ################################
 
-trackarr_traefik_middleware: "secureHeaders@file"
+trackarr_traefik_middleware: "secureHeaders@file,gzip"
 trackarr_traefik_host: "{{ trackarr_web_subdomain + '.' + trackarr_web_domain }}"
+trackarr_traefik_certresolver: "{{ traefik_default_certresolver }}"
+trackarr_traefik_enabled: yes
 
 ################################
 # API

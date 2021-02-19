@@ -45,8 +45,10 @@ sabnzbd_web_url: "{{ 'https://' + sabnzbd_web_subdomain + '.' + sabnzbd_web_doma
 # Traefik
 ################################
 
-sabnzbd_traefik_middleware: "secureHeaders@file"
+sabnzbd_traefik_middleware: "secureHeaders@file,gzip"
 sabnzbd_traefik_host: "{{ sabnzbd_web_subdomain + '.' + sabnzbd_web_domain }}"
+sabnzbd_traefik_certresolver: "{{ traefik_default_certresolver }}"
+sabnzbd_traefik_enabled: yes
 
 ################################
 # Config

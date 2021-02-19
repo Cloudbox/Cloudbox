@@ -36,6 +36,54 @@
   become_user: "{{ cloudbox_yml.stat.pw_name }}"
   when: not new_settings
 
+- name: "Migrator | 'adv_settings.yml' | Migration 02 | Set variables"
+  set_fact:
+    traefik_tls_settings: "{{ true if not(
+        (traefik is undefined)
+        or
+        (traefik is none)
+        or
+        (traefik | trim | length == 0)
+        or
+        (traefik.tls is undefined)
+        or
+        (traefik.tls is none)
+        or
+        (traefik.tls | trim | length == 0)
+      )
+        else false }}"
+
+- name: Migrator | 'adv_settings.yml' | Migration 02 | Rebuild 'traefik.tls' dict
+  shell: |
+    yyq w -i {{ playbook_dir }}/{{ file }} traefik.tls no
+  become: yes
+  become_user: "{{ cloudbox_yml.stat.pw_name }}"
+  when: not traefik_tls_settings
+
+- name: "Migrator | 'adv_settings.yml' | Migration 02 | Set variables"
+  set_fact:
+    traefik_metrics_settings: "{{ true if not(
+        (traefik is undefined)
+        or
+        (traefik is none)
+        or
+        (traefik | trim | length == 0)
+        or
+        (traefik.metrics is undefined)
+        or
+        (traefik.metrics is none)
+        or
+        (traefik.metrics | trim | length == 0)
+      )
+        else false }}"
+
+- name: Migrator | 'adv_settings.yml' | Migration 02 | Rebuild 'traefik.metrics' dict
+  shell: |
+    yyq w -i {{ playbook_dir }}/{{ file }} traefik.metrics no
+  become: yes
+  become_user: "{{ cloudbox_yml.stat.pw_name }}"
+  when: not traefik_metrics_settings
+
 - name: Migrator | 'adv_settings.yml' | Migration 02 | Remove 'null' values
   replace:
     path: "{{ playbook_dir }}/{{ file }}"

@@ -4,6 +4,9 @@ system:
 dns:
   enabled: yes
   proxied: no
+traefik:
+  tls: no
+  metrics: no
 mounts:
   unionfs: mergerfs
   remote: rclone_vfs

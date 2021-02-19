@@ -157,6 +157,13 @@ reverse_proxy_is_enabled: "{{ (user is defined) and
 global_themepark_theme: organizr-dark
 
 ################################
+# Traefik
+################################
+
+traefik_default_certresolver: "cfdns"
+traefik_role_enabled: "{{ lookup('vars', role_name + '_traefik_enabled') }}"
+
+################################
 # Docker
 ################################
 
@@ -174,14 +181,22 @@ docker_volumes_downloads_common: "{{ docker_volumes_downloads_nzbs + docker_volu
 
 docker_hosts_common: []
 
-docker_labels_common:
+docker_labels_cloudbox:
   - com.github.cloudbox.cloudbox_managed: "true"
+
+docker_labels_traefik:
   - traefik.enable: "true"
   - '{ "traefik.http.routers.{{ lookup("vars", role_name + "_web_subdomain") }}.entrypoints": "websecure" }'
   - '{ "traefik.http.routers.{{ lookup("vars", role_name + "_web_subdomain") }}.rule": "Host(`{{ lookup("vars", role_name + "_traefik_host") }}`)" }'
   - '{ "traefik.http.routers.{{ lookup("vars", role_name + "_web_subdomain") }}.tls.options": "securetls@file" }'
+  - '{ "traefik.http.routers.{{ lookup("vars", role_name + "_web_subdomain") }}.tls.certresolver": "{{ lookup("vars", role_name + "_traefik_certresolver") }}" }'
   - '{ "traefik.http.routers.{{ lookup("vars", role_name + "_web_subdomain") }}.middlewares": "{{ lookup("vars", role_name + "_traefik_middleware") }}" }'
   - '{ "traefik.http.services.{{ lookup("vars", role_name + "_web_subdomain") }}.loadbalancer.server.port": "{{ lookup("vars", role_name + "_web_port") }}" }'
+
+docker_labels_common: "{{ docker_labels_cloudbox | combine(docker_labels_traefik)
+                                    if (traefik_role_enabled)
+                                    else 
+                                    docker_labels_cloudbox }}"
 
 docker_networks_name_common: cloudbox
 

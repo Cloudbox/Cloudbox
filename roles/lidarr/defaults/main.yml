@@ -39,8 +39,10 @@ lidarr_web_url: "{{ 'https://' + lidarr_web_subdomain + '.' + lidarr_web_domain
 # Traefik
 ################################
 
-lidarr_traefik_middleware: "secureHeaders@file"
+lidarr_traefik_middleware: "secureHeaders@file,gzip"
 lidarr_traefik_host: "{{ lidarr_web_subdomain + '.' + lidarr_web_domain }}"
+lidarr_traefik_certresolver: "{{ traefik_default_certresolver }}"
+lidarr_traefik_enabled: yes
 
 ################################
 # API

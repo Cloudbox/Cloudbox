@@ -39,8 +39,10 @@ sstvirl_web_url: "{{ 'https://' + sstvirl_web_subdomain + '.' + sstvirl_web_doma
 # Traefik
 ################################
 
-sstvirl_traefik_middleware: "secureHeaders@file"
+sstvirl_traefik_middleware: "secureHeaders@file,gzip"
 sstvirl_traefik_host: "{{ sstvirl_web_subdomain + '.' + sstvirl_web_domain }}"
+sstvirl_traefik_certresolver: "{{ traefik_default_certresolver }}"
+sstvirl_traefik_enabled: yes
 
 ################################
 # Docker

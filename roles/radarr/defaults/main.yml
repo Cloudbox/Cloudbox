@@ -39,8 +39,10 @@ radarr_web_url: "{{ 'https://' + radarr_web_subdomain + '.' + radarr_web_domain
 # Traefik
 ################################
 
-radarr_traefik_middleware: "secureHeaders@file"
+radarr_traefik_middleware: "secureHeaders@file,gzip"
 radarr_traefik_host: "{{ radarr_web_subdomain + '.' + radarr_web_domain }}"
+radarr_traefik_certresolver: "{{ traefik_default_certresolver }}"
+radarr_traefik_enabled: yes
 
 ################################
 # API

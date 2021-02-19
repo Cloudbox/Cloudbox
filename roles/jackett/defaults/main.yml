@@ -38,8 +38,10 @@ jackett_web_url: "{{ 'https://' + jackett_web_subdomain + '.' + jackett_web_doma
 # Traefik
 ################################
 
-jackett_traefik_middleware: "secureHeaders@file"
+jackett_traefik_middleware: "secureHeaders@file,gzip"
 jackett_traefik_host: "{{ jackett_web_subdomain + '.' + jackett_web_domain }}"
+jackett_traefik_certresolver: "{{ traefik_default_certresolver }}"
+jackett_traefik_enabled: yes
 
 ################################
 # Docker
