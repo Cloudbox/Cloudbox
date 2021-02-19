@@ -35,3 +35,4 @@
   docker_container:
     name: "{{ lookup('vars', role_name + '_docker_container') }}"
     state: "{{ lookup('vars', role_name + '_docker_state') }}"
+    container_default_behavior: compatibility
