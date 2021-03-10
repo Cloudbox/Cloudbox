@@ -2,7 +2,7 @@
 system:
   timezone: auto
 docker:
-  repo: edge
+  repo: stable
   version: latest
 mounts:
   unionfs: mergerfs
