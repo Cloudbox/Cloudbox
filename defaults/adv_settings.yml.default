@@ -8,7 +8,7 @@ dns:
 reverse_proxy:
   wildcard_certs: yes
 docker:
-  repo: edge
+  repo: stable
   version: latest
 mounts:
   unionfs: mergerfs
