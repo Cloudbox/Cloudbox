@@ -7,7 +7,7 @@ rclone:
   destination: google:/Backups/Cloudbox
 rsync:
   enable: no
-  dest: rsync://somehost.com/Backups/Cloudbox
+  destination: rsync://somehost.com/Backups/Cloudbox
 cron:
   cron_time: weekly
   cron_state: absent
