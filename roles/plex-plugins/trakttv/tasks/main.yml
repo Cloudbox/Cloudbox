@@ -49,11 +49,6 @@
   register: plex_plugin_trakttv_download_status
   ignore_errors: yes
 
-- name: Display Trakt.tv Plugin version
-  debug:
-    msg: "Trakt.tv Plugin version {{ plex_plugin_trakttv_latest_version }} installed."
-  when: (plex_plugin_trakttv_download_status is success)
-
 - name: Post-Unsuccessfull Trakt.tv Plugin Install
   debug:
     msg: "Trakt.tv Plugin install failed."
