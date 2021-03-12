@@ -51,10 +51,6 @@
   import_role:
     name: plex-plugins/sub-zero
 
-- name: "Install Trakt.tv Plugin"
-  import_role:
-    name: plex-plugins/trakttv
-
 - name: "Install WebTools Plugin"
   import_role:
     name: plex-plugins/webtools
