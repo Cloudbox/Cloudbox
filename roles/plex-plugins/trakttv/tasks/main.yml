@@ -32,32 +32,6 @@
     path: "{{ plex_plugin_trakttv_paths_location }}"
     state: absent
 
-- name: Get latest version available for Trakt.tv Plugin
-  shell: curl -s {{ plex_plugin_trakttv_release_url }} | jq -r .tag_name
-  args:
-    warn: no
-  register: plex_plugin_trakttv_latest_version
-  ignore_errors: yes
-  changed_when: no
-
-- name: Set 'plex_plugin_trakttv_latest_version' variable
-  set_fact:
-    plex_plugin_trakttv_latest_version: "{{ plex_plugin_trakttv_latest_version.stdout }}"
-
-- name: Get latest Trakt.tv Plugin URL
-  shell: |
-    curl -s {{ plex_plugin_trakttv_release_url }} \
-      | jq -r ".assets[] | select(.name | test(\"linux_x86_64\")) | .browser_download_url"
-  args:
-    warn: no
-  register: plex_plugin_trakttv_download_url
-  ignore_errors: yes
-  changed_when: no
-
-- name: Set 'plex_plugin_trakttv_download_url' variable
-  set_fact:
-    plex_plugin_trakttv_download_url: "{{ plex_plugin_trakttv_download_url.stdout | default(plex_plugin_trakttv_download_url_backup,true) }}"
-
 - name: "Create {{ plex_name | title }} 'plug-ins' directory"
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"
   with_items:
@@ -65,7 +39,7 @@
 
 - name: Install Trakt.tv Plugin
   unarchive:
-    src: "{{ plex_plugin_trakttv_download_url }}"
+    src: "{{ plex_plugin_trakttv_release_url }}"
     dest: "{{ plex_paths_plugins_location }}"
     copy: no
     owner: "{{ user.name }}"
