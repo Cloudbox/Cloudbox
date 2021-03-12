@@ -48,11 +48,6 @@
   register: trakttv_install
   ignore_errors: yes
 
-- name: Display Trakt.tv Plugin version
-  debug:
-    msg: "Trakt.tv Plugin version {{ trakttv_latest_version.stdout }} installed."
-  when: (trakttv_install is success)
-
 - name: Post-Unsuccessfull Trakt.tv Plugin Install
   debug:
     msg: "Trakt.tv Plugin install failed."
