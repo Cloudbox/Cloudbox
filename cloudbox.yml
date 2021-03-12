@@ -44,7 +44,6 @@
     - { role: lidarr, tags: ['cloudbox', 'feederbox', 'lidarr'] }
     - { role: sickbeard_mp4_automator, tags: ['cloudbox', 'feederbox', 'sickbeard_mp4_automator', 'sma'], when: ['use_sma'] }
     - { role: plex_auth_token, tags: ['plex_auth_token'] }
-    - { role: plex-plugins/trakttv, tags: ['plex-plugins-trakttv'] }
     - { role: plex-plugins/sub-zero, tags: ['plex-plugins-sub-zero', 'plex-plugins-sub-zero-reinstall'] }
     - { role: plex-plugins/webtools, tags: ['plex-plugins-webtools', 'plex-plugins-webtools-reinstall'] }
     - { role: subliminal, tags: ['subliminal'] }
