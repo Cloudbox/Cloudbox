@@ -46,6 +46,18 @@
       )
       else false }}"
 
+- name: Variables | Set 'matrix_account_enabled' variable
+  set_fact:
+    matrix_account_enabled: "{{ true if not(
+        (matrix.webhook_url is undefined)
+        or
+        (matrix.webhook_url is none)
+        or
+        (matrix.webhook_url | trim | length == 0)
+      )
+      else false }}"
+
+
 ################################
 # Notification Services List
 ################################
@@ -61,3 +73,4 @@
   loop:
     - { service: 'apprise', enabled: '{{ apprise_account_enabled }}' }
     - { service: 'pushover', enabled: '{{ pushover_account_enabled }}' }
+    - { service: 'matrix', enabled: '{{ matrix_account_enabled }}' }

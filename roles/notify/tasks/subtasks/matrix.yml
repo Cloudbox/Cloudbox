@@ -1,0 +1,22 @@
+#########################################################################
+# Title:         Cloudbox: Notify | Matrix                              #
+# Author(s):     Sebastian Noel Lübke <sebastian@luebke.io>             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: Matrix | Send Notification
+  uri:
+    url: "{{ matrix.webhook_url }}"
+    method: POST
+    body_format: json
+    body:
+      text: "{{ message }}"
+      format: "plain"
+      displayName: "Cloudbox"
+    headers:
+      Content-Type: application/json
+  ignore_errors: yes
