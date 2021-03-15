@@ -25,3 +25,11 @@ pushover_account_is_enabled: "{{  (pushover is defined) and
                                   (pushover.user_key is defined) and
                                   (pushover.user_key is not none) and
                                   (pushover.user_key | trim | length > 0) }}"
+
+matrix_account_is_enabled: "{{  (matrix is defined) and
+                                (matrix is not none) and
+                                (matrix | trim | length > 0) and
+                                (matrix.webhook_url is defined) and
+                                (matrix.webhook_url is not none) and
+                                (matrix.webhook_url | trim | length > 0) }}"
+

@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Notify | Variables                           #
-# Author(s):     desimaniac                                             #
+# Author(s):     desimaniac, Sebastian Lübke                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -23,3 +23,4 @@
   loop:
     - { service: 'apprise', enabled: '{{ apprise_account_is_enabled }}' }
     - { service: 'pushover', enabled: '{{ pushover_account_is_enabled }}' }
+    - { service: 'matrix', enabled: '{{ matrix_account_is_enabled }}' }
