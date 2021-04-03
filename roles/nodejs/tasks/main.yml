@@ -28,14 +28,6 @@
     msg: "NodeJS {{ nodejs_version.stdout }} installed."
   when: nodejs_binary.stdout | trim | length > 0
 
-- name: "Symlink nodejs to /usr/local/bin"
-  file:
-    src: /usr/bin/nodejs
-    dest: /usr/local/bin/nodejs
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    state: link
-
 - name: Update npm
   shell: "npm install -g npm"
 
