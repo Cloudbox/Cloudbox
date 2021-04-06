@@ -8,6 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- name: Create docker directory
+  file: "path={{ item }} state=directory mode=0775 owner=root group=root"
+  with_items:
+    - /etc/docker
+
 - name: "Daemon | Import 'daemon.json'"
   template:
     src: daemon.json.j2

@@ -52,15 +52,15 @@
 
   when: (docker_binary.stat.exists) and (docker_service_running)
 
+- name: "Import Daemon Tasks"
+  import_tasks: "subtasks/daemon.yml"
+
 - name: "Import Docker Binary tasks"
   include_tasks: "subtasks/binary/binary.yml"
 
 - name: Import BTRFS Psuedo-File-System Tasks
   include_tasks: "subtasks/btrfs/pseudo_file_system.yml"
   when: ('btrfs' in var_lib_file_system.stdout)
-
-- name: "Import Daemon Tasks"
-  import_tasks: "subtasks/daemon.yml"
 
 - name: Start docker service
   systemd:
