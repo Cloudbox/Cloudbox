@@ -179,7 +179,7 @@
   ignore_errors: yes
   tags: glances
 
-- name: Install pip 'glances'
+- name: Install pip3 'glances'
   shell: pip3 install glances[action,browser,cloud,cpuinfo,docker,folders,gpu,graph,ip,raid,snmp,web]
   ignore_errors: yes
   tags: glances
