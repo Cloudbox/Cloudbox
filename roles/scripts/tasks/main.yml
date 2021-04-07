@@ -23,6 +23,7 @@
     state: present
     name:
       - yq
+    executable: pip3
 
 - name: Create script directories
   file: "path={{ item }} state=directory owner={{ user.name }} group={{ user.name }} mode=0775 recurse=yes"

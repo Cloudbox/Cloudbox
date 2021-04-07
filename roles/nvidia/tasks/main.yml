@@ -8,8 +8,8 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Install common pip modules
-  raw: pip install jmespath
+- name: Install common pip3 modules
+  raw: pip3 install jmespath
 
 - name: Fetch Nvidia card info
   shell: |

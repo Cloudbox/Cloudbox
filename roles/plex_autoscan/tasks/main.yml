@@ -39,10 +39,10 @@
   become_user: "{{ user.name }}"
   when: plex_autoscan_clone_status is failed
 
-- name: Install pip requirements
+- name: Install pip3 requirements
   pip:
     requirements: /opt/plex_autoscan/requirements.txt
-    executable: pip2
+    executable: pip3
 
 - name: Set 'scan.py' as executable
   file:

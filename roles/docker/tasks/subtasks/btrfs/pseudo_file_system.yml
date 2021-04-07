@@ -11,7 +11,7 @@
 # https://gist.github.com/hopeseekr/cd2058e71d01deca5bae9f4e5a555440
 
 - name: BTRFS | Psuedo-File-System | Install common pip modules
-  raw: pip install jmespath
+  raw: pip3 install jmespath
 
 - name: "BTRFS | Psuedo-File-System | Determine if '/var/lib/docker' is mounted"
   set_fact:

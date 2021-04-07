@@ -12,6 +12,7 @@
   pip:
     state: present
     name: "git+https://github.com/Diaoul/subliminal.git@develop"
+    executable: pip3
   ignore_errors: yes
 
 - name: "Get Subliminal version"

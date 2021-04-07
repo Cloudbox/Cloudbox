@@ -8,10 +8,11 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: Apprise | Install 'apprise' pip module
+- name: Apprise | Install 'apprise' pip3 module
   pip:
     name: apprise
     state: present
+    executable: pip3
 
 - name: Apprise | Send Notification
   shell: apprise -b '{{ message }}' '{{ apprise }}'
