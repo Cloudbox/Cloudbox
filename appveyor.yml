@@ -63,9 +63,9 @@ init:
 
 install:
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
+  - sh: curl -o ${CLOUDBOX_PATH}/daemon.json https://raw.githubusercontent.com/saltydk/AppveyorTest/main/daemon.json
+  - sh: cp -f daemon.json /home/appveyor/projects/cloudbox-3c1ng/roles/docker/templates/daemon.json.j2
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
-  - sh: sudo ansible-playbook cloudbox.yml --tags core --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
-  - sh: sudo docker login -u $DOCKER_USER -p $DOCKER_PWD
   - sh: |
       sudo ansible-playbook cloudbox.yml --tags "cloudbox,emby,netdata,sabnzbd" \
           --skip-tags "settings" \
