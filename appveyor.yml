@@ -59,11 +59,9 @@ matrix:
 build: off
 
 init:
-  - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh &> /dev/null
+  - sh: curl -s https://raw.githubusercontent.com/Cloudbox/cb/develop/cb_dep.sh | sudo -H bash
 
 install:
-  - sh: sudo -H pip install 'ansible>=2.9,<2.10'
-  - sh: git submodule update --init --recursive
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
   - sh: sudo ansible-playbook cloudbox.yml --tags core --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
@@ -72,37 +70,3 @@ install:
       sudo ansible-playbook cloudbox.yml --tags "cloudbox,emby,netdata,sabnzbd" \
           --skip-tags "settings" \
           --extra-vars '{"continuous_integration":true}'
-
-# https://boblokerse.github.io/2015/11/03/GitVersion-versioning-made-easy-and-dry/
-on_finish:
-  - ps: |
-      function gitVersion() {
-        $env:newhash=git rev-parse HEAD
-        write-host "newhash = $env:newhash"
-        $env:shorthash=git rev-parse --short HEAD
-        write-host "shorthash = $env:shorthash"
-
-        $env:gitCommits=git describe --tags $env:APPVEYOR_REPO_BRANCH | %{$_.split('-')[1]}
-        write-host "gitCommits = $env:gitCommits"
-        $env:gitVersion=git describe --tags --abbrev=0 $env:APPVEYOR_REPO_BRANCH
-        write-host "gitVersion = $env:gitVersion"
-        $env:newVersion="$env:gitVersion-$env:gitCommits"
-        write-host "newVersion = $env:newVersion"
-        $env:appveyor_info_version="$env:newVersion-$env:APPVEYOR_REPO_BRANCH"
-        write-host "appveyor_info_version = $env:appveyor_info_version"
-
-        $env:appveyor_build_version="$env:newVersion"
-        write-host "appveyor_build_version = $env:appveyor_build_version"
-
-        appveyor UpdateBuild -Version "$env:newVersion"
-        if ($LastExitCode -ne 0) { appveyor UpdateBuild -Version "$env:APPVEYOR_BUILD_VERSION" }
-
-        write-host "=========================================="
-        write-host "Using hash for build version: $env:newhash"
-        write-host "Update appveyor build version to: $env:appveyor_build_version"
-        write-host "Update appveyor info version to: $env:appveyor_info_version"
-      }
-
-      if( -not ($env:APPVEYOR_PULL_REQUEST_NUMBER) -and ($env:APPVEYOR_REPO_BRANCH –eq "develop") ){
-        gitVersion
-      }
