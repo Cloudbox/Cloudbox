@@ -60,6 +60,7 @@ build: off
 
 init:
   - sh: curl -s https://raw.githubusercontent.com/Cloudbox/cb/develop/cb_dep.sh | sudo -H bash
+  - sh: ansible --version
 
 install:
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
