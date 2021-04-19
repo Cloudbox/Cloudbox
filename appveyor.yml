@@ -57,7 +57,7 @@ matrix:
 build: off
 
 init:
-  - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh &> /dev/null
+  - sh: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh
 
 install:
   - sh: git submodule update --init --recursive
