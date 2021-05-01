@@ -159,7 +159,27 @@
       - ansible-toolbox
       - ndg-httpsclient
       - yq
+  ignore_errors: yes
+
+- name: Install common pip3 modules
+  pip:
+    state: present
+    name:
+      - certbot
+      - ansible-toolbox
+      - ndg-httpsclient
+      - yq
     executable: pip3
+  ignore_errors: yes
+
+- name: Install pip modules needed by Ansible via raw method
+  raw: "pip install {{ item }}"
+  loop:
+    - apprise
+    - dnspython
+    - lxml
+    - jmespath
+    - passlib
   ignore_errors: yes
 
 - name: Install pip3 modules needed by Ansible via raw method
