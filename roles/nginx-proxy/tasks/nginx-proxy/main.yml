@@ -83,7 +83,7 @@
 - name: Nginx-Proxy | Create and start container
   docker_container:
     name: nginx-proxy
-    image: "jwilder/nginx-proxy:alpine"
+    image: "jwilder/nginx-proxy:0.9.0"
     pull: yes
     published_ports:
       - "80:80"
