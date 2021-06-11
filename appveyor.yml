@@ -50,7 +50,8 @@ skip_commits:
 
   message: /\[minor\]/
 
-image: Ubuntu1804-minimal
+build_cloud: CLOUDBOX
+image: Ubuntu1804
 
 matrix:
   fast_finish: true
