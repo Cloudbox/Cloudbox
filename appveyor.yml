@@ -64,7 +64,7 @@ install:
   - sh: git submodule update --init --recursive
   - sh: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
   - sh: curl -o daemon.json https://raw.githubusercontent.com/saltydk/AppveyorTest/main/daemon.json
-  - sh: cp -f daemon.json /home/appveyor/projects/cloudbox-3c1ng/roles/docker/templates/daemon.json.j2
+  - sh: cp -f daemon.json /home/appveyor/projects/cloudbox-taa7x/roles/docker/templates/daemon.json.j2
   - sh: sudo ansible-playbook cloudbox.yml --syntax-check
   - sh: |
       sudo ansible-playbook cloudbox.yml --tags "cloudbox,emby,netdata,sabnzbd" \
