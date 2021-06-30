@@ -8,3 +8,4 @@ callback_whitelist = profile_tasks
 command_warnings = False
 retry_files_enabled = False
 interpreter_python = /usr/bin/python3
+force_color = True
