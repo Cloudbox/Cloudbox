@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-    - master
+      - master
   pull_request:
     branches:
-    - master
+      - master
 
 jobs:
   install:
@@ -22,9 +22,6 @@ jobs:
 
       - name: Change default configuration user
         run: sed -i 's/seed/runner/g' accounts.yml
-
-      - name: Enable Ansible Color
-        run: sed '/^defaults.*/a force_color = True' ansible.cfg
 
       - name: Syntax Check
         run: sudo ansible-playbook cloudbox.yml --syntax-check
