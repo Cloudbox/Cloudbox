@@ -1,6 +1,12 @@
 name: CI
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 
 jobs:
   install:
@@ -16,6 +22,9 @@ jobs:
 
       - name: Change default configuration user
         run: sed -i 's/seed/runner/g' accounts.yml
+
+      - name: Enable Ansible Color
+        run: sed '/^defaults.*/a force_color = True' ansible.cfg
 
       - name: Syntax Check
         run: sudo ansible-playbook cloudbox.yml --syntax-check
