@@ -1,0 +1,31 @@
+name: CI
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  install:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: curl -s https://cloudbox.works/scripts/dep.sh | sudo -H sh
+        
+      - name: Import default configuration
+        run: for i in defaults/*; do cp -n $i "$(basename "${i%.*}")"; done
+
+      - name: Import default configuration
+        run: sed -i 's/seed/runner/g' accounts.yml
+
+      - name: Syntax Check
+        run: sudo ansible-playbook cloudbox.yml --syntax-check
+
+      - name: Install Cloudbox
+        run: sudo ansible-playbook cloudbox.yml --tags "cloudbox,emby,netdata,sabnzbd" \
+          --skip-tags "settings" \
+          --extra-vars '{"continuous_integration":true}'
+
+#      - uses: sarisia/actions-status-discord@v1
+#        if: always()
+#        with:
+#          webhook: ${{ secrets.DISCORD_WEBHOOK }}
