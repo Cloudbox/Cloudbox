@@ -19,11 +19,13 @@
 ./drive_strm/*.log*
 
 ./lidarr/logs/*
+./lidarr/MediaCover/*
 
 ./nvidia/*
 
 ./plex/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/*
 ./plex/Library/Application Support/Plex Media Server/Cache/Transcode/*
+./plex/Library/Application Support/Plex Media Server/Metadata/*
 
 ./plex_autoscan/plex_autoscan.log
 ./plex_autoscan/plex_autoscan.log.*
@@ -36,9 +38,13 @@
 ./tautulli/logs/*
 
 ./radarr/logs/*
+./radarr/MediaCover/*
 
 ./radarr4k/logs/*
+./radarr4k/MediaCover/*
 
 ./sonarr/logs/*
+./sonarr/MediaCover/*
 
 ./sonarr4k/logs/*
+./sonarr4k/MediaCover/*
