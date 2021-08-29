@@ -14,7 +14,3 @@
 - name: Letsencrypt Tasks
   import_tasks: "letsencrypt/main.yml"
   tags: letsencrypt
-
-- name: CF-Real-IP Tasks
-  import_tasks: "cf-real-ip/main.yml"
-  when: cloudflare_is_enabled
