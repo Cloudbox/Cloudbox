@@ -10,7 +10,11 @@ on:
 
 jobs:
   install:
-    runs-on: ubuntu-18.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
 
@@ -28,8 +32,3 @@ jobs:
 
       - name: Install Cloudbox
         run: sudo ansible-playbook cloudbox.yml --tags "cloudbox,emby,netdata,sabnzbd" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
-
-#      - uses: sarisia/actions-status-discord@v1
-#        if: always()
-#        with:
-#          webhook: ${{ secrets.DISCORD_WEBHOOK }}
