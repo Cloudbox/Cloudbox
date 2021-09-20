@@ -28,9 +28,9 @@
 - name: Binary | Install Docker binaries
   include_tasks: "binary2.yml"
   loop:
+    - 'containerd_io'
     - 'docker_ce'
     - 'docker_ce_cli'
-    - 'containerd_io'
 
 - name: Binary | Install 'docker' pip module
   raw: pip install docker
