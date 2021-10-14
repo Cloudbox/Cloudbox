@@ -9,9 +9,7 @@
 #########################################################################
 ---
 - name: "Start | Install ruamel.yaml"
-  pip:
-    name: ruamel.yaml>0.17.0,<0.17.5
-    executable: pip3
+  shell: "pip3 install 'ruamel.yaml>0.17.0,<0.17.5'"
 
 - name: "Start | Check to see if yyq is installed"
   stat:
