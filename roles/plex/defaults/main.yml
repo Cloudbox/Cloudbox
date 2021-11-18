@@ -119,15 +119,10 @@ plex_docker_devices: "{{ plex_docker_devices_default
                               + plex_docker_devices_custom }}"
 
 # Hosts
-lazyman_ip: "{{ ( lookup('dig', 'nhl.freegamez.ga', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
-
 plex_docker_hosts_default:
   "metric.plex.tv": "{{ ip_address_localhost }}"
   "metrics.plex.tv": "{{ ip_address_localhost }}"
   "analytics.plex.tv": "{{ ip_address_localhost }}"
-  "mf.svc.nhl.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
-  "mlb-ws-mf.media.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
-  "playback.svcs.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
 
 plex_docker_hosts_custom: []
 plex_docker_hosts: "{{ docker_hosts_common
