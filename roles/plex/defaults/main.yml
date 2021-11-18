@@ -85,6 +85,6 @@ plex_default_hosts:
   "metrics.plex.tv": "{{ localhost_ip }}"
   "analytics.plex.tv": "{{ localhost_ip }}"
 
-plex_custom_hosts: ""
+plex_custom_hosts: []
 
 plex_docker_hosts: "{{ plex_default_hosts | combine(plex_custom_hosts) }}"
