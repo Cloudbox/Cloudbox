@@ -80,16 +80,11 @@ plex_docker_volumes:
 
 localhost_ip: "127.0.0.1"
 
-lazyman_ip: "{{ ( lookup('dig', 'nhl.freegamez.ga', '@8.8.8.8', 'qtype=A') | ipv4 ) | default(false,true) }}"
-
 plex_default_hosts:
   "metric.plex.tv": "{{ localhost_ip }}"
   "metrics.plex.tv": "{{ localhost_ip }}"
   "analytics.plex.tv": "{{ localhost_ip }}"
 
-plex_custom_hosts:
-  "mf.svc.nhl.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
-  "mlb-ws-mf.media.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
-  "playback.svcs.mlb.com": "{{ lazyman_ip | ternary(lazyman_ip, omit) }}"
+plex_custom_hosts: ""
 
 plex_docker_hosts: "{{ plex_default_hosts | combine(plex_custom_hosts) }}"
