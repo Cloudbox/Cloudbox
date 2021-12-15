@@ -2,7 +2,7 @@
 # Title:         Cloudbox: NZBHydra2 Role                               #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/nzbhydra2                                        #
+# Docker Image:  cr.hotio.dev/hotio/nzbhydra2                                        #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -54,7 +54,7 @@
 - name: Create and start container
   docker_container:
     name: nzbhydra2
-    image: hotio/nzbhydra2
+    image: cr.hotio.dev/hotio/nzbhydra2
     pull: yes
     published_ports:
       - "127.0.0.1:5076:5076"

@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Heimdall Role                                #
 # Author(s):     TheBradz, desimaniac                                   #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  linuxserver/heimdall                                   #
+# Docker Image:  lscr.io/linuxserver/heimdall                                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -40,7 +40,7 @@
 - name: Create and start container
   docker_container:
     name: heimdall
-    image: linuxserver/heimdall
+    image: lscr.io/linuxserver/heimdall
     pull: yes
     published_ports:
       - "127.0.0.1:8078:443"

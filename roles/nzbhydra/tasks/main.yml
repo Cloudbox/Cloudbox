@@ -2,7 +2,7 @@
 # Title:         Cloudbox: NZBHydra Role                                #
 # Author(s):     l3uddz, desimaniac, EnorMOZ                            #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  linuxserver/hydra                                      #
+# Docker Image:  lscr.io/linuxserver/hydra                                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -64,7 +64,7 @@
 - name: Create and start container
   docker_container:
     name: nzbhydra
-    image: linuxserver/hydra
+    image: lscr.io/linuxserver/hydra
     pull: yes
     published_ports:
       - "127.0.0.1:5075:5075"

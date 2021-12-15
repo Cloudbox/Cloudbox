@@ -2,7 +2,7 @@
 # Title:         Cloudbox: DDClient Role                                #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  linuxserver/ddclient                                   #
+# Docker Image:  lscr.io/linuxserver/ddclient                                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -48,7 +48,7 @@
 - name: Create and start container
   docker_container:
     name: ddclient
-    image: "linuxserver/ddclient:latest"
+    image: "lscr.io/linuxserver/ddclient:latest"
     pull: yes
     env:
       PUID: "{{ uid }}"

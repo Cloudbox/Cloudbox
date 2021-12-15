@@ -2,7 +2,7 @@
 # Title:         Cloudbox: The Lounge Role                              #
 # Author(s):     l3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  linuxserver/thelounge                                  #
+# Docker Image:  lscr.io/linuxserver/thelounge                                  #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -29,7 +29,7 @@
 - name: Create and start container
   docker_container:
     name: thelounge
-    image: "linuxserver/thelounge"
+    image: "lscr.io/linuxserver/thelounge"
     pull: yes
     published_ports:
       - "127.0.0.1:9500:9000"

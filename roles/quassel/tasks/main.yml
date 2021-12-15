@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Quassel Role                                 #
 # Author(s):     l3uddz                                                 #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  linuxserver/quassel-core                               #
+# Docker Image:  lscr.io/linuxserver/quassel-core                               #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -49,7 +49,7 @@
 - name: Create and start container
   docker_container:
     name: quassel
-    image: linuxserver/quassel-core
+    image: lscr.io/linuxserver/quassel-core
     pull: yes
     published_ports:
       - "4242:4242"

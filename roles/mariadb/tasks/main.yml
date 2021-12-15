@@ -2,7 +2,7 @@
 # Title:            Cloudbox: MariaDB Role                              #
 # Author(s):        l3uddz, desimaniac                                  #
 # URL:              https://github.com/cloudbox/cloudbox                #
-# Docker Image(s):  linuxserver/mariadb                                 #
+# Docker Image(s):  lscr.io/linuxserver/mariadb                                 #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -22,7 +22,7 @@
 - name: Create and start mariadb container
   docker_container:
     name: mariadb
-    image: "linuxserver/mariadb"
+    image: "lscr.io/linuxserver/mariadb"
     pull: yes
     published_ports:
       - "127.0.0.1:3306:3306"
