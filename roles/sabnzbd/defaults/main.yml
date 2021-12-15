@@ -74,7 +74,7 @@ sabnzbd_docker_container: "{{ sabnzbd_name }}"
 # Image
 sabnzbd_docker_image_pull: yes
 sabnzbd_docker_image_tag: "latest"
-sabnzbd_docker_image: "hotio/sabnzbd:{{ sabnzbd_docker_image_tag }}"
+sabnzbd_docker_image: "cr.hotio.dev/hotio/sabnzbd:{{ sabnzbd_docker_image_tag }}"
 
 # Ports
 sabnzbd_docker_ports_defaults:

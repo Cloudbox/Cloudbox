@@ -95,7 +95,7 @@ nzbhydra2_docker_container: "{{ nzbhydra2_name }}"
 # Image
 nzbhydra2_docker_image_pull: yes
 nzbhydra2_docker_image_tag: "release"
-nzbhydra2_docker_image: "hotio/nzbhydra2:{{ nzbhydra2_docker_image_tag }}"
+nzbhydra2_docker_image: "cr.hotio.dev/hotio/nzbhydra2:{{ nzbhydra2_docker_image_tag }}"
 
 # Ports
 nzbhydra2_docker_ports_defaults:
