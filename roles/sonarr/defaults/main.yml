@@ -52,7 +52,7 @@ sonarr_docker_container: "{{ sonarr_name }}"
 # Image
 sonarr_docker_image_pull: yes
 sonarr_docker_image_tag: "release"
-sonarr_docker_image: "hotio/sonarr:{{ sonarr_docker_image_tag }}"
+sonarr_docker_image: "cr.hotio.dev/hotio/sonarr:{{ sonarr_docker_image_tag }}"
 
 # Ports
 sonarr_docker_ports_defaults:

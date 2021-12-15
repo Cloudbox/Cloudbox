@@ -2,7 +2,7 @@
 # Title:         Cloudbox: NZBGet Role                                  #
 # Author(s):     l3uddz, desimaniac                                     #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/nzbget                                           #
+# Docker Image:  cr.hotio.dev/hotio/nzbget                                           #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -30,7 +30,7 @@
   import_tasks: "subtasks/darkerr.yml"
 
 - name: SMA Tasks
-  include_tasks: "{{ resources_tasks_path }}/hotio/sickbeard_mp4_automator/install_reqs.yml"
+  include_tasks: "{{ resources_tasks_path }}/cr.hotio.dev/hotio/sickbeard_mp4_automator/install_reqs.yml"
   when:
     - ('hotio' in lookup('vars', role_name + '_docker_image'))
     - (use_sma)

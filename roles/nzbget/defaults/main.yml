@@ -156,7 +156,7 @@ nzbget_docker_container: "{{ nzbget_name }}"
 # Image
 nzbget_docker_image_pull: yes
 nzbget_docker_image_tag: "testing"
-nzbget_docker_image: "hotio/nzbget:{{ nzbget_docker_image_tag }}"
+nzbget_docker_image: "cr.hotio.dev/hotio/nzbget:{{ nzbget_docker_image_tag }}"
 
 # Ports
 nzbget_docker_ports_defaults:

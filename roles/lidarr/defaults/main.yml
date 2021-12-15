@@ -52,7 +52,7 @@ lidarr_docker_container: "{{ lidarr_name }}"
 # Image
 lidarr_docker_image_pull: yes
 lidarr_docker_image_tag: "latest"
-lidarr_docker_image: "hotio/lidarr:{{ lidarr_docker_image_tag }}"
+lidarr_docker_image: "cr.hotio.dev/hotio/lidarr:{{ lidarr_docker_image_tag }}"
 
 # Ports
 lidarr_docker_ports_defaults:

@@ -44,7 +44,7 @@ ombi_docker_container: "{{ ombi_name }}"
 # Image
 ombi_docker_image_pull: yes
 ombi_docker_image_tag: "latest"
-ombi_docker_image: "hotio/ombi:{{ ombi_docker_image_tag }}"
+ombi_docker_image: "cr.hotio.dev/hotio/ombi:{{ ombi_docker_image_tag }}"
 
 # Ports
 ombi_docker_ports_defaults:

@@ -52,7 +52,7 @@ radarr_docker_container: "{{ radarr_name }}"
 # Image
 radarr_docker_image_pull: yes
 radarr_docker_image_tag: "release"
-radarr_docker_image: "hotio/radarr:{{ radarr_docker_image_tag }}"
+radarr_docker_image: "cr.hotio.dev/hotio/radarr:{{ radarr_docker_image_tag }}"
 
 # Ports
 radarr_docker_ports_defaults:
