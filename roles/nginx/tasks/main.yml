@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Nginx Role                                   #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                   #
-# Docker Image:  linuxserver/nginx                                      #
+# Docker Image:  lscr.io/linuxserver/nginx                                      #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -39,7 +39,7 @@
 - name: Create and start container
   docker_container:
     name: nginx
-    image: linuxserver/nginx
+    image: lscr.io/linuxserver/nginx
     pull: yes
     env:
       PUID: "{{ uid }}"

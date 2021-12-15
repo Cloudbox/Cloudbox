@@ -2,7 +2,7 @@
 # Title:         Cloudbox: Bazarr Role                                  #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/bazarr                                           #
+# Docker Image:  cr.hotio.dev/hotio/bazarr                                           #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -32,7 +32,7 @@
 - name: Create and start container
   docker_container:
     name: bazarr
-    image: "hotio/bazarr"
+    image: "cr.hotio.dev/hotio/bazarr"
     pull: yes
     published_ports:
       - "127.0.0.1:6767:6767"

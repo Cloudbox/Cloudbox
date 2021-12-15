@@ -2,7 +2,7 @@
 # Title:         Cloudbox: SABnzbd Role                                 #
 # Author(s):     desimaniac                                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  hotio/sabnzbd                                          #
+# Docker Image:  cr.hotio.dev/hotio/sabnzbd                                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -47,7 +47,7 @@
 - name: Create and start container
   docker_container:
     name: sabnzbd
-    image: hotio/sabnzbd
+    image: cr.hotio.dev/hotio/sabnzbd
     pull: yes
     published_ports:
       - "127.0.0.1:8081:8080"
