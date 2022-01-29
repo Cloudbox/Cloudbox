@@ -1,0 +1,17 @@
+##########################################################################
+# Title:         Cloudbox: Plex Auth Token | Default Variables           #
+# Author(s):     desimaniac, salty                                       #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
+---
+################################
+# API
+################################
+
+plex_auth_token_version: "1.0.0"
+
+plex_auth_token_product: "CB"
