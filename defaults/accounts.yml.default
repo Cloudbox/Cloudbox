@@ -10,6 +10,7 @@ cloudflare:
 plex:
   user:
   pass:
+  tfa: no
 pushover:
   app_token:
   user_key:

@@ -1,6 +1,6 @@
 #########################################################################
 # Title:         Cloudbox: Plex Auth Token Role                         #
-# Author(s):     EnorMOZ, Desimaniac                                    #
+# Author(s):     EnorMOZ, Desimaniac, salty                             #
 # URL:           https://github.com/cloudbox/cloudbox                   #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
@@ -8,28 +8,144 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Get X-Plex-Token"
+- name: "Auth Token | Create directories"
+  file:
+    path: "/opt/cloudbox"
+    state: directory
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: "0775"
+
+- name: "Auth Token | Check if PIN exists"
+  stat:
+    path: "/opt/cloudbox/plex.ini"
+  register: plex_ini
+
+- name: "Auth Token | Set plex_auth_client_identifier"
+  set_fact:
+    plex_auth_client_identifier: "Cloudbox{{ lookup('ini', 'client_identifier section=plex file=/opt/cloudbox/plex.ini') }}"
+  when: plex_ini.stat.exists
+
+- name: "Auth Token | Set plex_auth_client_identifier"
+  set_fact:
+    plex_auth_client_identifier: "Cloudbox{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=8') }}"
+  when: not plex_ini.stat.exists
+
+- name: "Auth Token | Set plex_auth_token variable if previously saved"
+  set_fact:
+    plex_auth_token: "{{ lookup('ini', 'token section=plex file=/opt/cloudbox/plex.ini') | regex_replace('\n', '') }}"
+  when: plex_ini.stat.exists
+
+- name: "Auth Token | Set plex_no_token status"
+  set_fact:
+    plex_no_token: "{{ (not plex_ini.stat.exists) | ternary(true, false)  }}"
+
+- name: "Auth Token | Check if Token is valid"
   uri:
-    url: https://plex.tv/users/sign_in.json
-    method: POST
-    headers:
+    url: "https://plex.tv/api/v2/user"
+    method: GET
+    return_content: yes
+    body:
+      X-Plex-Token: "{{ lookup('ini', 'token section=plex file=/opt/cloudbox/plex.ini') }}"
       X-Plex-Version: "{{ plex_auth_token_version }}"
       X-Plex-Product: "{{ plex_auth_token_product }}"
-      X-Plex-Client-Identifier: "{{ plex_auth_token_client_identifier }}"
-      Content-Type: "application/x-www-form-urlencoded; charset=utf-8"
-    user: '{{ plex.user }}'
-    password: '{{ plex.pass }}'
-    status_code: 201
-  register: plex_token_raw
+      X-Plex-Client-Identifier: "{{ plex_auth_client_identifier }}"
+    body_format: form-urlencoded
+    headers:
+      Accept: "application/json"
+    status_code: [200, 401]
+  register: plex_token
+  when: plex_ini.stat.exists
 
-- name: Display 'Plex Pass' status
-  debug:
-    msg: "Plex Pass is {{ ('plexpass' in plex_token_raw.json.user.roles.roles) | ternary('enabled','disabled') }}."
+- name: "Auth Token | 2FA Enabled"
+  block:
+    - name: "Auth Token | Generate New Token"
+      block:
 
-- name: Set plex_auth_token variable
-  set_fact:
-    plex_auth_token: "{{ plex_token_raw.json.user.authToken | regex_replace('\n', '') }}"
+        - name: "Auth Token | Generate PIN"
+          uri:
+            url: "https://plex.tv/api/v2/pins"
+            method: POST
+            return_content: yes
+            body:
+              strong: "true"
+              X-Plex-Version: "{{ plex_auth_token_version }}"
+              X-Plex-Product: "{{ plex_auth_token_product }}"
+              X-Plex-Client-Identifier: "{{ plex_auth_client_identifier }}"
+            body_format: form-urlencoded
+            headers:
+              Accept: "application/json"
+            status_code: 201
+          register: plex_pin
 
-- name: Display Plex Auth Token
+        - name: "Auth Token | Prompt user to login"
+          pause:
+            prompt: "Please open https://app.plex.tv/auth#?clientID={{ plex_pin.json.clientIdentifier }}&code={{ plex_pin.json.code }}&context%5Bdevice%5D%5Bproduct%5D={{ plex_pin.json.product }} and login. Hit enter after having logged in"  # noqa 204 line-length
+
+        - name: "Auth Token | Check PIN"
+          uri:
+            url: "https://plex.tv/api/v2/pins/{{ plex_pin.json.id }}"
+            method: GET
+            return_content: yes
+            body:
+              X-Plex-Client-Identifier: "{{ plex_auth_client_identifier }}"
+            body_format: form-urlencoded
+            headers:
+              Accept: "application/json"
+            status_code: 200
+          register: plex_token_new
+
+        - name: "Auth Token | Add Client Identifier to '/opt/cloudbox/plex.ini'"
+          ini_file:
+            path: /opt/cloudbox/plex.ini
+            section: plex
+            option: client_identifier
+            value: "{{ plex_auth_client_identifier }}"
+
+        - name: "Auth Token | Add Plex Token to '/opt/cloudbox/plex.ini'"
+          ini_file:
+            path: /opt/cloudbox/plex.ini
+            section: plex
+            option: token
+            value: "{{ plex_token_new.json.authToken }}"
+
+        - name: "Auth Token | Set plex_auth_token variable"
+          set_fact:
+            plex_auth_token: "{{ plex_token_new.json.authToken | regex_replace('\n', '') }}"
+
+      when: (plex_no_token) or (plex_token.status == 401)
+  when: plex.tfa
+
+- name: "Auth Token | 2FA Disabled"
+  block:
+    - name: "Auth Token | Get X-Plex-Token"
+      uri:
+        url: https://plex.tv/users/sign_in.json
+        method: POST
+        headers:
+          X-Plex-Version: "{{ plex_auth_token_version }}"
+          X-Plex-Product: "{{ plex_auth_token_product }}"
+          X-Plex-Client-Identifier: "{{ plex_auth_client_identifier }}"
+          Content-Type: "application/x-www-form-urlencoded; charset=utf-8"
+        user: '{{ plex.user }}'
+        password: '{{ plex.pass }}'
+        status_code: 201
+      register: plex_token_raw
+
+    - name: "Auth Token | Set plex_auth_token variable"
+      set_fact:
+        plex_auth_token: "{{ plex_token_raw.json.user.authToken | regex_replace('\n', '') }}"
+
+  when: not plex.tfa
+
+- name: "Auth Token | Display Plex Auth Token"
   debug:
     msg: "Plex Auth Token: {{ plex_auth_token }}"
+
+- name: Change permissions
+  file:
+    path: /opt/cloudbox
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: '0755'
+    recurse: true
