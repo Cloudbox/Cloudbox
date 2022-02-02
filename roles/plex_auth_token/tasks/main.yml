@@ -45,14 +45,13 @@
     url: "https://plex.tv/api/v2/user"
     method: GET
     return_content: yes
-    body:
+    headers:
+      Accept: "application/json"
+      Content-Type: "application/x-www-form-urlencoded; charset=utf-8"
       X-Plex-Token: "{{ lookup('ini', 'token section=plex file=/opt/cloudbox/plex.ini') }}"
       X-Plex-Version: "{{ plex_auth_token_version }}"
       X-Plex-Product: "{{ plex_auth_token_product }}"
       X-Plex-Client-Identifier: "{{ plex_auth_client_identifier }}"
-    body_format: form-urlencoded
-    headers:
-      Accept: "application/json"
     status_code: [200, 401]
   register: plex_token
   when: plex_ini.stat.exists
@@ -67,31 +66,29 @@
             url: "https://plex.tv/api/v2/pins"
             method: POST
             return_content: yes
-            body:
+            headers:
+              Accept: "application/json"
               strong: "true"
               X-Plex-Version: "{{ plex_auth_token_version }}"
               X-Plex-Product: "{{ plex_auth_token_product }}"
               X-Plex-Client-Identifier: "{{ plex_auth_client_identifier }}"
-            body_format: form-urlencoded
-            headers:
-              Accept: "application/json"
+              Content-Type: "application/x-www-form-urlencoded; charset=utf-8"
             status_code: 201
           register: plex_pin
 
         - name: "Auth Token | Prompt user to login"
           pause:
-            prompt: "Please open https://app.plex.tv/auth#?clientID={{ plex_pin.json.clientIdentifier }}&code={{ plex_pin.json.code }}&context%5Bdevice%5D%5Bproduct%5D={{ plex_pin.json.product }} and login. Hit enter after having logged in"  # noqa 204 line-length
+            prompt: "Please open https://app.plex.tv/auth#?clientID={{ plex_pin.json.clientIdentifier }}&code={{ plex_pin.json.code }}&context%5Bdevice%5D%5Bproduct%5D={{ plex_pin.json.product }} and login. Hit enter after having logged in"
 
         - name: "Auth Token | Check PIN"
           uri:
             url: "https://plex.tv/api/v2/pins/{{ plex_pin.json.id }}"
             method: GET
             return_content: yes
-            body:
-              X-Plex-Client-Identifier: "{{ plex_auth_client_identifier }}"
-            body_format: form-urlencoded
             headers:
               Accept: "application/json"
+              Content-Type: "application/x-www-form-urlencoded; charset=utf-8"
+              X-Plex-Client-Identifier: "{{ plex_auth_client_identifier }}"
             status_code: 200
           register: plex_token_new
 
