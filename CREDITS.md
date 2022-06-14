@@ -24,7 +24,7 @@
 
 #### Operating System
 
-* [Ubuntu Server 16.04 / 18.04](https://www.ubuntu.com/download/server)
+* [Ubuntu Server 18.04](https://www.ubuntu.com/download/server)
 
 #### Packages
 

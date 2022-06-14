@@ -8,12 +8,12 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Cloudbox supports Ubuntu 16.04 or higher"
+- name: "Cloudbox supports Ubuntu 18.04 or higher"
   debug:
     msg:
-      - "Cloudbox was designed for use on Ubuntu servers running versions 16.04+. With basic support for other Debian systems."
+      - "Cloudbox was designed for use on Ubuntu servers running versions 18.04+. With basic support for other Debian systems."
       - "Running Cloudbox on unsupported systems may cause unpredictable results."
-  when: (ansible_distribution != 'Ubuntu') or ((ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('16.04', '<')))
+  when: (ansible_distribution != 'Ubuntu') or ((ansible_distribution == 'Ubuntu') and (ansible_distribution_version is version('18.04', '<')))
 
 - name: "Display System Info"
   debug:

@@ -28,7 +28,7 @@ If issue occurs during Ansible playbook, run playbook with `-vv` to output detai
 **System Information**
 
  - Cloudbox Version: [e.g. 1.4.0, Master (latest), Develop (latest)]
- - Operating System: [e.g. Ubuntu Server 16.04 LTS]
+ - Operating System: [e.g. Ubuntu Server 18.04 LTS]
  - Linux Kernel: [e.g. 4.15]
 
 **Additional context**

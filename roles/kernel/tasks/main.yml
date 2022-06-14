@@ -26,9 +26,6 @@
 - name: "Mainline Kernel Script Tasks"
   include_tasks: "subtasks/script.yml"
 
-- name: "Update Tasks"
-  include_tasks: "subtasks/update.yml"
-
 - name: "Header Tasks"
   include_tasks: "subtasks/headers.yml"
 

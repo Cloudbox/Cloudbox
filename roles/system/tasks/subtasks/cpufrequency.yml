@@ -59,7 +59,3 @@
     section: null
     option: 'GOVENOR'
     state: absent
-
-- name: CPU Frequency | Disable “ondemand” CPU scaling daemon
-  shell: "update-rc.d ondemand disable"
-  when: ansible_distribution_version == "16.04"
