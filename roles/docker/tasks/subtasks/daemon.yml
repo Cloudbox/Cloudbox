@@ -41,3 +41,6 @@
     value: "{{ 'unionfs' if (mounts.unionfs|lower) == 'unionfs' else 'mergerfs' }}.service"
     state: present
     no_extra_spaces: yes
+
+- name: "Daemon | Remove old init entry from '/etc/docker/daemon.json'"
+  ansible.builtin.shell: jq 'del(."init")' /etc/docker/daemon.json  | sponge /etc/docker/daemon.json
