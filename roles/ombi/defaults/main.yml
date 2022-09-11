@@ -29,7 +29,7 @@ ombi_paths_folders_list:
 
 ombi_web_subdomain: "{{ ombi.subdomain | default(ombi_name) }}"
 ombi_web_domain: "{{ user.domain }}"
-ombi_web_port: "5000"
+ombi_web_port: "3579"
 ombi_web_url: "{{ 'https://' + ombi_web_subdomain + '.' + ombi_web_domain
                   if (reverse_proxy_is_enabled)
                   else 'http://localhost:' + ombi_web_port }}"
@@ -44,7 +44,7 @@ ombi_docker_container: "{{ ombi_name }}"
 # Image
 ombi_docker_image_pull: yes
 ombi_docker_image_tag: "latest"
-ombi_docker_image: "cr.hotio.dev/hotio/ombi:{{ ombi_docker_image_tag }}"
+ombi_docker_image: "lscr.io/linuxserver/ombi:{{ ombi_docker_image_tag }}"
 
 # Ports
 ombi_docker_ports_defaults:
@@ -61,7 +61,6 @@ ombi_docker_envs_default:
   PGID: "{{ gid }}"
   UMASK: "002"
   TZ: "{{ tz }}"
-  LC_ALL: "en_US.UTF-8"
 ombi_docker_envs_custom: {}
 ombi_docker_envs_reverse_proxy: {}
 ombi_docker_envs: "{{ ombi_docker_envs_default
