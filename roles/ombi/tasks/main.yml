@@ -29,20 +29,19 @@
 - name: Create and start container
   docker_container:
     name: ombi
-    image: "cr.hotio.dev/hotio/ombi"
+    image: "lscr.io/linuxserver/ombi"
     pull: yes
     published_ports:
-      - "127.0.0.1:3579:5000"
+      - "127.0.0.1:3579:3579"
     env:
       BACKUP: "no"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: 002
       VIRTUAL_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ user.domain }}"
-      VIRTUAL_PORT: 5000
+      VIRTUAL_PORT: 3579
       LETSENCRYPT_HOST: "{{ ombi.subdomain|default('ombi',true) }}.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      LC_ALL: "en_US.UTF-8"
       TZ: "{{ tz }}"
     volumes:
       - "/opt/ombi:/config"
