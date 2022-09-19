@@ -20,7 +20,7 @@
     image: "{{ lookup('vars', _var_prefix + '_docker_image') }}"
     pull: "{{ lookup('vars', _var_prefix + '_docker_image_pull') }}"
     published_ports: "{{ lookup('vars', _var_prefix + '_docker_ports') }}"
-    exposed_ports: "{{ lookup('vars', _var_prefix + '_docker_exposed_ports') }}"
+    exposed_ports: "{{ lookup('vars', _var_prefix + '_docker_exposed_ports', default=omit) }}"
     env: "{{ lookup('vars', _var_prefix + '_docker_envs') }}"
     volumes: "{{ lookup('vars', _var_prefix + '_docker_volumes') }}"
     devices: "{{ lookup('vars', _var_prefix + '_docker_devices') }}"
