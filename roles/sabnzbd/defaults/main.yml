@@ -84,7 +84,7 @@ sabnzbd_docker_ports: "{{ sabnzbd_docker_ports_defaults
                               + sabnzbd_docker_ports_custom
                           if (not reverse_proxy_is_enabled)
                           else [] + sabnzbd_docker_ports_custom }}"
-sabnzbd_docker_exposed_ports: "{{ sabnzbd_docker_ports_defaults + sabnzbd_docker_ports_custom }}"
+sabnzbd_docker_exposed_ports: "{{ sabnzbd_web_port }}"
 
 # Envs
 sabnzbd_docker_envs_default:

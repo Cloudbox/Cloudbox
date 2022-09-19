@@ -105,7 +105,7 @@ nzbhydra2_docker_ports: "{{ nzbhydra2_docker_ports_defaults
                                 + nzbhydra2_docker_ports_custom
                             if (not reverse_proxy_is_enabled)
                             else [] + nzbhydra2_docker_ports_custom }}"
-nzbhydra2_docker_exposed_ports: "{{ nzbhydra2_docker_ports_defaults + nzbhydra2_docker_ports_custom }}"
+nzbhydra2_docker_exposed_ports: "{{ nzbhydra2_web_port }}"
 
 # Envs
 nzbhydra2_docker_envs_default:
