@@ -197,18 +197,10 @@ upstream {{ $upstream_name }} {
 	{{ range $knownNetwork := $CurrentContainer.Networks }}
 		{{ range $containerNetwork := $container.Networks }}
 			{{ if (and (ne $containerNetwork.Name "ingress") (or (eq $knownNetwork.Name $containerNetwork.Name) (eq $knownNetwork.Name "host"))) }}
-	## Can be connected with "{{ $containerNetwork.Name }}" network
-
-				{{/* If only 1 port exposed, use that */}}
-				{{ if eq $addrLen 1 }}
-					{{ $address := index $container.Addresses 0 }}
-					{{ template "upstream" (dict "Container" $container "Address" $address "Network" $containerNetwork) }}
-				{{/* If more than one port exposed, use the one matching VIRTUAL_PORT env var, falling back to standard web port 80 */}}
-				{{ else }}
-					{{ $port := coalesce $container.Env.VIRTUAL_PORT "80" }}
-					{{ $address := where $container.Addresses "Port" $port | first }}
-					{{ template "upstream" (dict "Container" $container "Address" $address "Network" $containerNetwork) }}
-				{{ end }}
+	## Can be connected with "{{ $containerNetwork.Name }}" network			
+				{{ $port := coalesce $container.Env.VIRTUAL_PORT "80" }}
+				{{ $address := where $container.Addresses "Port" $port | first }}
+				{{ template "upstream" (dict "Container" $container "Address" $address "Network" $containerNetwork) }}
 			{{ else }}
 	# Cannot connect to network of this container
 	server 127.0.0.1 down;
