@@ -36,6 +36,8 @@
     pull: yes
     published_ports:
       - "127.0.0.1:6767:6767"
+    exposed_ports:
+      - "6767"
     env:
       BACKUP: "no"
       PUID: "{{ uid }}"
