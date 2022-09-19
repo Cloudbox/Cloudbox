@@ -69,7 +69,7 @@ nzbget_config_new_installs_settings_default:
   - { regexp: '^Category4\.Name\s?=.*', line: 'Category4.Name=apps' }
   - { regexp: '^Category4\.Aliases\s?=.*', line: 'Category4.Aliases=apps*, pc*' }
   # New Categories
-  - { regexp: '^Category5\.Name\s?=.*', line: 'Category5.Name=sonarr' }
+  - { regexp: '^Category5\.Name\s?=.*', line: 'Category5.Name=nzbget' }
   - { regexp: '^Category6\.Name\s?=.*', line: 'Category6.Name=radarr' }
   - { regexp: '^Category7\.Name\s?=.*', line: 'Category7.Name=lidarr' }
   # Logging
@@ -166,6 +166,7 @@ nzbget_docker_ports: "{{ nzbget_docker_ports_defaults
                               + nzbget_docker_ports_custom
                           if (not reverse_proxy_is_enabled)
                           else [] + nzbget_docker_ports_custom }}"
+nzbget_docker_exposed_ports: "{{ nzbget_docker_ports_defaults + nzbget_docker_ports_custom }}"
 
 # Envs
 nzbget_docker_envs_default:

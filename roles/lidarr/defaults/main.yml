@@ -62,6 +62,7 @@ lidarr_docker_ports: "{{ lidarr_docker_ports_defaults
                               + lidarr_docker_ports_custom
                           if (not reverse_proxy_is_enabled)
                           else [] + lidarr_docker_ports_custom }}"
+lidarr_docker_exposed_ports: "{{ lidarr_docker_ports_defaults + lidarr_docker_ports_custom }}"
 
 # Envs
 lidarr_docker_envs_default:
