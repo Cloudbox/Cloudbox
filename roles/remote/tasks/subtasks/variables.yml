@@ -12,18 +12,6 @@
 # Mount Types
 ################################
 
-- name: Variables | Set 'plexdrive4' mount variables
-  set_fact:
-    desired_mount_types: ['plexdrive4']
-  when: (mounts.remote | lower == 'plexdrive4')
-    or ((mounts.remote | lower == 'plexdrive') and ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int < 8))
-
-- name: Variables | Set 'plexdrive5' mount variables
-  set_fact:
-    desired_mount_types: ['plexdrive5']
-  when: (mounts.remote | lower == 'plexdrive5')
-    or ((mounts.remote | lower == 'plexdrive') and ((ansible_memory_mb.real.total/1024)|round(0,'ceil')|int >= 8))
-
 - name: Variables | Set 'rclone_cache' mount variables
   set_fact:
     desired_mount_types: ['rclone_cache']
@@ -75,8 +63,6 @@
 - name: Variables | Set 'service_files' variable
   set_fact:
     service_files:
-      - 'plexdrive4.service'
-      - 'plexdrive5.service'
       - 'rclone_cache.service'
       - 'rclone_vfs.service'
       - 'feeder.service'

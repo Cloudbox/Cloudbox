@@ -38,63 +38,6 @@ feeder_mount_start_command: |-
 feeder_mount_stop_command: /bin/fusermount -uz /mnt/feeder
 
 ################################
-# Plexdrive 4
-################################
-
-plexdrive_4_download_url: https://github.com/dweidenfeld/plexdrive/releases/download/4.1.0-beta-1498656614/plexdrive-linux-amd64
-
-plexdrive_4_install_path: "{{ server_appdata_path }}/plexdrive4"
-
-plexdrive_4_binary_path: "{{ plexdrive_4_install_path }}/plexdrive"
-
-plexdrive_4_config_path: "{{ plexdrive_4_install_path }}/config.json"
-
-plexdrive_4_mount_start_command: |-
-  {{ plexdrive_4_binary_path }} \
-    --refresh-interval=1m \
-    --chunk-size=16m \
-    --fuse-options=allow_other,read_only \
-    --config=/opt/plexdrive4 \
-    --temp=/opt/plexdrive4 \
-    -v 3 \
-    /mnt/remote
-
-plexdrive_4_mount_stop_command: /bin/fusermount -uz /mnt/remote
-
-################################
-# Plexdrive 5
-################################
-
-plexdrive_5_download_url: https://github.com/dweidenfeld/plexdrive/releases/download/5.0.0/plexdrive-linux-amd64
-
-plexdrive_5_install_path: "{{ server_appdata_path }}/plexdrive5"
-
-plexdrive_5_binary_path: "{{ plexdrive_5_install_path }}/plexdrive"
-
-plexdrive_5_config_path: "{{ plexdrive_5_install_path }}/config.json"
-
-plexdrive_5_cache_path: "{{ plexdrive_5_install_path }}/cache.bolt"
-
-# Max Chunks: 250 if total RAM >= 16GB; 150 if total RAM < 16GB
-plexdrive_5_mount_max_chunks: "{{ ((ansible_memory_mb.real.total / 1024) | round(0, 'ceil') | int >= 16) | ternary(250, 150) }}"
-
-plexdrive_5_mount_start_command: |-
-  {{ plexdrive_5_binary_path }} mount \
-    --refresh-interval=1m \
-    --chunk-check-threads=8 \
-    --chunk-load-threads=8 \
-    --chunk-load-ahead=4 \
-    --chunk-size=10M \
-    --max-chunks={{ plexdrive_5_mount_max_chunks }} \
-    --fuse-options=allow_other,read_only \
-    --config={{ plexdrive_5_install_path }} \
-    --cache-file={{ plexdrive_5_cache_path }} \
-    -v 3 \
-    /mnt/remote
-
-plexdrive_5_mount_stop_command: /bin/fusermount -uz /mnt/remote
-
-################################
 # Rclone Cache
 ################################
 

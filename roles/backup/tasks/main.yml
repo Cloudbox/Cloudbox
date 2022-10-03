@@ -212,50 +212,6 @@
   - name: Populate Service Facts
     service_facts:
 
-  # Stop Plexdrive 4
-
-  - name: Check if 'plexdrive4.service' exists
-    stat:
-      path: "/etc/systemd/system/plexdrive4.service"
-    register: plexdrive4_service
-
-  - name: Stop 'plexdrive4' service block
-    block:
-
-    - name: Get 'plexdrive4' service state
-      set_fact:
-        plexdrive4_service_running: "{{ (services['plexdrive4.service'] is defined) and (services['plexdrive4.service']['state'] == 'running') }}"
-
-    - name: Stop 'plexdrive4' service
-      systemd:
-        name: plexdrive4
-        state: stopped
-      when: (plexdrive4_service_running)
-
-    when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists)
-
-  # Stop Plexdrive 5
-
-  - name: Check if 'plexdrive5.service' exists
-    stat:
-      path: "/etc/systemd/system/plexdrive5.service"
-    register: plexdrive5_service
-
-  - name: Stop 'plexdrive5' service block
-    block:
-
-    - name: Get 'plexdrive5' service state
-      set_fact:
-        plexdrive5_service_running: "{{ (services['plexdrive5.service'] is defined) and (services['plexdrive5.service']['state'] == 'running') }}"
-
-    - name: Stop 'plexdrive5' service
-      systemd:
-        name: plexdrive5
-        state: stopped
-      when: (plexdrive5_service_running)
-
-    when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists)
-
   # Stop Cloudplow
 
   - name: Check if 'cloudplow.service' exists
@@ -301,22 +257,10 @@
 
     when: (use_snapshot)
 
-  # Start Plexdrive and Docker containers when snapshot is enabled
+  # Start Docker containers when snapshot is enabled
 
-  - name: Snapshot | Start Plexdrive and Docker containers
+  - name: Snapshot | Start Docker containers
     block:
-
-    - name: "Snapshot | Start 'plexdrive4' service"
-      systemd:
-        name: plexdrive4
-        state: started
-      when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists) and (plexdrive4_service_running)
-
-    - name: "Snapshot | Start 'plexdrive5' service"
-      systemd:
-        name: plexdrive5
-        state: started
-      when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists) and (plexdrive5_service_running)
 
     - name: "Snapshot | Wait for 5 seconds before starting Docker containers"
       wait_for:
@@ -434,22 +378,10 @@
       message: "Cloudbox Backup: Backup created with total size of {{ backup_size }}."
     ignore_errors: yes
 
-  # Start Plexdrive and Docker containers when snapshot is not enabled
+  # Start Docker containers when snapshot is not enabled
 
-  - name: Start Plexdrive and Docker Containers
+  - name: Start Docker Containers
     block:
-
-    - name: "Start 'plexdrive4' service"
-      systemd:
-        name: plexdrive4
-        state: started
-      when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists) and (plexdrive4_service_running)
-
-    - name: "Start 'plexdrive5' service"
-      systemd:
-        name: plexdrive5
-        state: started
-      when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists) and (plexdrive5_service_running)
 
     - name: "Wait for 5 seconds before starting Docker containers"
       wait_for:
@@ -633,20 +565,8 @@
     args:
       warn: no
 
-  - name: Start Plexdrive and Docker Containers
+  - name: Start Docker Containers
     block:
-
-    - name: "Start 'plexdrive4' service"
-      systemd:
-        name: plexdrive4
-        state: started
-      when: (plexdrive4_service is defined) and (plexdrive4_service.stat.exists) and (plexdrive4_service_running)
-
-    - name: "Start 'plexdrive5' service"
-      systemd:
-        name: plexdrive5
-        state: started
-      when: (plexdrive5_service is defined) and (plexdrive5_service.stat.exists) and (plexdrive5_service_running)
 
     - name: "Wait for 5 seconds before starting Docker containers"
       wait_for:
