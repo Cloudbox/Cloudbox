@@ -24,7 +24,7 @@
 
 #### Operating System
 
-* [Ubuntu Server 16.04 / 18.04](https://www.ubuntu.com/download/server)
+* [Ubuntu Server 18.04](https://www.ubuntu.com/download/server)
 
 #### Packages
 
@@ -34,7 +34,6 @@
 * [Docker](https://www.docker.com/community-edition)
 * [UnionFS](http://manpages.ubuntu.com/manpages/trusty/man8/unionfs-fuse.8.html)
 * [Rclone](https://rclone.org)
-* [Plexdrive](https://github.com/dweidenfeld/plexdrive)
 * [Plex Autoscan](https://github.com/l3uddz/plex_autoscan)
 * [Cloudplow](https://github.com/l3uddz/cloudplow)
 * [Cloudbox MOTD](https://github.com/Cloudbox/cloudbox_motd)
