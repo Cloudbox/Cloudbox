@@ -34,7 +34,6 @@
 * [Docker](https://www.docker.com/community-edition)
 * [UnionFS](http://manpages.ubuntu.com/manpages/trusty/man8/unionfs-fuse.8.html)
 * [Rclone](https://rclone.org)
-* [Plexdrive](https://github.com/dweidenfeld/plexdrive)
 * [Plex Autoscan](https://github.com/l3uddz/plex_autoscan)
 * [Cloudplow](https://github.com/l3uddz/cloudplow)
 * [Cloudbox MOTD](https://github.com/Cloudbox/cloudbox_motd)

@@ -31,7 +31,6 @@ Featured Applications:
 - Sonarr
 - Radarr
 - Lidarr
-- Plexdrive
 - NZBGet
 - ruTorrent
 - Tautulli (PlexPy)
